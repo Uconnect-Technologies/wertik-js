@@ -1,0 +1,26 @@
+{
+  "name": "NodeBoilerplate",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/ilyaskarim/NodeBoilerplate.git",
+  "author": "IlyasKarim <ilyas.datoo@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "express-graphql": "^0.7.1",
+    "faker": "^4.1.0",
+    "graphql": "^14.0.2",
+    "graphql-tag": "^2.10.0",
+    "handlebars": "^4.0.12",
+    "http-status-codes": "^1.3.0",
+    "jsonwebtoken": "^8.4.0",
+    "lodash": "^4.17.11",
+    "moment": "^2.23.0",
+    "mysql": "^2.16.0",
+    "nodemailer": "^5.0.0",
+    "nodemon": "^1.18.9",
+    "sequelize": "^4.42.0",
+    "winston": "^3.1.0"
+  }
+}
