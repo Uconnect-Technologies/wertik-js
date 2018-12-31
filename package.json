@@ -26,7 +26,7 @@
     "jsonwebtoken": "^8.4.0",
     "lodash": "^4.17.11",
     "moment": "^2.23.0",
-    "mysql": "^2.16.0",
+    "mysql2": "^1.6.4",
     "nodemailer": "^5.0.0",
     "nodemon": "^1.18.9",
     "sequelize": "^4.42.0",
