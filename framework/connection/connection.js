@@ -23,6 +23,20 @@ const DB_DEVELOPMENT =  new Sequelize(`${DB_NAME}_dev`,DB_USERNAME,DB_PASSWORD,{
 
 let CONNECTION = (MODE == 'development') ? DB_DEVELOPMENT : DB_PRODUCTION;
 
-loadAllModels();
+let models = loadAllModels();
+
+models.map((model) => {
+	let tableName = model.tableName;
+	let fields = model.fields;
+	CONNECTION.define(tableName,fields,{
+		paranoid: true,
+		underscored: true,
+		freezeTableName: true,
+	})
+});
+
+CONNECTION.sync({
+	force: true
+})
 
 export default CONNECTION;
