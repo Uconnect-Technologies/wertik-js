@@ -5,7 +5,6 @@ import {
 } from "graphql";
 import ForgetPasswordSchema from "./schema.js";
 
-
 const ForgetPasswordQueries = {
 	forgetPassword: {
 		type: ForgetPasswordSchema,

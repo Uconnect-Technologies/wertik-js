@@ -6,6 +6,7 @@ import {
 } from "graphql";
 import ForgetPasswordSchema from "./schema.js";
 
+console.log(ForgetPasswordSchema)
 
 const ForgetPasswordMutations = {
 	requestPasswordReset: {

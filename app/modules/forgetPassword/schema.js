@@ -7,7 +7,7 @@ import {get} from "lodash";
 
 const ForgetPasswordSchema = new GraphQLObjectType({
 	name: "ForgetPasswordSchema",
-	descriptionm: "ForgetPasswordSchema...",
+	description: "ForgetPasswordSchema...",
 	fields() {
 		return {
 			email: {
