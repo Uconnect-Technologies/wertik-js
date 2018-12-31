@@ -5,7 +5,6 @@
 import getDirectoriesInFolder from "./../helpers/getDirectoriesInFolder.js";
 import fs from "fs";
 
-
 export default function () {
 	let directories = getDirectoriesInFolder(__dirname+"/../../app/modules/");
 	let queries = {};
