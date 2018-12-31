@@ -9,6 +9,8 @@ import ForgetPasswordSchema from "./schema.js";
 
 const ForgetPasswordMutations = {
 	requestPasswordReset: {
+		name: "Request password reset",
+		description: "Allows user to reset their password",
 		type: ForgetPasswordSchema,
 		args: {
 			email: {

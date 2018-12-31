@@ -13,8 +13,8 @@ export default function () {
 	let mutations = loadAllMutations();
 	let queries = loadAllQueries();
 	let query = new GraphQLObjectType({
-		name: "asd",
-		description: "asd",
+		name: "Queries",
+		description: `All Queries for ${process.env.NAME}`,
 		fields: () => {
 			return {
 				...queries
@@ -23,7 +23,7 @@ export default function () {
 	});
 	let mutation = new GraphQLObjectType({
 		name: "mutation",
-		description: "mutation",
+		description: `All Mutations for ${process.env.NAME}`,
 		fields() {
 			return {
 				...mutations
