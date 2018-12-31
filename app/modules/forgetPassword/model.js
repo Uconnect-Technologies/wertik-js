@@ -1,5 +1,6 @@
 import Sequelize from "sequelize";
-import Model from "./../../../framework/model/model.js"
+import Model from "@root/framework/model/model.js"
+import Database from "@root/framework/connection/connection.js"
 class ForgetPasswordModel extends Model {
 	constructor() {
 		super({tableName: "forget_password"});
