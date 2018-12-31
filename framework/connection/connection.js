@@ -1,5 +1,5 @@
 import Sequelize from "sequelize";
-import loadAllModels from "./../helpers/loadAllModels.js";
+import loadAllModelsFromApp from "./../helpers/loadAllModelsFromApp.js";
 
 const {
 	DB_USERNAME,
@@ -27,23 +27,24 @@ const DB_DEVELOPMENT =  new Sequelize(`${DB_NAME}_dev`,DB_USERNAME,DB_PASSWORD,{
 
 let CONNECTION = (MODE == 'development') ? DB_DEVELOPMENT : DB_PRODUCTION;
 
-
-
-export let init = function ()  {
-	let models = loadAllModels();
-	models.map((model) => {
-		let tableName = model.tableName;
-		let fields = model.fields;
-		CONNECTION.define(tableName,fields,{
-			paranoid: true,
-			underscored: true,
-			freezeTableName: true,
-		})
-	});
-	CONNECTION.sync({
-		force: true
+let loadedModels = loadAllModelsFromApp();
+loadedModels.map((model) => {
+	let tableName = model.tableName;
+	let fields = model.fields;
+	CONNECTION.define(tableName,fields,{
+		paranoid: true,
+		underscored: true,
+		freezeTableName: true,
 	})
-	return CONNECTION;
-}
+});
+export let models = CONNECTION.models;
+// export let sync = CONNECTION.sync;
+// CONNECTION.sync({
+// 	force: true
+// }).then(() => {
+// 	models.forget_password.create({
+// 		email: "ilyas.datoo@gmail.com"
+// 	});
+// })
 
 export default CONNECTION;

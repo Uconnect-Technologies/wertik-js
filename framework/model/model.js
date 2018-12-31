@@ -1,10 +1,9 @@
 import {get} from "lodash";
-import connection from "@root/framework/connection/connection.js"
+import connection from "./../connection/connection.js"
 
 class Model {
 	constructor(props) {
 		this.tableName = get(props,'tableName','');
-		// this.table = CONNECTION.models[this.tableName];
 		this.instance = null;
 	}
 

@@ -6,10 +6,11 @@
   "author": "IlyasKarim <ilyas.datoo@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "cross-env NODE_ENV=development nodemon main --exec \"node -r dotenv/config -r babel-register\""
+    "start": "cross-env NODE_ENV=development nodemon main --exec \"node -r dotenv/config -r babel-register\"",
+    "sync-db": "cross-env NODE_ENV=development nodemon sync-db --exec \"node -r dotenv/config -r babel-register\""
   },
   "_moduleAliases": {
-    "@root": "."
+    "@": "."
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
