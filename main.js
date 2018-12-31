@@ -1,5 +1,4 @@
 import Express from "express";
-import GraphQLHttp from 'express-graphql';
 import startGraphql from "./app/GraphQL.js";
 import startRestService from "./app/rest.js";
 
@@ -12,8 +11,9 @@ const {
 	MODE
 } = process.env;
 
+
 app.listen(PORT, () => {
-	startGraphql();
+	startGraphql(app);
 	startRestService();
 	console.log("GraphQL and Rest API services are up and running");
 	console.log(`App is running on Port:${PORT}. Database: ${MODE}`);
