@@ -1,14 +1,15 @@
 import {get} from "lodash";
-import connection from "./../connection/connection.js"
+import {models} from "./../connection/connection.js"
 
 class Model {
 	constructor(props) {
-		this.tableName = get(props,'tableName','');
 		this.instance = null;
+		this.tableName = props.tableName;
+		this.model = models[this.tableName];
 	}
 
 	async findOne(id) {
-		let object = await this.table.findOne({
+		let object = await this.model.findOne({
 			where: { id: id }
 		});
 		this.instance = object;
@@ -19,13 +20,13 @@ class Model {
 	async delete(args) {
 		let id = get(this,'instance.id',null);
 		if (id > 0) {
-			let deleteItem = await this.table.destroy({
+			let deleteItem = await this.model.destroy({
 				where: {
 					id: id
 				}
 			});
 		}else {
-			let deleteItem = await this.table.destroy({
+			let deleteItem = await this.model.destroy({
 				where: args
 			});
 		}
@@ -33,7 +34,7 @@ class Model {
 
 
 	async create(args) {
-		let create = await this.table.create(args);
+		let create = await this.model.create(args);
 		this.instance = create;
 		return this;
 	}

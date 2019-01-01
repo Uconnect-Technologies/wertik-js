@@ -5,6 +5,7 @@ import {
 	GraphQLNonNull
 } from "graphql";
 import ForgetPasswordSchema from "./schema.js";
+import ForgetPasswordController from "./controller.js";
 
 
 const ForgetPasswordMutations = {
@@ -18,9 +19,7 @@ const ForgetPasswordMutations = {
 			}
 		},
 		resolve() {
-			return {
-				email: "Hello"
-			}
+			return ForgetPasswordController.requestPasswordReset();
 		}
 	}
 }

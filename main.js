@@ -4,10 +4,8 @@ import Express from "express";
 import startGraphql from "./app/GraphQL.js";
 import startRestService from "./app/rest.js";
 import conn from "./framework/connection/connection.js";
-import {models} from "./framework/connection/connection.js";
 
 const app = Express();
-
 
 const {
 	PORT,
@@ -23,8 +21,5 @@ conn.sync().then(()=> {
 			console.log(`App is running on Port:${PORT}. Database: ${MODE}`);
 		}
 		console.log(`GraphQL Running on localhost:${PORT}/graphql`);
-		models.forget_password.create({
-			email: "ilyas.datoo@gmail.com"
-		});
 	});
-})
+});

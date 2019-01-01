@@ -38,13 +38,4 @@ loadedModels.map((model) => {
 	})
 });
 export let models = CONNECTION.models;
-// export let sync = CONNECTION.sync;
-// CONNECTION.sync({
-// 	force: true
-// }).then(() => {
-// 	models.forget_password.create({
-// 		email: "ilyas.datoo@gmail.com"
-// 	});
-// })
-
 export default CONNECTION;
