@@ -1,12 +1,6 @@
-import {
-	GraphQLList,
-	GraphQLInt,
-	GraphQLString,
-	GraphQLNonNull
-} from "graphql";
 import ForgetPasswordSchema from "./schema.js";
 import ForgetPasswordController from "./controller.js";
-
+import mutationArgument from "./../../../framework/schema/mutationArgument.js";
 
 const ForgetPasswordMutations = {
 	requestPasswordReset: {
@@ -14,12 +8,11 @@ const ForgetPasswordMutations = {
 		description: "Allows user to reset their password",
 		type: ForgetPasswordSchema,
 		args: {
-			email: {
-				type: GraphQLString
-			}
+			...mutationArgument('email','string'),
+			...mutationArgument('returnUrl','string'),
 		},
-		resolve() {
-			return ForgetPasswordController.requestPasswordReset();
+		async resolve(_,args) {
+			return await ForgetPasswordController.requestPasswordReset(_,args);
 		}
 	}
 }

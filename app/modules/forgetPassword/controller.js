@@ -1,8 +1,7 @@
 import ForgetPasswordModel from "./model.js";
 class ForgetPasswordController {
-	requestPasswordReset() {
-		let response = ForgetPasswordModel.requestPasswordReset();
-		console.log(response);
+	async requestPasswordReset(_,args) {
+		let response = await ForgetPasswordModel.requestPasswordReset(_,args);
 		return {
 			email: "Hello"
 		}

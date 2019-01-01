@@ -6,6 +6,7 @@ class Model {
 		this.instance = null;
 		this.tableName = props.tableName;
 		this.model = models[this.tableName];
+		this.models = models;
 	}
 
 	async findOne(id) {
