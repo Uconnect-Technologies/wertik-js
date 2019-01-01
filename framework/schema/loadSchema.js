@@ -4,10 +4,7 @@
 import loadAllMutations from "./../mutations/loadAllMutations.js";
 import loadAllQueries from "./../queries/loadAllQueries.js";
 
-import schema from "./../../app/modules/forgetPassword/schema.js";
-
 import {GraphQLObjectType, GraphQLSchema,GraphQLString} from "graphql";
-
 
 export default function () {
 	let mutations = loadAllMutations();

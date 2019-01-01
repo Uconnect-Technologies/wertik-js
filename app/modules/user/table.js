@@ -2,7 +2,7 @@ import Sequelize from "sequelize";
 export default {
 	tableName: "user",
 	fields: {
-				username: {
+		username: {
 			type: Sequelize.STRING,
 			allowNull: true,
 		},

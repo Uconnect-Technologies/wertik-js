@@ -35,6 +35,8 @@
     "nodemailer": "^5.0.0",
     "nodemon": "^1.18.9",
     "sequelize": "^4.42.0",
+    "simplecrypt": "^0.1.0",
+    "validate.js": "^0.12.0",
     "winston": "^3.1.0"
   }
 }
