@@ -1,5 +1,7 @@
-import Model from "./../../../framework/model/model.js";
-import {sendEmail} from "./../../../framework/mailer/index.js";
+import Model from "@framework/model/model.js";
+import {sendEmail} from "@framework/mailer/index.js";
+import {encrypt,decrypt} from "@framework/security/password.js";
+import moment from "moment";
 
 class ForgetPasswordModel extends Model {
 	constructor() {
@@ -24,7 +26,7 @@ class ForgetPasswordModel extends Model {
 					},{
 						from: 'ilyas.datoo@gmail.com',
 						to: email,
-						subject: `Reset your account password for ${process.env.APP_NAME}`,
+						subject: `Reset your account password for ${process.env.NAME}`,
 					});
 					await this.model.create({
 						token: token,
@@ -58,6 +60,73 @@ class ForgetPasswordModel extends Model {
 				statusCode: 'INTERNAL_SERVER_ERROR'
 			};
 		}
+	}
+	async resetPassword(_,args) {
+		try {
+			let { token, email, password } = args;
+			if (token && email && password) {
+				let forgetPasswordItem = await this.model.findOne({
+					where: {
+						email: email
+					}
+				});
+				if (forgetPasswordItem) {
+					let user = await this.models.user.findOne({
+						where: {
+							email: email
+						}
+					});
+					if (user) {
+						sendEmail('changePassword.hbs',{
+							email: email,
+							siteName: process.env.NAME,
+							userName: email,
+						},{
+							from: 'ilyas.datoo@gmail.com',
+							to: email,
+							subject: `Password changed for ${process.env.NAME}`,
+						});
+						await user.updateAttributes({
+							password: encrypt(password),
+						});
+						await this.model.destroy({
+							where: {
+								token: token 
+							}
+						});
+						return {
+							successMessageType: "Password Changed", 
+							successMessage: `Password successfully changed for ${user.email}`,
+							statusCode: 'CREATED'
+						}
+					}else {
+						return {
+							errorMessageType: "User Not Found",
+							errorMessage: "User not found to update password.",
+							statusCode: 'BAD_REQUEST'
+						}
+					}
+				}else {
+					return {
+						errorMessageType: "Token Mismatched",
+						errorMessage: "The token you provided is mismatched or expired.",
+						statusCode: 'BAD_REQUEST'
+					}
+				}
+			}else {
+				return {
+					errorMessageType: "Details not provided",
+					errorMessage: "Please provide Token, Email and/or Password",
+					statusCode: 'BAD_REQUEST'
+				}
+			}
+		} catch (e) {
+			return {
+				errorMessageType: "Something went wrong",
+				errorMessage: "Something went wrong from our side. Message: " + e.message,
+				statusCode: 'INTERNAL_SERVER_ERROR'
+			}
+		}	
 	}
 }
 

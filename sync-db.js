@@ -4,5 +4,6 @@ const {
 	MODE
 } = process.env;
 conn.sync({force: true}).then(()=> {
-	console.log("sync complete")
+	console.log("sync complete");
+	process.exit();
 })

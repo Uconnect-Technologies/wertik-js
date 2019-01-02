@@ -13,7 +13,13 @@ class UserController {
   	return await UserModel.activateAccount(_, args);
   }
   async changePassword(_, args) {
-  	return await UserModel.changePassword(_, args);
+    return await UserModel.changePassword(_, args);
+  }
+  async refreshToken(_,args) {
+  	return await UserModel.refreshToken(_, args);
+  }
+  async updateProfile(_,args) {
+    return await UserModel.updateProfile(_,args);
   }
 }
 

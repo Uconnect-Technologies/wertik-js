@@ -18,16 +18,16 @@ const UserSchema = new GraphQLObjectType({
           return model.username;
         }
       },
-      token: {
-        type: GraphQLString,
-        resolve(model) {
-          return model.token;
-        }
-      },
       isActivated: {
         type: GraphQLString,
         resolve(model) {
           return model.isActivated;
+        }
+      },
+      refreshToken: {
+        type: GraphQLString,
+        resolve(model) {
+          return model.refreshToken;
         }
       },
       activationToken: {
@@ -67,10 +67,10 @@ const UserSchema = new GraphQLObjectType({
         }
       },
       // authentication
-      token: {
+      accessToken: {
         type: GraphQLString,
         resolve(model) {
-          return get(model,'token','');
+          return get(model,'accessToken','');
         }
       }
     }

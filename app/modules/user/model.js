@@ -31,7 +31,10 @@ class User extends Model {
           }
         }
         if (user && decrypt(user.password) == password ) {
-          user.token = await createJwtToken({email: email,for: "authentication"});
+          let accessToken = await createJwtToken({email: email,for: "authentication"});
+          await user.updateAttributes({
+            accessToken: accessToken
+          })
           return user
         }else {
           return {
@@ -70,7 +73,8 @@ class User extends Model {
       }
       let newUser = await this.model.create({
         email: email,
-        token: await createJwtToken({email: email,for: "authentication"}),
+        accessToken: await createJwtToken({email: email,for: "authentication"}),
+        refreshToken: await createJwtToken({email: email,for: "refreshToken"}),
         isActivated: false,
         activationToken: Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2),
         password: encrypt(password)
@@ -220,8 +224,61 @@ class User extends Model {
         }
       }
   }
-  updateProfile() {
-    
+  async updateProfile(_, args) {
+    try {
+      let {id} = args;
+      let user = await this.model.findById(id);
+      if (user) {
+        let attributes = {...args};
+        delete attributes['id'];
+        let response = await user.updateAttributes(attributes);
+        response.successMessageType = "Profile updated";
+        response.successMessage = "Profile updated successfully";
+        response.statusCode = "CREATED";
+        return response;
+      }else {
+        return {
+          errorMessageType: "No User found",
+          errorMessage: "No user found please try again.",
+          statusCode: 'BAD_REQUEST'
+        }
+      }
+    } catch (e) {
+      return {
+        errorMessageType: "Error from our side",
+        errorMessage: e.message,
+        statusCode: 'INTERNAL_SERVER_ERROR'
+      }
+    }
+  }
+  async refreshToken(_,args) {
+      try {
+        let {id,refreshToken} = args;
+        let user = await this.model.findOne({
+          where: {id: id}
+        });
+        if (!user) {
+          return {
+            errorMessageType: "No user found",
+            errorMessage: "No user found with that token",
+            statusCode: 'BAD_REQUEST'
+          }
+        }
+        let token = await createJwtToken({email: user.email,for: "authentication"});
+        await user.updateAttributes({
+          accessToken: token,
+        });
+        user.statusCode = 'CREATED';
+        user.successMessageType = "Token refreshed";
+        user.successMessage = "Token Refreshed successfuly";
+        return user;
+      } catch (e) {
+        return {
+          errorMessageType: 'Backend Error',
+          errorMessage: `Something went wrong, ${e.message}`,
+          statusCode: 'INTERNAL_SERVER_ERROR'
+        }
+      }
   }
 }
 

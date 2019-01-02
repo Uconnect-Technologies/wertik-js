@@ -18,6 +18,12 @@ const ForgetPasswordSchema = new GraphQLObjectType({
 				resolve(model) {
 					return get(model,'email','');	
 				}
+			},
+			token: {
+				type: GraphQLString,
+				resolve(model) {
+					return get(model,'token','');
+				}
 			}
 		}
 	}

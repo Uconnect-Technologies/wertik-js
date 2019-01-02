@@ -47,6 +47,27 @@ const UserMutations = {
     resolve(_, args) {
       return UserController.changePassword(_, args);
     }
+  },
+  refreshToken: {
+    type: UserSchema,
+    args: {
+      ...mutationArgument('id','number'),
+      ...mutationArgument('refreshToken','string'),
+    },
+    resolve(_, args) {
+      return UserController.refreshToken(_, args);
+    }
+  },
+  updateProfile: {
+    type: UserSchema,
+    args: {
+      ...mutationArgument('id','number'),
+      ...mutationArgument('name','string'),
+      ...mutationArgument('gender','string'),
+    },
+    resolve(_, args) {
+      return UserController.updateProfile(_,args)
+    }
   }
 }
 

@@ -6,7 +6,12 @@ export default {
 			type: Sequelize.STRING,
 			allowNull: true,
 		},
-		token: {
+		accessToken: {
+			type: Sequelize.STRING,
+			allowNull: true,
+			unique: false,
+		},
+		refreshToken: {
 			type: Sequelize.STRING,
 			allowNull: true,
 			unique: false,
