@@ -15,6 +15,15 @@ const UserMutations = {
 			return await UserController.login(_,args);
 		}
   },
+  activateAccount :{
+    type: UserSchema,
+    args: {
+      ...mutationArgument('activationToken','string')
+    },
+    async resolve(_, args) {
+      return await UserController.activateAccount(_, args);
+    }
+  },
   signup: {
     type: "Signup",
     description: "Mutation for signup",
@@ -26,6 +35,17 @@ const UserMutations = {
     },
     async resolve(_, args) {
       return await UserController.signup(_, args);
+    }
+  },
+  changePassword: {
+    type: UserSchema,
+    args: {
+      ...mutationArgument('id','number'),
+      ...mutationArgument('oldPassword','string'),
+      ...mutationArgument('newPassword','string')
+    },
+    resolve(_, args) {
+      return UserController.changePassword(_, args);
     }
   }
 }

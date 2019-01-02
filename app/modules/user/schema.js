@@ -4,7 +4,7 @@ import {
 	GraphQLString,
 } from "graphql";
 import {get} from "lodash";
-import schemaResponse from "./../../../framework/schema/schemaResponse.js";
+import schemaResponse from "@framework/schema/schemaResponse.js";
 
 const UserSchema = new GraphQLObjectType({
   name: "Userschema",

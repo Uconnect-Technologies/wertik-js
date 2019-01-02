@@ -1,7 +1,12 @@
-import Model from "./../../../framework/model/model.js";
-import {sendEmail} from "./../../../framework/mailer/index.js";
-import simplecrypt from "simplecrypt";
 import {get} from "lodash";
+import simplecrypt from "simplecrypt";
+import moment from "moment";
+
+import Model from "@framework/model/model.js";
+import {sendEmail} from "@framework/mailer/index.js";
+import createJwtToken from "@framework/security/createJwtToken.js";
+import {encrypt,decrypt} from "@framework/security/password.js";
+
 let crypto = simplecrypt();
 
 class User extends Model {
@@ -25,9 +30,8 @@ class User extends Model {
             statusCode: 'BAD_REQUEST'
           }
         }
-        if (user && crypto.decrypt(user.password) == password ) {
-          global.appEvents.onUserLogin();
-          user.token = await createJwtToken(user).token;
+        if (user && decrypt(user.password) == password ) {
+          user.token = await createJwtToken({email: email,for: "authentication"});
           return user
         }else {
           return {
@@ -66,23 +70,22 @@ class User extends Model {
       }
       let newUser = await this.model.create({
         email: email,
+        token: await createJwtToken({email: email,for: "authentication"}),
         isActivated: false,
         activationToken: Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2),
-        password: crypto.encrypt(password)
+        password: encrypt(password)
       });
-      // sendEmail('welcome.hbs',{
-      //     userName: email,
-      //     siteName: process.env.APP_NAME,
-      //     date: moment().format('dddd, MMMM Do YYYY, h:mm:ss a'),
-      //     activationToken: get(newUser,'activationToken',''),
-      //     activationUrl: activationUrl 
-      //   },{
-      //     from: 'ilyas.datoo@gmail.com',
-      //     to: email,
-      //     subject: `Welcome to ${process.env.APP_NAME}`,
-      //   });
-      // newUser.token = await createJwtToken(newUser).token;
-      newUser.token = "asdasdasd";
+      sendEmail('welcome.hbs',{
+          userName: email,
+          siteName: process.env.NAME,
+          date: moment().format('dddd, MMMM Do YYYY, h:mm:ss a'),
+          activationToken: get(newUser,'activationToken',''),
+          activationUrl: process.env.FRONTEND_DEVELOPMENT_URL 
+        },{
+          from: 'ilyas.datoo@gmail.com',
+          to: email,
+          subject: `Welcome to ${process.env.NAME}`,
+        });
       newUser.statusCode = 'CREATED';
       newUser.successMessage = "Account successfuly created";
       newUser.successMessageType = "Account Created";
@@ -96,14 +99,126 @@ class User extends Model {
       }
     }
   }
-  activateAccount() {
+  async activateAccount(_,args) {
+    try {
+      let {activationToken} = args;
+      let user = await this.model.findOne({
+        where: { activationToken: activationToken }
+      });
+      if (!user) {
+        return {
+          statusCode: "BAD_REQUEST",
+          errorMessageType: "User not found",
+          errorMessage: "User is not found please try again"
+        }
+      }
+      user.updateAttributes({
+        isActivated: true,
+        activationToken: ''
+      });
+      user.successMessageType = "Account activated";
+      user.successMessage = "Account successfuly activated";
 
+      sendEmail('accountActivated.hbs',{
+        userName: user.email,
+        siteName: process.env.NAME,
+      },{
+        from: 'ilyas.datoo@gmail.com',
+        to: user.email,
+        subject: `Account activated for ${process.env.NAME}`,
+      });
+      user.statusCode = "CREATED"
+      return user;
+    } catch (e) {
+      return {
+        errorMessageType: "Error from our side",
+        errorMessage: e.message,
+        statusCode: 'INTERNAL_SERVER_ERROR'
+      }
+    }
   }
-  view() {
-
+  async user(_,args) {
+    try {
+      let {id} = args;
+      if (!id) {
+        return {
+          errorMessageType: 'ID is required',
+          errorMessage: `ID is required to find user`,
+          statusCode: 'BAD_REQUEST'
+        }
+      }
+      let user = await this.model.findById(args.id);
+      if (!user) {
+        return {
+          errorMessageType: 'User not found',
+          errorMessage: `User not found, please try again`,
+          statusCode: 'BAD_REQUEST'
+        }
+      }
+      user.successMessage = "User fetched successfuly";
+      user.successMessageType = "User fetched";
+      user.statusCode = 'OK';
+      return user;
+    } catch (e) {
+      return {
+        errorMessageType: 'Backend Error',
+        errorMessage: `Something went wrong, ${e.message}`,
+        statusCode: 'INTERNAL_SERVER_ERROR'
+      }
+    } 
   }
-  changePassword() {
-
+  async changePassword(_,args) {
+      try {
+        let {id, oldPassword, newPassword} = args;
+        if (!id || !oldPassword || !newPassword) {
+          return {
+            errorMessageType: "Fields Required",
+            errorMessage: `You must provide id, old password and new password`,
+            statusCode: 'BAD_REQUEST'
+          }
+        }
+        let user = await this.model.findById(id);
+        if (user) {
+          let {email} = user;
+          if (decrypt(user.password) == oldPassword ) {
+            await user.updateAttributes({
+              password: encrypt(newPassword)
+            });
+            sendEmail('changePassword.hbs',{
+              email: email,
+              siteName: process.env.NAME,
+              userName: email,
+            },{
+              from: 'ilyas.datoo@gmail.com',
+              to: email,
+              subject: `Password changed for ${process.env.NAME}`,
+            });
+            return { 
+              successMessageType: "Password Changed", 
+              successMessage: `Password successfully changed for ${user.email}`,
+              statusCode: 'CREATED',
+            };
+          }else {
+            return { 
+              errorMessageType: "Incorrect Password", 
+              errorMessage: "You have entered incorrect Password",
+              statusCode: 'CREATED'
+            };
+          }
+        }else {
+          return {
+            errorMessageType: "No User found.",
+            errorMessage: "No user found please try again",
+            statusCode: 'BAD_REQUEST'
+          }
+        }
+      } catch (e) {
+        return {
+          errorMessageType: "Error from our side",
+          errorMessage: e.message,
+          statusCode: 'INTERNAL_SERVER_ERROR'
+        }
+      }
   }
   updateProfile() {
     

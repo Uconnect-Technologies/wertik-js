@@ -10,7 +10,9 @@
     "sync-db": "cross-env NODE_ENV=development nodemon sync-db --exec \"node -r dotenv/config -r babel-register\""
   },
   "_moduleAliases": {
-    "@": "."
+    "@": ".",
+    "@framework": "framework/",
+    "@app": "app/"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

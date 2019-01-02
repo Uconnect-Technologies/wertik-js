@@ -1,5 +1,5 @@
 import {get} from "lodash";
-import {models} from "./../connection/connection.js"
+import {models} from "@framework/connection/connection.js";
 
 class Model {
 	constructor(props) {
