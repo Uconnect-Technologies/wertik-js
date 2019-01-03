@@ -1,11 +1,17 @@
 require('module-alias/register');
 
 import Express from "express";
+import bodyParser from "body-parser";
 import startGraphql from "./app/GraphQL.js";
 import startRestService from "./app/rest.js";
 import conn from "./framework/connection/connection.js";
 
 const app = Express();
+app.use(bodyParser.urlencoded({
+  extended: true,
+  json: true,
+}));
+app.use(bodyParser.json());
 
 const {
 	PORT,

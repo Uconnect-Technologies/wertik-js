@@ -1,6 +1,4 @@
-let crypto = require('crypto'),
-    algorithm = 'aes-256-ctr',
-    password = 'd6F3Efeq';
+let crypto = require('crypto'),algorithm = 'aes-256-ctr',password = 'd6F3Efeq';
 
 export function encrypt(text){
   var cipher = crypto.createCipher(algorithm,password)
