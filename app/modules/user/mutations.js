@@ -1,6 +1,6 @@
 import UserSchema from "./schema.js";
 import UserController from "./controller.js";
-import mutationArgument from "./../../../framework/schema/mutationArgument.js";
+import mutationArgument from "@framework/schema/mutationArgument.js";
 
 const UserMutations = {
 	login: {

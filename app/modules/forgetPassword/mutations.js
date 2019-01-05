@@ -1,6 +1,6 @@
 import ForgetPasswordSchema from "./schema.js";
 import ForgetPasswordController from "./controller.js";
-import mutationArgument from "./../../../framework/schema/mutationArgument.js";
+import mutationArgument from "@framework/schema/mutationArgument.js";
 
 const ForgetPasswordMutations = {
 	requestPasswordReset: {
