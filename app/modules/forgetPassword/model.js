@@ -1,6 +1,7 @@
 import Model from "@framework/model/model.js";
 import {sendEmail} from "@framework/mailer/index.js";
 import {encrypt,decrypt} from "@framework/security/password.js";
+import internalServerError from "@framework/helpers/internalServerError.js";
 import moment from "moment";
 
 class ForgetPasswordModel extends Model {
@@ -54,11 +55,7 @@ class ForgetPasswordModel extends Model {
 				};
 			}
 		} catch (e) {
-			return {
-				errorMessageType: "Error from our side",
-				errorMessage: e.message,
-				statusCode: 'INTERNAL_SERVER_ERROR'
-			};
+			return internalServerError(e);
 		}
 	}
 	async resetPassword(_,args) {
@@ -121,11 +118,7 @@ class ForgetPasswordModel extends Model {
 				}
 			}
 		} catch (e) {
-			return {
-				errorMessageType: "Something went wrong",
-				errorMessage: "Something went wrong from our side. Message: " + e.message,
-				statusCode: 'INTERNAL_SERVER_ERROR'
-			}
+			return internalServerError(e);
 		}	
 	}
 	async forgetPasswordView(_,args) {
@@ -157,11 +150,7 @@ class ForgetPasswordModel extends Model {
 				token: "asasd"
 			}
 		} catch (e) {
-			return {
-				errorMessageType: "Something went wrong",
-				errorMessage: "Something went wrong from our side. Message: " + e.message,
-				statusCode: 'INTERNAL_SERVER_ERROR'
-			}
+			return internalServerError(e);
 		}
 	}
 }

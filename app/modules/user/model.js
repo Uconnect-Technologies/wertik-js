@@ -1,6 +1,7 @@
 import {get} from "lodash";
 import simplecrypt from "simplecrypt";
 import moment from "moment";
+import internalServerError from "@framework/helpers/internalServerError.js";
 
 import Model from "@framework/model/model.js";
 import {sendEmail} from "@framework/mailer/index.js";
@@ -51,11 +52,7 @@ class User extends Model {
         }
       }
     } catch (e) {
-      return {
-        errorMessageType: "Error from our side",
-        errorMessage: e.message,
-        statusCode: 'INTERNAL_SERVER_ERROR'
-      }
+      return internalServerError(e);
     }	
   }
   async signup(_, args) {
@@ -80,27 +77,23 @@ class User extends Model {
         password: encrypt(password)
       });
       sendEmail('welcome.hbs',{
-          userName: email,
-          siteName: process.env.NAME,
-          date: moment().format('dddd, MMMM Do YYYY, h:mm:ss a'),
-          activationToken: get(newUser,'activationToken',''),
-          activationUrl: process.env.FRONTEND_DEVELOPMENT_URL 
+        userName: email,
+        siteName: process.env.NAME,
+        date: moment().format('dddd, MMMM Do YYYY, h:mm:ss a'),
+        activationToken: get(newUser,'activationToken',''),
+        activationUrl: process.env.FRONTEND_DEVELOPMENT_URL 
         },{
-          from: 'ilyas.datoo@gmail.com',
-          to: email,
-          subject: `Welcome to ${process.env.NAME}`,
-        });
+        from: 'ilyas.datoo@gmail.com',
+        to: email,
+        subject: `Welcome to ${process.env.NAME}`,
+      });
       newUser.statusCode = 'CREATED';
       newUser.successMessage = "Account successfuly created";
       newUser.successMessageType = "Account Created";
       delete newUser['password'];
       return newUser;
     } catch (e) {
-      return {
-        errorMessageType: "Error from our side",
-        errorMessage: e.message,
-        statusCode: 'INTERNAL_SERVER_ERROR'
-      }
+      return internalServerError(e);
     }
   }
   async activateAccount(_,args) {
@@ -134,11 +127,7 @@ class User extends Model {
       user.statusCode = "CREATED"
       return user;
     } catch (e) {
-      return {
-        errorMessageType: "Error from our side",
-        errorMessage: e.message,
-        statusCode: 'INTERNAL_SERVER_ERROR'
-      }
+      return internalServerError(e);
     }
   }
   async user(_,args) {
@@ -164,11 +153,7 @@ class User extends Model {
       user.statusCode = 'OK';
       return user;
     } catch (e) {
-      return {
-        errorMessageType: 'Backend Error',
-        errorMessage: `Something went wrong, ${e.message}`,
-        statusCode: 'INTERNAL_SERVER_ERROR'
-      }
+      return internalServerError(e);
     } 
   }
   async changePassword(_,args) {
@@ -217,11 +202,7 @@ class User extends Model {
           }
         }
       } catch (e) {
-        return {
-          errorMessageType: "Error from our side",
-          errorMessage: e.message,
-          statusCode: 'INTERNAL_SERVER_ERROR'
-        }
+        return internalServerError(e);
       }
   }
   async updateProfile(_, args) {
@@ -244,11 +225,7 @@ class User extends Model {
         }
       }
     } catch (e) {
-      return {
-        errorMessageType: "Error from our side",
-        errorMessage: e.message,
-        statusCode: 'INTERNAL_SERVER_ERROR'
-      }
+      return internalServerError(e);
     }
   }
   async refreshToken(_,args) {
@@ -273,11 +250,7 @@ class User extends Model {
         user.successMessage = "Token Refreshed successfuly";
         return user;
       } catch (e) {
-        return {
-          errorMessageType: 'Backend Error',
-          errorMessage: `Something went wrong, ${e.message}`,
-          statusCode: 'INTERNAL_SERVER_ERROR'
-        }
+        return internalServerError(e);
       }
   }
 }
