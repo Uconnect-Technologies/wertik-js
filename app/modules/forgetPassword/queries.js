@@ -7,7 +7,7 @@ import ForgetPasswordSchema from "./schema.js";
 import queryMutationArgument from "@/framework/schema/queryMutationArgument.js";
 import ForgetPasswordController from "./controller.js";
 
-const ForgetPasswordQueries = {
+export default {
 	forgetPassword: {
 		type: ForgetPasswordSchema,
 		args: {
@@ -18,5 +18,3 @@ const ForgetPasswordQueries = {
 		}
 	}
 }
-
-export default ForgetPasswordQueries;

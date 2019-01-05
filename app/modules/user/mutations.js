@@ -2,7 +2,7 @@ import UserSchema from "./schema.js";
 import UserController from "./controller.js";
 import queryMutationArgument from "@framework/schema/queryMutationArgument.js";
 
-const UserMutations = {
+export default {
 	login: {
 		name: "Login",
 		description: "Mutation for login",
@@ -70,5 +70,3 @@ const UserMutations = {
     }
   }
 }
-
-export default UserMutations;

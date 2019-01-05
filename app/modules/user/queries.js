@@ -7,7 +7,7 @@ import UserSchema from "./schema.js";
 import UserController from "./controller.js";
 import queryMutationArgument from "@framework/schema/queryMutationArgument.js";
 
-const UserQueries = {
+export default {
 	user: {
 		type: UserSchema,
 		args: {
@@ -18,5 +18,3 @@ const UserQueries = {
 		}
 	}
 }
-
-export default UserQueries;

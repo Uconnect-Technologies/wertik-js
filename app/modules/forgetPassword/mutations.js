@@ -2,7 +2,7 @@ import ForgetPasswordSchema from "./schema.js";
 import ForgetPasswordController from "./controller.js";
 import queryMutationArgument from "@framework/schema/queryMutationArgument.js";
 
-const ForgetPasswordMutations = {
+export default {
 	requestPasswordReset: {
 		name: "Request password reset",
 		description: "Allows user to reset their password",
@@ -29,5 +29,3 @@ const ForgetPasswordMutations = {
 		}
 	}
 }
-
-export default ForgetPasswordMutations;

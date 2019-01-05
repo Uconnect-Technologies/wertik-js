@@ -8,7 +8,7 @@ import {get} from "lodash";
 import schemaResponse from "@framework/schema/schemaResponse.js";
 import schemaAttribute from "@framework/schema/schemaAttribute.js";
 
-const ForgetPasswordSchema = new GraphQLObjectType({
+export default new GraphQLObjectType({
 	name: "ForgetPasswordSchema",
 	description: "ForgetPasswordSchema...",
 	fields() {
@@ -19,5 +19,3 @@ const ForgetPasswordSchema = new GraphQLObjectType({
 		}
 	}
 });
-
-export default ForgetPasswordSchema;

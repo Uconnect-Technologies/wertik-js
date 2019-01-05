@@ -7,7 +7,7 @@ import {get} from "lodash";
 import schemaResponse from "@framework/schema/schemaResponse.js";
 import schemaAttribute from "@framework/schema/schemaAttribute.js";
 
-const UserSchema = new GraphQLObjectType({
+export default new GraphQLObjectType({
   name: "Userschema",
   description: "User schema for graphql",
   fields() {
@@ -26,5 +26,3 @@ const UserSchema = new GraphQLObjectType({
     }
   }
 });
-
-export default UserSchema;
