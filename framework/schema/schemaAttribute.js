@@ -1,4 +1,4 @@
-import {getType} from "./mutationArgument.js";
+import {getType} from "./queryMutationArgument.js";
 
 export default function (name,type,customResolver = "empty") {
 

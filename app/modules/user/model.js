@@ -151,7 +151,7 @@ class User extends Model {
           statusCode: 'BAD_REQUEST'
         }
       }
-      let user = await this.model.findById(args.id);
+      let user = await this.model.findByPk(args.id);
       if (!user) {
         return {
           errorMessageType: 'User not found',

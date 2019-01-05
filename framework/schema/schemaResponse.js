@@ -1,19 +1,23 @@
 import {GraphQLString} from "graphql";
 export default {
+  statusCode: {
+    type: GraphQLString,
+    resolve: (model) => model.statusCode
+  },
   errorMessage: {
     type: GraphQLString,
-    resolve: (user) => user.errorMessage
+    resolve: (model) => model.errorMessage
   },
   successMessage: {
     type: GraphQLString,
-    resolve: (user) => user.successMessage
+    resolve: (model) => model.successMessage
   },
   errorMessageType: {
     type: GraphQLString,
-    resolve: (user) => user.errorMessageType
+    resolve: (model) => model.errorMessageType
   },
   successMessageType: {
     type: GraphQLString,
-    resolve: (user) => user.successMessageType
+    resolve: (model) => model.successMessageType
   },
 }

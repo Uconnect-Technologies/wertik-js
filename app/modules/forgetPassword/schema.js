@@ -15,6 +15,7 @@ const ForgetPasswordSchema = new GraphQLObjectType({
 		return {
 			...schemaResponse,
 			...schemaAttribute('email','string'),
+			...schemaAttribute('token','string'),
 		}
 	}
 });

@@ -128,6 +128,42 @@ class ForgetPasswordModel extends Model {
 			}
 		}	
 	}
+	async forgetPasswordView(_,args) {
+		try {
+			const {id} = args;
+			if (id) {
+				let forgetPasswordItem = await this.model.findByPk(id);
+				if (forgetPasswordItem) {
+					forgetPasswordItem.successMessageType = "Fetched Successfully";
+					forgetPasswordItem.statusCode = "OK";
+					forgetPasswordItem.successMessage = "Forget password item fetched successfully";
+					return forgetPasswordItem;
+				}else {
+					return {
+						errorMessageType: "Not found",
+						errorMessage: "Forget password item not found",
+						statusCode: 'BAD_REQUEST'
+					}
+				}
+			}else {
+				return {
+					errorMessageType: "Details not provided",
+					errorMessage: "Please provide id for forget password",
+					statusCode: 'BAD_REQUEST'
+				}
+			}
+			return {
+				email: "asdas",
+				token: "asasd"
+			}
+		} catch (e) {
+			return {
+				errorMessageType: "Something went wrong",
+				errorMessage: "Something went wrong from our side. Message: " + e.message,
+				statusCode: 'INTERNAL_SERVER_ERROR'
+			}
+		}
+	}
 }
 
 export default new ForgetPasswordModel();

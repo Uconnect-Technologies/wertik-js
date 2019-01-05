@@ -1,6 +1,6 @@
 import UserSchema from "./schema.js";
 import UserController from "./controller.js";
-import mutationArgument from "@framework/schema/mutationArgument.js";
+import queryMutationArgument from "@framework/schema/queryMutationArgument.js";
 
 const UserMutations = {
 	login: {
@@ -8,8 +8,8 @@ const UserMutations = {
 		description: "Mutation for login",
 		type: UserSchema,
 		args: {
-			...mutationArgument('email','string'),
-			...mutationArgument('password','string'),
+			...queryMutationArgument('email','string'),
+			...queryMutationArgument('password','string'),
 		},
 		async resolve(_,args) {
 			return await UserController.login(_,args);
@@ -18,7 +18,7 @@ const UserMutations = {
   activateAccount :{
     type: UserSchema,
     args: {
-      ...mutationArgument('activationToken','string')
+      ...queryMutationArgument('activationToken','string')
     },
     async resolve(_, args) {
       return await UserController.activateAccount(_, args);
@@ -29,9 +29,9 @@ const UserMutations = {
     description: "Mutation for signup",
     type: UserSchema,
     args: {
-      ...mutationArgument('email','string'),
-      ...mutationArgument('password','string'),
-      ...mutationArgument('confirm_password','string')
+      ...queryMutationArgument('email','string'),
+      ...queryMutationArgument('password','string'),
+      ...queryMutationArgument('confirm_password','string')
     },
     async resolve(_, args) {
       return await UserController.signup(_, args);
@@ -40,9 +40,9 @@ const UserMutations = {
   changePassword: {
     type: UserSchema,
     args: {
-      ...mutationArgument('id','number'),
-      ...mutationArgument('oldPassword','string'),
-      ...mutationArgument('newPassword','string')
+      ...queryMutationArgument('id','number'),
+      ...queryMutationArgument('oldPassword','string'),
+      ...queryMutationArgument('newPassword','string')
     },
     resolve(_, args) {
       return UserController.changePassword(_, args);
@@ -51,8 +51,8 @@ const UserMutations = {
   refreshToken: {
     type: UserSchema,
     args: {
-      ...mutationArgument('id','number'),
-      ...mutationArgument('refreshToken','string'),
+      ...queryMutationArgument('id','number'),
+      ...queryMutationArgument('refreshToken','string'),
     },
     resolve(_, args) {
       return UserController.refreshToken(_, args);
@@ -61,9 +61,9 @@ const UserMutations = {
   updateProfile: {
     type: UserSchema,
     args: {
-      ...mutationArgument('id','number'),
-      ...mutationArgument('name','string'),
-      ...mutationArgument('gender','string'),
+      ...queryMutationArgument('id','number'),
+      ...queryMutationArgument('name','string'),
+      ...queryMutationArgument('gender','string'),
     },
     resolve(_, args) {
       return UserController.updateProfile(_,args)

@@ -1,6 +1,6 @@
 import ForgetPasswordSchema from "./schema.js";
 import ForgetPasswordController from "./controller.js";
-import mutationArgument from "@framework/schema/mutationArgument.js";
+import queryMutationArgument from "@framework/schema/queryMutationArgument.js";
 
 const ForgetPasswordMutations = {
 	requestPasswordReset: {
@@ -8,8 +8,8 @@ const ForgetPasswordMutations = {
 		description: "Allows user to reset their password",
 		type: ForgetPasswordSchema,
 		args: {
-			...mutationArgument('email','string'),
-			...mutationArgument('returnUrl','string'),
+			...queryMutationArgument('email','string'),
+			...queryMutationArgument('returnUrl','string'),
 		},
 		async resolve(_,args) {
 			return await ForgetPasswordController.requestPasswordReset(_,args);
@@ -20,9 +20,9 @@ const ForgetPasswordMutations = {
 		name: "Reset password",
 		description: "Allows you to reset your password",
 		args: {
-			...mutationArgument('password','string'),
-			...mutationArgument('email','string'),
-			...mutationArgument('token','string')
+			...queryMutationArgument('password','string'),
+			...queryMutationArgument('email','string'),
+			...queryMutationArgument('token','string')
 		},
 		resolve(_, args) {
 			return ForgetPasswordController.resetPassword(_, args);
