@@ -6,6 +6,7 @@ import {
 import {get} from "lodash";
 
 import schemaResponse from "@framework/schema/schemaResponse.js";
+import schemaAttribute from "@framework/schema/schemaAttribute.js";
 
 const ForgetPasswordSchema = new GraphQLObjectType({
 	name: "ForgetPasswordSchema",
@@ -13,18 +14,7 @@ const ForgetPasswordSchema = new GraphQLObjectType({
 	fields() {
 		return {
 			...schemaResponse,
-			email: {
-				type: GraphQLString,
-				resolve(model) {
-					return get(model,'email','');	
-				}
-			},
-			token: {
-				type: GraphQLString,
-				resolve(model) {
-					return get(model,'token','');
-				}
-			}
+			...schemaAttribute('email','string'),
 		}
 	}
 });

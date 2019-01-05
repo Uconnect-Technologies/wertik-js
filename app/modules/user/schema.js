@@ -6,73 +6,24 @@ import {
 import {get} from "lodash";
 import schemaResponse from "@framework/schema/schemaResponse.js";
 
+import schemaAttribute from "@framework/schema/schemaAttribute.js";
+
 const UserSchema = new GraphQLObjectType({
   name: "Userschema",
   description: "User schema for graphql",
   fields() {
     return {
       ...schemaResponse,
-      username: {
-        type: GraphQLString,
-        resolve(model) {
-          return model.username;
-        }
-      },
-      isActivated: {
-        type: GraphQLString,
-        resolve(model) {
-          return model.isActivated;
-        }
-      },
-      refreshToken: {
-        type: GraphQLString,
-        resolve(model) {
-          return model.refreshToken;
-        }
-      },
-      activationToken: {
-        type: GraphQLString,
-        resolve(model) {
-          return model.activationToken;
-        }
-      },
-      email: {
-        type: GraphQLString,
-        resolve(model) {
-          return model.email;
-        }
-      },
-      password: {
-        type: GraphQLString,
-        resolve(model) {
-          return model.password;
-        }
-      },
-      name: {
-        type: GraphQLString,
-        resolve(model) {
-          return model.name;
-        }
-      },
-      gender: {
-        type: GraphQLString,
-        resolve(model) {
-          return model.gender;
-        }
-      },
-      referer: {
-        type: GraphQLString,
-        resolve(model) {
-          return model.referer;
-        }
-      },
-      // authentication
-      accessToken: {
-        type: GraphQLString,
-        resolve(model) {
-          return get(model,'accessToken','');
-        }
-      }
+      ...schemaAttribute('username','string'),
+      ...schemaAttribute('isActivated','string'),
+      ...schemaAttribute('refreshToken','string'),
+      ...schemaAttribute('activationToken','string'),
+      ...schemaAttribute('email','string'),
+      ...schemaAttribute('password','string'),
+      ...schemaAttribute('name','string'),
+      ...schemaAttribute('gender','string'),
+      ...schemaAttribute('referer','string'),
+      ...schemaAttribute('accessToken','string'),
     }
   }
 });

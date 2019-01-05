@@ -3,7 +3,7 @@ import {
 	GraphQLString
 } from "graphql";
 
-function getType(type) {
+export function getType(type) {
 	if (type == "string") {
 		return GraphQLString
 	}else if (type == "number" || type == "integer") {

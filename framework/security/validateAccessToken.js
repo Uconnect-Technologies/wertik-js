@@ -10,7 +10,7 @@ export default function (req, res, next) {
 			next();
 		}
 		if (process.env.ALLOW_GRAPHQL == "TRUE") {
-			next()
+			next();
 		}
 	}else {
 		if (method == 'get') {

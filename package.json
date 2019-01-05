@@ -7,7 +7,8 @@
   "license": "MIT",
   "scripts": {
     "start": "cross-env NODE_ENV=development nodemon main --exec \"node -r dotenv/config -r babel-register\"",
-    "sync-db": "cross-env NODE_ENV=development nodemon sync-db --exec \"node -r dotenv/config -r babel-register\""
+    "sync-db": "cross-env NODE_ENV=development nodemon sync-db --exec \"node -r dotenv/config -r babel-register\"",
+    "generate": "plop --plopfile framework/generators/index.js --require babel-core/register"
   },
   "_moduleAliases": {
     "@": ".",
