@@ -10,6 +10,8 @@ import ForgetPasswordController from "./controller.js";
 export default {
 	forgetPassword: {
 		type: ForgetPasswordSchema,
+		name: "Fetch ForgetPassword Item",
+		description: "fetches foget passsword Item according to forgetPassword.id",
 		args: {
 			...queryMutationArgument('id','number')
 		},

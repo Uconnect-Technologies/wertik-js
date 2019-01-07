@@ -90,6 +90,26 @@ class Model {
 		}
 	}
 
+	async paginate(args) {
+		try {
+			let limit = get(args,'limit',20);
+			let page = get(args,'page',1);
+			let data = await this.model.findAndCountAll();
+			let pages = Math.ceil(data.count / limit);
+			let offset = limit * (page - 1);
+			let find =  await this.model.findAll({ offset: offset, limit: limit });
+			return {
+				list: find,
+				pagination: {
+					page: offset,
+					limit: limit
+				}
+			}
+		} catch (e) {
+			console.log(e.message);
+		}
+	}
+
 }
 
 export default Model;
