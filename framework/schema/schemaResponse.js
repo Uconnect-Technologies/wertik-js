@@ -3,6 +3,10 @@ export default {
   statusCode: {
     type: GraphQLString,
     resolve: (model) => model.statusCode
+  },  
+  status: {
+    type: GraphQLString,
+    resolve: (model) => model.status
   },
   errorMessage: {
     type: GraphQLString,

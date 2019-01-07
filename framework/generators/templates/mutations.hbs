@@ -7,7 +7,7 @@ export default {
 		name: "create {{ controllerName name }}",
 		type: {{ controllerName name }}Schema,
 		args: {
-
+			...queryMutationArgument("status","number"),
 			{{ mutationArguments fields }}
 		},
 		async resolve(_,args) {
