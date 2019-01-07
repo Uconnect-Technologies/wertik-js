@@ -1,5 +1,5 @@
+import isValidType from "./isValidType";
 import {camelCase} from "lodash";
-import isValidType from "./isValidType.js";
 import Handlebars from "handlebars";
 export default function (fields) {
 	let added = [];
@@ -14,7 +14,7 @@ export default function (fields) {
 				if (isValidType(type)) {
 					added.push(columnName);
 					output = `${output}
-					...tableField('${camelCase(columnName)}','${type.toLowerCase()}',{allowNull: false}),`;
+					...queryMutationArgument('${camelCase(columnName)}','${type.toLowerCase()}'),`;
 				}else {
 					console.log(`${columnName} type is unkown which is ${type}, please add it manually.`)
 				}

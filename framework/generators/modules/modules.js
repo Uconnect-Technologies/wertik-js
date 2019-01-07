@@ -15,6 +15,11 @@ module.exports = {
         },
     ],
     actions: (data)=> {
+        var format = /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+        if (format.test(data.name)) {
+            console.error("name should not contain special chracters")
+            return false;
+        }
         let actions = [];
         if (data.name && data.fields) {
             actions.push({

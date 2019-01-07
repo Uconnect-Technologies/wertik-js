@@ -6,7 +6,9 @@ export default {
 	create: {
 		name: "create {{ controllerName name }}",
 		type: {{ controllerName name }}Schema,
-		args: {},
+		args: {
+			{{ mutationArguments fields }}
+		},
 		resolve(_,args) {
 			return await {{controllerName name}}Controller.create(_,args);
 		}
@@ -14,7 +16,9 @@ export default {
 	update: {
 		name: "update {{ controllerName name }}",
 		type: {{ controllerName name }}Schema,
-		args: {},
+		args: {
+			{{ mutationArguments fields }}
+		},
 		resolve(_,args) {
 			return await {{controllerName name}}Controller.update(_,args);
 		}
