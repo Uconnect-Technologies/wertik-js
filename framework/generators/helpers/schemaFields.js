@@ -1,28 +1,24 @@
 import Handlebars from "handlebars";
 import isValidType from "./isValidType.js";
 import {camelCase} from "lodash";
+import {extractNameAndType ,splitFieldsIntoArrays} from "./generatorHelpers.js";
+
 export default function (fields) {
 	let added = [];
 	let output = '';
-	let split = fields.split(" ");
+	let split = splitFieldsIntoArrays(fields);
 	for (var i = 0; i < split.length; i++) {
-		let splitColon = split[i].split(":")
-		if (splitColon.length == 2) {
-			let columnName = splitColon[0];
-			let type = splitColon[1];
-			if (added.indexOf(columnName) == -1) {
-				if (isValidType(type)) {
-					added.push(columnName);
-					output = `${output}
-					...queryMutationArgument('${camelCase(columnName)}','${type.toLowerCase()}'),`;
-				}else {
-					console.log(`${columnName} type is unkown which is ${type}, please add it manually.`)
-				}
+		const {name, type} = extractNameAndType(split[i]);
+		if (added.indexOf(name) == -1) {
+			if (isValidType(type)) {
+				added.push(name);
+				output = `${output}
+				...queryMutationArgument('${camelCase(name)}','${type.toLowerCase()}'),`;
 			}else {
-				console.log(`You are trying to add ${columnName} twice, Ignored!`)
+				console.log(`${name} type is unkown which is ${type}, please add it manually.`)
 			}
 		}else {
-			console.log(`${splitColon} is not splittable`);
+			console.log(`You are trying to add ${name} twice, Ignored!`)
 		}
 	}
 	return new Handlebars.SafeString(output);
