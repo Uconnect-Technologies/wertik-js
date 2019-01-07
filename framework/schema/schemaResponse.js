@@ -20,4 +20,20 @@ export default {
     type: GraphQLString,
     resolve: (model) => model.successMessageType
   },
+  id: {
+    type: GraphQLString,
+    resolve: (model) => model.id
+  },
+  created_at: {
+    type: GraphQLString,
+    resolve: (model) => model.created_at
+  },
+  updated_at: {
+    type: GraphQLString,
+    resolve: (model) => model.updated_at
+  },
+  deleted_at: {
+    type: GraphQLString,
+    resolve: (model) => model.deleted_at
+  },
 }

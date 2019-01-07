@@ -1,4 +1,5 @@
 import Sequelize from "sequelize";
+export const SequelizeTypesArray = ["STRING","TEXT","INTEGER","BIGINT","FLOAT","REAL","DOUBLE","DECIMAL","DATE","BOOLEAN","BLOB","JSON","UUID","GEOMETRY","STRING"];
 export function getSequalizeType(type) {
 	type = type.toLowerCase();
 	switch (type) {

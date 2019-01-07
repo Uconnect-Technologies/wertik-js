@@ -1,4 +1,6 @@
 import Handlebars from "handlebars";
+import isValidType from "./isValidType.js";
+import {camelCase} from "lodash";
 export default function (fields) {
 	let output = '';
 	let split = fields.split(" ");
@@ -7,8 +9,12 @@ export default function (fields) {
 		if (splitColon.length == 2) {
 			let columnName = splitColon[0];
 			let type = splitColon[1];
-			output = `${output}
-			...schemaAttribute('${columnName}','${type}'),`;
+			if (isValidType(type)) {
+				output = `${output}
+				...schemaAttribute('${camelCase(columnName)}','${type.toLowerCase()}'),`;
+			}else {
+				console.log(`${columnName} type is unkown which is ${type}, please add it manually.`)
+			}
 		}else {
 			console.log(`${splitColon} is not splittable`);
 		}

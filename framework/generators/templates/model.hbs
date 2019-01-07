@@ -7,11 +7,11 @@ class {{controllerName name}} extends Model {
 	
 	constructor() {
 		super({
-			tableName: "{{ controllerName name }}"
+			tableName: "{{ name }}"
 		})
 	}
 
-	async view(_, args) {
+	async {{ controllerName name }}View(_, args) {
 		try {
 			const {id} = args;
 			let find = await this.model.findByPk(id);
@@ -30,7 +30,7 @@ class {{controllerName name}} extends Model {
 			return internalServerError(e);
 		}
 	}
-	async create(_, args) {
+	async {{ controllerName name }}Create(_, args) {
 		try {
 			let create = await this.model.save(args);
 			if (create) {
@@ -44,7 +44,7 @@ class {{controllerName name}} extends Model {
 			return internalServerError(e);
 		}
 	}
-	async update(_, args) {
+	async {{ controllerName name }}Update(_, args) {
 		try {
 			const {id} = args;
 			let update =  await this.model.findOne(id).save(args);
@@ -55,7 +55,7 @@ class {{controllerName name}} extends Model {
 			return internalServerError(e);
 		}
 	}
-	async list(_, args) {
+	async {{ controllerName name }}List(_, args) {
 		try {
 
 		} catch (e) {

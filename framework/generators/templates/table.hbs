@@ -1,0 +1,9 @@
+import Sequelize from "sequelize";
+import tableField from "./../../../framework/helpers/tableField.js";
+
+export default {
+	tableName: "{{name}}",
+	fields: {
+		{{ tableFields fields }}
+	}
+}
