@@ -1,1 +1,17 @@
-{{controllerName}}Controller
+import {{controllerName name}}Model from "./model.js";
+class {{controllerName name}}Controller {
+	async {{controllerName name}}View(_,args) {
+		return {{controllerName name}}Model.view(_,args);
+	}
+	async {{controllerName name}}Create(_,args) {
+		return {{controllerName name}}Model.create(_,args);
+	}
+	async {{controllerName name}}Update(_,args) {
+		return {{controllerName name}}Model.update(_,args);
+	}
+	async {{controllerName name}}List(_,args) {
+		return {{controllerName name}}Model.list(_,args);
+	}
+}
+
+export default new {{ controllerName name }}Controller;

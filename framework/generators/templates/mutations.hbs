@@ -1,0 +1,22 @@
+import {{controllerName name}}Schema from "./schema.js";
+import {{controllerName name}}Controller from "./controller.js";
+import queryMutationArgument from "@framework/schema/queryMutationArgument.js";
+
+export default {
+	create: {
+		name: "create {{ controllerName name }}",
+		type: {{ controllerName name }}Schema,
+		args: {},
+		resolve(_,args) {
+			return await {{controllerName name}}Controller.create(_,args);
+		}
+	},
+	update: {
+		name: "update {{ controllerName name }}",
+		type: {{ controllerName name }}Schema,
+		args: {},
+		resolve(_,args) {
+			return await {{controllerName name}}Controller.update(_,args);
+		}
+	},
+}

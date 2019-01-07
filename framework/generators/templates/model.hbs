@@ -1,0 +1,66 @@
+import {get} from "lodash";
+import internalServerError from "@framework/helpers/internalServerError.js";
+import Model from "@framework/model/model.js";
+
+
+class {{controllerName name}} extends Model {
+	
+	constructor() {
+		super({
+			tableName: "{{ controllerName name }}"
+		})
+	}
+
+	async view(_, args) {
+		try {
+			const {id} = args;
+			let find = await this.model.findByPk(id);
+			if (find) {
+				find.successMessageType = "Success";
+				find.successMessage = "Item fetched";
+				return find;
+			}else {
+				return {
+					errorMessageType: "{{controllerName name}} not found", 
+					errorMessage: "{{controllerName name}} not found, please try again",
+					statusCode: 'NOT_FOUND'
+				}
+			}
+		} catch (e) {
+			return internalServerError(e);
+		}
+	}
+	async create(_, args) {
+		try {
+			let create = await this.model.save(args);
+			if (create) {
+				create.successMessageType = "Created";
+				create.successMessage = "{{ controllerName name }} created successfully";
+				return create;
+			}else {
+				return internalServerError({message: "Something went wrong"});
+			}
+		} catch (e) {
+			return internalServerError(e);
+		}
+	}
+	async update(_, args) {
+		try {
+			const {id} = args;
+			let update =  await this.model.findOne(id).save(args);
+			update.successMessageType = "Updated";
+			update.successMessage = "{{ controllerName name }} updated successfully";
+			return update;
+		} catch (e) {
+			return internalServerError(e);
+		}
+	}
+	async list(_, args) {
+		try {
+
+		} catch (e) {
+			return internalServerError(e);
+		}
+	}
+
+}
