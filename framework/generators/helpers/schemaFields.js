@@ -13,7 +13,7 @@ export default function (fields) {
 			if (isValidType(type)) {
 				added.push(name);
 				output = `${output}
-				...queryMutationArgument('${camelCase(name)}','${type.toLowerCase()}'),`;
+				...schemaAttribute('${camelCase(name)}','${type.toLowerCase()}'),`;
 			}else {
 				console.log(`${name} type is unkown which is ${type}, please add it manually.`)
 			}

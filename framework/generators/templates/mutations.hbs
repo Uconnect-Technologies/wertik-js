@@ -3,24 +3,26 @@ import {{controllerName name}}Controller from "./controller.js";
 import queryMutationArgument from "@framework/schema/queryMutationArgument.js";
 
 export default {
-	create: {
+	{{ controllerName name }}Create: {
 		name: "create {{ controllerName name }}",
 		type: {{ controllerName name }}Schema,
 		args: {
+
 			{{ mutationArguments fields }}
 		},
-		resolve(_,args) {
-			return await {{controllerName name}}Controller.create(_,args);
+		async resolve(_,args) {
+			return await {{controllerName name}}Controller.{{ controllerName name }}Create(_,args);
 		}
 	},
-	update: {
+	{{ controllerName name }}Update: {
 		name: "update {{ controllerName name }}",
 		type: {{ controllerName name }}Schema,
 		args: {
+		...queryMutationArgument("id","number"),
 			{{ mutationArguments fields }}
 		},
-		resolve(_,args) {
-			return await {{controllerName name}}Controller.update(_,args);
+		async resolve(_,args) {
+			return await {{controllerName name}}Controller.{{ controllerName name }}Update(_,args);
 		}
 	},
 }

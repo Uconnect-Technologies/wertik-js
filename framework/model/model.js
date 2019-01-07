@@ -11,9 +11,7 @@ class Model {
 
 	async findOne(id) {
 		try {
-			let object = await this.model.findOne({
-				where: { id: id }
-			});
+			let object = await this.model.findByPk(id);
 			this.instance = object;
 			return this;
 		} catch (e) {
@@ -22,7 +20,7 @@ class Model {
 	}	
 
 
-	async delete(args) {
+	async delete(args = null) {
 		let id = get(this,'instance.id',null);
 		try {
 			if (id > 0) {
@@ -56,7 +54,8 @@ class Model {
 
 	async update(args) {
 		try {
-			let updateObject = await this.instance.updateAttributes(args);
+			let id = get(this,'instance.id',null);
+			let updateObject = await this.instance.update(args);
 			this.instance = updateObject;
 			return this;
 		} catch (e) {
@@ -70,21 +69,6 @@ class Model {
 			if (id>0) {
 				return await this.findOne(id);
 			}
-		} catch (e) {
-			console.log(e.message);
-		}
-	}
-
-
-	async save(args) {
-		try {
-			let id = get(this,'instance.id',null);
-			if (id>0) {
-				await this.update(args);
-			}else {
-				await this.create(args);
-			}
-			return this;
 		} catch (e) {
 			console.log(e.message);
 		}
@@ -109,7 +93,9 @@ class Model {
 			console.log(e.message);
 		}
 	}
-
+	getInstance() {
+		return this.instance;
+	}
 }
 
 export default Model;

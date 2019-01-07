@@ -1,16 +1,16 @@
 import {{controllerName name}}Model from "./model.js";
 class {{controllerName name}}Controller {
 	async {{controllerName name}}View(_,args) {
-		return {{controllerName name}}Model.view(_,args);
+		return {{controllerName name}}Model.{{ controllerName name }}View(_,args);
 	}
 	async {{controllerName name}}Create(_,args) {
-		return {{controllerName name}}Model.create(_,args);
+		return {{controllerName name}}Model.{{ controllerName name }}Create(_,args);
 	}
 	async {{controllerName name}}Update(_,args) {
-		return {{controllerName name}}Model.update(_,args);
+		return {{controllerName name}}Model.{{ controllerName name }}Update(_,args);
 	}
 	async {{controllerName name}}List(_,args) {
-		return {{controllerName name}}Model.list(_,args);
+		return {{controllerName name}}Model.{{ controllerName name }}List(_,args);
 	}
 }
 
