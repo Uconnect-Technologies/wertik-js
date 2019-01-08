@@ -32,8 +32,9 @@ class {{controllerName name}} extends Model {
 	}
 	async {{ controllerName name }}Create(_, args) {
 		try {
-			let create = await this.create(args);
-			let {instance} = create;
+			this.instance = null;
+			let create = await this.save(args);
+			let instance = create.getInstance();
 			if (instance) {
 				instance.statusCode = "CREATED";
 				instance.successMessageType = "Created";
@@ -49,17 +50,42 @@ class {{controllerName name}} extends Model {
 	async {{ controllerName name }}Update(_, args) {
 		try {
 			const {id} = args;
-			let update =  await this.model.findOne(id).update(args);
-			update.successMessageType = "Updated";
-			update.successMessage = "{{ controllerName name }} updated successfully";
-			return update;
+			let item =  await this.findOne(id);
+			let update = await item.save(args);;
+			let updatedItem = update.getInstance();
+			updatedItem.successMessageType = "Updated";
+			updatedItem.successMessage = "{{controllerName name}} updated successfully";
+			return updatedItem;
 		} catch (e) {
 			return internalServerError(e);
 		}
 	}
 	async {{ controllerName name }}List(_, args) {
 		try {
-
+			let items = await this.paginate(args);
+			return items.list;
+		} catch (e) {
+			return internalServerError(e);
+		}
+	}
+	async {{ controllerName name }}Delete(_, args) {
+		try {
+			const {id} = args;
+			let find =  await this.findOne(id);
+			let item = find.getInstance();
+			if (!item) {
+				return {
+					statusCode: "NOT_FOUND",
+					errorMessageType: "{{controllerName name}} deleted",
+					errorMessage: "{{ controllerName name }} deleted already"
+				}
+			}
+			await find.delete();
+			return {
+				statusCode: "OK",
+				successMessageType: "{{ controllerName name }} deleted",
+				successMessage: "{{ controllerName name }} deleted successfully"
+			}
 		} catch (e) {
 			return internalServerError(e);
 		}

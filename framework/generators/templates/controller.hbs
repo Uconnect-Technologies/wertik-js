@@ -12,6 +12,9 @@ class {{controllerName name}}Controller {
 	async {{controllerName name}}List(_,args) {
 		return {{controllerName name}}Model.{{ controllerName name }}List(_,args);
 	}
+	async {{controllerName name}}Delete(_,args) {
+		return {{controllerName name}}Model.{{ controllerName name }}Delete(_,args);
+	}
 }
 
 export default new {{ controllerName name }}Controller;

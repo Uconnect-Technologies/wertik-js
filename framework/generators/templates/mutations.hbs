@@ -5,6 +5,7 @@ import queryMutationArgument from "@framework/schema/queryMutationArgument.js";
 export default {
 	{{ controllerName name }}Create: {
 		name: "create {{ controllerName name }}",
+		description: "Creates a {{ controllerName namae }}",
 		type: {{ controllerName name }}Schema,
 		args: {
 			...queryMutationArgument("status","number"),
@@ -16,13 +17,26 @@ export default {
 	},
 	{{ controllerName name }}Update: {
 		name: "update {{ controllerName name }}",
+		description: "Updates a {{ controllerName namae }}",
 		type: {{ controllerName name }}Schema,
 		args: {
-		...queryMutationArgument("id","number"),
+			...queryMutationArgument("id","number"),
+			...queryMutationArgument("status","number"),
 			{{ mutationArguments fields }}
 		},
 		async resolve(_,args) {
 			return await {{controllerName name}}Controller.{{ controllerName name }}Update(_,args);
 		}
 	},
+	{{ controllerName name }}Delete: {
+		name: "Delete {{ controllerName name }}",
+		description: "Deletes a {{ controllerName namae }}",
+		type: {{ controllerName name }}Schema,
+		args: {
+			...queryMutationArgument("id","number"),
+		},
+		async resolve(_,args) {
+			return await {{controllerName name}}Controller.{{ controllerName name }}Delete(_,args);
+		}
+	}
 }

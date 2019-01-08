@@ -41,15 +41,39 @@ class Model {
 		}
 	}
 
+	async save(args) {
+		try {
+			let id = get(this,'instance.id',null);
+			if (!id) {
+				return await this.create(args);
+			}else {
+				return await this.update(args);
+			}
+		} catch (e) {
+			console.log(e.message);
+		}
+	}
+
 
 	async create(args) {
 		try {
 			let create = await this.model.create(args);
 			this.instance = create;
-			return this;
+			let bind = this;
+			return bind;
 		} catch (e) {
 			console.log(e.message);
 		}
+	}
+
+	async createAndReturnInstance(args) {
+		
+	}
+	async updateAndReturnInstance(args) {
+		
+	}
+	async viewAndReturnInstance(args) {
+		
 	}
 
 	async update(args) {

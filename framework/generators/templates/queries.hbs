@@ -18,8 +18,11 @@ export default {
 		}
 	},
 	{{controllerName name}}List: {
-		type: {{ controllerName name }}Schema,
-		args: {},
+		type: new GraphQLList({{ controllerName name }}Schema),
+		args: {
+			...queryMutationArgument('page','number'),
+			...queryMutationArgument('limit','number')
+		},
 		async resolve(_,args) {
 			return await {{ controllerName name }}Controller.{{controllerName name}}List(_,args);
 		}
