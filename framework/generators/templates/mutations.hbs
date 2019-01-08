@@ -3,7 +3,7 @@ import {{controllerName name}}Controller from "./controller.js";
 import queryMutationArgument from "@framework/schema/queryMutationArgument.js";
 
 export default {
-	{{ controllerName name }}Create: {
+	create{{ controllerName name }}: {
 		name: "create {{ controllerName name }}",
 		description: "Creates a {{ controllerName namae }}",
 		type: {{ controllerName name }}Schema,
@@ -12,10 +12,10 @@ export default {
 			{{ mutationArguments fields }}
 		},
 		async resolve(_,args) {
-			return await {{controllerName name}}Controller.{{ controllerName name }}Create(_,args);
+			return await {{controllerName name}}Controller.create{{ controllerName name }}(_,args);
 		}
 	},
-	{{ controllerName name }}Update: {
+	update{{ controllerName name }}: {
 		name: "update {{ controllerName name }}",
 		description: "Updates a {{ controllerName namae }}",
 		type: {{ controllerName name }}Schema,
@@ -25,10 +25,10 @@ export default {
 			{{ mutationArguments fields }}
 		},
 		async resolve(_,args) {
-			return await {{controllerName name}}Controller.{{ controllerName name }}Update(_,args);
+			return await {{controllerName name}}Controller.update{{ controllerName name }}(_,args);
 		}
 	},
-	{{ controllerName name }}Delete: {
+	delete{{ controllerName name }}: {
 		name: "Delete {{ controllerName name }}",
 		description: "Deletes a {{ controllerName namae }}",
 		type: {{ controllerName name }}Schema,
@@ -36,7 +36,7 @@ export default {
 			...queryMutationArgument("id","number"),
 		},
 		async resolve(_,args) {
-			return await {{controllerName name}}Controller.{{ controllerName name }}Delete(_,args);
+			return await {{controllerName name}}Controller.delete{{ controllerName name }}(_,args);
 		}
 	}
 }

@@ -11,7 +11,7 @@ class {{controllerName name}} extends Model {
 		})
 	}
 
-	async {{ controllerName name }}View(_, args) {
+	async view{{ controllerName name }}(_, args) {
 		try {
 			const {id} = args;
 			let find = await this.model.findByPk(id);
@@ -30,7 +30,7 @@ class {{controllerName name}} extends Model {
 			return internalServerError(e);
 		}
 	}
-	async {{ controllerName name }}Create(_, args) {
+	async create{{ controllerName name }}(_, args) {
 		try {
 			this.instance = null;
 			let create = await this.save(args);
@@ -47,7 +47,7 @@ class {{controllerName name}} extends Model {
 			return internalServerError(e);
 		}
 	}
-	async {{ controllerName name }}Update(_, args) {
+	async update{{ controllerName name }}(_, args) {
 		try {
 			const {id} = args;
 			let item =  await this.findOne(id);
@@ -60,7 +60,7 @@ class {{controllerName name}} extends Model {
 			return internalServerError(e);
 		}
 	}
-	async {{ controllerName name }}List(_, args) {
+	async list{{ controllerName name }}(_, args) {
 		try {
 			let items = await this.paginate(args);
 			return items.list;
@@ -68,7 +68,7 @@ class {{controllerName name}} extends Model {
 			return internalServerError(e);
 		}
 	}
-	async {{ controllerName name }}Delete(_, args) {
+	async delete{{ controllerName name }}(_, args) {
 		try {
 			const {id} = args;
 			let find =  await this.findOne(id);

@@ -8,23 +8,23 @@ import {{controllerName name}}Controller from "./controller.js";
 import queryMutationArgument from "@framework/schema/queryMutationArgument.js";
 
 export default {
-	{{controllerName name}}View: {
+	view{{controllerName name}}: {
 		type: {{ controllerName name }}Schema,
 		args: {
 			...queryMutationArgument('id','number')
 		},
 		async resolve(_,args) {
-			return await {{ controllerName name }}Controller.{{controllerName name}}View(_,args);
+			return await {{ controllerName name }}Controller.view{{controllerName name}}(_,args);
 		}
 	},
-	{{controllerName name}}List: {
+	list{{controllerName name}}: {
 		type: new GraphQLList({{ controllerName name }}Schema),
 		args: {
 			...queryMutationArgument('page','number'),
 			...queryMutationArgument('limit','number')
 		},
 		async resolve(_,args) {
-			return await {{ controllerName name }}Controller.{{controllerName name}}List(_,args);
+			return await {{ controllerName name }}Controller.list{{controllerName name}}(_,args);
 		}
 	}
 }
