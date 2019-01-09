@@ -9,14 +9,14 @@ import schemaResponse from "@framework/schema/schemaResponse.js";
 import schemaAttribute from "@framework/schema/schemaAttribute.js";
 
 export default new GraphQLObjectType({
-	name: "PermissionSchema",
-	description: "PermissionSchema...",
+	name: "RoleSchema",
+	description: "RoleSchema...",
 	fields() {
 		return {
 			...schemaResponse,
 			...schemaAttribute('user','number'),
 			...schemaAttribute('created_by','number'),
-			...schemaAttribute('graphql_query','string'),
+			...schemaAttribute('type','string'),
 		}
 	}
 });

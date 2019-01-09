@@ -2,13 +2,42 @@ import Model from "@framework/model/model.js";
 import internalServerError from "@framework/helpers/internalServerError.js";
 import {get} from "lodash";
 
-class PermissionModel extends Model {
+class roleModel extends Model {
 	constructor() {
 		super({
-			tableName: "permission"
-		})
+			tableName: "role"
+		});
 	}
-	async createPermission(_,args) {
+	async viewRole(_,args) {
+		try {
+			const id = get(args,'id',null);
+			if (id) {
+				let findOne =  await this.findOne(id);
+				let find = findOne.getInstance();
+				if (find) {
+					find.statusCode = "OK";
+					find.successMessageType = "Success";
+					find.successMessage = "Fetched successfully";
+					return find;
+				}else {
+					return {
+						statusCode: "NOT_FOUND",
+						errorMessageType: "Not found",
+						errorMessage: "Role Not found"
+					}
+				}
+			}else {
+				return {
+					statusCode: "BAD_REQUEST",
+					errorMessageType: "Id is required",
+					errorMessage: "Id is required to fetch role"
+				}
+			}
+		} catch (e) {
+			return internalServerError(e.message);
+		}
+	}
+	async createRole(_,args) {
 		try {
 			this.instance = null;
 			let create = await this.save(args);
@@ -25,22 +54,21 @@ class PermissionModel extends Model {
 			return internalServerError(e.message);
 		}
 	}
-	async updatePermission(_,args) {
+	async updateRole(_, args) {
 		try {
 			const {id} = args;
 			let item =  await this.findOne(id);
 			let update = await item.save(args);;
 			let updatedItem = update.getInstance();
 			updatedItem.successMessageType = "Updated";
-			updatedItem.successMessage = "Permission updated successfully";
+			updatedItem.successMessage = "Role updated successfully";
 			updatedItem.statusCode = "OK";
 			return updatedItem;
 		} catch (e) {
-			return internalServerError(e.message);
+			return internalServerError(e);
 		}
 	}
-
-	async listPermission(_, args) {
+	async listRole(_, args) {
 		try {
 			let items = await this.paginate(args);
 			return items.list;
@@ -48,37 +76,7 @@ class PermissionModel extends Model {
 			return internalServerError(e);
 		}
 	}
-	async viewPermission(_,args) {
-		try {
-			const id = get(args,'id',null);
-			if (id) {
-				let findOne =  await this.findOne(id);
-				let find = findOne.getInstance();
-				if (find) {
-					find.statusCode = "OK";
-					find.successMessageType = "Success";
-					find.successMessage = "Fetched successfully";
-					return find;
-				}else {
-					return {
-						statusCode: "NOT_FOUND",
-						errorMessageType: "Not found",
-						errorMessage: "Permission Not found"
-					}
-				}
-			}else {
-				return {
-					statusCode: "BAD_REQUEST",
-					errorMessageType: "Id is required",
-					errorMessage: "Id is required to fetch permission"
-				}
-			}
-		} catch (e) {
-			return internalServerError(e);
-		}
-	}
-
-	async deletePermission(_,args) {
+	async deleteRole(_, args) {
 		try {
 			const {id} = args;
 			let find =  await this.findOne(id);
@@ -86,20 +84,21 @@ class PermissionModel extends Model {
 			if (!item) {
 				return {
 					statusCode: "NOT_FOUND",
-					errorMessageType: "Permission deleted",
-					errorMessage: "Permission deleted already"
+					errorMessageType: "Role deleted",
+					errorMessage: "Role deleted already"
 				}
 			}
 			await find.delete();
 			return {
 				statusCode: "OK",
-				successMessageType: "Permission deleted",
-				successMessage: "Permission deleted successfully"
+				successMessageType: "Role deleted",
+				successMessage: "Role deleted successfully"
 			}
 		} catch (e) {
 			return internalServerError(e);
 		}
 	}
+
 }
 
-export default new PermissionModel;
+export default new roleModel;

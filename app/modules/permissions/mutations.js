@@ -15,6 +15,17 @@ export default {
 			return await permissionController.createPermission(_,args);
 		}
 	},
+	deletePermission: {
+		type: "Delete permission",
+		description: "Allows you to delete a permission",
+		type: permissionSchema,
+		args: {
+			...queryMutationArgument('id','number')
+		},
+		async resolve(_,args) {
+			return await permissionController.deletePermission(_, args);
+		}
+	},
 	updatePermission: {
 		name: "Update permission",
 		description: "Allows you to update a permission",
