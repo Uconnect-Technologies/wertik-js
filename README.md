@@ -9,8 +9,6 @@ Upcoming features:
 3. Authentication Feature.
 4. 2 Factor authorization by using email.
 5. Generators
-
-
-Projects Using:
-
-Nothing right now!
+6. MongoDB integration
+7. Permissions
+8. Roles
