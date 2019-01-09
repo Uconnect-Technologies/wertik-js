@@ -17,7 +17,8 @@ export default function () {
 					fields: fields
 				})
 			}else {
-				throw "Fields and tablename property require for " + item;
+				let message = `Fields and tablename property require for ${item}`
+				throw message;
 			}
 		}else {
 			console.warn("Model not found for " + item)
