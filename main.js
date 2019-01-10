@@ -2,7 +2,7 @@ require('module-alias/register');
 
 import Express from "express";
 import bodyParser from "body-parser";
-import startGraphql from "./app/GraphQL.js";
+import startGraphql from "./app/graphQL.js";
 import startRestService from "./app/rest.js";
 import conn from "./framework/connection/connection.js";
 

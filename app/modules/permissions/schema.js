@@ -16,7 +16,7 @@ export default new GraphQLObjectType({
 			...schemaResponse,
 			...schemaAttribute('user','number'),
 			...schemaAttribute('created_by','number'),
-			...schemaAttribute('graphql_query','string'),
+			...schemaAttribute('action','string'),
 		}
 	}
 });

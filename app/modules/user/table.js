@@ -7,6 +7,7 @@ export default {
 		...tableField('accessToken','string',{allowNull: true,unique: false}),
 		...tableField('refreshToken','string',{allowNull: false,unique:false}),
 		...tableField('isActivated','boolean',{allowNull: false}),
+		...tableField('superUser','boolean',{allowNull: false,default: false}),
 		...tableField('activationToken','string',{allowNull: true}),
 		...tableField('email','string',{allowNull:false,unique: true,isEmail:true}),
 		...tableField('password','string',{allowNull:false}),

@@ -9,7 +9,7 @@ export default {
 		type: permissionSchema,
 		args: {
 			...queryMutationArgument('user','number'),
-			...queryMutationArgument('graphql_query','string'),
+			...queryMutationArgument('action','string'),
 		},
 		async resolve(_,args) {
 			return await permissionController.createPermission(_,args);
@@ -33,7 +33,7 @@ export default {
 		args: {
 			...queryMutationArgument('id','number'),
 			...queryMutationArgument('user','number'),
-			...queryMutationArgument('graphql_query','string'),
+			...queryMutationArgument('function','string'),
 		},
 		async resolve(_,args) {
 			return await permissionController.updatePermission(_,args);

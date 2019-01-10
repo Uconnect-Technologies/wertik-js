@@ -18,7 +18,7 @@ export default new GraphQLObjectType({
       ...schemaAttribute('refreshToken','string'),
       ...schemaAttribute('activationToken','string'),
       ...schemaAttribute('email','string'),
-      ...schemaAttribute('password','string'),
+      ...schemaAttribute('superUser','string'),
       ...schemaAttribute('name','string'),
       ...schemaAttribute('gender','string'),
       ...schemaAttribute('referer','string'),

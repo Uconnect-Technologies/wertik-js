@@ -61,37 +61,53 @@ class User extends Model {
       let user = await this.model.findOne({
         where: { email: email }
       });
-      if (user) {
+      if (password && confirm_password) {
+        if (password !== confirm_password) {
+          return {
+            errorMessageType: "Passwords didn't matched",
+            errorMessage: `Password did not match please try again`,
+            statusCode: 'BAD_REQUEST'
+          }
+        }
+        if (user) {
+          return {
+            errorMessageType: "Already Registered",
+            errorMessage: `${email} is already is Registered`,
+            statusCode: 'BAD_REQUEST'
+          }
+        }
+        let newUser = await this.model.create({
+          email: email,
+          superUser: false,
+          accessToken: await createJwtToken({email: email,for: "authentication"}),
+          refreshToken: await createJwtToken({email: email,for: "refreshToken"}),
+          isActivated: false,
+          activationToken: Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2),
+          password: encrypt(password)
+        });
+        sendEmail('welcome.hbs',{
+          userName: email,
+          siteName: process.env.NAME,
+          date: moment().format('dddd, MMMM Do YYYY, h:mm:ss a'),
+          activationToken: get(newUser,'activationToken',''),
+          activationUrl: process.env.FRONTEND_DEVELOPMENT_URL 
+          },{
+          from: 'ilyas.datoo@gmail.com',
+          to: email,
+          subject: `Welcome to ${process.env.NAME}`,
+        });
+        newUser.statusCode = 'CREATED';
+        newUser.successMessage = "Account successfuly created";
+        newUser.successMessageType = "Account Created";
+        delete newUser['password'];
+        return newUser;
+      }else {
         return {
-          errorMessageType: "Already Registered",
-          errorMessage: `${email} is already is Registered`,
+          errorMessageType: "Required",
+          errorMessage: `Both passwords are required`,
           statusCode: 'BAD_REQUEST'
         }
       }
-      let newUser = await this.model.create({
-        email: email,
-        accessToken: await createJwtToken({email: email,for: "authentication"}),
-        refreshToken: await createJwtToken({email: email,for: "refreshToken"}),
-        isActivated: false,
-        activationToken: Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2),
-        password: encrypt(password)
-      });
-      sendEmail('welcome.hbs',{
-        userName: email,
-        siteName: process.env.NAME,
-        date: moment().format('dddd, MMMM Do YYYY, h:mm:ss a'),
-        activationToken: get(newUser,'activationToken',''),
-        activationUrl: process.env.FRONTEND_DEVELOPMENT_URL 
-        },{
-        from: 'ilyas.datoo@gmail.com',
-        to: email,
-        subject: `Welcome to ${process.env.NAME}`,
-      });
-      newUser.statusCode = 'CREATED';
-      newUser.successMessage = "Account successfuly created";
-      newUser.successMessageType = "Account Created";
-      delete newUser['password'];
-      return newUser;
     } catch (e) {
       return internalServerError(e);
     }
