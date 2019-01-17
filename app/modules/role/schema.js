@@ -15,7 +15,6 @@ export default new GraphQLObjectType({
 		return {
 			...schemaResponse,
 			...schemaAttribute('user','number'),
-			...schemaAttribute('created_by','number'),
 			...schemaAttribute('type','string'),
 		}
 	}

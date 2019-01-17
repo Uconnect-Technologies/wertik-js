@@ -6,6 +6,7 @@ export default {
 		...tableField('user','integer',{allowNull: true}),
 		...tableField('action','string',{allowNull: true}),
 		...tableField('status','boolean',{allowNull: true}),
-		...tableField('created_by','integer',{allowNull: true}),
+		...tableField('role','integer',{allowNull: false}),
+		...tableField('created_by','integer',{allowNull: false}),
 	}
 }

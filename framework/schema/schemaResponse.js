@@ -28,6 +28,10 @@ export default {
     type: GraphQLString,
     resolve: (model) => model.id
   },
+  created_by: {
+    type: GraphQLString,
+    resolve: (model) => model.created_at
+  },
   created_at: {
     type: GraphQLString,
     resolve: (model) => model.created_at
