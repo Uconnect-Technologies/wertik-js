@@ -31,7 +31,6 @@ class ForgetPasswordModel extends Model {
 					});
 					await this.model.create({
 						token: token,
-						userId: user.id,
 						email: email,
 						expireDate: `${moment().add('30','minutes').valueOf()}`
 					});
