@@ -11,7 +11,6 @@ export default `
 		password: String
 		gender: String
 		referer: String
-		message: String
 		successMessage: String
 		successMessageType: String
 		errors: [String]
