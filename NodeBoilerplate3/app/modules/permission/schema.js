@@ -1,8 +1,7 @@
 export default `
-	type ForgetPassword {
+	type Permission {
 		id: Int
-    email: String
-    token: String
+		action: String
 		successMessage: String
 		successMessageType: String
 		errors: [String]

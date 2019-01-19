@@ -1,5 +1,6 @@
 export default `
 	type User {
+		id: Int
 		name: String
 		age: Int
 		username: String
@@ -16,5 +17,7 @@ export default `
 		errors: [String]
 		statusCode: String
 		statusCodeNumber: Int
+		created_at: String
+		updated_at: String
 	}
 `;

@@ -1,6 +1,8 @@
 import {get} from "lodash";
 import getSequelizeType from "./getSequelizeType.js";
-const restrictColumns = ["errors","successMessage","successMessageType","statusCode","statusCodeNumber"];
+const restrictColumns = [
+    "errors","successMessage","successMessageType","statusCode","statusCodeNumber","created_at","id","updated_at",
+];
 export default function (graphqlFields,database) {
   let keys = Object.keys(graphqlFields);
   let tables = [];

@@ -25,8 +25,7 @@ class Model {
 	}	
 
 
-	async delete(args = null) {
-		let id = get(this,'instance.id',null);
+	async delete(id) {
 		try {
 			await this.model.destroy({
 				where: {
