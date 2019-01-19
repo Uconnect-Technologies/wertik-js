@@ -3,17 +3,19 @@ export default `
 		name: String
 		age: Int
 		username: String
-		token: String
+		refreshToken: String
+		accessToken: String
 		isActivated: Boolean
 		activationToken: String
-		email: String!
-		password: String!
+		email: String
+		password: String
 		gender: String
 		referer: String
 		message: String
 		successMessage: String
 		successMessageType: String
-		errorMessage: String
-		errorMessageType: String
+		errors: [String]
+		statusCode: String
+		statusCodeNumber: Int
 	}
 `;

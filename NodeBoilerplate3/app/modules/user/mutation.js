@@ -1,8 +1,8 @@
 export default `
 	activateAccount(id: Int): User
-	signup(id: Int): User
-	login(id: Int): User
-	refreshToken(id: Int): User
-	changePassword(id: Int): User
-	updateProfile(id: Int): User
+	signup(email: String, password: String, confirmPassword: String): User
+	login(email: String, password: String): User
+	refreshToken(refreshToken: String): User
+	changePassword(newPassword: String, oldPassword: String, userID: Int): User
+	updateProfile(userID: Int, name: String, age: Int, gender: String): User
 `;
