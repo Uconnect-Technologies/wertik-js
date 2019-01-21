@@ -1,13 +1,12 @@
-import getDirectoriesInfolder from "./../helpers/getDirectoriesInfolder.js";
+import getDirectoriesInfolder from "./../helpers/getDirectoriesInFolder.js";
 
-export default function (rootDirectory) {
-
-	let path = `${rootDirectory}/app/modules/`;
-	let folders = getDirectoriesInfolder(path);
-	let output = {};
-	folders.forEach(async (name) => {
-		let content = require(`${path}${name}/resolvers.js`).default;
-		output = {...output,...content}
-	});
-	return output;
+export default function(rootDirectory) {
+  let path = `${rootDirectory}/app/modules/`;
+  let folders = getDirectoriesInfolder(path);
+  let output = {};
+  folders.forEach(async name => {
+    let content = require(`${path}${name}/resolvers.js`).default;
+    output = { ...output, ...content };
+  });
+  return output;
 }
