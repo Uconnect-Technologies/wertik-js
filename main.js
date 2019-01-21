@@ -5,8 +5,18 @@ import mongodb from "./framework/database/mongodb/mongoose.js";
 
 var app = express();
 
-
-console.log(mongodb.models.user)
+setTimeout(() => {
+	let a = new mongodb.models.user;
+	a.gender = "123";
+	a.save((err) =>  {
+		console.log(err);
+	});
+	let b = new mongodb.models.forgetpassword;
+	b.email = "123";
+	b.save((err) =>  {
+		console.log(err);
+	});
+},7000);
 
 graphqlInit(__dirname, app);
 

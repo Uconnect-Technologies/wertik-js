@@ -12,7 +12,6 @@ mongoose.connect(mongo,{keepAlive: 1,useNewUrlParser: true}).then(() => {
 let mongoCollections = generateMongoDBSchema(mongoose.connection,getAllSchemasAsObject());
 let mongodbModels = {};
 Object.keys(mongoCollections).forEach((item) => {
-  console.log(mongoCollections[item]);
   let schema = new Schema(mongoCollections[item]);
   mongodbModels[item] = mongoose.model(item,schema);
 });
