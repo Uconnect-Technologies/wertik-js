@@ -1,0 +1,20 @@
+import {
+	GraphQLList,
+	GraphQLInt,
+	GraphQLObjectType,
+	GraphQLString,
+} from "graphql";
+
+import schemaResponse from "@framework/schema/schemaResponse.js";
+import schemaAttribute from "@framework/schema/schemaAttribute.js";
+
+export default new GraphQLObjectType({
+	name: "{{controllerName name}}Schema",
+	description: "{{ controllerName name }} schema for graphql",
+	fields() {
+		return {
+			...schemaResponse,
+			{{ schemaFields fields }}
+		}
+	}
+})
