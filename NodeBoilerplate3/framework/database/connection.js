@@ -1,42 +1,17 @@
-import Sequelize from "sequelize";
-import getAllSchemasAsObject from "../helpers/getAllSchemasAsObject.js";
-import generateTables from "./generateTables.js";
+const dialect = process.env.DIALECT;
+let db_connect = null;
+let db_models = null;
+let mongo_db = null;
 
-const {
-	DB_USERNAME,
-	DB_PASSWORD,
-	DB_NAME,
-	DB_HOST,
-	DB_PORT,
-	MODE
-} = process.env;
+if (dialect == "MYSQL") {
+  db_connect = require("./mysql/connection.js").default;
+  db_models = require("./mysql/connection.js").models;
+} else if (dialect == "MONGODB") {
+  db_connect = require("./mongodb/mongoose.js").default;
+}
 
-const DB_PRODUCTION = new Sequelize(DB_NAME,DB_USERNAME,DB_PASSWORD,{
-	dialect: 'mysql',
-	host: DB_HOST,
-	port: DB_PORT,
-	logging: false,
-	operatorsAliases: false
-});
-const DB_DEVELOPMENT =  new Sequelize(`${DB_NAME}_dev`,DB_USERNAME,DB_PASSWORD,{
-  	dialect: 'mysql',
-  	host: DB_HOST,
-  	port: DB_PORT,
-  	logging: false,
-  	operatorsAliases: false
-  });
-  
-let CONNECTION = (MODE == 'development') ? DB_DEVELOPMENT : DB_PRODUCTION;
-
-let f =getAllSchemasAsObject();
-let tables = generateTables(f,CONNECTION)
-tables.forEach(element => {
-  CONNECTION.define(element.tableName,element.fields,{
-		paranoid: true,
-		underscored: true,
-		freezeTableName: true,
-  });
-  
-});
-export let models = CONNECTION.models;
-export default CONNECTION;
+export default {
+  db_connect,
+  mongo_db
+};
+export let models = db_models;
