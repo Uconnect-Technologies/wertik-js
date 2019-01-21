@@ -1,28 +1,22 @@
 import mongoose from "mongoose";
-const mongo = `mongodb://<dbuser>:<dbpassword>@ds015690.mlab.com:15690/graphql`;
-console.log(mongo);
+import {Schema} from "mongoose";
+import getAllSchemasAsObject from "../../helpers/getAllSchemasAsObject.js";
+import generateMongoDBSchema from "./generateMongoDBSchema.js";
 
-mongoose.connection.on("error", err => {
-  console.error(`MongoDB connection error: ${err}`);
-  process.exit(-1);
+const mongo = process.env.MONGO_DB;
+
+mongoose.connect(mongo,{keepAlive: 1,useNewUrlParser: true}).then(() => {
+  console.log("Connected to mongodb successfully")
+}).catch(err => console.log(err.message));
+
+let mongoCollections = generateMongoDBSchema(mongoose.connection,getAllSchemasAsObject());
+let mongodbModels = {};
+Object.keys(mongoCollections).forEach((item) => {
+  console.log(mongoCollections[item]);
+  let schema = new Schema(mongoCollections[item]);
+  mongodbModels[item] = mongoose.model(item,schema);
 });
 
-/**
- * Connect to mongo db
- *
- * @returns {object} Mongoose connection
- * @public
- */
-exports.connect = () => {
-  mongoose
-    .connect(
-      mongo,
-      {
-        keepAlive: 1,
-        useNewUrlParser: true
-      }
-    )
-    .then(() => console.log("Connected to mongodb successfully"))
-    .catch(err => console.log(err));
-  return mongoose.connection;
-};
+export default mongoose.connection;
+
+export let models = mongodbModels;
