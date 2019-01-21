@@ -1,21 +1,13 @@
-import {
-	GraphQLObjectType,
-	GraphQLInt,
-	GraphQLString,
-} from "graphql";
-import {get} from "lodash";
-
-import schemaResponse from "@framework/schema/schemaResponse.js";
-import schemaAttribute from "@framework/schema/schemaAttribute.js";
-
-export default new GraphQLObjectType({
-	name: "RoleSchema",
-	description: "RoleSchema...",
-	fields() {
-		return {
-			...schemaResponse,
-			...schemaAttribute('user','number'),
-			...schemaAttribute('type','string'),
-		}
+export default `
+	type Role {
+		id: Int
+		name: String
+		successMessage: String
+		successMessageType: String
+		errors: [String]
+		statusCode: String
+		statusCodeNumber: Int
+		created_at: String
+		updated_at: String
 	}
-});
+`;

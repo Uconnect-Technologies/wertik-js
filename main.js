@@ -1,31 +1,11 @@
-require('module-alias/register');
+import express from "express";
+import graphqlInit from "./framework/graphql/index.js";
+import connection from "./framework/database/mysql/connection.js";
 
-import Express from "express";
-import bodyParser from "body-parser";
-import startGraphql from "./app/graphQL.js";
-import startRestService from "./app/rest.js";
-import conn from "./framework/connection/connection.js";
+var app = express();
 
-const app = Express();
-app.use(bodyParser.urlencoded({
-  extended: true,
-  json: true,
-}));
-app.use(bodyParser.json());
+graphqlInit(__dirname, app);
 
-const {
-	PORT,
-	MODE
-} = process.env;
-
-conn.sync().then(()=> {
-	app.listen(PORT, () => {
-		startGraphql(app);
-		startRestService();
-		if (process.env.LOGGING.toLowerCase() == "true") {
-			console.log("GraphQL and Rest API services are up and running");
-			console.log(`App is running on Port:${PORT}. Database: ${MODE}`);
-		}
-		console.log(`GraphQL Running on localhost:${PORT}/graphql`);
-	});
-});
+app.listen(4000, () =>
+  console.log("Listening server on localhost:4000/graphql")
+);
