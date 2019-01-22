@@ -100,7 +100,7 @@ export default {
 					statusCodeNumber: statusCodes.BAD_REQUEST.number
 				}
       }
-      let role = await roleModel.findOneByID(args.id);
+      let role = await roleModel.view(args);
       if (!role) {
         return {
           errors: ["Not Found"],

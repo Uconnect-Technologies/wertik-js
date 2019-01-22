@@ -1,4 +1,13 @@
 import {get} from "lodash";
+import actions from "./actions/index.js";
+
+const {
+	create,
+	update,
+	destroy,
+	view,
+	paginate
+} = actions;
 
 class Model {
 	constructor(props) {
@@ -8,30 +17,9 @@ class Model {
 		this.model = this.models[this.tableName];
 	}
 
-	async findOne(args) {
-		let object = await this.model.findOne({
-			where: args
-		});
-		return object;
-	}
-
-	async findOneByID(id) {
-		try {
-			let object = await this.model.findByPk(id);
-			return object;
-		} catch (e) {
-			console.log(e);
-		}
-	}	
-
-
 	async delete(id) {
 		try {
-			await this.model.destroy({
-				where: {
-					id: id
-				}
-			});
+			await destroy(this.model,id,'');
 			return true;
 		} catch (e) {
 			console.log(e.message);
@@ -42,8 +30,8 @@ class Model {
 
 	async create(args) {
 		try {
-			let create = await this.model.create(args);
-			return create;
+			let response = await create(this.model,args,'');
+			return response;
 		} catch (e) {
 			console.log(e.message);
 		}
@@ -51,10 +39,8 @@ class Model {
 
 	async update(args) {
 		try {
-			let id = get(args,'id',null);
-			let updateObject = await this.findOneByID(id);
-			let update = await updateObject.update(args);
-			return update;
+			let response = await update(this.model,args);
+			return response;
 		} catch (e) {
 			console.log(e.message);
 		}
@@ -62,10 +48,8 @@ class Model {
 
 	async view(args) {
 		try {
-			let id = get(args,'id',null);
-			if (id>0) {
-				return await this.findOne(id);
-			}
+			let response = await view(this.model,args);
+			return response;
 		} catch (e) {
 			console.log(e.message);
 		}
@@ -73,19 +57,8 @@ class Model {
 
 	async paginate(args) {
 		try {
-			let limit = get(args,'limit',20);
-			let page = get(args,'page',1);
-			let data = await this.model.findAndCountAll();
-			let pages = Math.ceil(data.count / limit);
-			let offset = limit * (page - 1);
-			let find = await this.model.findAll({ offset: offset, limit: limit });
-			return {
-				list: find,
-				pagination: {
-					page: offset,
-					limit: limit
-				}
-			}
+			let response = paginate(this.model,args);
+			return response;
 		} catch (e) {
 			console.log(e.message);
 		}

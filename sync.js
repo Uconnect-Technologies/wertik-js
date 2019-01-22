@@ -1,4 +1,4 @@
-import connection from "./framework/database/connection.js";
+import connection from "./framework/database/mysql/connection.js";
 
 connection.sync({force:true}).then(() => {
 	console.log("comlete");

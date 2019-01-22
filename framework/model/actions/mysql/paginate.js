@@ -5,7 +5,7 @@ export default async function (model,args) {
   let data = await model.findAndCountAll();
   let pages = Math.ceil(data.count / limit);
   let offset = limit * (page - 1);
-  let find =  await this.model.findAll({ offset: offset, limit: limit });
+  let find =  await model.findAll({ offset: offset, limit: limit });
   return {
     list: find,
     pagination: {
