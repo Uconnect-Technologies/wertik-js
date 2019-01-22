@@ -1,5 +1,6 @@
 export default `
 	type ForgetPassword {
+		_id: String
 		id: Int
     email: String
     token: String

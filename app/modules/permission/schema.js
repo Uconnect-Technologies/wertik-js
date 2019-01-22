@@ -1,5 +1,6 @@
 export default `
 	type Permission {
+		_id: String
 		id: Int
 		action: String
 		successMessage: String

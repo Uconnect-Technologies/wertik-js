@@ -1,5 +1,6 @@
 export default `
 	type RolePermission {
+		_id: String
 		id: Int
 		permission: Int,
 		role: Int

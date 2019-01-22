@@ -12,10 +12,9 @@ mongoose.connect(mongo,{keepAlive: 1,useNewUrlParser: true}).then(() => {
 let mongoCollections = generateMongoDBSchema(mongoose.connection,getAllSchemasAsObject());
 let mongodbModels = {};
 Object.keys(mongoCollections).forEach((item) => {
-  let schema = new Schema(mongoCollections[item]);
+  let schema = new Schema(mongoCollections[item],{ collection: item });
   mongodbModels[item] = mongoose.model(item,schema);
 });
 
 export default mongoose.connection;
-
 export let models = mongodbModels;

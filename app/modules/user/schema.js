@@ -1,5 +1,6 @@
 export default `
 	type User {
+		_id: String
 		id: Int
 		name: String
 		age: Int

@@ -1,6 +1,7 @@
 import express from "express";
 import graphqlInit from "./framework/graphql/index.js";
 import connection from "./framework/database/mysql/connection.js";
+import connection2 from "./framework/database/mongodb/connection.js";
 
 var app = express();
 

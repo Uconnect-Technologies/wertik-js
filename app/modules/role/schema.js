@@ -1,5 +1,6 @@
 export default `
 	type Role {
+		_id: String
 		id: Int
 		name: String
 		successMessage: String
