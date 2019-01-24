@@ -3,10 +3,12 @@ import {models} from "./../../../framework/database/connection.js";
 import Model from "./../../../framework/model/model.js";
 import bcrypt from "bcrypt-nodejs";
 import createJwtToken from "./../../../framework/security/createJwtToken.js";
+import moment from "moment";
 import {get} from "lodash";
 import validations from "./validations.js";
 import validate from "./../../../framework/validations/validate.js";
 import statusCodes from "./../../../framework/helpers/statusCodes";
+import {sendEmail} from "./../../../framework/mailer/index.js";
 
 let userModel = new Model({
 	models: models,
@@ -89,6 +91,18 @@ export default {
 				activationToken: Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2),
 				password: hash
 			});
+			await sendEmail('welcome.hbs',{
+        email: newUser.email,
+        username: newUser.email,
+        date: moment().format("dddd, MMMM Do YYYY, h:mm:ss a"),
+        siteName: process.env.NAME,
+        activationUrl: process.env.FRONTEND_DEVELOPMENT_URL,
+        activationToken: newUser.activationToken,
+      },{
+        from: process.env.MAILER_SERVICE_USERNAME,
+        to: newUser.email,
+        subject: `Welcome to ${process.env.NAME}`
+      });
 			newUser.statusCode = statusCodes.OK.type;
 			newUser.statusCodeNumber = statusCodes.OK.number;
 			newUser.successMessageType = "Registered";
@@ -177,6 +191,15 @@ export default {
 			await user.update({
 				password: bcrypt.hashSync(args.newPassword)
 			});
+			await sendEmail('changePassword.hbs',{
+        userName: user.email,
+        siteName: process.env.NAME,
+        email: user.email,
+      },{
+        from: process.env.MAILER_SERVICE_USERNAME,
+        to: user.email,
+        subject: "Password changed"
+      });
 			let response = {};
 			response.statusCode = statusCodes.OK.type;
 			response.statusCodeNumber = statusCodes.OK.number;

@@ -16,7 +16,7 @@ let transporter = nodemailer.createTransport({
 	}
 });
 
-export function sendEmail(templateFile, variables, credentials,useCustomTemplate, customTemplate) {
+export async function sendEmail(templateFile, variables, credentials,useCustomTemplate, customTemplate) {
 	let template = null;
 	if (!useCustomTemplate) {
 		template = fs.readFileSync(__dirname+"/templates/"+templateFile,'utf-8');
@@ -25,7 +25,7 @@ export function sendEmail(templateFile, variables, credentials,useCustomTemplate
 	}
 	let compiled = handlebars.compile(template);
 	let resultTemplate = compiled(variables);
-	return transporter.sendMail({
+	return await transporter.sendMail({
 		from : credentials.from,
 		to: credentials.to,
 		html: resultTemplate,

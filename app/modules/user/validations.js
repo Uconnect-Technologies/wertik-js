@@ -26,11 +26,21 @@ export default {
   refreshToken: Joi.object().keys({
     refreshToken: Joi.string().required()
   }),
-  changePassword: Joi.object().keys({
-    newPassword: Joi.string().min(3).required(),
-    oldPassword: Joi.string().min(3).required(),
-    userID: Joi.required(),
-  }),
+  changePassword: function () {
+    if (DIALECT == "MONGO_DB") {
+      return Joi.object().keys({
+        newPassword: Joi.string().min(3).required(),
+        oldPassword: Joi.string().min(3).required(),
+        _id: Joi.string().required(),
+      })
+    }else {
+      return Joi.object().keys({
+        newPassword: Joi.string().min(3).required(),
+        oldPassword: Joi.string().min(3).required(),
+        id: Joi.number().required(),
+      })
+    }
+  }(),
   updateProfile: Joi.object().keys({
     userID: Joi.number().required(),
     name: Joi.string().min(3).required(),

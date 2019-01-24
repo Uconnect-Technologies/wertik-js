@@ -20,9 +20,9 @@ class Model {
 
 
 
-	async delete(id) {
+	async delete(args) {
 		try {
-			await destroy(this.model,id,'');
+			await destroy(this.model,args);
 			return true;
 		} catch (e) {
 			console.log(e.message);

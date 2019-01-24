@@ -8,7 +8,7 @@ import {get} from "lodash";
 import validations from "./validations.js";
 import validate from "./../../../framework/validations/validate.js";
 import statusCodes from "./../../../framework/helpers/statusCodes";
-
+import {sendEmail} from "./../../../framework/mailer/index.js";
 
 let forgetPasswordModel = new Model({
 	models: models,
@@ -45,6 +45,17 @@ export default {
         token: token,
         email: args.email,
         expireDate: `${moment().add('30','minutes').valueOf()}`
+      });
+      await sendEmail('requestPasswordResetToken.hbs',{
+        email: args.email,
+        returnUrl: process.env.FRONTEND_DEVELOPMENT_URL,
+        token: token,
+        nextMinutes: moment().add('30','minutes').format("dddd, MMMM Do YYYY, h:mm:ss a"),
+        siteName: process.env.NAME
+      },{
+        from: process.env.MAILER_SERVICE_USERNAME,
+        to: args.email,
+        subject: "Reset your email"
       });
       return {
         successMessageType: "Successfull",
@@ -86,7 +97,16 @@ export default {
       await user.update({
         password: hash
       });
-      await forgetPassword.destroy();
+      await forgetPasswordModel.delete(forgetPassword);
+      await sendEmail('changePassword.hbs',{
+        userName: user.email,
+        siteName: process.env.NAME,
+        email: user.email,
+      },{
+        from: process.env.MAILER_SERVICE_USERNAME,
+        to: user.email,
+        subject: "Password changed"
+      });
       return {
         successMessageType: "Success",
         successMessage: "Password successfully changed",
