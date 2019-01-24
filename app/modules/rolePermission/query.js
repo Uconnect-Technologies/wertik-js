@@ -1,4 +1,4 @@
 export default `
-  rolePermission(id: Int, action: String): RolePermission
+  rolePermission(id: Int, _id: String): RolePermission
   listRolePermission(page: Int, limit: Int): [RolePermission]
 `

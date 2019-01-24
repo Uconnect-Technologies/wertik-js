@@ -48,7 +48,7 @@ export default {
 				}
       }
       let fakeResponse = {};
-      await userRoleModel.delete(args.id);
+      await userRoleModel.delete(args);
       fakeResponse.statusCode = statusCodes.CREATED.type;
       fakeResponse.statusCodeNumber = statusCodes.CREATED.number;
       fakeResponse.successMessageType = "Success";
@@ -84,7 +84,7 @@ export default {
   listUserRole: async (args, req, sceham) => {
     try {
       let paginate = await userRoleModel.paginate(args);
-      return paginate.list;
+      return paginate;
     } catch (e) {
       return internalServerError(e);
     }
@@ -100,7 +100,7 @@ export default {
 					statusCodeNumber: statusCodes.BAD_REQUEST.number
 				}
       }
-      let userRole = await userRoleModel.findOneByID(args.id);
+      let userRole = await userRoleModel.view(args);
       if (!userRole) {
         return {
           errors: ["Not Found"],

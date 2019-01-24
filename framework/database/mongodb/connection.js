@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import {Schema} from "mongoose";
+import mongoosePaginate from "mongoose-paginate";
 import getAllSchemasAsObject from "../../helpers/getAllSchemasAsObject.js";
 import generateMongoDBSchema from "./generateMongoDBSchema.js";
 
@@ -13,6 +14,7 @@ let mongoCollections = generateMongoDBSchema(mongoose.connection,getAllSchemasAs
 let mongodbModels = {};
 Object.keys(mongoCollections).forEach((item) => {
   let schema = new Schema(mongoCollections[item],{ collection: item });
+  schema.plugin(mongoosePaginate);
   mongodbModels[item] = mongoose.model(item,schema);
 });
 

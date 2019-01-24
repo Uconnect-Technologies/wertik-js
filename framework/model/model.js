@@ -57,7 +57,7 @@ class Model {
 
 	async paginate(args) {
 		try {
-			let response = paginate(this.model,args);
+			let response = await paginate(this.model,args);
 			return response;
 		} catch (e) {
 			console.log(e.message);

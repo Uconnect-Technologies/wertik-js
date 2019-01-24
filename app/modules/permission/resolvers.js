@@ -33,6 +33,7 @@ export default {
       return model;
 
     } catch (e) {
+      console.log(1);
       return internalServerError(e);
     }
   },
@@ -48,7 +49,7 @@ export default {
 				}
       }
       let fakeResponse = {};
-      await permissionModel.delete(args.id);
+      await permissionModel.delete(args);
       fakeResponse.statusCode = statusCodes.CREATED.type;
       fakeResponse.statusCodeNumber = statusCodes.CREATED.number;
       fakeResponse.successMessageType = "Success";
@@ -84,7 +85,7 @@ export default {
   listPermission: async (args, req, sceham) => {
     try {
       let paginate = await permissionModel.paginate(args);
-      return paginate.list;
+      return paginate;
     } catch (e) {
       return internalServerError(e);
     }
@@ -92,15 +93,15 @@ export default {
   permission: async (args, req, schema) => {
     try {
       let v = await validate(validations.permission,args,{abortEarly: false});
-			let {success} = v;
-			if (!success) {
-				return {
-					errors: v.errors,
-					statusCode: statusCodes.BAD_REQUEST.type,
-					statusCodeNumber: statusCodes.BAD_REQUEST.number
-				}
+      let {success} = v;
+      if (!success) {
+        return {
+          errors: v.errors,
+          statusCode: statusCodes.BAD_REQUEST.type,
+          statusCodeNumber: statusCodes.BAD_REQUEST.number
+        }
       }
-      let permission = await permissionModel.findOneByID(args.id);
+      let permission = await permissionModel.view(args);
       if (!permission) {
         return {
           errors: ["Not Found"],

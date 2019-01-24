@@ -1,5 +1,6 @@
 export default `
 	type UserRole {
+		_id: String
 		id: Int
 		user: Int
 		role: Int

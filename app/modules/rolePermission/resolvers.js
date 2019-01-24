@@ -48,7 +48,7 @@ export default {
 				}
       }
       let fakeResponse = {};
-      await rolePermissionModel.delete(args.id);
+      await rolePermissionModel.delete(args);
       fakeResponse.statusCode = statusCodes.CREATED.type;
       fakeResponse.statusCodeNumber = statusCodes.CREATED.number;
       fakeResponse.successMessageType = "Success";
@@ -84,7 +84,7 @@ export default {
   listRolePermission: async (args, req, sceham) => {
     try {
       let paginate = await rolePermissionModel.paginate(args);
-      return paginate.list;
+      return paginate;
     } catch (e) {
       return internalServerError(e);
     }
@@ -100,7 +100,7 @@ export default {
 					statusCodeNumber: statusCodes.BAD_REQUEST.number
 				}
       }
-      let rolePermission = await rolePermissionModel.findOneByID(args.id);
+      let rolePermission = await rolePermissionModel.view(args);
       if (!rolePermission) {
         return {
           errors: ["Not Found"],

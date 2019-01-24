@@ -1,18 +1,47 @@
 import Joi from "joi";
+const {DIALECT} = process.env;
 export default {
-  createRolePermission: Joi.object().keys({
-    role: Joi.number().required(),
-    permission: Joi.number().required()
-  }),
-  deleteRolePermission: Joi.object().keys({
-    id: Joi.number().required()
-  }),
-  updateRolePermission: Joi.object().keys({
-    id: Joi.number().required(),
-    role: Joi.number().required(),
-    permission: Joi.number().required()
-  }),
-  rolePermission: Joi.object().keys({
-    id: Joi.number().required(),
-  }),
+  createRolePermission: function () {
+    return Joi.object().keys({
+      role: Joi.number().required(),
+      permission: Joi.number().required()
+    })
+  }(),
+  deleteRolePermission: function () {
+    if (DIALECT == "MONGO_DB") {
+      return Joi.object().keys({
+        _id: Joi.string().required()
+      }) 
+    }else {
+      return Joi.object().keys({
+        id: Joi.number().required()
+      })
+    }
+  }(),
+  updateRolePermission: function () {
+    if (DIALECT == "MONGO_DB") {
+      return Joi.object().keys({
+        _id: Joi.string().required(),
+        role: Joi.number().required(),
+        permission: Joi.number().required()
+      });
+    }else {
+       return Joi.object().keys({
+        id: Joi.number().required(),
+        role: Joi.number().required(),
+        permission: Joi.number().required()
+      });     
+    }
+  }(),
+  rolePermission: function () {
+    if (DIALECT == "MONGO_DB") {
+      return Joi.object().keys({
+        _id: Joi.string().required(),
+      });
+    }else {
+      return Joi.object().keys({
+        id: Joi.number().required(),
+      });
+    }
+  }(),
 }

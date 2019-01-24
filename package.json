@@ -39,6 +39,7 @@
     "module-alias": "^2.1.0",
     "moment": "^2.23.0",
     "mongoose": "^5.4.2",
+    "mongoose-paginate": "^5.0.3",
     "mysql2": "^1.6.4",
     "nodemailer": "^5.0.0",
     "nodemon": "^1.18.9",

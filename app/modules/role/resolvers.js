@@ -48,7 +48,7 @@ export default {
 				}
       }
       let fakeResponse = {};
-      await roleModel.delete(args.id);
+      await roleModel.delete(args);
       fakeResponse.statusCode = statusCodes.CREATED.type;
       fakeResponse.statusCodeNumber = statusCodes.CREATED.number;
       fakeResponse.successMessageType = "Success";
@@ -84,7 +84,7 @@ export default {
   listRole: async (args, req, sceham) => {
     try {
       let paginate = await roleModel.paginate(args);
-      return paginate.list;
+      return paginate;
     } catch (e) {
       return internalServerError(e);
     }
