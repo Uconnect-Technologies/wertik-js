@@ -5,6 +5,7 @@ const {
 	create,
 	update,
 	destroy,
+	findOne,
 	view,
 	paginate
 } = actions;
@@ -16,6 +17,8 @@ class Model {
     this.models = props.models;
 		this.model = this.models[this.tableName];
 	}
+
+
 
 	async delete(id) {
 		try {
@@ -49,6 +52,15 @@ class Model {
 	async view(args) {
 		try {
 			let response = await view(this.model,args);
+			return response;
+		} catch (e) {
+			console.log(e.message);
+		}
+	}
+
+	async findOne(args) {
+		try {
+			let response = await findOne(this.model,args);
 			return response;
 		} catch (e) {
 			console.log(e.message);

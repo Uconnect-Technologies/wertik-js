@@ -1,13 +1,24 @@
 import Joi from "joi";
+
+const {DIALECT} = process.env;
+
 export default {
   signup: Joi.object().keys({
     email: Joi.string().required(),
     password: Joi.string().min(3).required(),
     confirmPassword: Joi.string().min(3).required()
   }),
-  userView: Joi.object().keys({
-    id: Joi.required(),
-  }),
+  userView: function () {
+    if (DIALECT == "MONGO_DB") {
+      return Joi.object().keys({
+        _id: Joi.string().required(),
+      })
+    }else {
+      return Joi.object().keys({
+        id: Joi.number().required(),
+      })
+    }
+  }(),
   login: Joi.object().keys({
     email: Joi.string().required(),
     password: Joi.string().min(3).required(),

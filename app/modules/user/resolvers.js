@@ -34,11 +34,11 @@ export default {
 			}
 			let { email, password } = args;
 			let user = await userModel.findOne({email: email});
-			let id = get(user,'id',null);
-			if (!id) {
+			let findEmail = get(user,'email',null);
+			if (!findEmail) {
 				return {
 					statusCode: statusCodes.BAD_REQUEST.type,
-					errors: ["Password: Incorrect Password"],
+					errors: ["User: user not found"],
 					statusCodeNumber: statusCodes.BAD_REQUEST.number
 				}
 			}	
@@ -142,7 +142,7 @@ export default {
 					statusCodeNumber: statusCodes.BAD_REQUEST.number
 				}
 			}
-			let user = await userModel.findOneByID(args.id);
+			let user = await userModel.view(args);
 			return user;
 		} catch (e) {
 			return internalServerError(e);
@@ -158,7 +158,7 @@ export default {
 					statusCodeNumber: statusCodes.BAD_REQUEST.number
 				}
 			}
-			let user = await userModel.findOneByID(args.userID);
+			let user = await userModel.view(args);
 			if (!user) {
 				return {
 					statusCode: statusCodes.BAD_REQUEST.type,

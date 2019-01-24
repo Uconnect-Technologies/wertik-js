@@ -1,3 +1,3 @@
 export default `
-	userView(id: Int): User
+	userView(id: Int,_id: String): User
 `;

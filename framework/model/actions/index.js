@@ -6,6 +6,7 @@ let paginate = require(`${path}/${action}/paginate.js`).default;
 let update = require(`${path}/${action}/update.js`).default;
 let view = require(`${path}/${action}/view.js`).default;
 let destroy = require(`${path}/${action}/destroy.js`).default;
+let findOne = require(`${path}/${action}/findOne.js`).default;
 
 
 export default {
@@ -13,5 +14,6 @@ export default {
   update,
   paginate,
   view,
-  destroy
+  destroy,
+  findOne
 }
