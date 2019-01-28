@@ -8,6 +8,11 @@ export default {
     password: Joi.string().min(3).required(),
     confirmPassword: Joi.string().min(3).required()
   }),
+  activateAccount: function () {
+    return Joi.object().keys({
+      activationToken: Joi.string().required(),
+    })
+  }(),
   userView: function () {
     if (DIALECT == "MONGO_DB") {
       return Joi.object().keys({

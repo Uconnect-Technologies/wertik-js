@@ -2,8 +2,8 @@ export default `
 	type ForgetPassword {
 		_id: String
 		id: Int
-    email: String
-    token: String
+		email: String
+		token: String
 		successMessage: String
 		successMessageType: String
 		errors: [String]

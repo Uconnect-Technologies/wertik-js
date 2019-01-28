@@ -89,7 +89,7 @@ export default {
       return internalServerError(e);
     }
   },
-  role: async (args, req, schema) => {
+  roleView: async (args, req, schema) => {
     try {
       let v = await validate(validations.role,args,{abortEarly: false});
 			let {success} = v;

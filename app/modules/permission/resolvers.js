@@ -90,7 +90,7 @@ export default {
       return internalServerError(e);
     }
   },
-  permission: async (args, req, schema) => {
+  permissionView: async (args, req, schema) => {
     try {
       let v = await validate(validations.permission,args,{abortEarly: false});
       let {success} = v;

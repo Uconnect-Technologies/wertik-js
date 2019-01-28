@@ -1,12 +1,12 @@
 import express from "express";
 import graphqlInit from "./framework/graphql/index.js";
-import connection from "./framework/database/mysql/connection.js";
-import connection2 from "./framework/database/mongodb/connection.js";
+import morgan from "morgan";
 
 var app = express();
 
+app.use(morgan('combined'))
+
 graphqlInit(__dirname, app);
 
-app.listen(4000, () =>
-  console.log("Listening server on localhost:4000/graphql")
+app.listen(4000, () => console.log("Listening server on localhost:4000/graphql")
 );

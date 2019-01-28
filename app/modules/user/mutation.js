@@ -1,5 +1,5 @@
 export default `
-	activateAccount(id: Int,_id: String, activationToken: String): User
+	activateAccount(activationToken: String): User
 	signup(email: String, password: String, confirmPassword: String): User
 	login(email: String, password: String): User
 	refreshToken(refreshToken: String): User

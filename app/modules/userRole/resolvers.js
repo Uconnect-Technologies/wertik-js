@@ -89,16 +89,16 @@ export default {
       return internalServerError(e);
     }
   },
-  userRole: async (args, req, schema) => {
+  userRoleView: async (args, req, schema) => {
     try {
       let v = await validate(validations.userRole,args,{abortEarly: false});
-			let {success} = v;
-			if (!success) {
-				return {
-					errors: v.errors,
-					statusCode: statusCodes.BAD_REQUEST.type,
-					statusCodeNumber: statusCodes.BAD_REQUEST.number
-				}
+      let {success} = v;
+      if (!success) {
+        return {
+          errors: v.errors,
+          statusCode: statusCodes.BAD_REQUEST.type,
+          statusCodeNumber: statusCodes.BAD_REQUEST.number
+        }
       }
       let userRole = await userRoleModel.view(args);
       if (!userRole) {

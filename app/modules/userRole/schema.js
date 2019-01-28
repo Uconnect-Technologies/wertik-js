@@ -2,8 +2,8 @@ export default `
 	type UserRole {
 		_id: String
 		id: Int
-		user: Int
-		role: Int
+		user: User
+		role: Role
 		successMessage: String
 		successMessageType: String
 		errors: [String]

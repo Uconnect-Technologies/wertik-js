@@ -117,7 +117,7 @@ export default {
       return internalServerError(e);
     }
   },
-  forgetPassword: async (args,req,schema) => {
+  forgetPasswordView: async (args,req,schema) => {
     try {
       let v = await validate(validations.forgetPassword,args,{abortEarly: false});
 			let {success} = v;

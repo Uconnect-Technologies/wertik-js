@@ -8,6 +8,7 @@ export default `
 		refreshToken: String
 		accessToken: String
 		isActivated: Boolean
+		isSuperUser: Boolean
 		activationToken: String
 		email: String
 		password: String

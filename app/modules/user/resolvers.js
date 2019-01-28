@@ -16,9 +16,43 @@ let userModel = new Model({
 });
 
 export default {
-	activateAccount: (_,args) => {
+	listUsers: async (args, req, schema) => {
 		try {
-			return {name: "Ilyas"}
+			let paginate = await userModel.paginate(args);
+			return paginate;
+		} catch (e) {
+			return internalServerError(e);
+		}
+	},
+	activateAccount: async (args, req, schema) => {
+		try {
+			let v = await validate(validations.activateAccount,args,{abortEarly: false});
+			let {success} = v;
+			if (!success) {
+				return {
+					errors: v.errors,
+					statusCode: statusCodes.BAD_REQUEST.type,
+					statusCodeNumber: statusCodes.BAD_REQUEST.number
+				}
+			}
+			let user = await userModel.findOne({activationToken: args.activationToken});
+			if (!user) {
+				return {
+					statusCode: statusCodes.BAD_REQUEST.type,
+					errors: ["User: user not found"],
+					statusCodeNumber: statusCodes.BAD_REQUEST.number
+				}
+			}
+			await user.update({
+				activationToken: "",
+				isActivated: true
+			});
+			return {
+				statusCode: statusCodes.OK.type,
+				statusCodeNumber: statusCodes.OK.number,
+				successMessage: "Success",
+				successMessageType: "Account successfully isActivated"
+			}
 		} catch (e) {
 			return internalServerError(e);
 		}

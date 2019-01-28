@@ -2,8 +2,8 @@ export default `
 	type RolePermission {
 		_id: String
 		id: Int
-		permission: Int,
-		role: Int
+		permission: Permission,
+		role: Role
 		successMessage: String
 		successMessageType: String
 		errors: [String]

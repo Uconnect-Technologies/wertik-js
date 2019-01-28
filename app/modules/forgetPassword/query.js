@@ -1,3 +1,3 @@
 export default `
-  forgetPassword(token: String): ForgetPassword
+  forgetPasswordView(token: String): ForgetPassword
 `;
