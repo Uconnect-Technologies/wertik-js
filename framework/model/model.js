@@ -19,7 +19,6 @@ class Model {
 	}
 
 
-
 	async delete(args) {
 		try {
 			await destroy(this.model,args);

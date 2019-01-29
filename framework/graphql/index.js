@@ -24,11 +24,14 @@ export default function (rootDirectory,app) {
 			mutation: Mutation
 		}
 	`;
-	console.log(mainSchema);
 	let schema = buildSchema(mainSchema);
-	app.use("/graphql", express_graphql({
-		schema: schema,
-		rootValue: allResolvers,
-		graphiql: true
-	}));
+	const server = new ApolloServer({ typeDefs: mainSchema, resolvers: allResolvers });
+	server.listen(1100).then(({ url }) => {
+	  console.log(`🚀  Server ready at ${url}`);
+	});
+	// app.use("/graphql", express_graphql({
+	// 	schema: schema,
+	// 	rootValue: allResolvers,
+	// 	graphiql: true
+	// }));
 }

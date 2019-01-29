@@ -13,109 +13,114 @@ let roleModel = new Model({
 });
 
 export default {
-  createRole: async (args, req, schema) => {
-    try {
-      let v = await validate(validations.createRole,args,{abortEarly: false});
-			let {success} = v;
-			if (!success) {
-				return {
-					errors: v.errors,
-					statusCode: statusCodes.BAD_REQUEST.type,
-					statusCodeNumber: statusCodes.BAD_REQUEST.number
-				}
+  queries: {
+    listRole: async (_, args, g) => {
+      try {
+        let paginate = await roleModel.paginate(args);
+        return paginate;
+      } catch (e) {
+        return internalServerError(e);
       }
-
-      let model = await roleModel.create({name: args.name});
-      model.statusCode = statusCodes.CREATED.type;
-      model.statusCodeNumber = statusCodes.CREATED.number;
-      model.successMessageType = "Success";
-      model.successMessage = "Role created";
-      return model;
-
-    } catch (e) {
-      return internalServerError(e);
-    }
-  },
-  deleteRole: async (args, req, schema) => {
-    try {
-      let v = await validate(validations.deleteRole,args,{abortEarly: false});
-			let {success} = v;
-			if (!success) {
-				return {
-					errors: v.errors,
-					statusCode: statusCodes.BAD_REQUEST.type,
-					statusCodeNumber: statusCodes.BAD_REQUEST.number
-				}
-      }
-      let fakeResponse = {};
-      await roleModel.delete(args);
-      fakeResponse.statusCode = statusCodes.CREATED.type;
-      fakeResponse.statusCodeNumber = statusCodes.CREATED.number;
-      fakeResponse.successMessageType = "Success";
-      fakeResponse.successMessage = "Role deleted";
-      return fakeResponse;
-    } catch (e) {
-      return internalServerError(e);
-    }
-  },
-  updateRole: async (args, req, schema) => {
-    try {
-      let v = await validate(validations.updateRole,args,{abortEarly: false});
-			let {success} = v;
-			if (!success) {
-				return {
-					errors: v.errors,
-					statusCode: statusCodes.BAD_REQUEST.type,
-					statusCodeNumber: statusCodes.BAD_REQUEST.number
-				}
-      }
-
-      let update = await roleModel.update(args);
-      update.statusCode = statusCodes.OK.type;
-      update.statusCodeNumber = statusCodes.OK.number;
-      update.successMessageType = "Success";
-      update.successMessage = "Role updated";
-      return update;
-
-    } catch (e) {
-      return internalServerError(e);
-    }
-  },
-  listRole: async (args, req, sceham) => {
-    try {
-      let paginate = await roleModel.paginate(args);
-      return paginate;
-    } catch (e) {
-      return internalServerError(e);
-    }
-  },
-  roleView: async (args, req, schema) => {
-    try {
-      let v = await validate(validations.role,args,{abortEarly: false});
-			let {success} = v;
-			if (!success) {
-				return {
-					errors: v.errors,
-					statusCode: statusCodes.BAD_REQUEST.type,
-					statusCodeNumber: statusCodes.BAD_REQUEST.number
-				}
-      }
-      let role = await roleModel.view(args);
-      if (!role) {
-        return {
-          errors: ["Not Found"],
-          statusCodeNumber: statusCodes.NOT_FOUND.number,
-          statusCode: statusCodes.NOT_FOUND.type
+    },
+    roleView: async (_, args, g) => {
+      try {
+        let v = await validate(validations.role,args,{abortEarly: false});
+        let {success} = v;
+        if (!success) {
+          return {
+            errors: v.errors,
+            statusCode: statusCodes.BAD_REQUEST.type,
+            statusCodeNumber: statusCodes.BAD_REQUEST.number
+          }
         }
-      }
-      role.statusCode = statusCodes.OK.type;
-      role.statusCodeNumber = statusCodes.OK.number;
-      role.successMessageType = "Success";
-      role.successMessage = "Role fetched";
-      return role;
+        let role = await roleModel.view(args);
+        if (!role) {
+          return {
+            errors: ["Not Found"],
+            statusCodeNumber: statusCodes.NOT_FOUND.number,
+            statusCode: statusCodes.NOT_FOUND.type
+          }
+        }
+        role.statusCode = statusCodes.OK.type;
+        role.statusCodeNumber = statusCodes.OK.number;
+        role.successMessageType = "Success";
+        role.successMessage = "Role fetched";
+        return role;
 
-    } catch (e) {
-      return internalServerError(e);
+      } catch (e) {
+        return internalServerError(e);
+      }
     }
-  }
+  },
+  mutations: {
+    createRole: async (_, args, g) => {
+      try {
+        let v = await validate(validations.createRole,args,{abortEarly: false});
+        let {success} = v;
+        if (!success) {
+          return {
+            errors: v.errors,
+            statusCode: statusCodes.BAD_REQUEST.type,
+            statusCodeNumber: statusCodes.BAD_REQUEST.number
+          }
+        }
+
+        let model = await roleModel.create({name: args.name});
+        model.statusCode = statusCodes.CREATED.type;
+        model.statusCodeNumber = statusCodes.CREATED.number;
+        model.successMessageType = "Success";
+        model.successMessage = "Role created";
+        return model;
+
+      } catch (e) {
+        return internalServerError(e);
+      }
+    },
+    deleteRole: async (_, args, g) => {
+      try {
+        let v = await validate(validations.deleteRole,args,{abortEarly: false});
+        let {success} = v;
+        if (!success) {
+          return {
+            errors: v.errors,
+            statusCode: statusCodes.BAD_REQUEST.type,
+            statusCodeNumber: statusCodes.BAD_REQUEST.number
+          }
+        }
+        let fakeResponse = {};
+        await roleModel.delete(args);
+        fakeResponse.statusCode = statusCodes.CREATED.type;
+        fakeResponse.statusCodeNumber = statusCodes.CREATED.number;
+        fakeResponse.successMessageType = "Success";
+        fakeResponse.successMessage = "Role deleted";
+        return fakeResponse;
+      } catch (e) {
+        return internalServerError(e);
+      }
+    },
+    updateRole: async (_, args, g) => {
+      try {
+        let v = await validate(validations.updateRole,args,{abortEarly: false});
+        let {success} = v;
+        if (!success) {
+          return {
+            errors: v.errors,
+            statusCode: statusCodes.BAD_REQUEST.type,
+            statusCodeNumber: statusCodes.BAD_REQUEST.number
+          }
+        }
+
+        let update = await roleModel.update(args);
+        update.statusCode = statusCodes.OK.type;
+        update.statusCodeNumber = statusCodes.OK.number;
+        update.successMessageType = "Success";
+        update.successMessage = "Role updated";
+        return update;
+
+      } catch (e) {
+        return internalServerError(e);
+      }
+    },
+  },
+
 }
