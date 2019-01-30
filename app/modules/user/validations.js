@@ -5,6 +5,7 @@ const {DIALECT} = process.env;
 export default {
   signup: Joi.object().keys({
     email: Joi.string().required(),
+    referer: Joi.allow('').optional(),
     password: Joi.string().min(3).required(),
     confirmPassword: Joi.string().min(3).required()
   }),

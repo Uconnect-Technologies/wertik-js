@@ -52,7 +52,6 @@ export default {
     }
   },
   mutations: {
-
     requestPasswordReset: async (_, args, g) => {
       try {
         let v = await validate(validations.requestPasswordReset,args,{abortEarly: false});
@@ -80,8 +79,9 @@ export default {
         });
         await sendEmail('requestPasswordResetToken.hbs',{
           email: args.email,
-          returnUrl: process.env.FRONTEND_DEVELOPMENT_URL,
+          returnUrl: process.env.FRONTEND_APP_URL,
           token: token,
+          frontendAppPasswordResetUrl: process.env.FRONTEND_APP_PASSWORD_RESET_URL,
           nextMinutes: moment().add('30','minutes').format("dddd, MMMM Do YYYY, h:mm:ss a"),
           siteName: process.env.NAME
         },{
@@ -90,6 +90,7 @@ export default {
           subject: "Reset your email"
         });
         return {
+          email: args.email,
           successMessageType: "Successfull",
           successMessage:  "Please check your email. We have sent a link to reset your email",
           statusCode: statusCodes.CREATED.type

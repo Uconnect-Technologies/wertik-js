@@ -4,7 +4,7 @@ import {camelCase,upperFirst} from "lodash";
 export default function(rootDirectory) {
   let path = `${rootDirectory}/app/modules/`;
   // let folders = getDirectoriesInfolder(path);
-  let folders = ['user', 'forgetPassword','permission','role','rolePermission','userRole' ];
+  let folders = ['user', 'forgetPassword','permission','role','rolePermission','userRole','userPermission' ];
   let output = {
     Query: {},
     Mutation: {}

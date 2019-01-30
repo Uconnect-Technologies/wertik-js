@@ -8,42 +8,24 @@ import validate from "./../../../framework/validations/validate.js";
 import statusCodes from "./../../../framework/helpers/statusCodes";
 import getIdName from "./../../../framework/helpers/getIdName.js";
 
-let rolePermissionModel = new Model({
+let userPermissionModel = new Model({
   models: models,
-  tableName: "rolepermission"
-});
-
-let permissionModel = new Model({
-  models: models,
-  tableName: "permission"
-});
-
-let roleModel = new Model({
-	models: models,
-	tableName: "role"
+  tableName: "userpermission"
 });
 
 export default {
-  RolePermission: {
-    async permission(rolePermission) {
-      return await permissionModel.findOne({[getIdName]: rolePermission.permission})
-    },
-    async role(rolePermission) {
-      return await roleModel.findOne({[getIdName]: rolePermission.role})
-    }
-  },
   queries: {
-    listRolePermission: async (_, args, g) => {
+    listUserPermission: async (_, args, g) => {
       try {
-        let paginate = await rolePermissionModel.paginate(args);
+        let paginate = await userPermissionModel.paginate(args);
         return paginate;
       } catch (e) {
         return internalServerError(e);
       }
     },
-    rolePermissionView: async (_, args, g) => {
+    userPermissionView: async (_, args, g) => {
       try {
-        let v = await validate(validations.rolePermission,args,{abortEarly: false});
+        let v = await validate(validations.userPermission,args,{abortEarly: false});
         let {success} = v;
         if (!success) {
           return {
@@ -52,19 +34,19 @@ export default {
             statusCodeNumber: statusCodes.BAD_REQUEST.number
           }
         }
-        let rolePermission = await rolePermissionModel.view(args);
-        if (!rolePermission) {
+        let userPermission = await userPermissionModel.view(args);
+        if (!userPermission) {
           return {
             errors: ["Not Found"],
             statusCodeNumber: statusCodes.NOT_FOUND.number,
             statusCode: statusCodes.NOT_FOUND.type
           }
         }
-        rolePermission.statusCode = statusCodes.OK.type;
-        rolePermission.statusCodeNumber = statusCodes.OK.number;
-        rolePermission.successMessageType = "Success";
-        rolePermission.successMessage = "Role permission fetched";
-        return rolePermission;
+        userPermission.statusCode = statusCodes.OK.type;
+        userPermission.statusCodeNumber = statusCodes.OK.number;
+        userPermission.successMessageType = "Success";
+        userPermission.successMessage = "User permission fetched";
+        return userPermission;
 
       } catch (e) {
         return internalServerError(e);
@@ -72,9 +54,9 @@ export default {
     }
   },
   mutations: {
-    createRolePermission: async (_, args, g) => {
+    createUserPermission: async (_, args, g) => {
       try {
-        let v = await validate(validations.createRolePermission,args,{abortEarly: false});
+        let v = await validate(validations.createUserPermission,args,{abortEarly: false});
   			let {success} = v;
   			if (!success) {
   				return {
@@ -84,20 +66,20 @@ export default {
   				}
         }
 
-        let model = await rolePermissionModel.create(args);
+        let model = await userPermissionModel.create(args);
         model.statusCode = statusCodes.CREATED.type;
         model.statusCodeNumber = statusCodes.CREATED.number;
         model.successMessageType = "Success";
-        model.successMessage = "Role Permission created";
+        model.successMessage = "User Permission created";
         return model;
 
       } catch (e) {
         return internalServerError(e);
       }
     },
-    deleteRolePermission: async (_, args, g) => {
+    deleteUserPermission: async (_, args, g) => {
       try {
-        let v = await validate(validations.deleteRolePermission,args,{abortEarly: false});
+        let v = await validate(validations.deleteUserPermission,args,{abortEarly: false});
   			let {success} = v;
   			if (!success) {
   				return {
@@ -107,19 +89,19 @@ export default {
   				}
         }
         let fakeResponse = {};
-        await rolePermissionModel.delete(args);
+        await userPermissionModel.delete(args);
         fakeResponse.statusCode = statusCodes.CREATED.type;
         fakeResponse.statusCodeNumber = statusCodes.CREATED.number;
         fakeResponse.successMessageType = "Success";
-        fakeResponse.successMessage = "Role Permission deleted";
+        fakeResponse.successMessage = "User Permission deleted";
         return fakeResponse;
       } catch (e) {
         return internalServerError(e);
       }
     },
-    updateRolePermission: async (_, args, g) => {
+    updateUserPermission: async (_, args, g) => {
       try {
-        let v = await validate(validations.updateRolePermission,args,{abortEarly: false});
+        let v = await validate(validations.updateUserPermission,args,{abortEarly: false});
   			let {success} = v;
   			if (!success) {
   				return {
@@ -129,11 +111,11 @@ export default {
   				}
         }
 
-        let update = await rolePermissionModel.update(args);
+        let update = await userPermissionModel.update(args);
         update.statusCode = statusCodes.OK.type;
         update.statusCodeNumber = statusCodes.OK.number;
         update.successMessageType = "Success";
-        update.successMessage = "Role permission updated";
+        update.successMessage = "User permission updated";
         return update;
 
       } catch (e) {

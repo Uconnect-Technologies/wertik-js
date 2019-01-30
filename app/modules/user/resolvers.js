@@ -137,10 +137,12 @@ export default {
 				var hash = bcrypt.hashSync(password);
 				let newUser = await userModel.create({
 					email: email,
+					referer: get(args,'referer',''),
 					superUser: false,
 					accessToken: await createJwtToken({email: email,for: "authentication"}),
 					refreshToken: await createJwtToken({email: email,for: "refreshToken"}),
 					isActivated: false,
+					isSuperUser: false,
 					activationToken: Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2),
 					password: hash
 				});
