@@ -24,23 +24,15 @@ export default {
       }
     },
     userPermissionView: async (_, args, g) => {
+      let v = await validate(validations.userPermission,args,{abortEarly: false});
+      let {success} = v;
+      if (!success) {
+        throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
+      }
       try {
-        let v = await validate(validations.userPermission,args,{abortEarly: false});
-        let {success} = v;
-        if (!success) {
-          return {
-            errors: v.errors,
-            statusCode: statusCodes.BAD_REQUEST.type,
-            statusCodeNumber: statusCodes.BAD_REQUEST.number
-          }
-        }
         let userPermission = await userPermissionModel.view(args);
         if (!userPermission) {
-          return {
-            errors: ["Not Found"],
-            statusCodeNumber: statusCodes.NOT_FOUND.number,
-            statusCode: statusCodes.NOT_FOUND.type
-          }
+          throw new ApolloError("Not found",statusCodes.NOT_FOUND.number);
         }
         userPermission.statusCode = statusCodes.OK.type;
         userPermission.statusCodeNumber = statusCodes.OK.number;
@@ -55,16 +47,12 @@ export default {
   },
   mutations: {
     createUserPermission: async (_, args, g) => {
+      let v = await validate(validations.createUserPermission,args,{abortEarly: false});
+			let {success} = v;
+			if (!success) {
+				throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
+      }
       try {
-        let v = await validate(validations.createUserPermission,args,{abortEarly: false});
-  			let {success} = v;
-  			if (!success) {
-  				return {
-  					errors: v.errors,
-  					statusCode: statusCodes.BAD_REQUEST.type,
-  					statusCodeNumber: statusCodes.BAD_REQUEST.number
-  				}
-        }
 
         let model = await userPermissionModel.create(args);
         model.statusCode = statusCodes.CREATED.type;
@@ -78,16 +66,12 @@ export default {
       }
     },
     deleteUserPermission: async (_, args, g) => {
+      let v = await validate(validations.deleteUserPermission,args,{abortEarly: false});
+			let {success} = v;
+			if (!success) {
+				throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
+      }
       try {
-        let v = await validate(validations.deleteUserPermission,args,{abortEarly: false});
-  			let {success} = v;
-  			if (!success) {
-  				return {
-  					errors: v.errors,
-  					statusCode: statusCodes.BAD_REQUEST.type,
-  					statusCodeNumber: statusCodes.BAD_REQUEST.number
-  				}
-        }
         let fakeResponse = {};
         await userPermissionModel.delete(args);
         fakeResponse.statusCode = statusCodes.CREATED.type;
@@ -100,17 +84,12 @@ export default {
       }
     },
     updateUserPermission: async (_, args, g) => {
+      let v = await validate(validations.updateUserPermission,args,{abortEarly: false});
+			let {success} = v;
+			if (!success) {
+				throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
+      }
       try {
-        let v = await validate(validations.updateUserPermission,args,{abortEarly: false});
-  			let {success} = v;
-  			if (!success) {
-  				return {
-  					errors: v.errors,
-  					statusCode: statusCodes.BAD_REQUEST.type,
-  					statusCodeNumber: statusCodes.BAD_REQUEST.number
-  				}
-        }
-
         let update = await userPermissionModel.update(args);
         update.statusCode = statusCodes.OK.type;
         update.statusCodeNumber = statusCodes.OK.number;

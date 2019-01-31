@@ -6,6 +6,7 @@ import {get} from "lodash";
 import validations from "./validations.js";
 import validate from "./../../../framework/validations/validate.js";
 import statusCodes from "./../../../framework/helpers/statusCodes";
+import {ApolloError} from "apollo-server";
 
 let roleModel = new Model({
 	models: models,
@@ -23,23 +24,15 @@ export default {
       }
     },
     roleView: async (_, args, g) => {
+      let v = await validate(validations.role,args,{abortEarly: false});
+      let {success} = v;
+      if (!success) {
+        throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
+      }
       try {
-        let v = await validate(validations.role,args,{abortEarly: false});
-        let {success} = v;
-        if (!success) {
-          return {
-            errors: v.errors,
-            statusCode: statusCodes.BAD_REQUEST.type,
-            statusCodeNumber: statusCodes.BAD_REQUEST.number
-          }
-        }
         let role = await roleModel.view(args);
         if (!role) {
-          return {
-            errors: ["Not Found"],
-            statusCodeNumber: statusCodes.NOT_FOUND.number,
-            statusCode: statusCodes.NOT_FOUND.type
-          }
+          throw new ApolloError("Role not found",statusCodes.NOT_FOUND.number)
         }
         role.statusCode = statusCodes.OK.type;
         role.statusCodeNumber = statusCodes.OK.number;
@@ -54,16 +47,12 @@ export default {
   },
   mutations: {
     createRole: async (_, args, g) => {
+      let v = await validate(validations.createRole,args,{abortEarly: false});
+      let {success} = v;
+      if (!success) {
+        throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
+      }
       try {
-        let v = await validate(validations.createRole,args,{abortEarly: false});
-        let {success} = v;
-        if (!success) {
-          return {
-            errors: v.errors,
-            statusCode: statusCodes.BAD_REQUEST.type,
-            statusCodeNumber: statusCodes.BAD_REQUEST.number
-          }
-        }
 
         let model = await roleModel.create({name: args.name});
         model.statusCode = statusCodes.CREATED.type;
@@ -77,16 +66,12 @@ export default {
       }
     },
     deleteRole: async (_, args, g) => {
+      let v = await validate(validations.deleteRole,args,{abortEarly: false});
+      let {success} = v;
+      if (!success) {
+        throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
+      }
       try {
-        let v = await validate(validations.deleteRole,args,{abortEarly: false});
-        let {success} = v;
-        if (!success) {
-          return {
-            errors: v.errors,
-            statusCode: statusCodes.BAD_REQUEST.type,
-            statusCodeNumber: statusCodes.BAD_REQUEST.number
-          }
-        }
         let fakeResponse = {};
         await roleModel.delete(args);
         fakeResponse.statusCode = statusCodes.CREATED.type;
@@ -99,24 +84,18 @@ export default {
       }
     },
     updateRole: async (_, args, g) => {
+      let v = await validate(validations.updateRole,args,{abortEarly: false});
+      let {success} = v;
+      if (!success) {
+        throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
+      }
       try {
-        let v = await validate(validations.updateRole,args,{abortEarly: false});
-        let {success} = v;
-        if (!success) {
-          return {
-            errors: v.errors,
-            statusCode: statusCodes.BAD_REQUEST.type,
-            statusCodeNumber: statusCodes.BAD_REQUEST.number
-          }
-        }
-
         let update = await roleModel.update(args);
         update.statusCode = statusCodes.OK.type;
         update.statusCodeNumber = statusCodes.OK.number;
         update.successMessageType = "Success";
         update.successMessage = "Role updated";
         return update;
-
       } catch (e) {
         return internalServerError(e);
       }

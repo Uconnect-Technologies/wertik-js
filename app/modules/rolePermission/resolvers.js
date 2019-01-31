@@ -7,6 +7,7 @@ import validations from "./validations.js";
 import validate from "./../../../framework/validations/validate.js";
 import statusCodes from "./../../../framework/helpers/statusCodes";
 import getIdName from "./../../../framework/helpers/getIdName.js";
+import {ApolloError} from "apollo-server";
 
 let rolePermissionModel = new Model({
   models: models,
@@ -42,23 +43,15 @@ export default {
       }
     },
     rolePermissionView: async (_, args, g) => {
+      let v = await validate(validations.rolePermission,args,{abortEarly: false});
+      let {success} = v;
+      if (!success) {
+        throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
+      }
       try {
-        let v = await validate(validations.rolePermission,args,{abortEarly: false});
-        let {success} = v;
-        if (!success) {
-          return {
-            errors: v.errors,
-            statusCode: statusCodes.BAD_REQUEST.type,
-            statusCodeNumber: statusCodes.BAD_REQUEST.number
-          }
-        }
         let rolePermission = await rolePermissionModel.view(args);
         if (!rolePermission) {
-          return {
-            errors: ["Not Found"],
-            statusCodeNumber: statusCodes.NOT_FOUND.number,
-            statusCode: statusCodes.NOT_FOUND.type
-          }
+          throw new ApolloError("Validation error",statusCodes.NOT_FOUND.number,{list: ["Role permission view."]})
         }
         rolePermission.statusCode = statusCodes.OK.type;
         rolePermission.statusCodeNumber = statusCodes.OK.number;
@@ -73,17 +66,12 @@ export default {
   },
   mutations: {
     createRolePermission: async (_, args, g) => {
+      let v = await validate(validations.createRolePermission,args,{abortEarly: false});
+			let {success} = v;
+			if (!success) {
+				throw new ApolloError("Validation Errors",statusCodes.BAD_REQUEST.number,{list: v.errors});
+      }
       try {
-        let v = await validate(validations.createRolePermission,args,{abortEarly: false});
-  			let {success} = v;
-  			if (!success) {
-  				return {
-  					errors: v.errors,
-  					statusCode: statusCodes.BAD_REQUEST.type,
-  					statusCodeNumber: statusCodes.BAD_REQUEST.number
-  				}
-        }
-
         let model = await rolePermissionModel.create(args);
         model.statusCode = statusCodes.CREATED.type;
         model.statusCodeNumber = statusCodes.CREATED.number;
@@ -96,16 +84,12 @@ export default {
       }
     },
     deleteRolePermission: async (_, args, g) => {
+      let v = await validate(validations.deleteRolePermission,args,{abortEarly: false});
+			let {success} = v;
+			if (!success) {
+				throw new ApolloError("Validation Errors",statusCodes.BAD_REQUEST.number,{list: v.errors});
+      }
       try {
-        let v = await validate(validations.deleteRolePermission,args,{abortEarly: false});
-  			let {success} = v;
-  			if (!success) {
-  				return {
-  					errors: v.errors,
-  					statusCode: statusCodes.BAD_REQUEST.type,
-  					statusCodeNumber: statusCodes.BAD_REQUEST.number
-  				}
-        }
         let fakeResponse = {};
         await rolePermissionModel.delete(args);
         fakeResponse.statusCode = statusCodes.CREATED.type;
@@ -118,16 +102,12 @@ export default {
       }
     },
     updateRolePermission: async (_, args, g) => {
+      let v = await validate(validations.updateRolePermission,args,{abortEarly: false});
+			let {success} = v;
+			if (!success) {
+				throw new ApolloError("Validation Errors",statusCodes.BAD_REQUEST.number,{list: v.errors});
+      }
       try {
-        let v = await validate(validations.updateRolePermission,args,{abortEarly: false});
-  			let {success} = v;
-  			if (!success) {
-  				return {
-  					errors: v.errors,
-  					statusCode: statusCodes.BAD_REQUEST.type,
-  					statusCodeNumber: statusCodes.BAD_REQUEST.number
-  				}
-        }
 
         let update = await rolePermissionModel.update(args);
         update.statusCode = statusCodes.OK.type;

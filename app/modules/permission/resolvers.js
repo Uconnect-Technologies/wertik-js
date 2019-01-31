@@ -6,6 +6,7 @@ import {get} from "lodash";
 import validations from "./validations.js";
 import validate from "./../../../framework/validations/validate.js";
 import statusCodes from "./../../../framework/helpers/statusCodes";
+import {ApolloError} from "apollo-server";
 
 let permissionModel = new Model({
 	models: models,
@@ -23,23 +24,15 @@ export default {
       }
     },
     permissionView: async (_, args, g) => {
+      let v = await validate(validations.permission,args,{abortEarly: false});
+      let {success} = v;
+      if (!success) {
+        throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
+      }
       try {
-        let v = await validate(validations.permission,args,{abortEarly: false});
-        let {success} = v;
-        if (!success) {
-          return {
-            errors: v.errors,
-            statusCode: statusCodes.BAD_REQUEST.type,
-            statusCodeNumber: statusCodes.BAD_REQUEST.number
-          }
-        }
         let permission = await permissionModel.view(args);
         if (!permission) {
-          return {
-            errors: ["Not Found"],
-            statusCodeNumber: statusCodes.NOT_FOUND.number,
-            statusCode: statusCodes.NOT_FOUND.type
-          }
+          throw new ApolloError("Validation error",statusCodes.NOT_FOUND.number);
         }
         permission.statusCode = statusCodes.OK.type;
         permission.statusCodeNumber = statusCodes.OK.number;
@@ -54,16 +47,12 @@ export default {
   },
   mutations: {
     createPermission: async (_, args, g) => {
+      let v = await validate(validations.createPermission,args,{abortEarly: false});
+      let {success} = v;
+      if (!success) {
+        throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
+      }
       try {
-        let v = await validate(validations.createPermission,args,{abortEarly: false});
-        let {success} = v;
-        if (!success) {
-          return {
-            errors: v.errors,
-            statusCode: statusCodes.BAD_REQUEST.type,
-            statusCodeNumber: statusCodes.BAD_REQUEST.number
-          }
-        }
 
         let model = await permissionModel.create({action: args.action});
         model.statusCode = statusCodes.CREATED.type;
@@ -73,21 +62,16 @@ export default {
         return model;
 
       } catch (e) {
-        console.log(1);
         return internalServerError(e);
       }
     },
     deletePermission: async (_, args, g) => {
+      let v = await validate(validations.deletePermission,args,{abortEarly: false});
+      let {success} = v;
+      if (!success) {
+        throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
+      }
       try {
-        let v = await validate(validations.deletePermission,args,{abortEarly: false});
-        let {success} = v;
-        if (!success) {
-          return {
-            errors: v.errors,
-            statusCode: statusCodes.BAD_REQUEST.type,
-            statusCodeNumber: statusCodes.BAD_REQUEST.number
-          }
-        }
         let fakeResponse = {};
         await permissionModel.delete(args);
         fakeResponse.statusCode = statusCodes.CREATED.type;
@@ -100,24 +84,18 @@ export default {
       }
     },
     updatePermission: async (_, args, g) => {
+      let v = await validate(validations.updatePermission,args,{abortEarly: false});
+      let {success} = v;
+      if (!success) {
+        throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
+      }
       try {
-        let v = await validate(validations.updatePermission,args,{abortEarly: false});
-        let {success} = v;
-        if (!success) {
-          return {
-            errors: v.errors,
-            statusCode: statusCodes.BAD_REQUEST.type,
-            statusCodeNumber: statusCodes.BAD_REQUEST.number
-          }
-        }
-
         let update = await permissionModel.update(args);
         update.statusCode = statusCodes.OK.type;
         update.statusCodeNumber = statusCodes.OK.number;
         update.successMessageType = "Success";
         update.successMessage = "Permission updated";
         return update;
-
       } catch (e) {
         return internalServerError(e);
       }

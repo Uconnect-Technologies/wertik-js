@@ -34,16 +34,12 @@ export default {
   },
   mutations: {
      createUserRole: async (_, args, g) => {
+      let v = await validate(validations.createUserRole,args,{abortEarly: false});
+      let {success} = v;
+      if (!success) {
+        throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
+      }
       try {
-        let v = await validate(validations.createUserRole,args,{abortEarly: false});
-        let {success} = v;
-        if (!success) {
-          return {
-            errors: v.errors,
-            statusCode: statusCodes.BAD_REQUEST.type,
-            statusCodeNumber: statusCodes.BAD_REQUEST.number
-          }
-        }
 
         let model = await userRoleModel.create(args);
         model.statusCode = statusCodes.CREATED.type;
@@ -57,16 +53,12 @@ export default {
       }
     },
     deleteUserRole: async (_, args, g) => {
+      let v = await validate(validations.deleteUserRole,args,{abortEarly: false});
+      let {success} = v;
+      if (!success) {
+        throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
+      }
       try {
-        let v = await validate(validations.deleteUserRole,args,{abortEarly: false});
-        let {success} = v;
-        if (!success) {
-          return {
-            errors: v.errors,
-            statusCode: statusCodes.BAD_REQUEST.type,
-            statusCodeNumber: statusCodes.BAD_REQUEST.number
-          }
-        }
         let fakeResponse = {};
         await userRoleModel.delete(args);
         fakeResponse.statusCode = statusCodes.CREATED.type;
@@ -79,16 +71,12 @@ export default {
       }
     },
     updateUserRole: async (_, args, g) => {
+      let v = await validate(validations.updateUserRole,args,{abortEarly: false});
+      let {success} = v;
+      if (!success) {
+        throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
+      }
       try {
-        let v = await validate(validations.updateUserRole,args,{abortEarly: false});
-        let {success} = v;
-        if (!success) {
-          return {
-            errors: v.errors,
-            statusCode: statusCodes.BAD_REQUEST.type,
-            statusCodeNumber: statusCodes.BAD_REQUEST.number
-          }
-        }
 
         let update = await userRoleModel.update(args);
         update.statusCode = statusCodes.OK.type;
@@ -112,23 +100,15 @@ export default {
         }
       },
       userRoleView: async (_, args, g) => {
+        let v = await validate(validations.userRole,args,{abortEarly: false});
+        let {success} = v;
+        if (!success) {
+          throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
+        }
         try {
-          let v = await validate(validations.userRole,args,{abortEarly: false});
-          let {success} = v;
-          if (!success) {
-            return {
-              errors: v.errors,
-              statusCode: statusCodes.BAD_REQUEST.type,
-              statusCodeNumber: statusCodes.BAD_REQUEST.number
-            }
-          }
           let userRole = await userRoleModel.view(args);
           if (!userRole) {
-            return {
-              errors: ["Not Found"],
-              statusCodeNumber: statusCodes.NOT_FOUND.number,
-              statusCode: statusCodes.NOT_FOUND.type
-            }
+            throw new ApolloError("Not found",statusCodes.BAD_REQUEST.number)
           }
           userRole.statusCode = statusCodes.OK.type;
           userRole.statusCodeNumber = statusCodes.OK.number;

@@ -26,8 +26,8 @@ export default function (rootDirectory,app) {
 	`;
 	let schema = buildSchema(mainSchema);
 	const server = new ApolloServer({ typeDefs: mainSchema, resolvers: allResolvers });
-	server.listen(1100).then(({ url }) => {
-	  console.log(`🚀  Server ready at ${url}`);
+	server.listen(1209).then(({ url }) => {
+	  console.log(`Server ready at ${url}`);
 	});
 	// app.use("/graphql", express_graphql({
 	// 	schema: schema,

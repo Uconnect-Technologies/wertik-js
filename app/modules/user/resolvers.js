@@ -9,6 +9,7 @@ import validations from "./validations.js";
 import validate from "./../../../framework/validations/validate.js";
 import statusCodes from "./../../../framework/helpers/statusCodes";
 import {sendEmail} from "./../../../framework/mailer/index.js";
+import {ApolloError} from "apollo-server";
 
 let userModel = new Model({
 	models: models,
@@ -26,15 +27,11 @@ export default {
 			}
 		},
 		userView: async (_,args,g) => {
+			let v = await validate(validations.userView,args,{abortEarly: false});
+			if (!v.success) {
+				throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
+			}
 			try {
-				let v = await validate(validations.userView,args,{abortEarly: false});
-				if (!v.success) {
-					return {
-						errors: v.errors,
-						statusCode: statusCodes.BAD_REQUEST.type,
-						statusCodeNumber: statusCodes.BAD_REQUEST.number
-					}
-				}
 				let user = await userModel.view(args);
 				return user;
 			} catch (e) {
@@ -44,23 +41,15 @@ export default {
 	},
 	mutations: {
 		activateAccount: async (_, args, g) => {
+			let v = await validate(validations.activateAccount,args,{abortEarly: false});
+			let {success} = v;
+			if (!success) {
+				throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors});
+			}
 			try {
-				let v = await validate(validations.activateAccount,args,{abortEarly: false});
-				let {success} = v;
-				if (!success) {
-					return {
-						errors: v.errors,
-						statusCode: statusCodes.BAD_REQUEST.type,
-						statusCodeNumber: statusCodes.BAD_REQUEST.number
-					}
-				}
 				let user = await userModel.findOne({activationToken: args.activationToken});
 				if (!user) {
-					return {
-						statusCode: statusCodes.BAD_REQUEST.type,
-						errors: ["User: user not found"],
-						statusCodeNumber: statusCodes.BAD_REQUEST.number
-					}
+					throw new ApolloError("Not found",statusCodes.NOT_FOUND.number);
 				}
 				await user.update({
 					activationToken: "",
@@ -77,33 +66,21 @@ export default {
 			}
 		},
 		login: async (_,args,g) => {
+			let v = await validate(validations.login,args,{abortEarly: false});
+			let {success} = v;
+			if (!success) {
+				throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors});
+			}
 			try {
-				let v = await validate(validations.login,args,{abortEarly: false});
-				let {success} = v;
-				if (!success) {
-					return {
-						errors: v.errors,
-						statusCode: statusCodes.BAD_REQUEST.type,
-						statusCodeNumber: statusCodes.BAD_REQUEST.number
-					}
-				}
 				let { email, password } = args;
 				let user = await userModel.findOne({email: email});
 				let findEmail = get(user,'email',null);
 				if (!findEmail) {
-					return {
-						statusCode: statusCodes.BAD_REQUEST.type,
-						errors: ["User: user not found"],
-						statusCodeNumber: statusCodes.BAD_REQUEST.number
-					}
+					throw new ApolloError("Not found",statusCodes.NOT_FOUND.number)
 				}	
 				let comparePassword = bcrypt.compareSync(password, user.password);
 				if (!comparePassword) {
-					return {
-						statusCode: statusCodes.BAD_REQUEST.type,
-						errors: ["Password: Incorrect Password"],
-						statusCodeNumber: statusCodes.BAD_REQUEST.number
-					}
+					throw new ApolloError("Incorrect Password",statusCodes.BAD_REQUEST.number)
 				}
 				let token = await createJwtToken({email: email,for: "authentication"});
 				await user.update({
@@ -120,20 +97,16 @@ export default {
 			}
 		},
 		signup: async (_,args,g) => {
+			let v = await validate(validations.signup,args,{abortEarly: false});
+			if (!v.success) {
+				throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
+			}
 			try {
-				let v = await validate(validations.signup,args,{abortEarly: false});
-				if (!v.success) {
-					return {
-						errors: v.errors,
-						statusCode: statusCodes.BAD_REQUEST.type,
-						statusCodeNumber: statusCodes.BAD_REQUEST.number
-					}
-				}
 				let { email, password, confirmPassword } = args;
 	      let user = await userModel.findOne({
 					email: email
 				});
-				if (user) throw new Error('Email: Email is already used');
+				if (user) throw new ApolloError("Email is already used",statusCodes.BAD_REQUEST.number)
 				var hash = bcrypt.hashSync(password);
 				let newUser = await userModel.create({
 					email: email,
@@ -168,24 +141,16 @@ export default {
 			}
 		},
 		refreshToken:  async (_,args,g) => {
+			let v = await validate(validations.refreshToken,args,{abortEarly: false});
+			if (!v.success) {
+				throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
+			}
 			try {
-				let v = await validate(validations.refreshToken,args,{abortEarly: false});
-				if (!v.success) {
-					return {
-						errors: v.errors,
-						statusCode: statusCodes.BAD_REQUEST.type,
-						statusCodeNumber: statusCodes.BAD_REQUEST.number
-					}
-				}
 				let user = await userModel.findOne({
 					refreshToken: args.refreshToken
 				});
 				if (!user) {
-					return {
-						errors: ["refreshToken: Refresh token is Incorrect"],
-						statusCode: statusCodes.BAD_REQUEST.type,
-						statusCodeNumber: statusCodes.BAD_REQUEST.number
-					}
+					throw new ApolloError("Refresh Token is Incorrect",statusCodes.BAD_REQUEST.number)
 				}
 
 				let token = await createJwtToken({email: user.email,for: "authentication"});
@@ -202,15 +167,11 @@ export default {
 			}
 		},
 		changePassword: async (_,args,g) => {
+			let v = await validate(validations.changePassword,args,{abortEarly: false});
+			if (!v.success) {
+				throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
+			}
 			try {
-				let v = await validate(validations.changePassword,args,{abortEarly: false});
-				if (!v.success) {
-					return {
-						errors: v.errors,
-						statusCode: statusCodes.BAD_REQUEST.type,
-						statusCodeNumber: statusCodes.BAD_REQUEST.number
-					}
-				}
 				let user = await userModel.view(args);
 				if (!user) {
 					return {

@@ -1,6 +1,4 @@
-export default function (e) {
-  return {
-    errors: [`${e.message}`],
-    statusCode: 'INTERNAL_SERVER_ERROR'
-  }
+import { ApolloError } from "apollo-server";
+export default function (e,data) {
+	throw new ApolloError(e.message,500,{});
 }
