@@ -7,6 +7,7 @@ export default `
 		username: String
 		refreshToken: String
 		accessToken: String
+		profile: Profile
 		isActivated: Boolean
 		activatedOn: String
 		twoFactorCode: String

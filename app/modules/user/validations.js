@@ -54,10 +54,36 @@ export default {
       })
     }
   }(),
-  updateProfile: Joi.object().keys({
-    userID: Joi.number().required(),
-    name: Joi.string().min(3).required(),
-    age: Joi.number(),
-    gender: Joi.string()
-  })
+  deleteUser: function () {
+    if (DIALECT == "MONGO_DB") {
+      return Joi.object().keys({
+        _id: Joi.string().required()
+      })
+    }else {
+      return Joi.object().keys({
+        id: Joi.number().required()
+      })
+    }
+  }(),
+  updateUser: function () {
+    if (DIALECT == "MONGO_DB") {
+      return Joi.object().keys({
+        _id: Joi.number().required(),
+        name: Joi.string().min(3).allow('').optional(),
+        email: Joi.string().allow('').optional(),
+        age: Joi.number().allow(null).optional(),
+        gender: Joi.string().allow('').optional(),
+        isSuperUser: Joi.boolean().allow().optional()
+      });
+    }else {
+      return Joi.object().keys({
+        id: Joi.number().required(),
+        name: Joi.string().min(3).allow('').optional(),
+        email: Joi.string().allow('').optional(),
+        age: Joi.number().allow(null).optional(),
+        gender: Joi.string().allow('').optional(),
+        isSuperUser: Joi.boolean().allow().optional()
+      });
+    }
+  }()
 }

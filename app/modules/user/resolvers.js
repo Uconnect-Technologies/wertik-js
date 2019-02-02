@@ -10,6 +10,7 @@ import validate from "./../../../framework/validations/validate.js";
 import statusCodes from "./../../../framework/helpers/statusCodes";
 import {sendEmail} from "./../../../framework/mailer/index.js";
 import {ApolloError} from "apollo-server";
+import getIdName from "./../../../framework/helpers/getIdName.js";
 
 let userModel = new Model({
 	models: models,
@@ -24,6 +25,12 @@ let userRoleModel = new Model({
 let roleModel = new Model({
 	models: models,
 	tableName: "role"
+});
+
+
+let profileModel = new Model({
+	models: models,
+	tableName: "profile"
 });
 
 let userPermissionModel = new Model({
@@ -41,6 +48,9 @@ export default {
 			let userRoles = await userRoleModel.paginate();
 			return userRoles;
 		},
+		async profile(user) {
+			return await profileModel.findOne({user: user[getIdName] })
+		}
 	},
 	queries: {
 		listUsers: async (_, args, g) => {
@@ -200,7 +210,7 @@ export default {
 					accessToken: await createJwtToken({email: email,for: "authentication"}),
 					refreshToken: await createJwtToken({email: email,for: "refreshToken"}),
 					isActivated: false,
-					isSuperUser: false,
+					isSuperUser: get(args,'isSuperUser',false),
 					activationToken: Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2),
 					password: hash
 				});
@@ -215,6 +225,10 @@ export default {
 	        from: process.env.MAILER_SERVICE_USERNAME,
 	        to: newUser.email,
 	        subject: `Welcome to ${process.env.NAME}`
+	      });
+	      await profileModel.create({
+	      	description: '',
+	      	user: newUser[getIdName],
 	      });
 				newUser.statusCode = statusCodes.OK.type;
 				newUser.statusCodeNumber = statusCodes.OK.number;
@@ -235,7 +249,7 @@ export default {
 					refreshToken: args.refreshToken
 				});
 				if (!user) {
-					throw new ApolloError("Refresh Token is Incorrect",statusCodes.BAD_REQUEST.number)
+					throw new ApolloError("Refresh Token is Incorrect, please login again.",statusCodes.BAD_REQUEST.number)
 				}
 
 				let token = await createJwtToken({email: user.email,for: "authentication"});
@@ -259,19 +273,11 @@ export default {
 			try {
 				let user = await userModel.view(args);
 				if (!user) {
-					return {
-						statusCode: statusCodes.BAD_REQUEST.type,
-						errors: ["User: User not found"],
-						statusCodeNumber: statusCodes.BAD_REQUEST.number
-					}
+					throw new ApolloError("User not found",statusCodes.BAD_REQUEST.number);
 				}
 				let correctPassword = bcrypt.compareSync(args.oldPassword, user.password);
 				if (!correctPassword) {
-					return {
-						statusCode: statusCodes.BAD_REQUEST.type,
-						errors: ["Password: Password Incorrect"],
-						statusCodeNumber: statusCodes.BAD_REQUEST.number
-					}
+					throw new ApolloError("Password incorrect",statusCodes.BAD_REQUEST.number);
 				}
 				await user.update({
 					password: bcrypt.hashSync(args.newPassword)
@@ -295,23 +301,33 @@ export default {
 				return internalServerError(e);
 			}
 		},
-		updateProfile: async (_,args,g) => {
+		deleteUser: async (_, args, g) => {
+      let v = await validate(validations.deleteUser,args,{abortEarly: false});
+      let {success} = v;
+      if (!success) {
+        throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
+      }
+      try {
+        let fakeResponse = {};
+        await userModel.delete(args);
+        fakeResponse.statusCode = statusCodes.CREATED.type;
+        fakeResponse.statusCodeNumber = statusCodes.CREATED.number;
+        fakeResponse.successMessageType = "Success";
+        fakeResponse.successMessage = "User deleted";
+        return fakeResponse;
+      } catch (e) {
+        return internalServerError(e);
+      }
+    },
+		updateUser: async (_,args,g) => {
+			let v = await validate(validations.updateUser,args,{abortEarly: false});
+			if (!v.success) {
+				throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
+			}
 			try {
-				let v = await validate(validations.updateProfile,args,{abortEarly: false});
-				if (!v.success) {
-					return {
-						errors: v.errors,
-						statusCode: statusCodes.BAD_REQUEST.type,
-						statusCodeNumber: statusCodes.BAD_REQUEST.number
-					}
-				}
-				let user = await userModel.findOneByID(args.userID);
+				let user = await userModel.findOne({[getIdName]: args[getIdName]});
 				if (!user) {
-					return {
-						statusCode: statusCodes.BAD_REQUEST.type,
-						errors: ["User: User not found"],
-						statusCodeNumber: statusCodes.BAD_REQUEST.number
-					}
+					throw new ApolloError("User not found",statusCodes.NOT_FOUND.number)
 				}
 				user.update(args);
 				let response = {...args};

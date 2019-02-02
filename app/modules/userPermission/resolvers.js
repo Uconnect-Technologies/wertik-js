@@ -29,7 +29,6 @@ export default {
       return await userModel.findOne({[getIdName]: userPermission.user});
     },
     async permission(userPermission) {
-      console.log(await permissionModel.findOne({[getIdName]: userPermission.permission}))
       return await permissionModel.findOne({[getIdName]: userPermission.permission});
     }
   },
