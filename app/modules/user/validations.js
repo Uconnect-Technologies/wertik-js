@@ -3,8 +3,15 @@ import Joi from "joi";
 const {DIALECT} = process.env;
 
 export default {
+  twoFactorLogin: Joi.object().keys({
+    email: Joi.string().required()
+  }),
+  twoFactorLoginValidate: Joi.object().keys({
+    twoFactorCode: Joi.string().required()
+  }),
   signup: Joi.object().keys({
     email: Joi.string().required(),
+    name: Joi.string().allow('').optional(),
     referer: Joi.allow('').optional(),
     password: Joi.string().min(3).required(),
     confirmPassword: Joi.string().min(3).required()

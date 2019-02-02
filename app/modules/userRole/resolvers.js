@@ -40,7 +40,6 @@ export default {
         throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
       }
       try {
-
         let model = await userRoleModel.create(args);
         model.statusCode = statusCodes.CREATED.type;
         model.statusCodeNumber = statusCodes.CREATED.number;

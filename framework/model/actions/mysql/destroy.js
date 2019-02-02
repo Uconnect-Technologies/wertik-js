@@ -1,11 +1,9 @@
-export default async function (model,id,name) {
+export default async function (model,args) {
   await model.destroy({
-    where: {
-      id: id
-    }
+    where: args
   });
   return {
     sucessMessageType: "Deleted",
-    sucessMessage: `${name} deleted sucessfully`
+    sucessMessage: `Deleted sucessfully`
   }
 }

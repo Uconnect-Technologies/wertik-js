@@ -9,11 +9,26 @@ import statusCodes from "./../../../framework/helpers/statusCodes";
 import {ApolloError} from "apollo-server";
 
 let roleModel = new Model({
+  models: models,
+  tableName: "role"
+});
+
+let rolePermissionsModel = new Model({
+  models: models,
+  tableName: "rolepermission"
+});
+
+let permissionModel = new Model({
 	models: models,
-	tableName: "role"
+	tableName: "permission"
 });
 
 export default {
+  Role: {
+    async permissions() {
+      return await rolePermissionsModel.paginate();
+    }
+  },
   queries: {
     listRole: async (_, args, g) => {
       try {

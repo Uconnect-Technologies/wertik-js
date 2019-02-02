@@ -5,6 +5,7 @@ export default `
 		name: String
 		successMessage: String
 		successMessageType: String
+		permissions: [RolePermission]
 		errors: [String]
 		statusCode: String
 		statusCodeNumber: Int

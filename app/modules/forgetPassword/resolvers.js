@@ -54,7 +54,7 @@ export default {
       try {
         let user = await userModel.findOne({email: args.email});
         if (!user) {
-          throw new ApolloError("Errors", statusCodes.NOT_FOUND.number, {list: ["User not found"]});
+          throw new ApolloError("User not found", statusCodes.NOT_FOUND.number);
         }
         let token = Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2)
         await forgetPasswordModel.create({

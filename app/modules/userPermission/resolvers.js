@@ -13,7 +13,26 @@ let userPermissionModel = new Model({
   tableName: "userpermission"
 });
 
+let userModel = new Model({
+  models: models,
+  tableName: "user"
+});
+
+let permissionModel = new Model({
+  models: models,
+  tableName: "permission"
+});
+
 export default {
+  UserPermission: {
+    async user(userPermission) {
+      return await userModel.findOne({[getIdName]: userPermission.user});
+    },
+    async permission(userPermission) {
+      console.log(await permissionModel.findOne({[getIdName]: userPermission.permission}))
+      return await permissionModel.findOne({[getIdName]: userPermission.permission});
+    }
+  },
   queries: {
     listUserPermission: async (_, args, g) => {
       try {

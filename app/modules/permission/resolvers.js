@@ -9,8 +9,13 @@ import statusCodes from "./../../../framework/helpers/statusCodes";
 import {ApolloError} from "apollo-server";
 
 let permissionModel = new Model({
+  models: models,
+  tableName: "permission"
+});
+
+let userModel = new Model({
 	models: models,
-	tableName: "permission"
+	tableName: "user"
 });
 
 export default {

@@ -16,7 +16,32 @@ let userModel = new Model({
 	tableName: "user"
 });
 
+let userRoleModel = new Model({
+	models: models,
+	tableName: "userrole"
+});
+
+let roleModel = new Model({
+	models: models,
+	tableName: "role"
+});
+
+let userPermissionModel = new Model({
+	models: models,
+	tableName: "userpermission"
+});
+
 export default {
+	User: {
+		async assignedPermissions(user) {
+			let userPermission = await userPermissionModel.paginate();
+			return userPermission;
+		},
+		async assignedRoles() {
+			let userRoles = await userRoleModel.paginate();
+			return userRoles;
+		},
+	},
 	queries: {
 		listUsers: async (_, args, g) => {
 			try {
@@ -40,6 +65,65 @@ export default {
 		},
 	},
 	mutations: {
+		twoFactorLogin: async (_, args, g) => {
+			let v = await validate(validations.twoFactorLogin,args,{abortEarly: false});
+			let {success} = v;
+			if (!success) {
+				throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors});
+			}
+			try {
+				let user = await userModel.findOne({email: args.email});
+				if (!user) {
+					throw new ApolloError("User Not found",statusCodes.NOT_FOUND.number)
+				}
+				let twoFactorCode = Math.floor(Math.random() * 100000);
+				await user.update({
+					twoFactorCode: twoFactorCode
+				});
+				await sendEmail('twoFactorLogin.hbs',{
+	        twoFactorCode: twoFactorCode,
+	        siteName: process.env.NAME,
+	        userName: user.email
+	      },{
+	        from: process.env.MAILER_SERVICE_USERNAME,
+	        to: args.email,
+	        subject: `${process.env.NAME} Two Factor Authorization`
+	      });
+	      return {
+	      	successMessageType: "Success",
+	      	successMessage: "Email Sent"
+	      }
+			} catch (e) {
+				return internalServerError(e);
+			}
+		},
+		twoFactorLoginValidate: async (_, args, g) => {
+			let v = await validate(validations.twoFactorLoginValidate,args,{abortEarly: false});
+			let {success} = v;
+			if (!success) {
+				throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors});
+			}
+			try {
+				let user = await userModel.findOne({twoFactorCode: args.twoFactorCode});
+				if (!user) {
+					throw new ApolloError("User Not found",statusCodes.NOT_FOUND.number)
+				}
+				let token = await createJwtToken({email: user.email,for: "authentication"});
+				await user.update({
+					accessToken: token,
+					twoFactorCode: ""
+				});
+				user.accessToken = token;
+				user.successMessage = "Success";
+				user.successMessageType = "You are successfully logged in";
+				user.statusCode = statusCodes.OK.type;
+				user.statusCodeNumber = statusCodes.OK.number;
+				return user;
+			} catch (e) {
+				return internalServerError(e);
+			}
+
+		},	
 		activateAccount: async (_, args, g) => {
 			let v = await validate(validations.activateAccount,args,{abortEarly: false});
 			let {success} = v;
@@ -112,6 +196,7 @@ export default {
 					email: email,
 					referer: get(args,'referer',''),
 					superUser: false,
+					name: get(args,'name',''),
 					accessToken: await createJwtToken({email: email,for: "authentication"}),
 					refreshToken: await createJwtToken({email: email,for: "refreshToken"}),
 					isActivated: false,
