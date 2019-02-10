@@ -21,8 +21,8 @@ let userModel = new Model({
 
 export default {
 	Profile: {
-		async user(user) {
-			return await userModel.findOne({id: user[getIdName] })
+		async user(profile) {
+			return await userModel.findOne({[getIdName]: profile.user })
 		}
 	},
 	queries: {
@@ -45,12 +45,7 @@ export default {
         if (!profile) {
           throw new ApolloError("Profile not found",statusCodes.NOT_FOUND.number);
         }
-        profile.statusCode = statusCodes.OK.type;
-        profile.statusCodeNumber = statusCodes.OK.number;
-        profile.successMessageType = "Success";
-        profile.successMessage = "Profile fetched";
         return profile;
-
       } catch (e) {
         return internalServerError(e);
       }
@@ -64,14 +59,8 @@ export default {
         throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
       }
       try {
-
         let model = await profileModel.create(args);
-        model.statusCode = statusCodes.CREATED.type;
-        model.statusCodeNumber = statusCodes.CREATED.number;
-        model.successMessageType = "Success";
-        model.successMessage = "Profile created";
         return model;
-
       } catch (e) {
         return internalServerError(e);
       }
@@ -83,13 +72,8 @@ export default {
         throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
       }
       try {
-        let fakeResponse = {};
-        await profileModel.delete(args);
-        fakeResponse.statusCode = statusCodes.CREATED.type;
-        fakeResponse.statusCodeNumber = statusCodes.CREATED.number;
-        fakeResponse.successMessageType = "Success";
-        fakeResponse.successMessage = "Profile deleted";
-        return fakeResponse;
+        let response = await profileModel.delete(args);
+        return response;
       } catch (e) {
         return internalServerError(e);
       }
@@ -102,10 +86,6 @@ export default {
       }
       try {
         let update = await profileModel.update(args);
-        update.statusCode = statusCodes.OK.type;
-        update.statusCodeNumber = statusCodes.OK.number;
-        update.successMessageType = "Success";
-        update.successMessage = "Profile updated";
         return update;
       } catch (e) {
         return internalServerError(e);

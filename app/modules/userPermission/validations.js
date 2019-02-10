@@ -2,10 +2,17 @@ import Joi from "joi";
 const {DIALECT} = process.env;
 export default {
   createUserPermission: function () {
-    return Joi.object().keys({
-      user: Joi.number().required(),
-      permission: Joi.number().required()
-    })
+    if (DIALECT == "MONGO_DB") {
+      return Joi.object().keys({
+        user: Joi.string().required(),
+        permission: Joi.string().required()
+      })
+    }else {
+      return Joi.object().keys({
+        user: Joi.number().required(),
+        permission: Joi.number().required()
+      })
+    }
   }(),
   deleteUserPermission: function () {
     if (DIALECT == "MONGO_DB") {
@@ -22,8 +29,8 @@ export default {
     if (DIALECT == "MONGO_DB") {
       return Joi.object().keys({
         _id: Joi.string().required(),
-        user: Joi.number().required(),
-        permission: Joi.number().required()
+        user: Joi.string().required(),
+        permission: Joi.string().required()
       });
     }else {
        return Joi.object().keys({

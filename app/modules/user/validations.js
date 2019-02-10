@@ -6,6 +6,10 @@ export default {
   twoFactorLogin: Joi.object().keys({
     email: Joi.string().required()
   }),
+  loginWithAccessToken: Joi.object().keys({
+    accessToken: Joi.string().required(),
+    refreshToken: Joi.string().allow('').optional()
+  }),
   twoFactorLoginValidate: Joi.object().keys({
     twoFactorCode: Joi.string().required()
   }),
@@ -68,7 +72,7 @@ export default {
   updateUser: function () {
     if (DIALECT == "MONGO_DB") {
       return Joi.object().keys({
-        _id: Joi.number().required(),
+        _id: Joi.string().required(),
         name: Joi.string().min(3).allow('').optional(),
         email: Joi.string().allow('').optional(),
         age: Joi.number().allow(null).optional(),

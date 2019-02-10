@@ -5,7 +5,7 @@ let db_models = null;
 if (dialect == "MYSQL") {
   db_connect = require("./mysql/connection.js").default;
   db_models = require("./mysql/connection.js").models;
-} else if (dialect == "MONGO_DB" || dialect == "MONGO" || dialect == "MONGODB") {
+} else if (dialect == "MONGO_DB") {
   db_connect = require("./mongodb/connection.js").default;
   db_models = require("./mongodb/connection.js").models;
 }

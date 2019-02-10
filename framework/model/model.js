@@ -21,8 +21,13 @@ class Model {
 
 	async delete(args) {
 		try {
+			let fakeResponse = {};
 			await destroy(this.model,args);
-			return true;
+			fakeResponse.statusCode = statusCodes.CREATED.type;
+			fakeResponse.statusCodeNumber = statusCodes.CREATED.number;
+			fakeResponse.successMessageType = "Success";
+			fakeResponse.successMessage = `${this.tableName} deleted`;
+			return fakeResponse;
 		} catch (e) {
 			console.log(e.message);
 			return false;
@@ -33,6 +38,10 @@ class Model {
 	async create(args) {
 		try {
 			let response = await create(this.model,args,'');
+			model.statusCode = statusCodes.CREATED.type;
+			model.statusCodeNumber = statusCodes.CREATED.number;
+			model.successMessageType = "Success";
+			model.successMessage = `${this.tableName} created`;
 			return response;
 		} catch (e) {
 			console.log(e.message);
@@ -42,6 +51,10 @@ class Model {
 	async update(args) {
 		try {
 			let response = await update(this.model,args);
+			response.statusCode = statusCodes.OK.type;
+			response.statusCodeNumber = statusCodes.OK.number;
+			response.successMessageType = "Success";
+			response.successMessage = `${this.tableName} updated`;
 			return response;
 		} catch (e) {
 			console.log(e.message);
@@ -51,6 +64,10 @@ class Model {
 	async view(args) {
 		try {
 			let response = await view(this.model,args);
+			response.statusCode = statusCodes.OK.type;
+			response.statusCodeNumber = statusCodes.OK.number;
+			response.successMessageType = "Success";
+			response.successMessage = `${this.tableName} fetched`;
 			return response;
 		} catch (e) {
 			console.log(e.message);
@@ -60,6 +77,10 @@ class Model {
 	async findOne(args) {
 		try {
 			let response = await findOne(this.model,args);
+			response.statusCode = statusCodes.OK.type;
+			response.statusCodeNumber = statusCodes.OK.number;
+			response.successMessageType = "Success";
+			response.successMessage = `${this.tableName} fetched`;
 			return response;
 		} catch (e) {
 			console.log(e.message);

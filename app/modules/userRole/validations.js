@@ -3,10 +3,17 @@ const {DIALECT} = process.env;
 
 export default {
   createUserRole: function () {
-    return Joi.object().keys({
-      user: Joi.number().required(),
-      role: Joi.number().required(),
-    })
+    if (DIALECT == "MONGO_DB") {
+      return Joi.object().keys({
+        user: Joi.string().required(),
+        role: Joi.string().required(),
+      });
+    }else {
+      return Joi.object().keys({
+        user: Joi.number().required(),
+        role: Joi.number().required(),
+      });
+    }
   }(),
   deleteUserRole: function () {
     if (DIALECT == "MONGO_DB") {
@@ -23,8 +30,8 @@ export default {
     if (DIALECT == "MONGO_DB") {
       return Joi.object().keys({
         _id: Joi.string().required(),
-        user: Joi.number().required(),
-        role: Joi.number().required(),
+        user: Joi.string().required(),
+        role: Joi.string().required(),
       });
     }else {
       return Joi.object().keys({

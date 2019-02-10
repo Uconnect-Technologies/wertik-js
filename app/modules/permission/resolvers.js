@@ -39,10 +39,6 @@ export default {
         if (!permission) {
           throw new ApolloError("Validation error",statusCodes.NOT_FOUND.number);
         }
-        permission.statusCode = statusCodes.OK.type;
-        permission.statusCodeNumber = statusCodes.OK.number;
-        permission.successMessageType = "Success";
-        permission.successMessage = "Permission fetched";
         return permission;
 
       } catch (e) {
@@ -58,14 +54,8 @@ export default {
         throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
       }
       try {
-
         let model = await permissionModel.create({action: args.action});
-        model.statusCode = statusCodes.CREATED.type;
-        model.statusCodeNumber = statusCodes.CREATED.number;
-        model.successMessageType = "Success";
-        model.successMessage = "Permission created";
         return model;
-
       } catch (e) {
         return internalServerError(e);
       }
@@ -77,13 +67,8 @@ export default {
         throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
       }
       try {
-        let fakeResponse = {};
-        await permissionModel.delete(args);
-        fakeResponse.statusCode = statusCodes.CREATED.type;
-        fakeResponse.statusCodeNumber = statusCodes.CREATED.number;
-        fakeResponse.successMessageType = "Success";
-        fakeResponse.successMessage = "Permission deleted";
-        return fakeResponse;
+        let response = await permissionModel.delete(args);
+        return response;
       } catch (e) {
         return internalServerError(e);
       }
@@ -96,10 +81,6 @@ export default {
       }
       try {
         let update = await permissionModel.update(args);
-        update.statusCode = statusCodes.OK.type;
-        update.statusCodeNumber = statusCodes.OK.number;
-        update.successMessageType = "Success";
-        update.successMessage = "Permission updated";
         return update;
       } catch (e) {
         return internalServerError(e);

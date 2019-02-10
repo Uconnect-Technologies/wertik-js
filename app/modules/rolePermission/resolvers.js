@@ -53,10 +53,6 @@ export default {
         if (!rolePermission) {
           throw new ApolloError("Validation error",statusCodes.NOT_FOUND.number,{list: ["Role permission view."]})
         }
-        rolePermission.statusCode = statusCodes.OK.type;
-        rolePermission.statusCodeNumber = statusCodes.OK.number;
-        rolePermission.successMessageType = "Success";
-        rolePermission.successMessage = "Role permission fetched";
         return rolePermission;
 
       } catch (e) {
@@ -73,10 +69,6 @@ export default {
       }
       try {
         let model = await rolePermissionModel.create(args);
-        model.statusCode = statusCodes.CREATED.type;
-        model.statusCodeNumber = statusCodes.CREATED.number;
-        model.successMessageType = "Success";
-        model.successMessage = "Role Permission created";
         return model;
 
       } catch (e) {
@@ -90,13 +82,7 @@ export default {
 				throw new ApolloError("Validation Errors",statusCodes.BAD_REQUEST.number,{list: v.errors});
       }
       try {
-        let fakeResponse = {};
-        await rolePermissionModel.delete(args);
-        fakeResponse.statusCode = statusCodes.CREATED.type;
-        fakeResponse.statusCodeNumber = statusCodes.CREATED.number;
-        fakeResponse.successMessageType = "Success";
-        fakeResponse.successMessage = "Role Permission deleted";
-        return fakeResponse;
+        return await rolePermissionModel.delete(args);
       } catch (e) {
         return internalServerError(e);
       }
@@ -108,14 +94,7 @@ export default {
 				throw new ApolloError("Validation Errors",statusCodes.BAD_REQUEST.number,{list: v.errors});
       }
       try {
-
-        let update = await rolePermissionModel.update(args);
-        update.statusCode = statusCodes.OK.type;
-        update.statusCodeNumber = statusCodes.OK.number;
-        update.successMessageType = "Success";
-        update.successMessage = "Role permission updated";
-        return update;
-
+        return await rolePermissionModel.update(args);
       } catch (e) {
         return internalServerError(e);
       }

@@ -3,6 +3,8 @@ import Model from "./../../../framework/model/model.js";
 import {ApolloError} from "apollo-server";
 import isAuthQuery from "./../../../framework/security/isAuthQuery.js";
 import isTokenExpired from "./../../../framework/security/isTokenExpired.js";
+import statusCodes from "./../../../framework/helpers/statusCodes";
+import {get} from "lodash";
 
 let userModel = new Model({
 	models: models,
@@ -11,20 +13,24 @@ let userModel = new Model({
 
 export default {
 	async validateAccessToken(req) {
-		let query = req.body.query;
-		let isAuthGraphqlQuery = isAuthQuery(query);
-		if (isAuthGraphqlQuery) {
-			return {};
-		}
-		let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImlseWFzLmRhdG9vQGdtYWlsLmNvbSIsImZvciI6ImF1dGhlbnRpY2F0aW9uIiwiZXhwaXJlRGF0ZSI6MTU0OTIyNzgzMCwiaWF0IjoxNTQ5MTQxNDMwfQ.s7_Dby1ZFhptapkFOhc37OZSNpfibJiLd2nzxge6eEg";
-		let isExpired = await isTokenExpired(token);
-		if (isExpired) {
-			throw new ApolloError("Jwt Token Expired",statusCodes.UNAUTHORIZED.number)
-		}
-		let user = await userModel.findOne({accessToken: token});
-		if (!user) {
-			throw new ApolloError("You should login",statusCodes.UNAUTHORIZED.number)
-		}
-		return {user: user};
+		// let query = req.body.query;
+		// let token = get(req,'headers.authorization','');
+		// let isAuthGraphqlQuery = isAuthQuery(query);
+		// if (isAuthGraphqlQuery) {
+		// 	return {};
+		// }
+		// console.log(token);
+		// if (!token) {
+		// 	throw new ApolloError("JWT not passed",statusCodes.UNAUTHORIZED.number)
+		// }
+		// let isExpired = await isTokenExpired(token);
+		// if (isExpired) {
+		// 	throw new ApolloError("Jwt Token Expired",statusCodes.UNAUTHORIZED.number)
+		// }
+		// let user = await userModel.findOne({accessToken: token});
+		// if (!user) {
+		// 	throw new ApolloError("You should login",statusCodes.UNAUTHORIZED.number)
+		// }
+		// return {user: user};
 	}
 }

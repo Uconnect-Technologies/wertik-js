@@ -6,9 +6,6 @@ export default `
 		successMessage: String
 		successMessageType: String
 		permissions: [RolePermission]
-		errors: [String]
-		statusCode: String
-		statusCodeNumber: Int
 		created_by: User
 		created_at: String
 		updated_at: String

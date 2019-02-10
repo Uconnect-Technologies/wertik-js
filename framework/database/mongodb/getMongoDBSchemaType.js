@@ -1,3 +1,5 @@
+const relations = ['user', 'forgetPassword','permission','role','rolePermission','userRole','userPermission',"profile" ];
+
 export default function (type) {
 	type = type.toLowerCase();
 	if (type == "string") {
@@ -8,5 +10,7 @@ export default function (type) {
 		return Boolean;
 	}else if (type == "date" || type == "datetime") {
 		return Date;
+	}else if (relations.indexOf(type) > -1) {
+		return String;
 	}
 }

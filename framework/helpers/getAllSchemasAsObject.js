@@ -4,7 +4,8 @@ import gql from "graphql-tag";
 var path = require('path');
 export default function () {
   var appDir = path.dirname(require.main.filename);
-  let f = getDirectoriesInFolder(`${appDir}/app/modules/`);
+  // let f = getDirectoriesInFolder(`${appDir}/app/modules/`);
+  let f = ['user', 'forgetPassword','permission','role','rolePermission','userRole','userPermission',"profile" ];
   let object = {};
   f.forEach((folder) => {
     let schemaPath = `${appDir}/app/modules/${folder}/schema.js`;

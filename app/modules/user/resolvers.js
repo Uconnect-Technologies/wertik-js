@@ -3,6 +3,7 @@ import {models} from "./../../../framework/database/connection.js";
 import Model from "./../../../framework/model/model.js";
 import bcrypt from "bcrypt-nodejs";
 import createJwtToken from "./../../../framework/security/createJwtToken.js";
+import isTokenExpired from "./../../../framework/security/isTokenExpired.js";
 import moment from "moment";
 import {get} from "lodash";
 import validations from "./validations.js";
@@ -75,6 +76,23 @@ export default {
 		},
 	},
 	mutations: {
+		loginWithAccessToken: async (_,args,g) => {
+			let v = await validate(validations.loginWithAccessToken,args,{abortEarly: false});
+			if (!v.success) {
+				throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
+			}
+			try {
+				let user = await userModel.view({accessToken: args.accessToken});
+				if (isTokenExpired(user.accessToken)) {
+					await user.update({
+						accessToken: await createJwtToken({email: user.email,for: "authentication"})
+					});
+				}
+				return user;
+			} catch (e) {
+				return internalServerError(e);
+			}
+		},
 		twoFactorLogin: async (_, args, g) => {
 			let v = await validate(validations.twoFactorLogin,args,{abortEarly: false});
 			let {success} = v;
@@ -147,8 +165,17 @@ export default {
 				}
 				await user.update({
 					activationToken: "",
-					isActivated: true
+					isActivated: true,
+					activatedOn: moment().valueOf()
 				});
+				await sendEmail('accountActivated.hbs',{
+	        username: user.email,
+	        siteName: process.env.NAME,
+	      },{
+	        from: process.env.MAILER_SERVICE_USERNAME,
+	        to: user.email,
+	        subject: `Welcome to ${process.env.NAME}`
+	      });
 				return {
 					statusCode: statusCodes.OK.type,
 					statusCodeNumber: statusCodes.OK.number,
@@ -219,7 +246,7 @@ export default {
 	        username: newUser.email,
 	        date: moment().format("dddd, MMMM Do YYYY, h:mm:ss a"),
 	        siteName: process.env.NAME,
-	        activationUrl: process.env.FRONTEND_DEVELOPMENT_URL,
+	        activationUrl: `${process.env.FRONTEND_APP_URL}/activate-account/`,
 	        activationToken: newUser.activationToken,
 	      },{
 	        from: process.env.MAILER_SERVICE_USERNAME,
@@ -227,7 +254,7 @@ export default {
 	        subject: `Welcome to ${process.env.NAME}`
 	      });
 	      await profileModel.create({
-	      	description: '',
+	      	description: '...',
 	      	user: newUser[getIdName],
 	      });
 				newUser.statusCode = statusCodes.OK.type;
@@ -308,13 +335,7 @@ export default {
         throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
       }
       try {
-        let fakeResponse = {};
-        await userModel.delete(args);
-        fakeResponse.statusCode = statusCodes.CREATED.type;
-        fakeResponse.statusCodeNumber = statusCodes.CREATED.number;
-        fakeResponse.successMessageType = "Success";
-        fakeResponse.successMessage = "User deleted";
-        return fakeResponse;
+        return await userModel.delete(args);
       } catch (e) {
         return internalServerError(e);
       }
@@ -329,13 +350,7 @@ export default {
 				if (!user) {
 					throw new ApolloError("User not found",statusCodes.NOT_FOUND.number)
 				}
-				user.update(args);
-				let response = {...args};
-				response.statusCode = statusCodes.OK.type;
-				response.statusCodeNumber = statusCodes.OK.number;
-				response.successMessageType = "Success";
-				response.successMessage = "Account updated";
-				return response;
+				return await user.update(args);
 			} catch (e) {
 				return internalServerError(e);
 			}
