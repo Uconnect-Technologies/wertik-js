@@ -1,5 +1,6 @@
-import {get} from "lodash";
 import actions from "./actions/index.js";
+import statusCodes from "./../helpers/statusCodes.js";
+import {ApolloError} from "apollo-server";
 
 const {
 	create,
@@ -29,22 +30,21 @@ class Model {
 			fakeResponse.successMessage = `${this.tableName} deleted`;
 			return fakeResponse;
 		} catch (e) {
-			console.log(e.message);
-			return false;
+			return internalServerError(e);
 		}
 	}
 
 
 	async create(args) {
 		try {
-			let response = await create(this.model,args,'');
-			model.statusCode = statusCodes.CREATED.type;
-			model.statusCodeNumber = statusCodes.CREATED.number;
-			model.successMessageType = "Success";
-			model.successMessage = `${this.tableName} created`;
-			return response;
+			let fakeResponse = await create(this.model,args,'');
+			fakeResponse.statusCode = statusCodes.CREATED.type;
+			fakeResponse.statusCodeNumber = statusCodes.CREATED.number;
+			fakeResponse.successMessageType = "Success";
+			fakeResponse.successMessage = `${this.tableName} created`;
+			return fakeResponse;
 		} catch (e) {
-			console.log(e.message);
+			return internalServerError(e);
 		}
 	}
 
@@ -57,7 +57,7 @@ class Model {
 			response.successMessage = `${this.tableName} updated`;
 			return response;
 		} catch (e) {
-			console.log(e.message);
+			return internalServerError(e);
 		}
 	}
 
@@ -70,7 +70,7 @@ class Model {
 			response.successMessage = `${this.tableName} fetched`;
 			return response;
 		} catch (e) {
-			console.log(e.message);
+			return internalServerError(e);
 		}
 	}
 
@@ -83,7 +83,7 @@ class Model {
 			response.successMessage = `${this.tableName} fetched`;
 			return response;
 		} catch (e) {
-			console.log(e.message);
+			return internalServerError(e);
 		}
 	}
 
@@ -92,7 +92,7 @@ class Model {
 			let response = await paginate(this.model,args);
 			return response;
 		} catch (e) {
-			console.log(e.message);
+			return internalServerError(e);
 		}
 	}
 	getInstance() {

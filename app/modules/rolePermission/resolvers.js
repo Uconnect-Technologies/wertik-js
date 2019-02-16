@@ -1,13 +1,8 @@
-import internalServerError from "./../../../framework/helpers/internalServerError.js";
 import {models} from "./../../../framework/database/connection.js";
 import Model from "./../../../framework/model/model.js";
-import moment from "moment";
-import {get} from "lodash";
 import validations from "./validations.js";
-import validate from "./../../../framework/validations/validate.js";
-import statusCodes from "./../../../framework/helpers/statusCodes";
 import getIdName from "./../../../framework/helpers/getIdName.js";
-import {ApolloError} from "apollo-server";
+import dynamic from "./../../../framework/dynamic/index.js";
 
 let rolePermissionModel = new Model({
   models: models,
@@ -24,6 +19,18 @@ let roleModel = new Model({
 	tableName: "role"
 });
 
+let rolePermissionResolver = dynamic.resolvers({
+  moduleName: 'RolePermission',
+  validations: {
+    create: validations.createRolePermission,
+    delete: validations.deleteRolePermission,
+    update: validations.updateRolePermission,
+    view: validations.rolePermission
+  },
+  model: rolePermissionModel
+});
+
+
 export default {
   RolePermission: {
     async permission(rolePermission) {
@@ -35,69 +42,21 @@ export default {
   },
   queries: {
     listRolePermission: async (_, args, g) => {
-      try {
-        let paginate = await rolePermissionModel.paginate(args);
-        return paginate;
-      } catch (e) {
-        return internalServerError(e);
-      }
+      return rolePermissionResolver.queries.listRolePermission(_,args,g);
     },
     rolePermissionView: async (_, args, g) => {
-      let v = await validate(validations.rolePermission,args,{abortEarly: false});
-      let {success} = v;
-      if (!success) {
-        throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
-      }
-      try {
-        let rolePermission = await rolePermissionModel.view(args);
-        if (!rolePermission) {
-          throw new ApolloError("Validation error",statusCodes.NOT_FOUND.number,{list: ["Role permission view."]})
-        }
-        return rolePermission;
-
-      } catch (e) {
-        return internalServerError(e);
-      }
+      return rolePermissionResolver.queries.viewRolePermission(_,args.input,g);
     }
   },
   mutations: {
     createRolePermission: async (_, args, g) => {
-      let v = await validate(validations.createRolePermission,args,{abortEarly: false});
-			let {success} = v;
-			if (!success) {
-				throw new ApolloError("Validation Errors",statusCodes.BAD_REQUEST.number,{list: v.errors});
-      }
-      try {
-        let model = await rolePermissionModel.create(args);
-        return model;
-
-      } catch (e) {
-        return internalServerError(e);
-      }
+      return rolePermissionResolver.mutations.createRolePermission(_,args.input,g);
     },
     deleteRolePermission: async (_, args, g) => {
-      let v = await validate(validations.deleteRolePermission,args,{abortEarly: false});
-			let {success} = v;
-			if (!success) {
-				throw new ApolloError("Validation Errors",statusCodes.BAD_REQUEST.number,{list: v.errors});
-      }
-      try {
-        return await rolePermissionModel.delete(args);
-      } catch (e) {
-        return internalServerError(e);
-      }
+      return rolePermissionResolver.mutations.deleteRolePermission(_,args.input,g);
     },
     updateRolePermission: async (_, args, g) => {
-      let v = await validate(validations.updateRolePermission,args,{abortEarly: false});
-			let {success} = v;
-			if (!success) {
-				throw new ApolloError("Validation Errors",statusCodes.BAD_REQUEST.number,{list: v.errors});
-      }
-      try {
-        return await rolePermissionModel.update(args);
-      } catch (e) {
-        return internalServerError(e);
-      }
+      return rolePermissionResolver.mutations.updateRolePermission(_,args.input,g);
     },
   },
   

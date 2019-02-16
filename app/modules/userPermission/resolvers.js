@@ -1,12 +1,8 @@
-import internalServerError from "./../../../framework/helpers/internalServerError.js";
 import {models} from "./../../../framework/database/connection.js";
 import Model from "./../../../framework/model/model.js";
-import moment from "moment";
-import {get} from "lodash";
 import validations from "./validations.js";
-import validate from "./../../../framework/validations/validate.js";
-import statusCodes from "./../../../framework/helpers/statusCodes";
 import getIdName from "./../../../framework/helpers/getIdName.js";
+import dynamic from "./../../../framework/dynamic/index.js";
 
 let userPermissionModel = new Model({
   models: models,
@@ -23,6 +19,18 @@ let permissionModel = new Model({
   tableName: "permission"
 });
 
+
+let userPermissionResolver = dynamic.resolvers({
+  moduleName: 'UserPermission',
+  validations: {
+    create: validations.createUserPermission,
+    delete: validations.deleteUserPermission,
+    update: validations.updateUserPermission,
+    view: validations.userPermission
+  },
+  model: userPermissionModel
+});
+
 export default {
   UserPermission: {
     async user(userPermission) {
@@ -34,62 +42,22 @@ export default {
   },
   queries: {
     listUserPermission: async (_, args, g) => {
-      try {
-        let paginate = await userPermissionModel.paginate(args);
-        return paginate;
-      } catch (e) {
-        return internalServerError(e);
-      }
+      return userPermissionResolver.queries.listUserPermission(_,args,g);
     },
     userPermissionView: async (_, args, g) => {
-      let {success} = await validate(validations.userPermission,args,{abortEarly: false});
-      if (!success) {
-        throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
-      }
-      try {
-        let userPermission = await userPermissionModel.view(args);
-        if (!userPermission) {
-          throw new ApolloError("Not found",statusCodes.NOT_FOUND.number);
-        }
-        return userPermission;
-      } catch (e) {
-        return internalServerError(e);
-      }
+      return userPermissionResolver.queries.viewUserPermission(_,args.input,g);
     }
   },
+  
   mutations: {
     createUserPermission: async (_, args, g) => {
-      let {success} = await validate(validations.createUserPermission,args,{abortEarly: false});
-			if (!success) {
-				throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
-      }
-      try {
-        return await userPermissionModel.create(args);
-      } catch (e) {
-        return internalServerError(e);
-      }
+      return userPermissionResolver.mutations.createUserPermission(_,args.input,g);
     },
     deleteUserPermission: async (_, args, g) => {
-      let {success} = await validate(validations.deleteUserPermission,args,{abortEarly: false});
-			if (!success) {
-				throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
-      }
-      try {
-        return await userPermissionModel.delete(args);
-      } catch (e) {
-        return internalServerError(e);
-      }
+      return userPermissionResolver.mutations.deleteUserPermission(_,args.input,g);
     },
     updateUserPermission: async (_, args, g) => {
-      let {success} = await validate(validations.updateUserPermission,args,{abortEarly: false});
-			if (!success) {
-				throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
-      }
-      try {
-        return await userPermissionModel.update(args);
-      } catch (e) {
-        return internalServerError(e);
-      }
+      return userPermissionResolver.mutations.updateUserPermission(_,args.input,g);
     },
   },
   
