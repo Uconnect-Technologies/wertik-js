@@ -8,6 +8,7 @@ import validations from "./validations.js";
 import validate from "./../../../framework/validations/validate.js";
 import statusCodes from "./../../../framework/helpers/statusCodes";
 import getIdName from "./../../../framework/helpers/getIdName.js";
+import dynamic from "./../../../framework/dynamic/index.js";
 
 let userRoleModel = new Model({
   models: models,
@@ -24,6 +25,18 @@ let roleModel = new Model({
 	tableName: "role"
 });
 
+let userRoleResolver = dynamic.resolvers({
+  moduleName: 'UserRole',
+  validations: {
+    create: validations.createUserRole,
+    delete: validations.deleteUserRole,
+    update: validations.updateUserRole,
+    view: validations.userRole
+  },
+  model: userRoleModel
+});
+
+
 export default {
   UserRole: {
     async user(userRole) {
@@ -33,70 +46,24 @@ export default {
       return await roleModel.findOne({[getIdName]: userRole.role})
     }
   },
+  queries: {
+    listUserRole: async (_, args, g) => {
+      return userRoleResolver.queries.listRole(_,args,g);
+    },
+    userRoleView: async (_, args, g) => {
+      return userRoleResolver.queries.viewUserRole(_,args.input,g);
+    }
+  },
   mutations: {
-     createUserRole: async (_, args, g) => {
-      let v = await validate(validations.createUserRole,args,{abortEarly: false});
-      let {success} = v;
-      if (!success) {
-        throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
-      }
-      try {
-        return await userRoleModel.create(args);
-      } catch (e) {
-        return internalServerError(e);
-      }
+    createUserRole: async (_, args, g) => {
+      return userRoleResolver.mutations.createUserRole(_,args.input,g);
     },
     deleteUserRole: async (_, args, g) => {
-      let v = await validate(validations.deleteUserRole,args,{abortEarly: false});
-      let {success} = v;
-      if (!success) {
-        throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
-      }
-      try {
-        return await userRoleModel.delete(args);
-      } catch (e) {
-        return internalServerError(e);
-      }
+      return userRoleResolver.mutations.deleteUserRole(_,args.input,g);
     },
     updateUserRole: async (_, args, g) => {
-      let v = await validate(validations.updateUserRole,args,{abortEarly: false});
-      let {success} = v;
-      if (!success) {
-        throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
-      }
-      try {
-        return await userRoleModel.update(args);
-      } catch (e) {
-        return internalServerError(e);
-      }
+      return userRoleResolver.mutations.updateUserRole(_,args.input,g);
     },
   },
-  queries: {
-    listUserRole: async (args, req, sceham) => {
-        try {
-          let paginate = await userRoleModel.paginate(args);
-          return paginate;
-        } catch (e) {
-          return internalServerError(e);
-        }
-      },
-      userRoleView: async (_, args, g) => {
-        let v = await validate(validations.userRole,args,{abortEarly: false});
-        let {success} = v;
-        if (!success) {
-          throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
-        }
-        try {
-          let userRole = await userRoleModel.view(args);
-          if (!userRole) {
-            throw new ApolloError("Not found",statusCodes.BAD_REQUEST.number)
-          }
-          return userRole;
-        } catch (e) {
-          return internalServerError(e);
-        }
-      }
-  },
- 
   
 }

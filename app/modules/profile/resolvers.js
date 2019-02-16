@@ -1,11 +1,8 @@
-import internalServerError from "./../../../framework/helpers/internalServerError.js";
 import {models} from "./../../../framework/database/connection.js";
 import Model from "./../../../framework/model/model.js";
 import validations from "./validations.js";
-import validate from "./../../../framework/validations/validate.js";
-import statusCodes from "./../../../framework/helpers/statusCodes";
-import {ApolloError} from "apollo-server";
 import getIdName from "./../../../framework/helpers/getIdName.js";
+import dynamic from "./../../../framework/dynamic/index.js";
 
 let profileModel = new Model({
   models: models,
@@ -17,77 +14,41 @@ let userModel = new Model({
   tableName: "user"
 });
 
+let profileResolver = dynamic.resolvers({
+  moduleName: 'Profile',
+  validations: {
+    create: validations.createProfile,
+    delete: validations.deleteProfile,
+    update: validations.updateProfile,
+    view: validations.profile
+  },
+  model: profileModel
+});
+
+
 export default {
 	Profile: {
 		async user(profile) {
 			return await userModel.findOne({[getIdName]: profile.user })
 		}
-	},
-	queries: {
-		listProfile: async (_, args, g) => {
-      try {
-        let paginate = await profileModel.paginate(args);
-        return paginate;
-      } catch (e) {
-        return internalServerError(e);
-      }
+  },
+  queries: {
+    listProfile: async (_, args, g) => {
+      return profileResolver.queries.listProfile(_,args,g);
     },
     profileView: async (_, args, g) => {
-      let v = await validate(validations.profile,args,{abortEarly: false});
-      let {success} = v;
-      if (!success) {
-        throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
-      }
-      try {
-        let profile = await profileModel.view(args);
-        if (!profile) {
-          throw new ApolloError("Profile not found",statusCodes.NOT_FOUND.number);
-        }
-        return profile;
-      } catch (e) {
-        return internalServerError(e);
-      }
+      return profileResolver.queries.viewProfile(_,args.input,g);
     }
-	},
-	mutations: {
+  },
+  mutations: {
     createProfile: async (_, args, g) => {
-      let v = await validate(validations.createProfile,args,{abortEarly: false});
-      let {success} = v;
-      if (!success) {
-        throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
-      }
-      try {
-        let model = await profileModel.create(args);
-        return model;
-      } catch (e) {
-        return internalServerError(e);
-      }
+      return profileResolver.mutations.createProfile(_,args.input,g);
     },
     deleteProfile: async (_, args, g) => {
-      let v = await validate(validations.deleteProfile,args,{abortEarly: false});
-      let {success} = v;
-      if (!success) {
-        throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
-      }
-      try {
-        let response = await profileModel.delete(args);
-        return response;
-      } catch (e) {
-        return internalServerError(e);
-      }
+      return profileResolver.mutations.deleteProfile(_,args.input,g);
     },
     updateProfile: async (_, args, g) => {
-      let v = await validate(validations.updateProfile,args,{abortEarly: false});
-      let {success} = v;
-      if (!success) {
-        throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
-      }
-      try {
-        let update = await profileModel.update(args);
-        return update;
-      } catch (e) {
-        return internalServerError(e);
-      }
+      return profileResolver.mutations.updateProfile(_,args.input,g);
     },
-	}
+  },
 }
