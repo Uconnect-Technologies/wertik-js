@@ -6,12 +6,13 @@ I will be using this boilreplate for my future projects, so please star this rep
 
 Up-coming Features
 
-1. Add Stripe Integration
-2. Aws Integaration
-3. Firebase Integration
-4. JWT Token Validation
-5. Two Factor Authorization by Email
+1. Stripe Integration.
+2. Aws Integaration.
+3. Firebase Integration.
+4. JWT Token Validation.
+5. Two Factor Authorization by Email.
 6. Control GraphQL queries according to RBAC.
+7. Sockets Integration.
 
 Completed Features:
 
