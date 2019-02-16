@@ -5,8 +5,11 @@
 A scalable and easy to work with Graphql Node Boilerplate which uses Apollo.
 
 Graphql: Apollo
+
 Database: Mysql + MongoDB
+
 Auth: Forget Password, General Auth, Two Factor Authorization By Email
+
 
 💻 Work in progress.
 
