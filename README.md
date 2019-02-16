@@ -5,15 +5,10 @@
 A scalable and easy to work with Graphql Node Boilerplate which uses Apollo.
 
 Graphql: Apollo
-
 Database: Mysql + MongoDB
-
 Auth: Forget Password, General Auth, Two Factor Authorization By Email
 
-
-💻 Work in progress.
-
-Up-coming Features
+**Up-coming Features:**
 
 1. Stripe Integration [Planned]
 2. Aws Integaration [Planned]
@@ -24,13 +19,13 @@ Up-coming Features
 7. Testing [Planned]
 8. Generators [Needs Improvement]
 
-In-Progress Features:
+**In-Progress Features:**
 
 1. Dynamic Resolvers [Progress]
 2. Dynamic Mutations [Progress]
 3. Dynamic Queries [Progress]
 
-Completed Features:
+**Completed Features:**
 
 1. Changing Crud operations into dynamic, write resolvers for your custom features, not for creating, updating and listing features ✔ [Done]
 2. RBAC, Roles, Permissions, Role Permissions, User Permissions ✔ [Done]
