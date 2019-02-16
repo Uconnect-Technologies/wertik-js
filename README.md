@@ -2,7 +2,13 @@
 💪 Node Mysql Graphql RestAPI Starter Kit
 
 
-I will be using this boilreplate for my future projects, so please star this repo and use this in your backend, because I will be making do this repo in future.
+A scalable and easy to work with Graphql Node Boilerplate which uses Apollo.
+
+Graphql: Apollo
+Database: Mysql + MongoDB
+Auth: Forget Password, General Auth, Two Factor Authorization By Email
+
+💻 Work in progress.
 
 Up-coming Features
 
@@ -13,10 +19,11 @@ Up-coming Features
 5. Two Factor Authorization by Email.
 6. Control GraphQL queries according to RBAC.
 7. Sockets Integration.
+8. Testing
 
 Completed Features:
 
-1. Changing Crud operations into dynamic currntly using code ✔
+1. Changing Crud operations into dynamic, write resolvers for your custom features, not for creating, updating and listing features ✔
 2. RBAC, Roles, Permissions, Role Permissions, User Permissions ✔
 3. Forget Password ✔
 
