@@ -4,7 +4,7 @@ if (DIALECT == "MONGO_DB") {
 	relationSchemaType = "String";
 }
 export default `
-  createPermission(action: String): Permission
-  deletePermission(id: Int,_id: String): Permission
-  updatePermission(id: Int, action: String,_id: String): Permission
+  createPermission(input: PermissionInput): Permission
+  deletePermission(input: PermissionInput): Permission
+  updatePermission(input: PermissionInput): Permission
 `;

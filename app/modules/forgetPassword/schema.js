@@ -9,4 +9,10 @@ export default `
 		created_at: String
 		updated_at: String
 	}
+	input ForgetPasswordInput {
+		_id: String
+		id: Int
+		email: String
+		token: String
+	}
 `;

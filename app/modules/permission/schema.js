@@ -9,4 +9,9 @@ export default `
 		created_at: String
 		updated_at: String
 	}
+	input PermissionInput {
+		_id: String
+		id: Int
+		action: String
+	}
 `;

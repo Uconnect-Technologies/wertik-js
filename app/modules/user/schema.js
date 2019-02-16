@@ -1,27 +1,33 @@
+let userFields = `
+	_id: String
+	id: Int
+	name: String
+	age: Int
+	username: String
+	refreshToken: String
+	accessToken: String
+	isActivated: Boolean
+	activatedOn: String
+	twoFactorCode: String
+	isSuperUser: Boolean
+	activationToken: String
+	email: String
+	password: String
+	gender: String
+	referer: String
+`
 export default `
 	type User {
-		_id: String
-		id: Int
-		name: String
-		age: Int
-		username: String
-		refreshToken: String
-		accessToken: String
+		${userFields}
 		profile: Profile
-		isActivated: Boolean
-		activatedOn: String
-		twoFactorCode: String
 		assignedPermissions: [UserPermission]
 		assignedRoles: [UserRole]
-		isSuperUser: Boolean
-		activationToken: String
-		email: String
-		password: String
-		gender: String
-		referer: String
 		successMessage: String
 		successMessageType: String
 		created_at: String
 		updated_at: String
+	}
+	input UserInput {
+		${userFields}
 	}
 `;

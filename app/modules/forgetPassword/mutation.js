@@ -4,6 +4,6 @@ if (DIALECT == "MONGO_DB") {
 	relationSchemaType = "String";
 }
 export default `
-  requestPasswordReset(email: String): ForgetPassword
-  resetPassword(token: String, password: String, confirmPassword: String): ForgetPassword
+  requestPasswordReset(input: ForgetPasswordInput): ForgetPassword
+  resetPassword(input: ForgetPasswordInput): ForgetPassword
 `;

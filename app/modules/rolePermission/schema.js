@@ -1,3 +1,8 @@
+const {DIALECT} = process.env;
+let relationSchemaType = "Int";
+if (DIALECT == "MONGO_DB") {
+	relationSchemaType = "String";
+}
 export default `
 	type RolePermission {
 		_id: String
@@ -11,5 +16,11 @@ export default `
 		statusCodeNumber: Int
 		created_at: String
 		updated_at: String
+	}
+	input RolePermissionInput {
+		_id: String
+		id: Int
+		permission: ${relationSchemaType}
+		role: ${relationSchemaType}
 	}
 `;
