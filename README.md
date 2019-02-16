@@ -18,3 +18,6 @@ Completed Features:
 1. Changing Crud operations into dynamic currntly using code ✔
 2. RBAC, Roles, Permissions, Role Permissions, User Permissions ✔
 3. Forget Password ✔
+
+
+You can suggest me a feature you want in Node Boilerplate: https://github.com/ilyaskarim/NodeBoilerplate/issues/2
