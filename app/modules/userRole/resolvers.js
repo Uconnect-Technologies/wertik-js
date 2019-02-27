@@ -50,7 +50,7 @@ export default {
     listUserRole: async (_, args, g) => {
       return userRoleResolver.queries.listRole(_,args,g);
     },
-    userRoleView: async (_, args, g) => {
+    viewUserRole: async (_, args, g) => {
       return userRoleResolver.queries.viewUserRole(_,args.input,g);
     }
   },

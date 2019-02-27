@@ -1,9 +1,9 @@
 export default {
-  generateMutationsSchema(moduleName,schema) {
+  generateMutationsSchema(moduleName) {
     return `
-      create${moduleName}(name: String): ${schema}
-      delete${moduleName}(id: Int, _id: String): ${schema}
-      update${moduleName}(id: Int, name: String, _id: String): ${schema}
+        create${moduleName}(input: ${moduleName}Input): ${moduleName}
+        delete${moduleName}(input: ${moduleName}Input): ${moduleName}
+        update${moduleName}(input: ${moduleName}Input): ${moduleName}
     `
   }
 }

@@ -44,7 +44,7 @@ export default {
     listRolePermission: async (_, args, g) => {
       return rolePermissionResolver.queries.listRolePermission(_,args,g);
     },
-    rolePermissionView: async (_, args, g) => {
+    viewRolePermission: async (_, args, g) => {
       return rolePermissionResolver.queries.viewRolePermission(_,args.input,g);
     }
   },

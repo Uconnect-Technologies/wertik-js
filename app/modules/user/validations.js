@@ -25,7 +25,7 @@ export default {
       activationToken: Joi.string().required(),
     })
   }(),
-  userView: function () {
+  viewUser: function () {
     if (DIALECT == "MONGO_DB") {
       return Joi.object().keys({
         _id: Joi.string().required(),

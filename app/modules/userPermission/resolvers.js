@@ -44,7 +44,7 @@ export default {
     listUserPermission: async (_, args, g) => {
       return userPermissionResolver.queries.listUserPermission(_,args,g);
     },
-    userPermissionView: async (_, args, g) => {
+    viewUserPermission: async (_, args, g) => {
       return userPermissionResolver.queries.viewUserPermission(_,args.input,g);
     }
   },
