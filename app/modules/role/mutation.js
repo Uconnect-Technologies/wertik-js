@@ -1,5 +1,5 @@
+import dynamic from "./../../../framework/dynamic/index.js";
+
 export default `
-  createRole(input: RoleInput): Role
-  deleteRole(input: RoleInput): Role
-  updateRole(input: RoleInput): Role
+  ${dynamic.mutations.generateMutationsSchema("Role")}
 `;

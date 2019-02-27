@@ -36,7 +36,7 @@ export default {
     listProfile: async (_, args, g) => {
       return profileResolver.queries.listProfile(_,args,g);
     },
-    profileView: async (_, args, g) => {
+    viewProfile: async (_, args, g) => {
       return profileResolver.queries.viewProfile(_,args.input,g);
     }
   },

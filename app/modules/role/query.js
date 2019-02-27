@@ -1,4 +1,4 @@
 export default `
-  roleView(input: RoleInput): Role
+  viewRole(input: RoleInput): Role
   listRole(page: Int, limit: Int): [Role]
 `

@@ -33,7 +33,7 @@ export default {
     listPermission: async (_, args, g) => {
       return permissionResolver.queries.listPermission(_,args,g);
     },
-    permissionView: async (_, args, g) => {
+    viewPermission: async (_, args, g) => {
       return permissionResolver.queries.viewPermission(_,args.input,g);
     }
   },
