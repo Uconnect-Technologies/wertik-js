@@ -1,4 +1,4 @@
 export default `
-  viewProfile(id: Int,_id: String): Profile
-  listProfile(page: Int, limit: Int): [Profile]
+profileView(id: Int,_id: String): Profile
+  listProfile(pagination: PaginationInput,filters: [FilterInput]): [Profile]
 `

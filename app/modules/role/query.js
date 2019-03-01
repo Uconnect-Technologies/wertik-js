@@ -1,4 +1,4 @@
 export default `
-  viewRole(input: RoleInput): Role
-  listRole(page: Int, limit: Int): [Role]
+roleView(input: RoleInput): Role
+  listRole(pagination: PaginationInput,filters: [FilterInput]): [Role]
 `

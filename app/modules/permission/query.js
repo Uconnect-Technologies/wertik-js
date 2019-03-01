@@ -1,4 +1,5 @@
 export default `
-  viewPermission(id: Int, action: String,_id: String): Permission
-  listPermission(page: Int, limit: Int): [Permission]
+
+  permissionView(id: Int, action: String,_id: String): Permission
+  listPermission(pagination: PaginationInput,filters: [FilterInput]): [Permission]
 `

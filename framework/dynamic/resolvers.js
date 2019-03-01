@@ -7,7 +7,6 @@ export default function ({moduleName,validations,model}) {
   return {
     queries: {
       [`list${moduleName}`]: async (_, args, g) => {
-        console.log(args);
         try {
           return await model.paginate(args);
         } catch (e) {

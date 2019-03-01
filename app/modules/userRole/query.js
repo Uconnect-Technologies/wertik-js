@@ -1,4 +1,4 @@
 export default `
-  viewUserRole(id: Int, action: String,_id: String): UserRole
-  listUserRole(page: Int, limit: Int): [UserRole]
+ userRoleView(id: Int, action: String,_id: String): UserRole
+  listUserRole(pagination: PaginationInput,filters: [FilterInput]): [UserRole]
 `

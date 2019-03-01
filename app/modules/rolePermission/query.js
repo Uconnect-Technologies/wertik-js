@@ -1,4 +1,4 @@
 export default `
-  viewRolePermission(id: Int, _id: String): RolePermission
-  listRolePermission(page: Int, limit: Int): [RolePermission]
+ rolePermissionView(id: Int, _id: String): RolePermission
+  listRolePermission(pagination: PaginationInput,filters: [FilterInput]): [RolePermission]
 `
