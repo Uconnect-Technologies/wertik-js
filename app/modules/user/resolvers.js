@@ -62,8 +62,8 @@ export default {
 				return internalServerError(e);
 			}
 		},
-		userView: async (_,args,g) => {
-			let v = await validate(validations.userView,args,{abortEarly: false});
+		viewUser: async (_,args,g) => {
+			let v = await validate(validations.viewUser,args,{abortEarly: false});
 			if (!v.success) {
 				throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
 			}

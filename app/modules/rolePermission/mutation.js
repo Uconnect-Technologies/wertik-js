@@ -1,5 +1,5 @@
+import dynamic from "./../../../framework/dynamic/index.js";
+
 export default `
-  createRolePermission(input: RolePermissionInput): RolePermission
-  deleteRolePermission(input: RolePermissionInput): RolePermission
-  updateRolePermission(input: RolePermissionInput): RolePermission
+  ${dynamic.mutations.generateMutationsSchema("RolePermission")}
 `;

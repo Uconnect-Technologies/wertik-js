@@ -1,6 +1,6 @@
 import actions from "./actions/index.js";
 import statusCodes from "./../helpers/statusCodes.js";
-import {ApolloError} from "apollo-server";
+import internalServerError from "./../../framework/helpers/internalServerError";
 
 const {
 	create,

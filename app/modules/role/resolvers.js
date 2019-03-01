@@ -34,7 +34,7 @@ export default {
     listRole: async (_, args, g) => {
       return roleResolver.queries.listRole(_,args,g);
     },
-    roleView: async (_, args, g) => {
+    viewRole: async (_, args, g) => {
       return roleResolver.queries.viewRole(_,args.input,g);
     }
   },
