@@ -21,7 +21,7 @@ Auth: Forget Password, General Auth, Two Factor Authorization By Email
 
 **In-Progress Features:**
 
-No Task
+1. Setup ES Lint
 
 **Completed Features:**
 
