@@ -1,4 +1,4 @@
-# NodeBoilerplate
+# NodeSaaSBoilerplate
 💪 Node Mysql Graphql RestAPI Starter Kit
 
 
