@@ -48,6 +48,12 @@ export default {
     updateRole: async (_, args, g) => {
       return roleResolver.mutations.updateRole(_,args.input,g);
     },
+    updateBulkRole: async (_, args, g) => {
+      return roleResolver.mutations.updateBulkRole(_,args.input,g);
+    },
+    createBulkRole: async (_, args, g) => {
+      return roleResolver.mutations.createBulkRole(_,args.input,g);
+    },
   },
 
 }
