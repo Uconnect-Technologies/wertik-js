@@ -10,9 +10,11 @@ export default `
 		created_at: String
 		updated_at: String
 	}
+
 	input RoleInput {
 		_id: String
 		id: Int
 		name: String
 	}
+	
 `;
