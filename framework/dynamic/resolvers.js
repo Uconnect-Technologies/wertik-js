@@ -31,7 +31,20 @@ export default function ({moduleName,validations,model}) {
       }
     },
     mutations: {
-      [`updateBulk${moduleName}`]: async (_, args, g) => {},
+      [`updateBulk${moduleName}`]: async (_, args, g) => {
+        return args.map( async (e) => {
+          let v = await validate(validations.update,e,{abortEarly: false});
+          let {success} = v;
+          if (!success) {
+            throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
+          }
+          try {
+            return await model.update(e);
+          } catch (e) {
+            return internalServerError(e);
+          }
+        });
+      },
       [`createBulk${moduleName}`]: async (_, args, g) => {
         return args.map( async (e) => {
           let v = await validate(validations.create,e,{abortEarly: false});
