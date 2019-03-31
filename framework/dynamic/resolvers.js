@@ -45,6 +45,9 @@ export default function ({moduleName,validations,model}) {
           }
         });
       },
+      [`deleteBulk${moduleName}`]: async (_, args, g) => {
+        console.log(args);
+      },
       [`createBulk${moduleName}`]: async (_, args, g) => {
         return args.map( async (e) => {
           let v = await validate(validations.create,e,{abortEarly: false});
