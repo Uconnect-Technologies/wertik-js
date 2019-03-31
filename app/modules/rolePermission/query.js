@@ -1,4 +1,4 @@
+import dynamic from "./../../../framework/dynamic/index.js";
 export default `
-  viewRolePermission(id: Int, _id: String): RolePermission
-  listRolePermission(page: Int, limit: Int): [RolePermission]
+  ${dynamic.queries.generateQueriesSchema("RolePermission")}
 `

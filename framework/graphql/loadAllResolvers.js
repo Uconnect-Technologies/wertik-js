@@ -3,12 +3,12 @@ import {camelCase,upperFirst} from "lodash";
 
 export default function(rootDirectory) {
   let path = `${rootDirectory}/app/modules/`;
-  let folders = ['user', 'forgetPassword','permission','role','rolePermission','userRole','userPermission' ,"profile"];
+  let modules = process.env.MODULES_ENABLED.split(",");
   let output = {
     Query: {},
     Mutation: {}
   };
-  folders.forEach(async name => {
+  modules.forEach(async name => {
     let content = require(`${path}${name}/resolvers.js`).default;
     let queries = content.queries;
     let mutations = content.mutations;

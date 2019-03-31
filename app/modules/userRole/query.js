@@ -1,4 +1,4 @@
+import dynamic from "./../../../framework/dynamic/index.js";
 export default `
-  viewUserRole(id: Int, action: String,_id: String): UserRole
-  listUserRole(page: Int, limit: Int): [UserRole]
+	${dynamic.queries.generateQueriesSchema("UserRole")}
 `

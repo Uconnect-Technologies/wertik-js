@@ -1,4 +1,4 @@
+import dynamic from "./../../../framework/dynamic/index.js";
 export default `
-	viewUserPermission(id: Int,_id: String): UserPermission
-	listUserPermission(page: Int, limit: Int): [UserPermission]
+	${dynamic.queries.generateQueriesSchema("UserPermission")}
 `;
