@@ -1,4 +1,4 @@
-# NodeBoilerplate
+# NodeSaaSBoilerplate
 💪 Node Mysql Graphql RestAPI Starter Kit
 
 
@@ -21,15 +21,16 @@ Auth: Forget Password, General Auth, Two Factor Authorization By Email
 
 **In-Progress Features:**
 
-1. Dynamic Resolvers [Progress]
-2. Dynamic Mutations [Progress]
-3. Dynamic Queries [Progress]
+1. Setup ES Lint
 
 **Completed Features:**
 
 1. Changing Crud operations into dynamic, write resolvers for your custom features, not for creating, updating and listing features ✔ [Done]
 2. RBAC, Roles, Permissions, Role Permissions, User Permissions ✔ [Done]
 3. Forget Password ✔ [Done]
+4. Dynamic Resolvers [Progress]
+5. Dynamic Mutations [Progress]
+6. Dynamic Queries [Progress]
 
 
 You can suggest me a feature you want in Node Boilerplate: https://github.com/ilyaskarim/NodeBoilerplate/issues/2
