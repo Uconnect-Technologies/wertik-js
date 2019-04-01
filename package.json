@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "main.js",
   "repository": "https://github.com/ilyaskarim/NodeBoilerplate.git",
-  "author": "Ilyas Karim <ilyas.datoo@gmail.com>",
+  "author": "Ilyas Karim  <ilyas.datoo@gmail.com>",
   "license": "MIT",
   "scripts": {
     "start": "cross-env NODE_ENV=development nodemon main --exec \"node -r dotenv/config -r babel-register\"",
