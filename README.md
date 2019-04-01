@@ -32,5 +32,8 @@ Auth: Forget Password, General Auth, Two Factor Authorization By Email
 5. Dynamic Mutations [Progress]
 6. Dynamic Queries [Progress]
 
+**Issues**
+
+1. In-progress issues: https://github.com/ilyaskarim/NodeSaaSBoilerplate/issues?utf8=%E2%9C%93&q=label%3Ain-progress
 
 You can suggest me a feature you want in Node Boilerplate: https://github.com/ilyaskarim/NodeBoilerplate/issues/2
