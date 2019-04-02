@@ -13,8 +13,6 @@ mongoose.connect(mongo,{keepAlive: 1,useNewUrlParser: true}).then(() => {
 let mongoCollections = generateMongoDBSchema(mongoose.connection,getAllSchemasAsObject());
 let mongodbModels = {};
 
-console.log(mongoCollections);
-
 Object.keys(mongoCollections).forEach((item) => {
   let schema = new Schema(mongoCollections[item],{ collection: item });
   schema.plugin(mongoosePaginate);

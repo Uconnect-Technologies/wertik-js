@@ -1,3 +1,5 @@
+import getListByPaginationAndFiltersSchema from "./../../../framework/graphql/getListByPaginationAndFiltersSchema.js"
+
 let userFields = `
 	_id: String
 	id: Int
@@ -27,6 +29,7 @@ export default `
 		created_at: String
 		updated_at: String
 	}
+	${getListByPaginationAndFiltersSchema("User")}
 	input UserInput {
 		${userFields}
 	}

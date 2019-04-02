@@ -89,7 +89,7 @@ class Model {
 
 	async paginate(args) {
 		try {
-			let response = await paginate(this.model,args.pagination);
+			let response = await paginate(this.model,args);
 			return response;
 		} catch (e) {
 			return internalServerError(e);

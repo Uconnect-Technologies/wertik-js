@@ -8,7 +8,7 @@ export default function ({moduleName,validations,model}) {
     queries: {
       [`list${moduleName}`]: async (_, args, g) => {
         try {
-          return await model.paginate(args);
+          return await model.paginate(args)
         } catch (e) {
           return internalServerError(e);
         }
