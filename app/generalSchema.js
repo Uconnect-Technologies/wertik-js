@@ -21,4 +21,7 @@ export default `
 	type Filter {
 		${filter}
 	}
+	type SuccessMessage {
+		successMessage: String
+	}
 `;

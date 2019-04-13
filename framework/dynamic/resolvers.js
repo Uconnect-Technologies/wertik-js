@@ -46,9 +46,19 @@ export default function ({moduleName,validations,model}) {
         });
       },
       [`deleteBulk${moduleName}`]: async (_, args, g) => {
-        return {
-          successMessage: "Deleted all items"
-        }
+        console.log(args);
+        return args.input.map( async (item) => {
+          let v = await validate(validations.delete,item,{abortEarly: false});
+          let {success} = v;
+          if (!success) {
+            throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
+          }
+          try {
+            return await model.delete(item);
+          } catch (e) {
+            return internalServerError(e);
+          }
+        });
       },
       [`createBulk${moduleName}`]: async (_, args, g) => {
         return args.map( async (e) => {
