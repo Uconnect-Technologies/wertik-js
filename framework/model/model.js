@@ -64,6 +64,9 @@ class Model {
 	async view(args) {
 		try {
 			let response = await view(this.model,args);
+			if (!response) {
+				return null;
+			}
 			response.statusCode = statusCodes.OK.type;
 			response.statusCodeNumber = statusCodes.OK.number;
 			response.successMessageType = "Success";
@@ -77,6 +80,9 @@ class Model {
 	async findOne(args) {
 		try {
 			let response = await findOne(this.model,args);
+			if (!response) {
+				return null;
+			}
 			response.statusCode = statusCodes.OK.type;
 			response.statusCodeNumber = statusCodes.OK.number;
 			response.successMessageType = "Success";

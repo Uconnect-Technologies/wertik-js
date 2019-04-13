@@ -1,14 +1,21 @@
 import Joi from "joi";
 const {DIALECT} = process.env;
 
-let id = (MONGO_DB == "MONGO_DB") ? "_id" : "id";
+let id = (DIALECT == "MONGO_DB") ? "_id" : "id";
 
 export function loadRules(rules) {
-	
+	rules.rules.forEach((item,index) => {
+		console.log(item);
+		if (typeof Joi[item] === "function") {
+			console.log("fine")
+		}
+	});
+	return {};
 }
 
 export default async function (rules) {
-	return Joi.object().keys({
-	  ...loadRules(rules)
-	})
+	// return Joi.object().keys({
+	  // ...loadRules(rules)
+	// })
+	loadRules(rules);
 }

@@ -33,4 +33,9 @@ export default `
 	input UserInput {
 		${userFields}
 	}
+	input UserSignupInput {
+		email: String
+		password: String
+		confirmPassword: String
+	}
 `;
