@@ -38,6 +38,3 @@ export default {
     ...dynamic.loader("Role",roleResolver).queries
   }
 }
-
-
-console.log(dynamic.loader("Role",roleResolver).mutations)
