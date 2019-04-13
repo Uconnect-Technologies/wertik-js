@@ -24,8 +24,6 @@ class Model {
 		try {
 			let fakeResponse = {};
 			await destroy(this.model,args);
-			fakeResponse.statusCode = statusCodes.CREATED.type;
-			fakeResponse.statusCodeNumber = statusCodes.CREATED.number;
 			fakeResponse.successMessageType = "Success";
 			fakeResponse.successMessage = `${this.tableName} deleted`;
 			return fakeResponse;
@@ -38,8 +36,6 @@ class Model {
 	async create(args) {
 		try {
 			let fakeResponse = await create(this.model,args,'');
-			fakeResponse.statusCode = statusCodes.CREATED.type;
-			fakeResponse.statusCodeNumber = statusCodes.CREATED.number;
 			fakeResponse.successMessageType = "Success";
 			fakeResponse.successMessage = `${this.tableName} created`;
 			return fakeResponse;
@@ -51,8 +47,6 @@ class Model {
 	async update(args) {
 		try {
 			let response = await update(this.model,args);
-			response.statusCode = statusCodes.OK.type;
-			response.statusCodeNumber = statusCodes.OK.number;
 			response.successMessageType = "Success";
 			response.successMessage = `${this.tableName} updated`;
 			return response;
@@ -67,8 +61,6 @@ class Model {
 			if (!response) {
 				return null;
 			}
-			response.statusCode = statusCodes.OK.type;
-			response.statusCodeNumber = statusCodes.OK.number;
 			response.successMessageType = "Success";
 			response.successMessage = `${this.tableName} fetched`;
 			return response;
@@ -83,8 +75,6 @@ class Model {
 			if (!response) {
 				return null;
 			}
-			response.statusCode = statusCodes.OK.type;
-			response.statusCodeNumber = statusCodes.OK.number;
 			response.successMessageType = "Success";
 			response.successMessage = `${this.tableName} fetched`;
 			return response;

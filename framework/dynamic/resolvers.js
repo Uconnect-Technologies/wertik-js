@@ -46,7 +46,9 @@ export default function ({moduleName,validations,model}) {
         });
       },
       [`deleteBulk${moduleName}`]: async (_, args, g) => {
-        console.log(args);
+        return {
+          successMessage: "Deleted all items"
+        }
       },
       [`createBulk${moduleName}`]: async (_, args, g) => {
         return args.map( async (e) => {

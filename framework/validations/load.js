@@ -5,9 +5,7 @@ let id = (DIALECT == "MONGO_DB") ? "_id" : "id";
 
 export function loadRules(rules) {
 	rules.rules.forEach((item,index) => {
-		console.log(item);
 		if (typeof Joi[item] === "function") {
-			console.log("fine")
 		}
 	});
 	return {};
