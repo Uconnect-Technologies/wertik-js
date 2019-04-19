@@ -1,8 +1,10 @@
+import getListByPaginationAndFiltersSchema from "./../../../framework/graphql/getListByPaginationAndFiltersSchema.js"
 const {DIALECT} = process.env;
 let relationSchemaType = "Int";
 if (DIALECT == "MONGO_DB") {
 	relationSchemaType = "String";
 }
+
 export default `
 	type Profile {
 		_id: String
@@ -15,6 +17,7 @@ export default `
 		created_at: String
 		updated_at: String
 	}
+	${getListByPaginationAndFiltersSchema("Profile")}
 	input ProfileInput {
 		_id: String
 		id: Int

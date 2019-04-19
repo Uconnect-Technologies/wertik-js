@@ -41,23 +41,10 @@ export default {
     }
   },
   queries: {
-    listUserRole: async (_, args, g) => {
-      return userRoleResolver.queries.listRole(_,args,g);
-    },
-    viewUserRole: async (_, args, g) => {
-      return userRoleResolver.queries.viewUserRole(_,args.input,g);
-    }
+    ...dynamic.loader("UserRole",userRoleResolver).queries
   },
   mutations: {
-    createUserRole: async (_, args, g) => {
-      return userRoleResolver.mutations.createUserRole(_,args.input,g);
-    },
-    deleteUserRole: async (_, args, g) => {
-      return userRoleResolver.mutations.deleteUserRole(_,args.input,g);
-    },
-    updateUserRole: async (_, args, g) => {
-      return userRoleResolver.mutations.updateUserRole(_,args.input,g);
-    },
+    ...dynamic.loader("UserRole",userRoleResolver).mutations
   },
   
 }

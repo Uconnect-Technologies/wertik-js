@@ -33,22 +33,9 @@ export default {
 		}
   },
   queries: {
-    listProfile: async (_, args, g) => {
-      return profileResolver.queries.listProfile(_,args,g);
-    },
-    viewProfile: async (_, args, g) => {
-      return profileResolver.queries.viewProfile(_,args.input,g);
-    }
+    ...dynamic.loader("Profile",profileResolver).queries
   },
   mutations: {
-    createProfile: async (_, args, g) => {
-      return profileResolver.mutations.createProfile(_,args.input,g);
-    },
-    deleteProfile: async (_, args, g) => {
-      return profileResolver.mutations.deleteProfile(_,args.input,g);
-    },
-    updateProfile: async (_, args, g) => {
-      return profileResolver.mutations.updateProfile(_,args.input,g);
-    },
+    ...dynamic.loader("Profile",profileResolver).mutations
   },
 }

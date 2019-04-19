@@ -1,4 +1,5 @@
+import dynamic from "./../../../framework/dynamic/index.js";
+
 export default `
-  viewRole(input: RoleInput): Role
-  listRole(page: Int, limit: Int): [Role]
+	${dynamic.queries.generateQueriesSchema("Role")}
 `

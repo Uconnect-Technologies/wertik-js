@@ -1,3 +1,5 @@
+import {camelCase} from "lodash";
+
 export default {
   generateMutationsSchema(moduleName) {
     return `
@@ -6,6 +8,7 @@ export default {
         update${moduleName}(input: ${moduleName}Input): ${moduleName}
         updateBulk${moduleName}(input: [${moduleName}Input]): [${moduleName}]
         createBulk${moduleName}(input: [${moduleName}Input]): [${moduleName}]
+        deleteBulk${moduleName}(input: [${moduleName}Input]): [${moduleName}]
     `
   }
 }

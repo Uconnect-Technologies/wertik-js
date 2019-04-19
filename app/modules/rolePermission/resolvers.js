@@ -41,23 +41,10 @@ export default {
     }
   },
   queries: {
-    listRolePermission: async (_, args, g) => {
-      return rolePermissionResolver.queries.listRolePermission(_,args,g);
-    },
-    viewRolePermission: async (_, args, g) => {
-      return rolePermissionResolver.queries.viewRolePermission(_,args.input,g);
-    }
+    ...dynamic.loader("RolePermission",rolePermissionResolver).queries
   },
   mutations: {
-    createRolePermission: async (_, args, g) => {
-      return rolePermissionResolver.mutations.createRolePermission(_,args.input,g);
-    },
-    deleteRolePermission: async (_, args, g) => {
-      return rolePermissionResolver.mutations.deleteRolePermission(_,args.input,g);
-    },
-    updateRolePermission: async (_, args, g) => {
-      return rolePermissionResolver.mutations.updateRolePermission(_,args.input,g);
-    },
+    ...dynamic.loader("RolePermission",rolePermissionResolver).mutations
   },
   
 }

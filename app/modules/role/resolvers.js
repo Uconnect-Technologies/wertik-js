@@ -3,6 +3,7 @@ import Model from "./../../../framework/model/model.js";
 import validations from "./validations.js";
 import dynamic from "./../../../framework/dynamic/index.js";
 
+
 let roleModel = new Model({
   models: models,
   tableName: "role"
@@ -30,30 +31,10 @@ export default {
       return await rolePermissionsModel.paginate();
     }
   },
-  queries: {
-    listRole: async (_, args, g) => {
-      return roleResolver.queries.listRole(_,args,g);
-    },
-    viewRole: async (_, args, g) => {
-      return roleResolver.queries.viewRole(_,args.input,g);
-    }
-  },
   mutations: {
-    createRole: async (_, args, g) => {
-      return roleResolver.mutations.createRole(_,args.input,g);
-    },
-    deleteRole: async (_, args, g) => {
-      return roleResolver.mutations.deleteRole(_,args.input,g);
-    },
-    updateRole: async (_, args, g) => {
-      return roleResolver.mutations.updateRole(_,args.input,g);
-    },
-    updateBulkRole: async (_, args, g) => {
-      return roleResolver.mutations.updateBulkRole(_,args.input,g);
-    },
-    createBulkRole: async (_, args, g) => {
-      return roleResolver.mutations.createBulkRole(_,args.input,g);
-    },
+    ...dynamic.loader("Role",roleResolver).mutations
   },
-
+  queries: {
+    ...dynamic.loader("Role",roleResolver).queries
+  }
 }

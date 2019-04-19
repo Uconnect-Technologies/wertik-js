@@ -24,8 +24,6 @@ class Model {
 		try {
 			let fakeResponse = {};
 			await destroy(this.model,args);
-			fakeResponse.statusCode = statusCodes.CREATED.type;
-			fakeResponse.statusCodeNumber = statusCodes.CREATED.number;
 			fakeResponse.successMessageType = "Success";
 			fakeResponse.successMessage = `${this.tableName} deleted`;
 			return fakeResponse;
@@ -38,8 +36,6 @@ class Model {
 	async create(args) {
 		try {
 			let fakeResponse = await create(this.model,args,'');
-			fakeResponse.statusCode = statusCodes.CREATED.type;
-			fakeResponse.statusCodeNumber = statusCodes.CREATED.number;
 			fakeResponse.successMessageType = "Success";
 			fakeResponse.successMessage = `${this.tableName} created`;
 			return fakeResponse;
@@ -51,8 +47,6 @@ class Model {
 	async update(args) {
 		try {
 			let response = await update(this.model,args);
-			response.statusCode = statusCodes.OK.type;
-			response.statusCodeNumber = statusCodes.OK.number;
 			response.successMessageType = "Success";
 			response.successMessage = `${this.tableName} updated`;
 			return response;
@@ -64,8 +58,9 @@ class Model {
 	async view(args) {
 		try {
 			let response = await view(this.model,args);
-			response.statusCode = statusCodes.OK.type;
-			response.statusCodeNumber = statusCodes.OK.number;
+			if (!response) {
+				return null;
+			}
 			response.successMessageType = "Success";
 			response.successMessage = `${this.tableName} fetched`;
 			return response;
@@ -77,8 +72,9 @@ class Model {
 	async findOne(args) {
 		try {
 			let response = await findOne(this.model,args);
-			response.statusCode = statusCodes.OK.type;
-			response.statusCodeNumber = statusCodes.OK.number;
+			if (!response) {
+				return null;
+			}
 			response.successMessageType = "Success";
 			response.successMessage = `${this.tableName} fetched`;
 			return response;
@@ -89,7 +85,7 @@ class Model {
 
 	async paginate(args) {
 		try {
-			let response = await paginate(this.model,args.pagination);
+			let response = await paginate(this.model,args);
 			return response;
 		} catch (e) {
 			return internalServerError(e);

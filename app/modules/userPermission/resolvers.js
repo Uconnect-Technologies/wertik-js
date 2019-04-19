@@ -41,24 +41,11 @@ export default {
     }
   },
   queries: {
-    listUserPermission: async (_, args, g) => {
-      return userPermissionResolver.queries.listUserPermission(_,args,g);
-    },
-    viewUserPermission: async (_, args, g) => {
-      return userPermissionResolver.queries.viewUserPermission(_,args.input,g);
-    }
+    ...dynamic.loader("UserPermission",userPermissionResolver).queries
   },
   
   mutations: {
-    createUserPermission: async (_, args, g) => {
-      return userPermissionResolver.mutations.createUserPermission(_,args.input,g);
-    },
-    deleteUserPermission: async (_, args, g) => {
-      return userPermissionResolver.mutations.deleteUserPermission(_,args.input,g);
-    },
-    updateUserPermission: async (_, args, g) => {
-      return userPermissionResolver.mutations.updateUserPermission(_,args.input,g);
-    },
+    ...dynamic.loader("UserPermission",userPermissionResolver).mutations
   },
   
 }

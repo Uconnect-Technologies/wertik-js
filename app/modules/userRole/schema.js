@@ -1,3 +1,4 @@
+import getListByPaginationAndFiltersSchema from "./../../../framework/graphql/getListByPaginationAndFiltersSchema.js"
 const {DIALECT} = process.env;
 let relationSchemaType = "Int";
 if (DIALECT == "MONGO_DB") {
@@ -14,6 +15,7 @@ export default `
 		created_at: String
 		updated_at: String
 	}
+	${getListByPaginationAndFiltersSchema("UserRole")}
 	input UserRoleInput {
 		_id: String
 		id: Int
