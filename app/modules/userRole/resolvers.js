@@ -3,6 +3,7 @@ import Model from "./../../../framework/model/model.js";
 import validations from "./validations.js";
 import getIdName from "./../../../framework/helpers/getIdName.js";
 import dynamic from "./../../../framework/dynamic/index.js";
+import allModels from "./../../../framework/dynamic/allModels.js";
 
 let userRoleModel = new Model({
   models: models,
