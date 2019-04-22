@@ -1,5 +1,6 @@
 import Joi from "joi";
 const {DIALECT} = process.env;
+
 export default {
   createPermission: Joi.object().keys({
     action: Joi.string().required()

@@ -1,20 +1,11 @@
-import internalServerError from "./../../../framework/helpers/internalServerError.js";
 import {models} from "./../../../framework/database/connection.js";
 import Model from "./../../../framework/model/model.js";
 import validations from "./validations.js";
-import validate from "./../../../framework/validations/validate.js";
-import statusCodes from "./../../../framework/helpers/statusCodes";
-import {ApolloError} from "apollo-server";
 import dynamic from "./../../../framework/dynamic/index.js";
 
 let permissionModel = new Model({
   models: models,
   tableName: "permission"
-});
-
-let userModel = new Model({
-	models: models,
-	tableName: "user"
 });
 
 let permissionResolver = dynamic.resolvers({
