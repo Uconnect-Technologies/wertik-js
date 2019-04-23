@@ -15,7 +15,7 @@ export default async function (model,args = {}) {
   const response = get(result,'docs',[]);
   return {
     filters: filters,
-    pagination,
+    pagination: pagination,
     list: response
   }
 }
