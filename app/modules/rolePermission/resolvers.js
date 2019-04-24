@@ -3,21 +3,7 @@ import Model from "./../../../framework/model/model.js";
 import validations from "./validations.js";
 import getIdName from "./../../../framework/helpers/getIdName.js";
 import dynamic from "./../../../framework/dynamic/index.js";
-
-let rolePermissionModel = new Model({
-  models: models,
-  tableName: "rolepermission"
-});
-
-let permissionModel = new Model({
-  models: models,
-  tableName: "permission"
-});
-
-let roleModel = new Model({
-	models: models,
-	tableName: "role"
-});
+import {rolePermissionModel,permissionModel,roleModel} from "./../../../framework/dynamic/allModels.js";
 
 let rolePermissionResolver = dynamic.resolvers({
   moduleName: 'RolePermission',

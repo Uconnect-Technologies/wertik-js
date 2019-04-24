@@ -1,17 +1,21 @@
+import convertFiltersArrayInToMongoFilter from "./../../../database/mongodb/convertFiltersArrayInToMongoFilter.js";
 import {get} from "lodash";
 export default async function (model,args = {}) {
-	const page = get(args,'page',1);
-	const limit = get(args,'limit',10);
-	let filters = args;
-  delete filters['limit'];
-  delete filters['page'];
-  let totalFilters = Object.keys(filters).length;
+  let filters = get(args,'filters',[]);
+  let mongodbFilter = await convertFiltersArrayInToMongoFilter(filters);
+  let pagination = get(args,'pagination',{page: 1, limit: 10});
+  const {page, limit} = pagination;
+  let totalFilters = filters.length;
   let result = {};
   if (totalFilters > 0) {
-  	result = await model.paginate({},{page: page,limit: limit})
+  	result = await model.paginate(mongodbFilter,{page: page,limit: limit})
   }else {
-  	result = await model.paginate(filters,{page: page,limit: limit})
+  	result = await model.paginate({},{page: page,limit: limit})
   }
   const response = get(result,'docs',[]);
-  return response;
+  return {
+    filters: filters,
+    pagination: pagination,
+    list: response
+  }
 }

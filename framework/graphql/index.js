@@ -4,7 +4,6 @@ import resolvers from "./loadAllResolvers";
 import schemas from "./loadAllSchemas.js";
 import generalSchema from "./../../app/generalSchema.js";
 import {buildSchema} from "graphql";
-import express_graphql from "express-graphql";
 const { ApolloServer, gql } = require('apollo-server');
 
 export default function (rootDirectory,app) {
@@ -13,7 +12,6 @@ export default function (rootDirectory,app) {
 	let allSchemas = schemas(rootDirectory);
 	let allResolvers = resolvers(rootDirectory);
 	let {validateAccessToken} = require(`${rootDirectory}/app/modules/user/auth.js`).default;
-
 	let mainSchema  = `
 		${generalSchema}
 		${allSchemas}

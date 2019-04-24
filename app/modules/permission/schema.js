@@ -1,3 +1,5 @@
+import getListByPaginationAndFiltersSchema from "./../../../framework/graphql/getListByPaginationAndFiltersSchema.js"
+
 export default `
 	type Permission {
 		_id: String
@@ -9,6 +11,7 @@ export default `
 		created_at: String
 		updated_at: String
 	}
+	${getListByPaginationAndFiltersSchema("Permission")}
 	input PermissionInput {
 		_id: String
 		id: Int

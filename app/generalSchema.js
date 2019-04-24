@@ -1,11 +1,27 @@
+let pagination = `
+	page: Int
+	limit: Int
+`;
+
+let filter = `
+	column: String
+	operator: String
+	value: String
+`;
 export default `
 	input PaginationInput {
-		page: Int
-		limit: Int
+		${pagination}
 	}
 	input FilterInput {
-		column: String
-		operator: String
-		value: String
+		${filter}
 	}
-`
+	type Pagination {
+		${pagination}
+	}
+	type Filter {
+		${filter}
+	}
+	type SuccessMessage {
+		successMessage: String
+	}
+`;

@@ -1,26 +1,32 @@
 import {get} from "lodash"; 
+import convertFiltersIntoSequalizeObject from "./../../../database/mysql/convertFiltersIntoSequalizeObject.js";
+
+
 export default async function (model,args = {}) {
-  let limit = get(args,'limit',20);
-  let page = get(args,'page',1);
+  let pagination = get(args,'pagination',{page: 1, limit: 10});
+  const {page, limit} = pagination;
+  let filters = get(args,'filters',[]);
+  let convertedFilters = await convertFiltersIntoSequalizeObject(filters);
   let data = await model.findAndCountAll();
   let pages = Math.ceil(data.count / limit);
   let offset = limit * (page - 1);
-  let filters = args;
-  delete filters['limit'];
-  delete filters['page'];
-  let totalFilters = Object.keys(filters).length;
+  let totalFilters = filters.length;
   let find = [];
-  if (totalFilters > 0) {
+  if (totalFilters === 0) {
     find = await model.findAll({ 
       offset: offset, 
       limit: limit,
-      where: filters
     });
   }else {
-    find = await model.findAll({ 
-      offset: offset, 
-      limit: limit
+    find = await model.findAll({
+      offset: offset,
+      limit: limit,
+      where: convertedFilters
     });
   }
-  return find;
+  return {
+    filters: filters,
+    pagination,
+    list: find
+  }
 }

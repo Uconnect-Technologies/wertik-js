@@ -1,4 +1,10 @@
 import Joi from "joi";
+import validations from "./../../../framework/validations/load.js"
+
+validations({
+  name: "email",
+  rules: ['email','required']
+})
 
 const {DIALECT} = process.env;
 
