@@ -1,18 +1,6 @@
-import {models} from "./../../../framework/database/connection.js";
-import Model from "./../../../framework/model/model.js";
 import validations from "./validations.js";
 import dynamic from "./../../../framework/dynamic/index.js";
-
-
-let roleModel = new Model({
-  models: models,
-  tableName: "role"
-});
-
-let rolePermissionsModel = new Model({
-  models: models,
-  tableName: "rolepermission"
-});
+import {roleModel,rolePermissionsModel} from "./../../../framework/dynamic/allModels.js";
 
 let roleResolver = dynamic.resolvers({
   moduleName: 'Role',

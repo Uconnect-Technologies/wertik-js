@@ -12,31 +12,8 @@ import statusCodes from "./../../../framework/helpers/statusCodes";
 import {sendEmail} from "./../../../framework/mailer/index.js";
 import {ApolloError} from "apollo-server";
 import getIdName from "./../../../framework/helpers/getIdName.js";
+import {userModel, userRoleModel, roleModel, profileModel, userPermissionModel} from "./../../../framework/dynamic/allModels.js";
 
-let userModel = new Model({
-	models: models,
-	tableName: "user"
-});
-
-let userRoleModel = new Model({
-	models: models,
-	tableName: "userrole"
-});
-
-let roleModel = new Model({
-	models: models,
-	tableName: "role"
-});
-
-let profileModel = new Model({
-	models: models,
-	tableName: "profile"
-});
-
-let userPermissionModel = new Model({
-	models: models,
-	tableName: "userpermission"
-});
 
 export default {
 	queries: {

@@ -7,7 +7,7 @@ let allModels = {};
 
 modules.forEach((moduleName, index) => {
   if (moduleName !== "auth") {
-    allModels[moduleName] = new Model({
+    allModels[`${moduleName}Model`] = new Model({
       models: models,
       tableName: moduleName.toLowerCase(moduleName)
     });
