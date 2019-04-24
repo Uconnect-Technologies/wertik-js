@@ -1,9 +1,15 @@
 import {get} from "lodash";
 import Sequelize from "sequelize";
 const Op = Sequelize.Op;
-import {types} from "./filterTypes.js";
+import {types,typeValues} from "./filterTypes.js";
 
 export default async function (filters) {
-	console.log(types);
-	return filters;
+	let f = {};
+	filters.forEach((item) => {
+		if (!f[item.column]) {
+			f[item.column] = {}
+		}
+		f[item.column][typeValues[item.operator]] = item.value;
+	});
+	return f;
 }
