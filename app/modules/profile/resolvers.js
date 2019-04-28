@@ -3,7 +3,8 @@ import Model from "./../../../framework/model/model.js";
 import validations from "./validations.js";
 import getIdName from "./../../../framework/helpers/getIdName.js";
 import dynamic from "./../../../framework/dynamic/index.js";
-import {profileModel,userModel} from "./../../../framework/dynamic/allModels.js";
+import allModels from "./../../../framework/dynamic/allModels.js";
+let {userModel,profileModel} = allModels;
 
 
 let profileResolver = dynamic.resolvers({

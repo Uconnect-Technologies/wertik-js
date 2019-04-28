@@ -1,56 +1,21 @@
 import Joi from "joi";
 const {DIALECT} = process.env;
+import getIdName from "./../../../framework/helpers/getIdName.js";
 
 export default {
-  createUserRole: function () {
-    if (DIALECT == "MONGO_DB") {
-      return Joi.object().keys({
-        user: Joi.string().required(),
-        role: Joi.string().required(),
-      });
-    }else {
-      return Joi.object().keys({
-        user: Joi.number().required(),
-        role: Joi.number().required(),
-      });
-    }
-  }(),
-  deleteUserRole: function () {
-    if (DIALECT == "MONGO_DB") {
-      return Joi.object().keys({
-        _id: Joi.string().required()
-      });
-    }else {
-      return Joi.object().keys({
-        id: Joi.number().required()
-      });
-    }
-  }(),
-  updateUserRole: function () {
-    if (DIALECT == "MONGO_DB") {
-      return Joi.object().keys({
-        _id: Joi.string().required(),
-        user: Joi.string().required(),
-        role: Joi.string().required(),
-      });
-    }else {
-      return Joi.object().keys({
-        id: Joi.number().required(),
-        user: Joi.number().required(),
-        role: Joi.number().required(),
-      });
-    }
-   
-  }(),
-  userRole: function () {
-    if (DIALECT == "MONGO_DB") {
-      return Joi.object().keys({
-        _id: Joi.string().required(),
-      });
-    }else {
-      return Joi.object().keys({
-        id: Joi.number().required(),
-      });
-    }
-  }(),
+  createUserRole: {
+    user: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required", 
+    role: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required", 
+  },
+  deleteUserRole: {
+   [getIdName]: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required", 
+  },
+  updateUserRole: {
+    user: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required", 
+    role: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required", 
+    [getIdName]: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required", 
+  },
+  userRole: {
+    [getIdName]: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required",
+  },
 }

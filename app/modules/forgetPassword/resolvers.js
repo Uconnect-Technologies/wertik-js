@@ -10,7 +10,8 @@ import validate from "./../../../framework/validations/validate.js";
 import statusCodes from "./../../../framework/helpers/statusCodes";
 import {sendEmail} from "./../../../framework/mailer/index.js";
 import {ApolloError} from "apollo-server";
-import {forgetPasswordModel, userModel} from "./../../../framework/dynamic/allModels.js";
+import allModels from "./../../../framework/dynamic/allModels.js";
+let {forgetPasswordModel, userModel} = allModels;
 
 export default {
   queries: {

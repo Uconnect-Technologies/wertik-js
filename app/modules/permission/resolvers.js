@@ -2,7 +2,8 @@ import {models} from "./../../../framework/database/connection.js";
 import Model from "./../../../framework/model/model.js";
 import validations from "./validations.js";
 import dynamic from "./../../../framework/dynamic/index.js";
-import {permissionModel} from "./../../../framework/dynamic/allModels.js";
+import allModels from "./../../../framework/dynamic/allModels.js";
+let {permissionModel} = allModels;
 
 let permissionResolver = dynamic.resolvers({
   moduleName: 'Permission',

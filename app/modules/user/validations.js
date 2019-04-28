@@ -1,99 +1,46 @@
 import Joi from "joi";
-import validations from "./../../../framework/validations/load.js"
-
-validations({
-  name: "email",
-  rules: ['email','required']
-})
+import getIdName from "./../../../framework/helpers/getIdName.js";
 
 const {DIALECT} = process.env;
 
 export default {
-  twoFactorLogin: Joi.object().keys({
-    email: Joi.string().required()
-  }),
-  loginWithAccessToken: Joi.object().keys({
-    accessToken: Joi.string().required(),
-    refreshToken: Joi.string().allow('').optional()
-  }),
-  twoFactorLoginValidate: Joi.object().keys({
-    twoFactorCode: Joi.string().required()
-  }),
-  signup: Joi.object().keys({
-    email: Joi.string().required(),
-    name: Joi.string().allow('').optional(),
-    referer: Joi.allow('').optional(),
-    password: Joi.string().min(3).required(),
-    confirmPassword: Joi.string().min(3).required()
-  }),
-  activateAccount: function () {
-    return Joi.object().keys({
-      activationToken: Joi.string().required(),
-    })
-  }(),
-  viewUser: function () {
-    if (DIALECT == "MONGO_DB") {
-      return Joi.object().keys({
-        _id: Joi.string().required(),
-      })
-    }else {
-      return Joi.object().keys({
-        id: Joi.number().required(),
-      })
-    }
-  }(),
-  login: Joi.object().keys({
-    email: Joi.string().required(),
-    password: Joi.string().min(3).required(),
-  }),
-  refreshToken: Joi.object().keys({
-    refreshToken: Joi.string().required()
-  }),
-  changePassword: function () {
-    if (DIALECT == "MONGO_DB") {
-      return Joi.object().keys({
-        newPassword: Joi.string().min(3).required(),
-        oldPassword: Joi.string().min(3).required(),
-        _id: Joi.string().required(),
-      })
-    }else {
-      return Joi.object().keys({
-        newPassword: Joi.string().min(3).required(),
-        oldPassword: Joi.string().min(3).required(),
-        id: Joi.number().required(),
-      })
-    }
-  }(),
-  deleteUser: function () {
-    if (DIALECT == "MONGO_DB") {
-      return Joi.object().keys({
-        _id: Joi.string().required()
-      })
-    }else {
-      return Joi.object().keys({
-        id: Joi.number().required()
-      })
-    }
-  }(),
-  updateUser: function () {
-    if (DIALECT == "MONGO_DB") {
-      return Joi.object().keys({
-        _id: Joi.string().required(),
-        name: Joi.string().min(3).allow('').optional(),
-        email: Joi.string().allow('').optional(),
-        age: Joi.number().allow(null).optional(),
-        gender: Joi.string().allow('').optional(),
-        isSuperUser: Joi.boolean().allow().optional()
-      });
-    }else {
-      return Joi.object().keys({
-        id: Joi.number().required(),
-        name: Joi.string().min(3).allow('').optional(),
-        email: Joi.string().allow('').optional(),
-        age: Joi.number().allow(null).optional(),
-        gender: Joi.string().allow('').optional(),
-        isSuperUser: Joi.boolean().allow().optional()
-      });
-    }
-  }()
+  twoFactorLogin: {
+    email: "email|required"
+  },
+  loginWithAccessToken: {
+    accessToken: "string|required",
+    refreshToken: "string",
+  },
+  twoFactorLoginValidate: {
+    twoFactorCode: "string|required"
+  },
+  signup: {
+    email: "email|required",
+    name: "string",
+    referer: "string",
+    password: "string|min:3|required",
+    confirmPassword: "string|min:3|required"
+  },
+  activateAccount: {
+    activationToken: "string|required"
+  },
+  viewUser: {
+    [getIdName]: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required",
+  },
+  changePassword: {
+    oldPassword: "string|min:3|required",
+    newPassword: "string|min:3|required",
+    [getIdName]: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required",
+  },
+  deleteUser: {
+    [getIdName]: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required",
+  },
+  updateUser: {
+    [getIdName]: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required",
+    name: "string|min:3",
+    email: "string",
+    age: "integer",
+    gender: "integer",
+    isSuperUser: "boolean"
+  },
 }

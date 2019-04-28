@@ -12,7 +12,8 @@ import statusCodes from "./../../../framework/helpers/statusCodes";
 import {sendEmail} from "./../../../framework/mailer/index.js";
 import {ApolloError} from "apollo-server";
 import getIdName from "./../../../framework/helpers/getIdName.js";
-import {userModel, userRoleModel, roleModel, profileModel, userPermissionModel} from "./../../../framework/dynamic/allModels.js";
+import allModels from "./../../../framework/dynamic/allModels.js";
+let {userModel, userRoleModel, roleModel, profileModel, userPermissionModel} = allModels;
 
 
 export default {

@@ -1,46 +1,38 @@
 import Joi from "joi";
+import Validator from 'validatorjs';
+import getIdName from "./../../../framework/helpers/getIdName.js";
 
 const {DIALECT} = process.env;
 
 export default {
-  twoFactorLogin: Joi.object().keys({
-    email: Joi.string().required()
-  }),
-  loginWithAccessToken: Joi.object().keys({
-    accessToken: Joi.string().required(),
-    refreshToken: Joi.string().allow('').optional()
-  }),
-  twoFactorLoginValidate: Joi.object().keys({
-    twoFactorCode: Joi.string().required()
-  }),
-  signup: Joi.object().keys({
-    email: Joi.string().required(),
-    name: Joi.string().allow('').optional(),
-    referer: Joi.allow('').optional(),
-    password: Joi.string().min(3).required(),
-    confirmPassword: Joi.string().min(3).required()
-  }),
-  activateAccount: function () {
-    return Joi.object().keys({
-      activationToken: Joi.string().required(),
-    })
-  }(),
-  viewUser: function () {
-    if (DIALECT == "MONGO_DB") {
-      return Joi.object().keys({
-        _id: Joi.string().required(),
-      })
-    }else {
-      return Joi.object().keys({
-        id: Joi.number().required(),
-      })
-    }
-  }(),
-  login: Joi.object().keys({
-    email: Joi.string().required(),
-    password: Joi.string().min(3).required(),
-  }),
-  refreshToken: Joi.object().keys({
-    refreshToken: Joi.string().required()
-  }),
+  twoFactorLogin: {
+    email: "required|email"
+  },
+  loginWithAccessToken: {
+    accessToken: "string|required",
+    refreshToken: "string"
+  },
+  twoFactorLoginValidate: {
+    twoFactorCode: "string|required"
+  },
+  signup: {
+    email: "email|required",
+    name: "string",
+    referer: "string",
+    password: "string|required|min:3",
+    confirmPassword: "string|required|min:3"
+  },
+  activateAccount: {
+    activationToken: "string|required",
+  },
+  viewUser: {
+    [getIdName]: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required",
+  },
+  login: {
+    email: "string|required",
+    password: "string|required"
+  },
+  refreshToken: {
+    refreshToken: "string|required"
+  }
 }

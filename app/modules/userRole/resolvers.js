@@ -4,7 +4,7 @@ import validations from "./validations.js";
 import getIdName from "./../../../framework/helpers/getIdName.js";
 import dynamic from "./../../../framework/dynamic/index.js";
 import allModels from "./../../../framework/dynamic/allModels.js";
-import {userRoleModel,userModel,roleModel} from "./../../../framework/dynamic/allModels.js";
+let {userRoleModel,userModel,roleModel} = allModels;
 
 let userRoleResolver = dynamic.resolvers({
   moduleName: 'UserRole',
@@ -16,7 +16,6 @@ let userRoleResolver = dynamic.resolvers({
   },
   model: userRoleModel
 });
-
 
 export default {
   UserRole: {

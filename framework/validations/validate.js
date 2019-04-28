@@ -1,11 +1,11 @@
-import Joi from "joi";
 import getErrors from "./getErrors.js";
+let Validator = require('validatorjs');
 
 export default async function (schema,args) {
-  try {
-    let v = await Joi.validate(args,schema);
-    return {success: true}
-  } catch (e) {
-    return {success: false, errors: getErrors(e.details)};
-  }
+	let validate = new Validator(args,schema);
+	if (validate.passes()) {
+		return {success: true}
+	}else {
+		return {success: false, errors: validate.errors.all()}
+	}
 }
