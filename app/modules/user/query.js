@@ -1,4 +1,5 @@
+import dynamic from "./../../../framework/dynamic/index.js";
+
 export default `
-	viewUser(id: Int,_id: String): User
-	listUsers(page: Int, limit: Int): [User]
+	${dynamic.queries.generateQueriesSchema("User")}
 `;

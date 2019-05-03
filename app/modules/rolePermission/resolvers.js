@@ -4,6 +4,8 @@ import validations from "./validations.js";
 import getIdName from "./../../../framework/helpers/getIdName.js";
 import dynamic from "./../../../framework/dynamic/index.js";
 import allModels from "./../../../framework/dynamic/allModels.js";
+import relateResolver from "./../../../framework/database/relateResolver.js";
+
 let {rolePermissionModel,permissionModel,roleModel} = allModels;
 
 let rolePermissionResolver = dynamic.resolvers({
@@ -21,10 +23,10 @@ let rolePermissionResolver = dynamic.resolvers({
 export default {
   RolePermission: {
     async permission(rolePermission) {
-      return await permissionModel.findOne({[getIdName]: rolePermission.permission})
+      return await relateResolver(permissionModel,rolePermission,'permission')
     },
     async role(rolePermission) {
-      return await roleModel.findOne({[getIdName]: rolePermission.role})
+      return await relateResolver(roleModel,rolePermission,'role')
     }
   },
   queries: {

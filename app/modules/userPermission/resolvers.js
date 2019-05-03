@@ -4,8 +4,9 @@ import validations from "./validations.js";
 import getIdName from "./../../../framework/helpers/getIdName.js";
 import dynamic from "./../../../framework/dynamic/index.js";
 import allModels from "./../../../framework/dynamic/allModels.js";
-let {userPermissionModel,userModel,permissionModel} = allModels;
+import relateResolver from "./../../../framework/database/relateResolver.js";
 
+let {userPermissionModel,userModel,permissionModel} = allModels;
 
 let userPermissionResolver = dynamic.resolvers({
   moduleName: 'UserPermission',
@@ -21,10 +22,10 @@ let userPermissionResolver = dynamic.resolvers({
 export default {
   UserPermission: {
     async user(userPermission) {
-      return await userModel.findOne({[getIdName]: userPermission.user});
+      return await relateResolver(userModel,userPermission,'user')
     },
     async permission(userPermission) {
-      return await permissionModel.findOne({[getIdName]: userPermission.permission});
+      return await relateResolver(permissionModel,userPermission,'permission')
     }
   },
   queries: {

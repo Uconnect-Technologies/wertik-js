@@ -13,6 +13,8 @@ import {sendEmail} from "./../../../framework/mailer/index.js";
 import {ApolloError} from "apollo-server";
 import getIdName from "./../../../framework/helpers/getIdName.js";
 import allModels from "./../../../framework/dynamic/allModels.js";
+import relateResolver from "./../../../framework/database/relateResolver.js";
+
 let {userModel,userRoleModel,roleModel,profileModel, userPermissionModel} = allModels;
 
 export default {
@@ -26,11 +28,11 @@ export default {
 			return userRoles;
 		},
 		async profile(user) {
-			return await profileModel.findOne({user: user[getIdName] })
+			return await relateResolver(profileModel,user,'profile');
 		}
 	},
 	queries: {
-		listUsers: async (_, args, g) => {
+		listUser: async (_, args, g) => {
 			try {
 				let paginate = await userModel.paginate(args);
 				return paginate;

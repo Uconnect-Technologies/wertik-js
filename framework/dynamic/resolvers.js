@@ -80,7 +80,7 @@ export default function ({moduleName,validations,model}) {
           throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
         }
         try {
-          return await model.create({name: args.input.name});
+          return await model.create(args.input);
         } catch (e) {
           return internalServerError(e);
         }

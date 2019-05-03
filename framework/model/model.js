@@ -19,7 +19,6 @@ class Model {
 		this.model = this.models[this.tableName];
 	}
 
-
 	async delete(args) {
 		try {
 			let fakeResponse = {};
@@ -31,7 +30,6 @@ class Model {
 			return internalServerError(e);
 		}
 	}
-
 
 	async create(args) {
 		try {
