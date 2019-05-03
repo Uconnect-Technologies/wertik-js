@@ -20,12 +20,10 @@ let {userModel,userRoleModel,roleModel,profileModel, userPermissionModel} = allM
 export default {
 	User: {
 		async assignedPermissions(user) {
-			let userPermission = await userPermissionModel.paginate();
-			return userPermission;
+			return await relateResolver(userPermissionModel,user,'id',true);
 		},
-		async assignedRoles() {
-			let userRoles = await userRoleModel.paginate();
-			return userRoles;
+		async assignedRoles(user) {
+			return await relateResolver(userRoleModel,user,'id',true);
 		},
 		async profile(user) {
 			return await relateResolver(profileModel,user,'profile');

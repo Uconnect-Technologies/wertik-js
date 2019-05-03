@@ -7,7 +7,7 @@ export default `
 		name: String
 		successMessage: String
 		successMessageType: String
-		permissions: [RolePermission]
+		permissions: [RolePermissionList]
 		created_by: User
 		created_at: String
 		updated_at: String

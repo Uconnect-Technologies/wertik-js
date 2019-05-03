@@ -1,6 +1,7 @@
 import validations from "./validations.js";
 import dynamic from "./../../../framework/dynamic/index.js";
 import allModels from "./../../../framework/dynamic/allModels.js";
+import relateResolver from "./../../../framework/database/relateResolver.js";
 let {roleModel, rolePermissionsModel} = allModels;
 
 let roleResolver = dynamic.resolvers({
@@ -16,8 +17,8 @@ let roleResolver = dynamic.resolvers({
 
 export default {
   Role: {
-    async permissions() {
-      return await rolePermissionsModel.paginate();
+    async permissions(role) {
+      return await relateResolver(rolePermissionsModel,role,'permission',true);
     }
   },
   mutations: {
