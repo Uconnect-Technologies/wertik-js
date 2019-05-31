@@ -1,10 +1,9 @@
-import {models} from "./../../../framework/database/connection.js";
-import Model from "./../../../framework/model/model.js";
 import validations from "./validations.js";
-import getIdName from "./../../../framework/helpers/getIdName.js";
 import dynamic from "./../../../framework/dynamic/index.js";
 import allModels from "./../../../framework/dynamic/allModels.js";
-import {userRoleModel,userModel,roleModel} from "./../../../framework/dynamic/allModels.js";
+import relateResolver from "./../../../framework/database/relateResolver.js";
+
+let {userRoleModel,userModel,roleModel} = allModels;
 
 let userRoleResolver = dynamic.resolvers({
   moduleName: 'UserRole',
@@ -17,14 +16,13 @@ let userRoleResolver = dynamic.resolvers({
   model: userRoleModel
 });
 
-
 export default {
   UserRole: {
-    async user(userRole) {
-      return await userModel.findOne({[getIdName]: userRole.user})
+    user: async (userRole) => {
+      return await relateResolver(userModel,userRole,'user')
     },
-    async role(userRole) {
-      return await roleModel.findOne({[getIdName]: userRole.role})
+    role: async (userRole) => {
+      return await relateResolver(roleModel,userRole,'role')
     }
   },
   queries: {

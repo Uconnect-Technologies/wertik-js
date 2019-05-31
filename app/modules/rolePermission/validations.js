@@ -1,54 +1,21 @@
 import Joi from "joi";
 const {DIALECT} = process.env;
+import getIdName from "./../../../framework/helpers/getIdName.js";
+
 export default {
-  createRolePermission: function () {
-    if (DIALECT == "MONGO_DB") {
-      return Joi.object().keys({
-        role: Joi.string().required(),
-        permission: Joi.string().required()
-      })
-    }else {
-      return Joi.object().keys({
-        role: Joi.number().required(),
-        permission: Joi.number().required()
-      })
-    }
-  }(),
-  deleteRolePermission: function () {
-    if (DIALECT == "MONGO_DB") {
-      return Joi.object().keys({
-        _id: Joi.string().required()
-      }) 
-    }else {
-      return Joi.object().keys({
-        id: Joi.number().required()
-      })
-    }
-  }(),
-  updateRolePermission: function () {
-    if (DIALECT == "MONGO_DB") {
-      return Joi.object().keys({
-        _id: Joi.string().required(),
-        role: Joi.string().required(),
-        permission: Joi.string().required()
-      });
-    }else {
-       return Joi.object().keys({
-        id: Joi.number().required(),
-        role: Joi.number().required(),
-        permission: Joi.number().required()
-      });     
-    }
-  }(),
-  rolePermission: function () {
-    if (DIALECT == "MONGO_DB") {
-      return Joi.object().keys({
-        _id: Joi.string().required(),
-      });
-    }else {
-      return Joi.object().keys({
-        id: Joi.number().required(),
-      });
-    }
-  }(),
+  createRolePermission: {
+    role: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required",
+    permission: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required"
+  },
+  deleteRolePermission: {
+    [getIdName]: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required",
+  },
+  updateRolePermission: {
+    [getIdName]: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required",
+    role: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required",
+    permission: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required"
+  },
+  rolePermission:  {
+    [getIdName]: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required",
+  }
 }

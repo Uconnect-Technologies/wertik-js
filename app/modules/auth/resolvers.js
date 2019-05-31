@@ -1,6 +1,4 @@
 import internalServerError from "./../../../framework/helpers/internalServerError.js";
-import {models} from "./../../../framework/database/connection.js";
-import Model from "./../../../framework/model/model.js";
 import bcrypt from "bcrypt-nodejs";
 import createJwtToken from "./../../../framework/security/createJwtToken.js";
 import isTokenExpired from "./../../../framework/security/isTokenExpired.js";
@@ -12,7 +10,8 @@ import statusCodes from "./../../../framework/helpers/statusCodes";
 import {sendEmail} from "./../../../framework/mailer/index.js";
 import {ApolloError} from "apollo-server";
 import getIdName from "./../../../framework/helpers/getIdName.js";
-import {userModel, userRoleModel, roleModel, profileModel, userPermissionModel} from "./../../../framework/dynamic/allModels.js";
+import allModels from "./../../../framework/dynamic/allModels.js";
+let {userModel,profileModel} = allModels;
 
 
 export default {

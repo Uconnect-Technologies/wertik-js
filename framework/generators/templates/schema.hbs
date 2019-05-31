@@ -6,23 +6,21 @@ if (DIALECT == "MONGO_DB") {
 }
 
 export default `
-	type RolePermission {
+	type {{ moduleName }} {
 		_id: String
 		id: Int
-		permission: Permission,
-		role: Role
-		successMessage: String
-		successMessageType: String
-		statusCode: String
-		statusCodeNumber: Int
+		{{ mapFieldsToGraphqlSchemaFields moduleFields }}
+		{{ mapRelationFieldsToSchema validations }}
+		created_by: User
 		created_at: String
 		updated_at: String
 	}
-	${getListByPaginationAndFiltersSchema("RolePermission")}
-	input RolePermissionInput {
+	input {{ moduleName }}Input {
 		_id: String
 		id: Int
-		permission: ${relationSchemaType}
-		role: ${relationSchemaType}
+		{{ mapFieldsToGraphqlSchemaFields moduleFields }}
+		created_by: User
+		created_at: String
+		updated_at: String
 	}
 `;

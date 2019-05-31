@@ -1,46 +1,19 @@
 import Joi from "joi";
+import getIdName from "./../../../framework/helpers/getIdName.js";
 const {DIALECT} = process.env;
 
 export default {
-  createRole: function () {
-    return Joi.object().keys({
-      name: Joi.string().required()
-    })
-  }(),
-  deleteRole: function () {
-    if (DIALECT == "MONGO_DB") {
-      return Joi.object().keys({
-        _id: Joi.string().required()
-      });
-    }else {
-      return Joi.object().keys({
-        id: Joi.number().required()
-      });
-    }
-  }(),
-  updateRole: function () {
-    if (DIALECT == "MONGO_DB") {
-      return Joi.object().keys({
-        _id: Joi.string().required(),
-        name: Joi.string().required()
-      })
-    }else {
-      return Joi.object().keys({
-        id: Joi.number().required(),
-        name: Joi.string().required()
-      })
-    }
-    
-  }(),
-  role: function () {
-    if (DIALECT == "MONGO_DB") {
-      return Joi.object().keys({
-        _id: Joi.string().required(),
-      })
-    }else {
-      return Joi.object().keys({
-        id: Joi.number().required(),
-      })
-    }
-  }(),
+  createRole: {
+    name: "string|required",
+  },
+  deleteRole: {
+    [getIdName]: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required",
+  },
+  updateRole: {
+    [getIdName]: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required",
+    name: "string|required"
+  },
+  role: {
+    [getIdName]: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required",
+  }
 }

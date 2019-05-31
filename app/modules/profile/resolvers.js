@@ -1,9 +1,9 @@
-import {models} from "./../../../framework/database/connection.js";
-import Model from "./../../../framework/model/model.js";
 import validations from "./validations.js";
-import getIdName from "./../../../framework/helpers/getIdName.js";
 import dynamic from "./../../../framework/dynamic/index.js";
-import {profileModel,userModel} from "./../../../framework/dynamic/allModels.js";
+import allModels from "./../../../framework/dynamic/allModels.js";
+import relateResolver from "./../../../framework/database/relateResolver.js";
+
+let {userModel,profileModel} = allModels;
 
 
 let profileResolver = dynamic.resolvers({
@@ -21,7 +21,7 @@ let profileResolver = dynamic.resolvers({
 export default {
 	Profile: {
 		async user(profile) {
-			return await userModel.findOne({[getIdName]: profile.user })
+      return await relateResolver(userModel,profile,'user');
 		}
   },
   queries: {
