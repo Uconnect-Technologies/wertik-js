@@ -6,11 +6,11 @@ let modules = process.env.MODULES_ENABLED.split(",");
 let predefinedModules = process.env.PREDEFINED_MODULES.split(",");
 let allModels = {};
 
-predefinedModules.forEach((moduleName, index) => {
+predefinedModules.forEach((moduleName: string, index) => {
   if (moduleName !== "auth") {
     allModels[`${moduleName}Model`] = new Model({
       models: models,
-      tableName: moduleName.toLowerCase(moduleName)
+      tableName: moduleName.toLowerCase()
     });
   }
 });
