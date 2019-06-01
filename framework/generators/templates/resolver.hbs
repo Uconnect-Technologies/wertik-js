@@ -1,18 +1,30 @@
-import {models} from "./../../../framework/database/connection.js";
-import Model from "./../../../framework/model/model.js";
-import validations from "./validations.js";
-import getIdName from "./../../../framework/helpers/getIdName.js";
-import dynamic from "./../../../framework/dynamic/index.js";
-import allModels from "./../../../framework/dynamic/allModels.js";
-import {userRoleModel,userModel,roleModel} from "./../../../framework/dynamic/allModels.js";
+import validations from "./validations.ts";
+import getIdName from "./../../../framework/helpers/getIdName.ts";
+import dynamic from "./../../../framework/dynamic/index.ts";
+import allModels from "./../../../framework/dynamic/allModels.ts";
+import relateResolver from "./../../../framework/database/relateResolver.ts";
+let { {{ camelCase moduleName }}Model } = allModels;
+
+let {{ camelCase moduleName }}Resolver = dynamic.resolvers({
+  moduleName: '{{ moduleName }}',
+  validations: {
+    create: validations.create{{ moduleName }},
+    delete: validations.delete{{ moduleName }},
+    update: validations.update{{ moduleName }},
+    view: validations.{{ camelCase moduleName }}
+  },
+  model: {{ camelCase moduleName }}Model
+});
 
 
 export default {
 
 	queries: {
+		...dynamic.loader("{{ moduleName }}",{{ camelCase moduleName }}Resolver).mutations
   },
 
   mutations: {
+  	...dynamic.loader("{{ moduleName }}",{{ camelCase moduleName }}Resolver).mutations
   },
 
 }

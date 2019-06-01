@@ -3,3 +3,4 @@ package-lock.json
 yarn.lock
 frontend/vue/node_modules
 frontend/react/node_modules
+docs/node_modules

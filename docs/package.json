@@ -1,0 +1,20 @@
+{
+  "name": "NodeBoilerplate",
+  "version": "1.0.0",
+  "main": "main.js",
+  "repository": "https://github.com/ilyaskarim/NodeBoilerplate.git",
+  "author": "Ilyas Karim <ilyas.datoo@gmail.com> ",
+  "license": "MIT",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "devDependencies": {},
+  "dependencies": {
+    "antd": "^3.16.6",
+    "next": "^8.1.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  }
+}

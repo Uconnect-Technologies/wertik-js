@@ -1,4 +1,4 @@
-import getListByPaginationAndFiltersSchema from "./../../../framework/graphql/getListByPaginationAndFiltersSchema.js"
+import getListByPaginationAndFiltersSchema from "./../../../framework/graphql/getListByPaginationAndFiltersSchema.ts"
 const {DIALECT} = process.env;
 let relationSchemaType = "Int";
 if (DIALECT == "MONGO_DB") {
