@@ -1,7 +1,7 @@
-import validate from "./../validations/validate.ts";
-import internalServerError from "./../helpers/internalServerError.ts";
+import validate from "./../validations/validate";
+import internalServerError from "./../helpers/internalServerError";
 import {ApolloError} from "apollo-server";
-import statusCodes from "./../helpers/statusCodes.ts";
+import statusCodes from "./../helpers/statusCodes";
 
 export default function ({moduleName,validations,model}) {
   return {

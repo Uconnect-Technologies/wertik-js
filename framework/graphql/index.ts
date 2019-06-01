@@ -1,8 +1,8 @@
-import mutations from "./loadAllMutations.ts";
-import queries from "./loadAllQueries.ts";
+import mutations from "./loadAllMutations";
+import queries from "./loadAllQueries";
 import resolvers from "./loadAllResolvers";
-import schemas from "./loadAllSchemas.ts";
-import generalSchema from "./../../app/generalSchema.ts";
+import schemas from "./loadAllSchemas";
+import generalSchema from "./../../app/generalSchema";
 import {buildSchema} from "graphql";
 const { ApolloServer, gql } = require('apollo-server');
 
@@ -11,7 +11,7 @@ export default function (rootDirectory,app) {
 	let allQueries=  queries(rootDirectory);
 	let allSchemas = schemas(rootDirectory);
 	let allResolvers = resolvers(rootDirectory);
-	let {validateAccessToken} = require(`${rootDirectory}/framework/predefinedModules/user/auth.ts`).default;
+	let {validateAccessToken} = require(`${rootDirectory}/framework/predefinedModules/user/auth`).default;
 	let mainSchema  = `
 		${generalSchema}
 		${allSchemas}

@@ -1,5 +1,5 @@
-import actions from "./actions/index.ts";
-import statusCodes from "./../helpers/statusCodes.ts";
+import actions from "./actions/index";
+import statusCodes from "./../helpers/statusCodes";
 import internalServerError from "./../../framework/helpers/internalServerError";
 
 const {

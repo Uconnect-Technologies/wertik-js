@@ -2,7 +2,7 @@ import {get} from "lodash";
 import gql from "graphql-tag";
 const path = require('path');
 import {join} from "path";
-import fileExists from "./fileExists.ts";
+import fileExists from "./fileExists";
 
 export default function () {
   var appDir = path.dirname(require.main.filename);

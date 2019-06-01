@@ -1,13 +1,13 @@
-import internalServerError from "./../../../framework/helpers/internalServerError.ts";
+import internalServerError from "./../../../framework/helpers/internalServerError";
 import bcrypt from "bcrypt-nodejs";
-import validations from "./validations.ts";
-import validate from "./../../../framework/validations/validate.ts";
+import validations from "./validations";
+import validate from "./../../../framework/validations/validate";
 import statusCodes from "./../../../framework/helpers/statusCodes";
-import {sendEmail} from "./../../../framework/mailer/index.ts";
+import {sendEmail} from "./../../../framework/mailer/index";
 import {ApolloError} from "apollo-server";
-import getIdName from "./../../../framework/helpers/getIdName.ts";
-import allModels from "./../../../framework/dynamic/allModels.ts";
-import relateResolver from "./../../../framework/database/relateResolver.ts";
+import getIdName from "./../../../framework/helpers/getIdName";
+import allModels from "./../../../framework/dynamic/allModels";
+import relateResolver from "./../../../framework/database/relateResolver";
 
 let {userModel,userRoleModel,roleModel,profileModel, userPermissionModel} = allModels;
 

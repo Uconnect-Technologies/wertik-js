@@ -1,7 +1,7 @@
-import mutations from "./mutations.ts";
-import queries from "./queries.ts";
-import resolvers from "./resolvers.ts"
-import loader from "./loader.ts"
+import mutations from "./mutations";
+import queries from "./queries";
+import resolvers from "./resolvers"
+import loader from "./loader"
 
 export default {
   mutations,

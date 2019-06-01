@@ -1,7 +1,7 @@
 import {get} from "lodash";
 import Sequelize from "sequelize";
 const Op = Sequelize.Op;
-import {types,typeValues} from "./filterTypes.ts";
+import {types,typeValues} from "./filterTypes";
 
 export default async function (filters) {
 	let f = {};

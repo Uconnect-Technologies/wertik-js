@@ -1,4 +1,4 @@
-import getErrors from "./getErrors.ts";
+import getErrors from "./getErrors";
 let Validator = require('validatorjs');
 
 export default async function (schema,args) {

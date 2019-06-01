@@ -1,16 +1,16 @@
-import internalServerError from "./../../../framework/helpers/internalServerError.ts";
+import internalServerError from "./../../../framework/helpers/internalServerError";
 import bcrypt from "bcrypt-nodejs";
-import createJwtToken from "./../../../framework/security/createJwtToken.ts";
-import isTokenExpired from "./../../../framework/security/isTokenExpired.ts";
+import createJwtToken from "./../../../framework/security/createJwtToken";
+import isTokenExpired from "./../../../framework/security/isTokenExpired";
 import moment from "moment";
 import {get} from "lodash";
-import validations from "./validations.ts";
-import validate from "./../../../framework/validations/validate.ts";
+import validations from "./validations";
+import validate from "./../../../framework/validations/validate";
 import statusCodes from "./../../../framework/helpers/statusCodes";
-import {sendEmail} from "./../../../framework/mailer/index.ts";
+import {sendEmail} from "./../../../framework/mailer/index";
 import {ApolloError} from "apollo-server";
-import getIdName from "./../../../framework/helpers/getIdName.ts";
-import allModels from "./../../../framework/dynamic/allModels.ts";
+import getIdName from "./../../../framework/helpers/getIdName";
+import allModels from "./../../../framework/dynamic/allModels";
 let {userModel,profileModel} = allModels;
 
 

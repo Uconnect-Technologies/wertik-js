@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import {Schema} from "mongoose";
 import mongoosePaginate from "mongoose-paginate";
-import getAllSchemasAsObject from "../../helpers/getAllSchemasAsObject.ts";
-import generateMongoDBSchema from "./generateMongoDBSchema.ts";
+import getAllSchemasAsObject from "../../helpers/getAllSchemasAsObject";
+import generateMongoDBSchema from "./generateMongoDBSchema";
 
 const mongo = process.env.MONGO_DB;
 

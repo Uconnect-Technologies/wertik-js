@@ -1,5 +1,5 @@
-import getDirectoriesInfolder from "./../helpers/getDirectoriesInFolder.ts";
-import fileExists from "./../helpers/fileExists.ts";
+import getDirectoriesInfolder from "./../helpers/getDirectoriesInFolder";
+import fileExists from "./../helpers/fileExists";
 import {join} from "path";
 
 export default function(rootDirectory) {

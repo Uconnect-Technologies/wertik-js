@@ -1,8 +1,8 @@
-import {models} from "./../../../framework/database/connection.ts";
-import Model from "./../../../framework/model/model.ts";
+import {models} from "./../../../framework/database/connection";
+import Model from "./../../../framework/model/model";
 import {ApolloError} from "apollo-server";
-import isAuthQuery from "./../../../framework/security/isAuthQuery.ts";
-import isTokenExpired from "./../../../framework/security/isTokenExpired.ts";
+import isAuthQuery from "./../../../framework/security/isAuthQuery";
+import isTokenExpired from "./../../../framework/security/isTokenExpired";
 import statusCodes from "./../../../framework/helpers/statusCodes";
 import {get} from "lodash";
 

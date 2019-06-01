@@ -1,6 +1,6 @@
-import validations from "./validations.ts";
-import dynamic from "./../../../framework/dynamic/index.ts";
-import allModels from "./../../../framework/dynamic/allModels.ts";
+import validations from "./validations";
+import dynamic from "./../../../framework/dynamic/index";
+import allModels from "./../../../framework/dynamic/allModels";
 let {permissionModel} = allModels;
 
 let permissionResolver = dynamic.resolvers({

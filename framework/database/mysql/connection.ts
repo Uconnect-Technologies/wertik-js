@@ -1,6 +1,6 @@
 import Sequelize from "sequelize";
-import getAllSchemasAsObject from "../../helpers/getAllSchemasAsObject.ts";
-import generateTables from "./generateTables.ts";
+import getAllSchemasAsObject from "../../helpers/getAllSchemasAsObject";
+import generateTables from "./generateTables";
 
 const {
   DB_USERNAME,

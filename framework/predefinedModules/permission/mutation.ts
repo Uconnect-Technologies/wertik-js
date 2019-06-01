@@ -1,4 +1,4 @@
-import dynamic from "./../../../framework/dynamic/index.ts";
+import dynamic from "./../../../framework/dynamic/index";
 const {DIALECT} = process.env;
 let relationSchemaType = "Int";
 if (DIALECT == "MONGO_DB") {

@@ -1,4 +1,4 @@
-import dynamic from "./../../../framework/dynamic/index.ts";
+import dynamic from "./../../../framework/dynamic/index";
 
 export default `
 	${dynamic.mutations.generateMutationsSchema("game")}

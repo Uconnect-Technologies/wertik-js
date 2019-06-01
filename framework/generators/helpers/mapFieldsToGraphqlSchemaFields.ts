@@ -1,5 +1,5 @@
 import {has} from "lodash";
-import fieldTypes from "./fieldTypes.ts";
+import fieldTypes from "./fieldTypes";
 
 export default function (data) {
 	let string = "";

@@ -1,8 +1,8 @@
 
-import mapFieldsToGraphqlSchemaFields from "./helpers/mapFieldsToGraphqlSchemaFields.ts";
-import mapFieldsToValidations from "./helpers/mapFieldsToValidations.ts";
-import mapRelationFieldsToSchema from "./helpers/mapRelationFieldsToSchema.ts";
-import { createValidation,updateValidation,deleteValidation, bulkDeleteValidation, bulkUpdateValidation, viewValidation} from "./helpers/mapFieldsToValidations.ts"
+import mapFieldsToGraphqlSchemaFields from "./helpers/mapFieldsToGraphqlSchemaFields";
+import mapFieldsToValidations from "./helpers/mapFieldsToValidations";
+import mapRelationFieldsToSchema from "./helpers/mapRelationFieldsToSchema";
+import { createValidation,updateValidation,deleteValidation, bulkDeleteValidation, bulkUpdateValidation, viewValidation} from "./helpers/mapFieldsToValidations"
 module.exports = function (plop) {
     plop.setHelper('mapFieldsToGraphqlSchemaFields',(data) => mapFieldsToGraphqlSchemaFields(data) );
     plop.setHelper("mapRelationFieldsToSchema",(data) => mapRelationFieldsToSchema(data) );
@@ -44,27 +44,27 @@ If errors, It will be harder to fix issues. .
             return [
                 {
                     type: 'add',
-                    path: 'src/mutation.ts',
+                    path: 'src/mutation',
                     templateFile: 'templates/mutation.hbs'
                 },
                 {
                     type: 'add',
-                    path: 'src/query.ts',
+                    path: 'src/query',
                     templateFile: 'templates/query.hbs'
                 },
                 {
                     type: 'add',
-                    path: 'src/resolver.ts',
+                    path: 'src/resolver',
                     templateFile: 'templates/resolver.hbs'
                 },
                 {
                     type: 'add',
-                    path: 'src/schema.ts',
+                    path: 'src/schema',
                     templateFile: 'templates/schema.hbs'
                 },
                 {
                     type: 'add',
-                    path: 'src/validations.ts',
+                    path: 'src/validations',
                     templateFile: 'templates/validations.hbs'
                 }
             ];

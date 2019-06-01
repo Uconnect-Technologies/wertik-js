@@ -1,8 +1,8 @@
 import {get} from "lodash";
 const allowGraphql  = get(process,'env.ALLOW_GRAPHQL','FALSE') === "TRUE";
-import isTokenValid from "./isTokenValid.ts";
-import isPublicToken from "./isPublicToken.ts";
-import isAuthQuery from "./isAuthQuery.ts";
+import isTokenValid from "./isTokenValid";
+import isPublicToken from "./isPublicToken";
+import isAuthQuery from "./isAuthQuery";
 export default async function (req,res,next) {
 	let method = req.method.toLowerCase();
 	if (method == "get" || allowGraphql) {
@@ -11,7 +11,7 @@ export default async function (req,res,next) {
 	}
 	let query = get(req,'body.query','');
 	if (!query) {
-		return res.tson({
+		return res.json({
 			errorMessageType: "Error",
 			errorMessage: "Query is required",
 		});
@@ -28,7 +28,7 @@ export default async function (req,res,next) {
 	let user = await isTokenValid(token);
 	let isCorrectAccessToken = get(user,'id',false);
 	if (!isCorrectAccessToken) {
-		res.tson({
+		res.json({
 			errorMessageType: "Error",
 			errorMessage: "JWT token mismatched or incorrect",
 		});

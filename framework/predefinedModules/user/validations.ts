@@ -1,5 +1,5 @@
 import Joi from "joi";
-import getIdName from "./../../../framework/helpers/getIdName.ts";
+import getIdName from "./../../../framework/helpers/getIdName";
 
 const {DIALECT} = process.env;
 

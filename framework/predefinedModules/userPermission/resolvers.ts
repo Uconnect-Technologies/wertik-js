@@ -1,7 +1,7 @@
-import validations from "./validations.ts";
-import dynamic from "./../../../framework/dynamic/index.ts";
-import allModels from "./../../../framework/dynamic/allModels.ts";
-import relateResolver from "./../../../framework/database/relateResolver.ts";
+import validations from "./validations";
+import dynamic from "./../../../framework/dynamic/index";
+import allModels from "./../../../framework/dynamic/allModels";
+import relateResolver from "./../../../framework/database/relateResolver";
 
 let {userPermissionModel,userModel,permissionModel} = allModels;
 

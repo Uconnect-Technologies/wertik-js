@@ -1,5 +1,5 @@
 import {get} from "lodash"; 
-import convertFiltersIntoSequalizeObject from "./../../../database/mysql/convertFiltersIntoSequalizeObject.ts";
+import convertFiltersIntoSequalizeObject from "./../../../database/mysql/convertFiltersIntoSequalizeObject";
 
 
 export default async function (model,args = {}) {

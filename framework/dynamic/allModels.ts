@@ -1,5 +1,5 @@
-import Model from "./../model/model.ts";
-import {models} from "./../database/connection.ts";
+import Model from "./../model/model";
+import {models} from "./../database/connection";
 import {join} from "path";
 
 let modules = process.env.MODULES_ENABLED.split(",");

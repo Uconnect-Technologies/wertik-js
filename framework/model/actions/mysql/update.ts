@@ -1,5 +1,5 @@
 import {get} from "lodash";
-import findOneByPK from "./findOneByPK.ts";
+import findOneByPK from "./findOneByPK";
 export default async function (model,args,name) {
   let id = get(args,'id',null);
   let updateObject = await findOneByPK(model,id);

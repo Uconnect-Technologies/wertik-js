@@ -1,4 +1,4 @@
-import getDirectoriesInfolder from "./../helpers/getDirectoriesInFolder.ts";
+import getDirectoriesInfolder from "./../helpers/getDirectoriesInFolder";
 import {camelCase,upperFirst} from "lodash";
 import {join} from "path";
 
