@@ -4,16 +4,16 @@ const restrictColumns = [
     "errors","successMessage","successMessageType","statusCode","statusCodeNumber","created_at","id","updated_at",
     "_id","permissions","assignedPermissions","assignedRoles"
 ];
-export default function (graphqlFields,database) {
+export default function (graphqlFields: any,database: any) {
   let keys = Object.keys(graphqlFields);
-  let tables = [];
+  let tables: any = [];
   keys.forEach(element => {
     let fields = graphqlFields[element];
     let table = {
       tableName: element,
       fields: {}
     }
-    fields.forEach(fieldElement => {
+    fields.forEach((fieldElement: any) => {
       let fieldName = get(fieldElement,'name.value');
       if (restrictColumns.indexOf(fieldName) == -1) {
         let type = "";

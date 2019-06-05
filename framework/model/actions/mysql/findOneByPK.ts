@@ -1,4 +1,4 @@
-export default async function (model,id) {
+export default async function (model: any,id: any) {
   let object = await model.findByPk(id);
   return object;
 }

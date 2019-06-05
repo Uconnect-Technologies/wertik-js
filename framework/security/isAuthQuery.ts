@@ -1,6 +1,6 @@
 import {get} from "lodash"
 import gql from 'graphql-tag';
-export default function (query) {
+export default function (query: string) {
 	let parsed = gql`${query}`;
 	let queryName = get(parsed,"definitions[0].selectionSet.selections[0].name.value",'');
 	let auth = [

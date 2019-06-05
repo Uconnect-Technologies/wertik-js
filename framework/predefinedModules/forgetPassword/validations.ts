@@ -1,4 +1,3 @@
-import Joi from "joi";
 const {DIALECT} = process.env;
 export default {
   requestPasswordReset: {

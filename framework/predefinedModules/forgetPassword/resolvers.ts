@@ -11,8 +11,8 @@ let {forgetPasswordModel, userModel} = allModels;
 
 export default {
   queries: {
-    forgetPasswordView: async (_, args, g) => {
-      let v = await validate(validations.forgetPassword,args,{abortEarly: false});
+    forgetPasswordView: async (_: any, args: any, g: any) => {
+      let v = await validate(validations.forgetPassword,args);
       let {success} = v;
       if (!success) {
         throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
@@ -33,8 +33,8 @@ export default {
     }
   },
   mutations: {
-    requestPasswordReset: async (_, args, g) => {
-      let v = await validate(validations.requestPasswordReset,args,{abortEarly: false});
+    requestPasswordReset: async (_: any, args: any, g: any) => {
+      let v = await validate(validations.requestPasswordReset,args);
 			let {success} = v;
 			if (!success) {
         throw new ApolloError("Validation Errors",statusCodes.BAD_REQUEST.number,{list: v.errors});
@@ -61,7 +61,7 @@ export default {
           from: process.env.MAILER_SERVICE_USERNAME,
           to: args.email,
           subject: "Reset your email"
-        });
+        },null,null);
         return {
           email: args.email,
           successMessageType: "Successfull",
@@ -72,8 +72,8 @@ export default {
         return internalServerError(e);
       }
     },
-    resetPassword: async (_, args, g) => {
-      let v = await validate(validations.resetPassword,args,{abortEarly: false});
+    resetPassword: async (_: any, args: any, g: any) => {
+      let v = await validate(validations.resetPassword,args);
 			let {success} = v;
 			if (!success) {
         throw new ApolloError("Validation Errors",statusCodes.BAD_REQUEST.number,{list: v.errors});
@@ -100,7 +100,7 @@ export default {
           from: process.env.MAILER_SERVICE_USERNAME,
           to: user.email,
           subject: "Password changed"
-        });
+        },null,null);
         return {
           successMessageType: "Success",
           successMessage: "Password successfully changed",

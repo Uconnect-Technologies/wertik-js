@@ -6,6 +6,7 @@ import statusCodes from "./../../../framework/helpers/statusCodes";
 import {sendEmail} from "./../../../framework/mailer/index";
 import {ApolloError} from "apollo-server";
 import getIdName from "./../../../framework/helpers/getIdName";
+//@ts-ignore
 import allModels from "./../../../framework/dynamic/allModels";
 import relateResolver from "./../../../framework/database/relateResolver";
 
@@ -13,18 +14,18 @@ let {userModel,userRoleModel,roleModel,profileModel, userPermissionModel} = allM
 
 export default {
 	User: {
-		async assignedPermissions(user) {
+		async assignedPermissions(user: any) {
 			return await relateResolver(userPermissionModel,user,'id',true);
 		},
-		async assignedRoles(user) {
+		async assignedRoles(user: any) {
 			return await relateResolver(userRoleModel,user,'id',true);
 		},
-		async profile(user) {
+		async profile(user: any) {
 			return await relateResolver(profileModel,user,'profile');
 		}
 	},
 	queries: {
-		listUser: async (_, args, g) => {
+		listUser: async (_: any, args: any, g: any) => {
 			try {
 				let paginate = await userModel.paginate(args);
 				return paginate;
@@ -32,8 +33,8 @@ export default {
 				return internalServerError(e);
 			}
 		},
-		viewUser: async (_,args,g) => {
-			let v = await validate(validations.viewUser,args,{abortEarly: false});
+		viewUser: async (_: any,args: any,g: any) => {
+			let v = await validate(validations.viewUser,args);
 			if (!v.success) {
 				throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
 			}
@@ -46,8 +47,8 @@ export default {
 		},
 	},
 	mutations: {
-		changePassword: async (_,args,g) => {
-			let v = await validate(validations.changePassword,args,{abortEarly: false});
+		changePassword: async (_: any,args: any,g: any) => {
+			let v = await validate(validations.changePassword,args);
 			if (!v.success) {
 				throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
 			}
@@ -71,8 +72,8 @@ export default {
 	        from: process.env.MAILER_SERVICE_USERNAME,
 	        to: user.email,
 	        subject: "Password changed"
-	      });
-				let response = {};
+	      },null,null);
+				let response: any = {};
 				response.statusCode = statusCodes.OK.type;
 				response.statusCodeNumber = statusCodes.OK.number;
 				response.successMessageType = "Success";
@@ -82,8 +83,8 @@ export default {
 				return internalServerError(e);
 			}
 		},
-		deleteUser: async (_, args, g) => {
-      let v = await validate(validations.deleteUser,args,{abortEarly: false});
+		deleteUser: async (_: any, args: any, g: any) => {
+      let v = await validate(validations.deleteUser,args);
       let {success} = v;
       if (!success) {
         throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
@@ -94,8 +95,8 @@ export default {
         return internalServerError(e);
       }
     },
-		updateUser: async (_,args,g) => {
-			let v = await validate(validations.updateUser,args,{abortEarly: false});
+		updateUser: async (_: any,args: any,g: any) => {
+			let v = await validate(validations.updateUser,args);
 			if (!v.success) {
 				throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
 			}

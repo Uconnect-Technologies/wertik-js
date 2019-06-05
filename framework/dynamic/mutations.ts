@@ -1,7 +1,7 @@
 import {camelCase} from "lodash";
 
 export default {
-  generateMutationsSchema(moduleName) {
+  generateMutationsSchema(moduleName: any) {
     return `
         create${moduleName}(input: ${moduleName}Input): ${moduleName}
         delete${moduleName}(input: ${moduleName}Input): ${moduleName}

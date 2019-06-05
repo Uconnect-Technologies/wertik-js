@@ -19,7 +19,7 @@ let profileResolver = dynamic.resolvers({
 
 export default {
 	Profile: {
-		async user(profile) {
+		async user(profile: any) {
       return await relateResolver(userModel,profile,'user');
 		}
   },

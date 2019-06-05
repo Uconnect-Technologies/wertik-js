@@ -1,6 +1,6 @@
 var fs = require("fs");
 
-export default function exists(path){
+export default function exists(path: any){
 	try{
 		fs.accessSync(path);
 	} catch (err){

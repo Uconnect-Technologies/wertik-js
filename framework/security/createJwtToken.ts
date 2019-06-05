@@ -1,6 +1,6 @@
-import moment from "moment";
+import * as moment from "moment";
 import jwt from "jsonwebtoken";
-export default async function createJwtToken(data) {
+export default async function createJwtToken(data: any) {
 	if (typeof data !== "object") {
 		throw "Data must be object";
 	}

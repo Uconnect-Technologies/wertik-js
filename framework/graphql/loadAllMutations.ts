@@ -4,7 +4,7 @@ import {join} from "path";
 import {camelCase,upperFirst} from "lodash";
 
 
-export default function(rootDirectory) {
+export default function(rootDirectory: any) {
   let modules = process.env.MODULES_ENABLED.split(",");
   let predefinedModules = process.env.PREDEFINED_MODULES.split(",");
   let output = "";

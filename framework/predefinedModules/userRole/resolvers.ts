@@ -18,10 +18,10 @@ let userRoleResolver = dynamic.resolvers({
 
 export default {
   UserRole: {
-    user: async (userRole) => {
+    user: async (userRole: any) => {
       return await relateResolver(userModel,userRole,'user')
     },
-    role: async (userRole) => {
+    role: async (userRole: any) => {
       return await relateResolver(roleModel,userRole,'role')
     }
   },

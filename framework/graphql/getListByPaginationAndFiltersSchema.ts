@@ -1,4 +1,4 @@
-export default function (moduleName) {
+export default function (moduleName: any) {
   return `
     type ${moduleName}List {
       list: [${moduleName}]

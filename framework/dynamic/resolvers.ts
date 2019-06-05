@@ -3,18 +3,19 @@ import internalServerError from "./../helpers/internalServerError";
 import {ApolloError} from "apollo-server";
 import statusCodes from "./../helpers/statusCodes";
 
-export default function ({moduleName,validations,model}) {
+export default function (info: any) {
+  let {moduleName,validations,model} = info;
   return {
     queries: {
-      [`list${moduleName}`]: async (_, args, context) => {
+      [`list${moduleName}`]: async (_:any, args:any, context:any) => {
         try {
           return await model.paginate(args);
         } catch (e) {
           return internalServerError(e);
         }
       },
-      [`view${moduleName}`]: async (_, args, context) => {
-        let v = await validate(validations.view,args.input,{abortEarly: false});
+      [`view${moduleName}`]: async (_:any, args:any, context:any) => {
+        let v = await validate(validations.view,args.input);
         let {success} = v;
         if (!success) {
           throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
@@ -31,9 +32,9 @@ export default function ({moduleName,validations,model}) {
       }
     },
     mutations: {
-      [`updateBulk${moduleName}`]: async (_, args, context) => {
-        return args.input.map( async (e) => {
-          let v = await validate(validations.update,e,{abortEarly: false});
+      [`updateBulk${moduleName}`]: async (_:any, args:any, context:any) => {
+        return args.input.map( async (e: any) => {
+          let v = await validate(validations.update,e);
           let {success} = v;
           if (!success) {
             throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
@@ -45,9 +46,9 @@ export default function ({moduleName,validations,model}) {
           }
         });
       },
-      [`deleteBulk${moduleName}`]: async (_, args, context) => {
-        return args.input.map( async (item) => {
-          let v = await validate(validations.delete,item,{abortEarly: false});
+      [`deleteBulk${moduleName}`]: async (_:any, args:any, context:any) => {
+        return args.input.map( async (item: any) => {
+          let v = await validate(validations.delete,item);
           let {success} = v;
           if (!success) {
             throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
@@ -59,9 +60,9 @@ export default function ({moduleName,validations,model}) {
           }
         });
       },
-      [`createBulk${moduleName}`]: async (_, args, context) => {
-        return args.input.map( async (e) => {
-          let v = await validate(validations.create,e,{abortEarly: false});
+      [`createBulk${moduleName}`]: async (_:any, args:any, context:any) => {
+        return args.input.map( async (e: any) => {
+          let v = await validate(validations.create,e);
           let {success} = v;
           if (!success) {
             throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
@@ -73,8 +74,8 @@ export default function ({moduleName,validations,model}) {
           }  
         })
       },
-      [`create${moduleName}`]: async (_, args, context) => {
-        let v = await validate(validations.create,args.input,{abortEarly: false});
+      [`create${moduleName}`]: async (_:any, args:any, context:any) => {
+        let v = await validate(validations.create,args.input);
         let {success} = v;
         if (!success) {
           throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
@@ -85,8 +86,8 @@ export default function ({moduleName,validations,model}) {
           return internalServerError(e);
         }
       },
-      [`update${moduleName}`]: async (_, args, context) => {
-        let v = await validate(validations.update,args.input,{abortEarly: false});
+      [`update${moduleName}`]: async (_:any, args:any, context:any) => {
+        let v = await validate(validations.update,args.input);
         let {success} = v;
         if (!success) {
           throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
@@ -97,8 +98,8 @@ export default function ({moduleName,validations,model}) {
           return internalServerError(e);
         }
       },
-      [`delete${moduleName}`]: async (_, args, context) => {
-        let v = await validate(validations.delete,args.input,{abortEarly: false});
+      [`delete${moduleName}`]: async (_:any, args:any, context:any) => {
+        let v = await validate(validations.delete,args.input);
         let {success} = v;
         if (!success) {
           throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})

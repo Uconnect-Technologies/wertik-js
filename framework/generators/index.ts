@@ -1,17 +1,16 @@
 
 import mapFieldsToGraphqlSchemaFields from "./helpers/mapFieldsToGraphqlSchemaFields";
-import mapFieldsToValidations from "./helpers/mapFieldsToValidations";
 import mapRelationFieldsToSchema from "./helpers/mapRelationFieldsToSchema";
 import { createValidation,updateValidation,deleteValidation, bulkDeleteValidation, bulkUpdateValidation, viewValidation} from "./helpers/mapFieldsToValidations"
-module.exports = function (plop) {
-    plop.setHelper('mapFieldsToGraphqlSchemaFields',(data) => mapFieldsToGraphqlSchemaFields(data) );
-    plop.setHelper("mapRelationFieldsToSchema",(data) => mapRelationFieldsToSchema(data) );
-    plop.setHelper('createValidation',(data) => createValidation(data) )
-    plop.setHelper('updateValidation',(data) => updateValidation(data) )
-    plop.setHelper('deleteValidation',(data) => deleteValidation(data) )
-    plop.setHelper('bulkDeleteValidation',(data) => bulkDeleteValidation(data) )
-    plop.setHelper('bulkUpdateValidation',(data) => bulkUpdateValidation(data) )
-    plop.setHelper('viewValidation',(data) => viewValidation(data) )
+module.exports = function (plop: any) {
+    plop.setHelper('mapFieldsToGraphqlSchemaFields',(data: any) => mapFieldsToGraphqlSchemaFields(data) );
+    plop.setHelper("mapRelationFieldsToSchema",(data: any) => mapRelationFieldsToSchema(data) );
+    plop.setHelper('createValidation',(data: any) => createValidation(data) )
+    plop.setHelper('updateValidation',(data: any) => updateValidation(data) )
+    plop.setHelper('deleteValidation',(data: any) => deleteValidation(data) )
+    plop.setHelper('bulkDeleteValidation',(data: any) => bulkDeleteValidation(data) )
+    plop.setHelper('bulkUpdateValidation',(data: any) => bulkUpdateValidation(data) )
+    plop.setHelper('viewValidation',(data: any) => viewValidation(data) )
     // controller generator
     plop.setGenerator('controller', {
         description: 'application controller logic',
@@ -36,7 +35,7 @@ If errors, It will be harder to fix issues. .
                 `
             }
         ],
-        actions: function (data) {
+        actions: function (data: any) {
             let {moduleName, moduleFields} = data;
             if (!moduleName || !moduleFields) {
                 throw new Error("You should pass moduleName and moduleFields");

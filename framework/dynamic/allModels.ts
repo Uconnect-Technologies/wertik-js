@@ -4,9 +4,9 @@ import {join} from "path";
 
 let modules = process.env.MODULES_ENABLED.split(",");
 let predefinedModules = process.env.PREDEFINED_MODULES.split(",");
-let allModels = {};
+let allModels: any = {};
 
-predefinedModules.forEach((moduleName: string, index) => {
+predefinedModules.forEach((moduleName: string, index: any) => {
   if (moduleName !== "auth") {
     allModels[`${moduleName}Model`] = new Model({
       models: models,

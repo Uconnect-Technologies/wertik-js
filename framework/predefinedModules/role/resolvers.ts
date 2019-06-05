@@ -17,7 +17,7 @@ let roleResolver = dynamic.resolvers({
 
 export default {
   Role: {
-    async permissions(role) {
+    async permissions(role: any) {
       return await relateResolver(rolePermissionsModel,role,'permission',true);
     }
   },

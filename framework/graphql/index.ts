@@ -6,7 +6,7 @@ import generalSchema from "./../../app/generalSchema";
 import {buildSchema} from "graphql";
 const { ApolloServer, gql } = require('apollo-server');
 
-export default function (rootDirectory,app) {
+export default function (rootDirectory: string,app: any) {
 	let allMutations = mutations(rootDirectory);
 	let allQueries=  queries(rootDirectory);
 	let allSchemas = schemas(rootDirectory);
@@ -31,11 +31,11 @@ export default function (rootDirectory,app) {
 	const server = new ApolloServer({ 
 		typeDefs: mainSchema, 
 		resolvers: allResolvers,
-		context: async ({req}) => {
-			await validateAccessToken(req);
+		context: async (a: any) => {
+			await validateAccessToken(a.req);
 		}
 	});
-	server.listen(1209).then(({ url }) => {
-	  console.log(`Server ready at ${url}`);
+	server.listen(1209).then((a: any) => {
+	  console.log(`Server ready at ${a.url}`);
 	});
 }

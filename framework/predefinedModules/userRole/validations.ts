@@ -1,4 +1,3 @@
-import Joi from "joi";
 const {DIALECT} = process.env;
 import getIdName from "./../../../framework/helpers/getIdName";
 

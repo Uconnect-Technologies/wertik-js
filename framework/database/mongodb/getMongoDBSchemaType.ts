@@ -1,6 +1,6 @@
 const relations = ['user', 'forgetPassword','permission','role','rolePermission','userRole','userPermission',"profile" ];
 
-export default function (type) {
+export default function (type: any) {
 	type = type.toLowerCase();
 	if (type == "string") {
 		return String

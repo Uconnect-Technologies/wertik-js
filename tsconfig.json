@@ -6,8 +6,11 @@
 		"preserveConstEnums": true,
 		"outFile": "../../built/local/tsc.js",
 		"sourceMap": true,
-		"outDir": "dist"
+		"outDir": "./dist/"
 	},
+	"typeRoots": [
+		"node_modules/@types"
+	],
 	"include": [
 		"app/**/*",
 		"framework/**/*"

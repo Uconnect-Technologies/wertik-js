@@ -3,7 +3,7 @@ import dynamic from "./../dynamic/index";
 import {join} from "path";
 import {camelCase,upperFirst} from "lodash";
 
-export default function(rootDirectory) {
+export default function(rootDirectory: any) {
   let path = `${rootDirectory}/app/modules/`;
   let frameworkPath = `${rootDirectory}/frameworkPath/`;
   let modules = process.env.MODULES_ENABLED.split(",");

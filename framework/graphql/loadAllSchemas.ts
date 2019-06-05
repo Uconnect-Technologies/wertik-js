@@ -2,7 +2,7 @@ import getDirectoriesInfolder from "./../helpers/getDirectoriesInFolder";
 import fileExists from "./../helpers/fileExists";
 import {join} from "path";
 
-export default function(rootDirectory) {
+export default function(rootDirectory: string) {
   let path = `${rootDirectory}/app/modules/`;
   let modules = process.env.MODULES_ENABLED.split(",");
   let predefinedModules = process.env.PREDEFINED_MODULES.split(",");

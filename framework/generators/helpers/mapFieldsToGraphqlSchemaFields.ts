@@ -1,11 +1,12 @@
 import {has} from "lodash";
-import fieldTypes from "./fieldTypes";
+import allFieldTypes from "./fieldTypes";
+let fieldTypes: any = allFieldTypes;
 
-export default function (data) {
+export default function (data: any) {
 	let string = "";
 	let split = data.split(" ");
-	let addedColumns = [];
-	split.forEach((data) => {
+	let addedColumns: any = [];
+	split.forEach((data: any) => {
 		let splitColon = data.split(":");
 		let [columnName,columnType] = splitColon;
 		let hasProperty = has(fieldTypes,columnType);

@@ -1,6 +1,6 @@
 import convertFiltersArrayInToMongoFilter from "./../../../database/mongodb/convertFiltersArrayInToMongoFilter";
 import {get} from "lodash";
-export default async function (model,args = {}) {
+export default async function (model: any,args: any = {}) {
   let filters = get(args,'filters',[]);
   let mongodbFilter = await convertFiltersArrayInToMongoFilter(filters);
   let pagination = get(args,'pagination',{page: 1, limit: 10});

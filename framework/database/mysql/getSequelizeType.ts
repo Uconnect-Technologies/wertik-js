@@ -1,5 +1,5 @@
 import Sequelize from "sequelize";
-export default function getSequalizeType(type) {
+export default function getSequalizeType(type: any) {
 	type = type.toLowerCase();
 	switch (type) {
 		case 'string':

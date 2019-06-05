@@ -1,5 +1,6 @@
 import validations from "./validations";
 import dynamic from "./../../../framework/dynamic/index";
+//@ts-ignore
 import allModels from "./../../../framework/dynamic/allModels";
 import relateResolver from "./../../../framework/database/relateResolver";
 
@@ -19,10 +20,10 @@ let rolePermissionResolver = dynamic.resolvers({
 
 export default {
   RolePermission: {
-    async permission(rolePermission) {
+    async permission(rolePermission: any) {
       return await relateResolver(permissionModel,rolePermission,'permission')
     },
-    async role(rolePermission) {
+    async role(rolePermission: any) {
       return await relateResolver(roleModel,rolePermission,'role')
     }
   },

@@ -18,8 +18,8 @@ export default {
 	queries: {
 	},
 	mutations: {
-		loginWithAccessToken: async (_,args,g) => {
-			let v = await validate(validations.loginWithAccessToken,args.input,{abortEarly: false});
+		loginWithAccessToken: async (_: any,args: any,g: any) => {
+			let v = await validate(validations.loginWithAccessToken,args.input);
 			if (!v.success) {
 				throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
 			}
@@ -38,8 +38,8 @@ export default {
 				return internalServerError(e);
 			}
 		},
-		twoFactorLogin: async (_, args, g) => {
-			let v = await validate(validations.twoFactorLogin,args.input,{abortEarly: false});
+		twoFactorLogin: async (_: any, args: any, g: any) => {
+			let v = await validate(validations.twoFactorLogin,args.input);
 			let {success} = v;
 			if (!success) {
 				throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors});
@@ -61,7 +61,7 @@ export default {
 	        from: process.env.MAILER_SERVICE_USERNAME,
 	        to: get(args,'input.email',''),
 	        subject: `${process.env.NAME} Two Factor Authorization`
-	      });
+	      },null,null);
 	      return {
 	      	successMessageType: "Success",
 	      	successMessage: "Email Sent"
@@ -70,8 +70,8 @@ export default {
 				return internalServerError(e);
 			}
 		},
-		twoFactorLoginValidate: async (_, args, g) => {
-			let v = await validate(validations.twoFactorLoginValidate,args.input,{abortEarly: false});
+		twoFactorLoginValidate: async (_: any, args: any, g: any) => {
+			let v = await validate(validations.twoFactorLoginValidate,args.input);
 			let {success} = v;
 			if (!success) {
 				throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors});
@@ -97,8 +97,8 @@ export default {
 			}
 
 		},	
-		activateAccount: async (_, args, g) => {
-			let v = await validate(validations.activateAccount,args.input,{abortEarly: false});
+		activateAccount: async (_: any, args: any, g: any) => {
+			let v = await validate(validations.activateAccount,args.input);
 			let {success} = v;
 			if (!success) {
 				throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors});
@@ -120,7 +120,7 @@ export default {
 	        from: process.env.MAILER_SERVICE_USERNAME,
 	        to: user.email,
 	        subject: `Welcome to ${process.env.NAME}`
-	      });
+	      },null,null);
 				return {
 					statusCode: statusCodes.OK.type,
 					statusCodeNumber: statusCodes.OK.number,
@@ -131,8 +131,8 @@ export default {
 				return internalServerError(e);
 			}
 		},
-		login: async (_,args,g) => {
-			let v = await validate(validations.login,args.input,{abortEarly: false});
+		login: async (_: any,args: any,g: any) => {
+			let v = await validate(validations.login,args.input);
 			let {success} = v;
 			if (!success) {
 				throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors});
@@ -162,8 +162,8 @@ export default {
 				return internalServerError(e);
 			}
 		},
-		signup: async (_,args,g) => {
-			let v = await validate(validations.signup,args.input,{abortEarly: false});
+		signup: async (_: any,args: any,g: any) => {
+			let v = await validate(validations.signup,args.input);
 			if (!v.success) {
 				throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
 			}
@@ -197,7 +197,7 @@ export default {
 	        from: process.env.MAILER_SERVICE_USERNAME,
 	        to: newUser.email,
 	        subject: `Welcome to ${process.env.NAME}`
-	      });
+	      },null,null);
 	      await profileModel.create({
 	      	description: '...',
 	      	user: newUser[getIdName],
@@ -211,8 +211,8 @@ export default {
 				return internalServerError(e);
 			}
 		},
-		refreshToken:  async (_,args,g) => {
-			let v = await validate(validations.refreshToken,args.input,{abortEarly: false});
+		refreshToken:  async (_: any,args: any,g: any) => {
+			let v = await validate(validations.refreshToken,args.input);
 			if (!v.success) {
 				throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
 			}

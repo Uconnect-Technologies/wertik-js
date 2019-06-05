@@ -18,10 +18,10 @@ let userPermissionResolver = dynamic.resolvers({
 
 export default {
   UserPermission: {
-    async user(userPermission) {
+    async user(userPermission: any) {
       return await relateResolver(userModel,userPermission,'user')
     },
-    async permission(userPermission) {
+    async permission(userPermission: any) {
       return await relateResolver(permissionModel,userPermission,'permission')
     }
   },

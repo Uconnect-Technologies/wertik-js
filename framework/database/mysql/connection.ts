@@ -35,7 +35,7 @@ let CONNECTION = MODE == "development" ? DB_DEVELOPMENT : DB_PRODUCTION;
 
 let f = getAllSchemasAsObject();
 let tables = generateTables(f, CONNECTION);
-tables.forEach(element => {
+tables.forEach((element: any) => {
   CONNECTION.define(element.tableName, element.fields, {
     paranoid: true,
     underscored: true,

@@ -3,7 +3,7 @@ const allowGraphql  = get(process,'env.ALLOW_GRAPHQL','FALSE') === "TRUE";
 import isTokenValid from "./isTokenValid";
 import isPublicToken from "./isPublicToken";
 import isAuthQuery from "./isAuthQuery";
-export default async function (req,res,next) {
+export default async function (req: any,res: any,next: any) {
 	let method = req.method.toLowerCase();
 	if (method == "get" || allowGraphql) {
 		next();

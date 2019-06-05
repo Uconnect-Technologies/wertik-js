@@ -1,6 +1,6 @@
 import {models} from "./../../../framework/database/connection";
 import Model from "./../../../framework/model/model";
-import {ApolloError} from "apollo-server";
+let {ApolloError} = require("apollo-server");
 import isAuthQuery from "./../../../framework/security/isAuthQuery";
 import isTokenExpired from "./../../../framework/security/isTokenExpired";
 import statusCodes from "./../../../framework/helpers/statusCodes";
@@ -12,7 +12,7 @@ let userModel = new Model({
 });
 
 export default {
-	async validateAccessToken(req) {
+	async validateAccessToken(req: any) {
 		// let query = req.body.query;
 		// let token = get(req,'headers.authorization','');
 		// let isAuthGraphqlQuery = isAuthQuery(query);
