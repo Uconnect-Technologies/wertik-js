@@ -1,1 +1,0 @@
-{"version":3,"file":"schema.js","sourceRoot":"","sources":["../../../../framework/predefinedModules/rolePermission/schema.ts"],"names":[],"mappings":";;;;;;;;;;;YACO,OAAO,GAAI,OAAO,CAAC,GAAG,SAAC;YAC1B,kBAAkB,GAAG,KAAK,CAAC;YAC/B,IAAI,OAAO,IAAI,UAAU,EAAE;gBAC1B,kBAAkB,GAAG,QAAQ,CAAC;aAC9B;iCAEc,iRAaZ,gDAAmC,CAAC,gBAAgB,CAAC,uFAIxC,kBAAkB,oBACxB,kBAAkB,YAE3B;QAAC,CAAC"}

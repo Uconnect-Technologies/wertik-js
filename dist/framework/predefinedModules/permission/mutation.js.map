@@ -1,1 +1,0 @@
-{"version":3,"file":"mutation.js","sourceRoot":"","sources":["../../../../framework/predefinedModules/permission/mutation.ts"],"names":[],"mappings":";;;;;;;;;;;YACO,OAAO,GAAI,OAAO,CAAC,GAAG,SAAC;YAC1B,kBAAkB,GAAG,KAAK,CAAC;YAC/B,IAAI,OAAO,IAAI,UAAU,EAAE;gBAC1B,kBAAkB,GAAG,QAAQ,CAAC;aAC9B;iCAEc,SACX,kBAAO,CAAC,SAAS,CAAC,uBAAuB,CAAC,YAAY,CAAC,OAC1D;QACD,CAAC"}
