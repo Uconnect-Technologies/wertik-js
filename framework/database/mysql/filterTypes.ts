@@ -1,4 +1,4 @@
-import Sequelize from "sequelize";
+let Sequelize = require("sequelize");
 const op = Sequelize.Op;
 
 export let types = [

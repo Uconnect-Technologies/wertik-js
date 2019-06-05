@@ -1,4 +1,4 @@
-import Sequelize from "sequelize";
+let Sequelize = require("sequelize");
 import getAllSchemasAsObject from "../../helpers/getAllSchemasAsObject";
 import generateTables from "./generateTables";
 

@@ -1,4 +1,5 @@
-import {get} from "lodash";
+// import  from "lodash";
+let {get} = require("lodash");
 const allowGraphql  = get(process,'env.ALLOW_GRAPHQL','FALSE') === "TRUE";
 import isTokenValid from "./isTokenValid";
 import isPublicToken from "./isPublicToken";

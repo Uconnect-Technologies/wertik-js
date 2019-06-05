@@ -1,7 +1,7 @@
 import fileExists from "./../helpers/fileExists";
 import dynamic from "./../dynamic/index";
-import {join} from "path";
-import {camelCase,upperFirst} from "lodash";
+let {join} = require("path");
+let {camelCase,upperFirst} = require("lodash");
 
 
 export default function(rootDirectory: any) {

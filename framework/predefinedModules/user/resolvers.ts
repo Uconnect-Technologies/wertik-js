@@ -1,12 +1,12 @@
+let bcrypt = require("bcrypt-nodejs");
+let {ApolloError} = require("apollo-server");
+
 import internalServerError from "./../../../framework/helpers/internalServerError";
-import bcrypt from "bcrypt-nodejs";
 import validations from "./validations";
 import validate from "./../../../framework/validations/validate";
 import statusCodes from "./../../../framework/helpers/statusCodes";
 import {sendEmail} from "./../../../framework/mailer/index";
-import {ApolloError} from "apollo-server";
 import getIdName from "./../../../framework/helpers/getIdName";
-//@ts-ignore
 import allModels from "./../../../framework/dynamic/allModels";
 import relateResolver from "./../../../framework/database/relateResolver";
 

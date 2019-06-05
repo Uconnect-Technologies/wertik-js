@@ -1,5 +1,6 @@
-import * as moment from "moment";
-import jwt from "jsonwebtoken";
+let moment = require("moment");
+let jwt = require("jsonwebtoken");
+
 export default async function createJwtToken(data: any) {
 	if (typeof data !== "object") {
 		throw "Data must be object";

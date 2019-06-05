@@ -1,5 +1,6 @@
+let {get} = require("lodash");
 import convertFiltersArrayInToMongoFilter from "./../../../database/mongodb/convertFiltersArrayInToMongoFilter";
-import {get} from "lodash";
+
 export default async function (model: any,args: any = {}) {
   let filters = get(args,'filters',[]);
   let mongodbFilter = await convertFiltersArrayInToMongoFilter(filters);

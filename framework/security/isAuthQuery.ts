@@ -1,5 +1,5 @@
-import {get} from "lodash"
-import gql from 'graphql-tag';
+let {get} = require("lodash")
+let gql = require('graphql-tag')
 export default function (query: string) {
 	let parsed = gql`${query}`;
 	let queryName = get(parsed,"definitions[0].selectionSet.selections[0].name.value",'');

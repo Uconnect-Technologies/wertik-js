@@ -1,5 +1,5 @@
-import {get} from "lodash";
-import jwt from "jsonwebtoken";
+let {get} = require("lodash");
+let jwt = require("jsonwebtoken");
 import isPublicToken from "./isPublicToken";
 import getUserWithTokenAndEmail from "./getUserWithTokenAndEmail";
 export default async function isTokenValid(token: string) {

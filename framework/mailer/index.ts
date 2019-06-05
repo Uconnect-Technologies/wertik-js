@@ -1,5 +1,6 @@
 let nodemailer = require('nodemailer');
-import handlebars from "handlebars";
+let handlebars = require("handlebars");
+
 import fs from "fs";
 
 const {

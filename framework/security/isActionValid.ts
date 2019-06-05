@@ -1,5 +1,5 @@
 import allModels from "./../dynamic/allModels";
-import {get} from "lodash";
+let {get} = require("lodash");
 
 export default async function (user: any,action: string) {
 	let permission = get(allModels,'permissionModel',null)

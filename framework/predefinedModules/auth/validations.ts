@@ -1,4 +1,4 @@
-import Validator from 'validatorjs';
+let Validator = require('validatorjs');
 import getIdName from "./../../../framework/helpers/getIdName";
 
 const {DIALECT} = process.env;

@@ -1,6 +1,6 @@
 import getDirectoriesInfolder from "./../helpers/getDirectoriesInFolder";
-import {camelCase,upperFirst} from "lodash";
-import {join} from "path";
+let {camelCase,upperFirst} = require("lodash");
+let {join} = require("path");
 
 export default function(rootDirectory: any) {
   let path = `${rootDirectory}/app/modules/`;

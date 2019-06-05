@@ -1,10 +1,11 @@
+let {get} = require("lodash");
+let {ApolloError} = require("apollo-server");
+
 import {models} from "./../../../framework/database/connection";
 import Model from "./../../../framework/model/model";
-let {ApolloError} = require("apollo-server");
 import isAuthQuery from "./../../../framework/security/isAuthQuery";
 import isTokenExpired from "./../../../framework/security/isTokenExpired";
 import statusCodes from "./../../../framework/helpers/statusCodes";
-import {get} from "lodash";
 
 let userModel = new Model({
 	models: models,

@@ -1,6 +1,6 @@
-import {get} from "lodash";
-import jwt from "jsonwebtoken";
-import {ApolloError} from "apollo-server";
+let {get} = require("lodash")
+let jwt = require("jsonwebtoken");
+let {ApolloError} = require("apollo-server");
 import statusCodes from "./../helpers/statusCodes";
 
 export default async function (jwtToken: string) {

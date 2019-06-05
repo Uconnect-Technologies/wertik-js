@@ -1,7 +1,8 @@
+let {get} = require("lodash");
+
 import actions from "./actions/index";
 import statusCodes from "./../helpers/statusCodes";
 import internalServerError from "./../../framework/helpers/internalServerError";
-import {get} from "lodash";
 
 const {
 	create,

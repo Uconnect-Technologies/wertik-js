@@ -1,12 +1,14 @@
+let moment = require("moment");
+let bcrypt = require("bcrypt-nodejs");
+let {ApolloError} =  require("apollo-server");
+
 import internalServerError from "./../../../framework/helpers/internalServerError";
-import moment from "moment";
-import bcrypt from "bcrypt-nodejs";
 import validations from "./validations";
 import validate from "./../../../framework/validations/validate";
 import statusCodes from "./../../../framework/helpers/statusCodes";
 import {sendEmail} from "./../../../framework/mailer/index";
-import {ApolloError} from "apollo-server";
 import allModels from "./../../../framework/dynamic/allModels";
+
 let {forgetPasswordModel, userModel} = allModels;
 
 export default {

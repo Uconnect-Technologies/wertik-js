@@ -1,4 +1,4 @@
-import {get} from "lodash";
+let {get} = require("lodash");
 import getMongoDBSchemaType from "./getMongoDBSchemaType"
 
 const restrictColumns = [

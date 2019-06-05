@@ -1,4 +1,4 @@
-import Sequelize from "sequelize";
+let Sequelize = require("sequelize");
 export default function getSequalizeType(type: any) {
 	type = type.toLowerCase();
 	switch (type) {

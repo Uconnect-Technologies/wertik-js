@@ -1,4 +1,4 @@
-import {has} from "lodash";
+let {has} = require("lodash");
 import allFieldTypes from "./fieldTypes";
 let fieldTypes: any = allFieldTypes;
 

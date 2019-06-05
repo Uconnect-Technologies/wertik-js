@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
-import {Schema} from "mongoose";
-import mongoosePaginate from "mongoose-paginate";
+let mongoose = require("mongoose");
+let {Schema} = require("mongoose");
+let mongoosePaginate = require("mongoose-paginate");
 import getAllSchemasAsObject from "../../helpers/getAllSchemasAsObject";
 import generateMongoDBSchema from "./generateMongoDBSchema";
 

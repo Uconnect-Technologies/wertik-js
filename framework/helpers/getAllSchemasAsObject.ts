@@ -1,5 +1,5 @@
-import {get} from "lodash";
-import * as gql from "graphql-tag";
+let {get} = require('lodash');
+let gql = require("graphql-tag")
 const path = require('path');
 import {join} from "path";
 import fileExists from "./fileExists";

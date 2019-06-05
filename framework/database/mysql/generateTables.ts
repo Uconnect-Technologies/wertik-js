@@ -1,4 +1,4 @@
-import {get} from "lodash";
+let {get} = require("lodash");
 import getSequelizeType from "./getSequelizeType";
 const restrictColumns = [
     "errors","successMessage","successMessageType","statusCode","statusCodeNumber","created_at","id","updated_at",

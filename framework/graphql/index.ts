@@ -1,10 +1,11 @@
+let {buildSchema} = require("graphql");
+const { ApolloServer, gql } = require('apollo-server');
+
 import mutations from "./loadAllMutations";
 import queries from "./loadAllQueries";
 import resolvers from "./loadAllResolvers";
 import schemas from "./loadAllSchemas";
 import generalSchema from "./../../app/generalSchema";
-import {buildSchema} from "graphql";
-const { ApolloServer, gql } = require('apollo-server');
 
 export default function (rootDirectory: string,app: any) {
 	let allMutations = mutations(rootDirectory);

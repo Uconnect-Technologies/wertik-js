@@ -1,4 +1,4 @@
-import {camelCase} from "lodash";
+let {camelCase} = require("lodash");
 
 export default {
   generateMutationsSchema(moduleName: any) {

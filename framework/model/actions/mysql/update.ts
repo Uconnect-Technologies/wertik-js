@@ -1,4 +1,4 @@
-import {get} from "lodash";
+let {get} = require("lodash");
 import findOneByPK from "./findOneByPK";
 export default async function (model: any,args: any,name: any) {
   let id = get(args,'id',null);
