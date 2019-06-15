@@ -41,7 +41,7 @@ export default function (rootDirectory: string,app: any,configuration: object) {
 		}
 		schema {
 			query: Query
-			mutation: Mutation
+			mutatiobn: Mutation
 		}
 	`;
 	let schema = buildSchema(mainSchema);

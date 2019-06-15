@@ -1,7 +1,6 @@
 let {get} = require("lodash");
 
 import actions from "./actions/index";
-import statusCodes from "./../helpers/statusCodes";
 import internalServerError from "./../../framework/helpers/internalServerError";
 
 const {
@@ -18,10 +17,11 @@ class Model {
 	tableName: string;
 	models: any;
 	model: any;
+	
 	constructor(props: any) {
 		this.instance = null;
 		this.tableName = props.tableName;
-    this.models = props.models;
+    	this.models = props.models;
 		this.model = this.models[this.tableName];
 	}
 
