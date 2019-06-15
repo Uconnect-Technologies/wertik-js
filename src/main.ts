@@ -6,7 +6,7 @@ const app = express();
 app.use(morgan('combined'))
 
 export default {
-    init(configuration) {
+    run: function (configuration) {
         graphqlInit(__dirname, app, configuration);
         app.listen(4000, function () {
             console.log("Listening server on localhost:4000/graphql");

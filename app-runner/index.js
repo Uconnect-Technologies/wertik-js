@@ -4,3 +4,5 @@ wertick.init({
     mode: "development",
     appName: "Wertick Demo"
 });
+
+console.log(1);
