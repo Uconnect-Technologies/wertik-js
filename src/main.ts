@@ -3,7 +3,7 @@ import graphqlInit from "./framework/graphql/index";
 import morgan from "morgan";
 
 const app = express();
-app.use(morgan('combined'))
+app.use(morgan('combined'));
 
 export default {
     run: function (configuration) {
