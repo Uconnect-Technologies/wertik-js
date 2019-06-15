@@ -7,7 +7,23 @@ import resolvers from "./loadAllResolvers";
 import schemas from "./loadAllSchemas";
 import generalSchema from "./../../app/generalSchema";
 
-export default function (rootDirectory: string,app: any) {
+export default function (rootDirectory: string,app: any,configuration: object) {
+	
+	// let {
+	// 	name,
+	// 	mode, 
+	// 	port,
+	// 	database, 
+	// 	predefinedModules, 
+	// 	dialect, 
+	// 	mailer, 
+	// 	logging,
+	// 	backendApp,
+	// 	frontendAppUrl,
+	// 	frontendAppPasswordResetUrl
+	// } = configuration;
+	// let {dbUsername, dbPassword, dbHost, dbPort,mongoUrl} = database;
+
 	let allMutations = mutations(rootDirectory);
 	let allQueries=  queries(rootDirectory);
 	let allSchemas = schemas(rootDirectory);
