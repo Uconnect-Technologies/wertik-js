@@ -1,23 +1,20 @@
 {
-"compilerOptions": {
-	"module": "commonjs",
-	"esModuleInterop": true,
-	"target": "es6",
-	"noImplicitAny": false,
-	"moduleResolution": "node",
-	"sourceMap": true,
-	"outDir": "build",
-	"baseUrl": "./",
-	"types": ["node", "jest"],
-	"paths": {
-	"*": ["node_modules/*", "app/types/*"],
-	"modules/*": ["app/modules/*"],
-	"config/*": ["app/config/*"],
-	"models/*": ["app/models/*"],
-	"utils/*": ["app/utils/*"],
-	"interfaces": ["app/interfaces/index.ts"],
-	"common/*": ["app/common/*"]
-	}
-},
-"include": ["app/**/*"]
+	"compilerOptions": {
+		"module": "commonjs",
+		"esModuleInterop": true,
+		"target": "es6",
+		"noImplicitAny": false,
+		"moduleResolution": "node",
+		"sourceMap": true,
+		"outDir": "build",
+		"baseUrl": "./",
+		"types": [
+			"node",
+		],
+		"paths": {
+		}
+	},
+	"include": [
+		"src/**/*"
+	]
 }

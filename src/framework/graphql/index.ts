@@ -5,7 +5,7 @@ import mutations from "./loadAllMutations";
 import queries from "./loadAllQueries";
 import resolvers from "./loadAllResolvers";
 import schemas from "./loadAllSchemas";
-import generalSchema from "./../../app/generalSchema";
+import generalSchema from "./../helpers/generalSchema";
 
 export default function (rootDirectory: string,app: any,configuration: object) {
 	
