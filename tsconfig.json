@@ -1,0 +1,20 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"esModuleInterop": true,
+		"target": "es6",
+		"noImplicitAny": false,
+		"moduleResolution": "node",
+		"sourceMap": true,
+		"outDir": "build",
+		"baseUrl": "./",
+		"types": [
+			"node",
+		],
+		"paths": {
+		}
+	},
+	"include": [
+		"lib/**/*"
+	]
+}

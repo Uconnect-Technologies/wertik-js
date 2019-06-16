@@ -1,12 +1,17 @@
-import express from "express";
-import graphqlInit from "./framework/graphql/index.js";
-import morgan from "morgan";
+let wertick = require("./build/main.js");
 
-var app = express();
-
-app.use(morgan('combined'))
-
-graphqlInit(__dirname, app);
-
-app.listen(4000, () => console.log("Listening server on localhost:4000/graphql")
-);
+wertick.default.run({
+    NAME: "Wapgee",
+    MODE: "development",
+    PORT: 1200,
+    JWT_SECRET: "v1s4LIGdBu",
+    DB_USERNAME: "root",
+    DB_PASSWORD: "root",
+    DB_NAME: "graphql",
+    DB_HOST: "localhost",
+    DB_PORT: 3306,
+    LOGGING: false,
+    ALLOW_GRAPHQL: "TRUE",
+    MODULES_ENABLED: " ",
+    PREDEFINED_MODULES: "user,forgetPassword,permission,role,rolePermission,userRole,userPermission,profile,auth",
+});
