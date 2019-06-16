@@ -8,9 +8,12 @@
   "scripts": {
     "build": "npm run clean && npm run build-ts",
     "start": "cross-env NODE_ENV=development nodemon main --exec \"node -r dotenv/config -r babel-register\"",
+    "watch-node": "nodemon build/index.js",
+    "watch-ts": "tsc -w",
+    "dev": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\"  \"npm run watch-ts\" \"npm run watch-node\"",
     "db:migrate": "cross-env NODE_ENV=development nodemon sync --exec \"node -r dotenv/config -r babel-register\"",
     "jest": "jest",
-    "generate": "plop --plopfile framework/generators/index.js --require babel-core/register"
+    "generate-module": "plop --plopfile framework/generators/index.js --require babel-core/register"
   },
   "dependencies": {
     "apollo-server": "^2.3.2",
