@@ -1,21 +1,23 @@
 {
-	"compilerOptions": {
-		"module": "system",
-		"noImplicitAny": true,
-		"removeComments": true,
-		"preserveConstEnums": true,
-		"sourceMap": true,
-		"outDir": "./dist/"
-	},
-	"typeRoots": [
-		"node_modules/@types"
-	],
-	"include": [
-		"app/**/*",
-		"framework/**/*"
-	],
-	"exclude": [
-		"node_modules",
-		"**/*.spec.ts"
-	]
+"compilerOptions": {
+	"module": "commonjs",
+	"esModuleInterop": true,
+	"target": "es6",
+	"noImplicitAny": false,
+	"moduleResolution": "node",
+	"sourceMap": true,
+	"outDir": "build",
+	"baseUrl": "./",
+	"types": ["node", "jest"],
+	"paths": {
+	"*": ["node_modules/*", "app/types/*"],
+	"modules/*": ["app/modules/*"],
+	"config/*": ["app/config/*"],
+	"models/*": ["app/models/*"],
+	"utils/*": ["app/utils/*"],
+	"interfaces": ["app/interfaces/index.ts"],
+	"common/*": ["app/common/*"]
+	}
+},
+"include": ["app/**/*"]
 }
