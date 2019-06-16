@@ -1,1 +1,0 @@
-### Getting Starting with Wertick

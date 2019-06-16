@@ -1,1 +1,0 @@
-### Wertick JS Demo
