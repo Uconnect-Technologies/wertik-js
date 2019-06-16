@@ -1,0 +1,28 @@
+let wertick = require("./../../lib/main.js").default;
+
+wertick.run({
+	NAME: "Wapgee",
+	MODE: "development",
+	PORT: "1200",
+	JWT_SECRET: "v1s4LIGdBu",
+	DB_USERNAME: "root",
+	DB_PASSWORD: "root",
+	DB_NAME: "graphql",
+	DB_HOST: "localhost",
+	DB_PORT: "3306",
+	LOGGING: "false",
+	ALLOW_GRAPHQL: "TRUE",
+	MODULES_ENABLED:" ",
+	PREDEFINED_MODULES: "user,forgetPassword,permission,role,rolePermission,userRole,userPermission,profile,auth",
+
+	DIALECT: "MONGO_DB",
+
+	MONGO_DB: "mongodb://ilyas:pass1234@ds027719.mlab.com:27719/graphql",
+
+	MAILER_SERVICE: "gmail",
+	MAILER_SERVICE_USERNAME: "jangonewsmailer@gmail.com",
+	MAILER_SERVICE_PASSWORD: "jango/12345",
+	BACKEND_APP: "http://localhost:1200",
+	FRONTEND_APP_URL: "http://localhost:3000",
+	FRONTEND_APP_PASSWORD_RESET_URL: "/reset-password/",
+});
