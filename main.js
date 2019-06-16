@@ -1,6 +1,5 @@
 let wertick = require("./build/main.js");
 
-
 wertick.default.run({
     NAME: "Wapgee",
     MODE: "development",

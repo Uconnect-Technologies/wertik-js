@@ -1,19 +1,14 @@
 {
-  "name": "NodeBoilerplate",
+  "name": "wertick-js",
   "version": "1.0.0",
   "main": "main.js",
-  "repository": "https://github.com/ilyaskarim/NodeBoilerplate.git",
+  "repository": "https://github.com/ilyaskarim/wertick-js.git",
   "author": "Ilyas Karim <ilyas.datoo@gmail.com> ",
   "license": "MIT",
   "scripts": {
     "build": "npm run clean && npm run build-ts",
-    "start": "cross-env NODE_ENV=development nodemon main --exec \"node -r dotenv/config -r babel-register\"",
-    "dev": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\"  \"npm run watch-ts\" \"npm run watch-node\"",
-    "watch-node": "node main.js",
-    "watch-ts": "tsc -w",
-    "db:migrate": "cross-env NODE_ENV=development nodemon sync --exec \"node -r dotenv/config -r babel-register\"",
-    "jest": "jest",
-    "generate-module": "plop --plopfile framework/generators/index.js --require babel-core/register"
+    "dev": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\"  \"npm run watch-ts\" ",
+    "watch-ts": "tsc -w"
   },
   "dependencies": {
     "apollo-server": "^2.3.2",
