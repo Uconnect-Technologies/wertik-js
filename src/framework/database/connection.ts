@@ -1,4 +1,4 @@
-const dialect = process.env.DIALECT;
+const dialect = process.env.dialect;
 let db_connect = null;
 let db_models = null;
 

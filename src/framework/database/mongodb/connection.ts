@@ -4,7 +4,7 @@ let mongoosePaginate = require("mongoose-paginate");
 import getAllSchemasAsObject from "../../helpers/getAllSchemasAsObject";
 import generateMongoDBSchema from "./generateMongoDBSchema";
 
-const mongo = process.env.MONGO_DB;
+const mongo = process.env.mongoURI;
 
 mongoose.connect(mongo,{keepAlive: 1,useNewUrlParser: true}).then(() => {
   console.log("Connected to mongodb successfully")
