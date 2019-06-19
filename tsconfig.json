@@ -6,7 +6,7 @@
 		"noImplicitAny": false,
 		"moduleResolution": "node",
 		"sourceMap": true,
-		"outDir": "build",
+		"outDir": "lib",
 		"baseUrl": "./",
 		"types": [
 			"node",
