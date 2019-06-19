@@ -54,13 +54,13 @@ export default {
         });
         await sendEmail('requestPasswordResetToken.hbs',{
           email: args.email,
-          returnUrl: process.env.FRONTEND_APP_URL,
+          returnUrl: process.env.frontendAppUrl,
           token: token,
-          frontendAppPasswordResetUrl: process.env.FRONTEND_APP_PASSWORD_RESET_URL,
+          frontendAppPasswordResetUrl: process.env.frontendAppPasswordResetUrl,
           nextMinutes: moment().add('30','minutes').format("dddd, MMMM Do YYYY, h:mm:ss a"),
-          siteName: process.env.NAME
+          siteName: process.env.name
         },{
-          from: process.env.MAILER_SERVICE_USERNAME,
+          from: process.env.mailerServiceUsername,
           to: args.email,
           subject: "Reset your email"
         },null,null);
@@ -96,10 +96,10 @@ export default {
         await forgetPasswordModel.delete(forgetPassword);
         await sendEmail('changePassword.hbs',{
           userName: user.email,
-          siteName: process.env.NAME,
+          siteName: process.env.name,
           email: user.email,
         },{
-          from: process.env.MAILER_SERVICE_USERNAME,
+          from: process.env.mailerServiceUsername,
           to: user.email,
           subject: "Password changed"
         },null,null);

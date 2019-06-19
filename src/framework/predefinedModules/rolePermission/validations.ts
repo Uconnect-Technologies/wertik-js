@@ -1,20 +1,20 @@
-const {DIALECT} = process.env;
+const {dialect} = process.env;
 import getIdName from "./../../../framework/helpers/getIdName";
 
 export default {
   createRolePermission: {
-    role: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required",
-    permission: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required"
+    role: (dialect == "MONGO_DB") ? "string|required" : "integer|required",
+    permission: (dialect == "MONGO_DB") ? "string|required" : "integer|required"
   },
   deleteRolePermission: {
-    [getIdName]: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required",
+    [getIdName]: (dialect == "MONGO_DB") ? "string|required" : "integer|required",
   },
   updateRolePermission: {
-    [getIdName]: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required",
-    role: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required",
-    permission: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required"
+    [getIdName]: (dialect == "MONGO_DB") ? "string|required" : "integer|required",
+    role: (dialect == "MONGO_DB") ? "string|required" : "integer|required",
+    permission: (dialect == "MONGO_DB") ? "string|required" : "integer|required"
   },
   rolePermission:  {
-    [getIdName]: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required",
+    [getIdName]: (dialect == "MONGO_DB") ? "string|required" : "integer|required",
   }
 }

@@ -1,6 +1,6 @@
-const {DIALECT} = process.env;
+const {dialect} = process.env;
 let relationSchemaType = "Int";
-if (DIALECT == "MONGO_DB") {
+if (dialect == "MONGO_DB") {
 	relationSchemaType = "String";
 }
 export default `

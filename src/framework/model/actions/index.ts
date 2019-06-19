@@ -1,4 +1,4 @@
-const dialect = process.env.DIALECT;
+const dialect = process.env.dialect;
 let action = dialect.toLowerCase();
 let path = __dirname;
 let create = require(`${path}/${action}/create`).default;

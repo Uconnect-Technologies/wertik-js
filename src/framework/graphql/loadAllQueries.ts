@@ -7,7 +7,7 @@ export default function(rootDirectory: any) {
   let predefinedModules = process.env.predefinedModules.split(",");
   let output = "";
   predefinedModules.forEach(async name => {
-    let filePath = join(__dirname,"../../framework/predefinedModules",name,"query");
+    let filePath = join(__dirname,"../../framework/predefinedModules",name,"query.js");
     let isQueryFileExists = fileExists(filePath);
     let content = "";
     if (!isQueryFileExists) {

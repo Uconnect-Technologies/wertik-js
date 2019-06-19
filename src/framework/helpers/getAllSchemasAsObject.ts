@@ -8,7 +8,7 @@ export default function () {
   let predefinedModules = process.env.predefinedModules.split(",");
   let object = {};
   predefinedModules.forEach((folder) => {
-    let schemaPath = join(__dirname,"../../framework/predefinedModules",folder,"schema.ts");
+    let schemaPath = join(__dirname,"../../framework/predefinedModules",folder,"schema.js");
     if (fileExists(schemaPath)) {
       let file = require(schemaPath).default;
       let schema = gql(file);

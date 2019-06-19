@@ -8,7 +8,7 @@ export default function(rootDirectory: any) {
   let predefinedModules = process.env.predefinedModules.split(",");
   let output = "";
   predefinedModules.forEach(async (name: string) => {
-    let filePath = join(__dirname,"../../framework/predefinedModules",name,"mutation.ts");
+    let filePath = join(__dirname,"../../framework/predefinedModules",name,"mutation.js");
     let isMutationFileExist = fileExists(filePath);
     let content = "";
     if (!isMutationFileExist) {

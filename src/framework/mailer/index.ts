@@ -4,16 +4,16 @@ let handlebars = require("handlebars");
 import fs from "fs";
 
 const {
-  MAILER_SERVICE,
-  MAILER_SERVICE_USERNAME,
-  MAILER_SERVICE_PASSWORD
+  mailerService,
+  mailerServiceUsername,
+  mailerServicePassword
 } = process.env;
 
 let transporter = nodemailer.createTransport({
-	service: MAILER_SERVICE,
+	service: mailerService,
 	auth: {
-		user: MAILER_SERVICE_USERNAME,
-		pass: MAILER_SERVICE_PASSWORD
+		user: mailerServiceUsername,
+		pass: mailerServicePassword
 	}
 });
 

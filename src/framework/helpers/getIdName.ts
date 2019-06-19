@@ -1,3 +1,3 @@
-const {DIALECT} = process.env;
+const {dialect} = process.env;
 
-export default (DIALECT == "MONGO_DB") ? "_id": "id";
+export default (dialect == "MONGO_DB") ? "_id": "id";

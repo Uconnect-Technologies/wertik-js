@@ -1,7 +1,7 @@
 let Validator = require('validatorjs');
 import getIdName from "./../../../framework/helpers/getIdName";
 
-const {DIALECT} = process.env;
+const {dialect} = process.env;
 
 export default {
   twoFactorLogin: {
@@ -25,7 +25,7 @@ export default {
     activationToken: "string|required",
   },
   viewUser: {
-    [getIdName]: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required",
+    [getIdName]: (dialect == "MONGO_DB") ? "string|required" : "integer|required",
   },
   login: {
     email: "string|required",
