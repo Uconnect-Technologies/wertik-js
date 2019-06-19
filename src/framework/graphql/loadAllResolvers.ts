@@ -3,9 +3,7 @@ let {camelCase,upperFirst} = require("lodash");
 let {join} = require("path");
 
 export default function(rootDirectory: any) {
-  let path = `${rootDirectory}/app/modules/`;
-  let modules = process.env.MODULES_ENABLED.split(",");
-  let predefinedModules = process.env.PREDEFINED_MODULES.split(",");
+  let predefinedModules = process.env.predefinedModules.split(",");
   let output = {
     Query: {},
     Mutation: {}

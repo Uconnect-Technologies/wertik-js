@@ -4,7 +4,7 @@ wertick.run({
 	name: "Wapgee",
 	mode: "development",
 	port: "1200",
-	jwtSecret: "v1s4LIGdBu",
+	jwtSecret: "kakoilyas",
 	dbUsername: "root",
 	dbPassword: "root",
 	dbName: "graphql",
