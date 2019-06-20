@@ -1,12 +1,27 @@
 let {ApolloError} = require("apollo-server");
+const { PubSub } = require('apollo-server');
+const {camelCase} = require('lodash');
 
 import validate from "./../validations/validate";
 import internalServerError from "./../helpers/internalServerError";
 import statusCodes from "./../helpers/statusCodes";
 
+const pubsub = new PubSub();
+
 export default function (info: any) {
   let {moduleName,validations,model} = info;
   return {
+    subscriptions: {
+      [`${camelCase(moduleName)}Created`]: {
+        subscribe: () => pubsub.asyncIterator([`${moduleName}Created`])
+      },
+      [`${camelCase(moduleName)}Updated`]: {
+        subscribe: () => pubsub.asyncIterator([`${moduleName}Updated`])
+      },
+      [`${camelCase(moduleName)}Deleted`]: {
+        subscribe: () => pubsub.asyncIterator([`${moduleName}Deleted`])
+      }
+    },
     queries: {
       [`list${moduleName}`]: async (_:any, args:any, context:any) => {
         try {
@@ -82,7 +97,9 @@ export default function (info: any) {
           throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
         }
         try {
-          return await model.create(args.input);
+          let createModel = await model.create(args.input);
+          pubsub.publish(`${camelCase(moduleName)}Created`, { data: createModel });
+          return createModel;
         } catch (e) {
           return internalServerError(e);
         }
@@ -94,7 +111,9 @@ export default function (info: any) {
           throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
         }
         try {
-          return await model.update(args.input);
+          let updateModel = await model.update(args.input);
+          pubsub.publish(`${camelCase(moduleName)}Updated`, { data: updateModel });
+          return updateModel;
         } catch (e) {
           return internalServerError(e);
         }
@@ -106,7 +125,9 @@ export default function (info: any) {
           throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
         }
         try {
-          return await model.delete(args.input);
+          await model.delete(args.input);
+          pubsub.publish(`${camelCase(moduleName)}Deleted`, { data: args.input });
+          return;
         } catch (e) {
           return internalServerError(e);
         }

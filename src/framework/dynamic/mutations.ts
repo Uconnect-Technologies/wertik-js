@@ -1,5 +1,3 @@
-let {camelCase} = require("lodash");
-
 export default {
   generateMutationsSchema(moduleName: any) {
     return `

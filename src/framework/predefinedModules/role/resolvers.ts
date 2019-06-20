@@ -16,15 +16,12 @@ let roleResolver = dynamic.resolvers({
 });
 
 export default {
+  Subscription: dynamic.loader("Role", roleResolver).subscriptions,
   Role: {
     async permissions(role: any) {
       return await relateResolver(rolePermissionsModel,role,'permission',true);
     }
   },
-  mutations: {
-    ...dynamic.loader("Role",roleResolver).mutations
-  },
-  queries: {
-    ...dynamic.loader("Role",roleResolver).queries
-  }
+  mutations: dynamic.loader("Role",roleResolver).mutations,
+  queries: dynamic.loader("Role",roleResolver).queries
 }
