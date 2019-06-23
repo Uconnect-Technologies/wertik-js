@@ -2,6 +2,7 @@ import validations from "./validations";
 import dynamic from "./../../../framework/dynamic/index";
 import allModels from "./../../../framework/dynamic/allModels";
 import relateResolver from "./../../../framework/database/relateResolver";
+
 let {roleModel, rolePermissionsModel} = allModels;
 
 let roleResolver = dynamic.resolvers({

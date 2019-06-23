@@ -28,5 +28,4 @@ export default {
   },
   queries: dynamic.loader("UserPermission",userPermissionResolver).queries,
   mutations: dynamic.loader("UserPermission",userPermissionResolver).mutations
-  
 }

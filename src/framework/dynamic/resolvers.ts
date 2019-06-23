@@ -9,17 +9,25 @@ import statusCodes from "./../helpers/statusCodes";
 const pubsub = new PubSub();
 
 export default function (info: any) {
+  
   let {moduleName,validations,model} = info;
+  const moduleCrated = `${camelCase(moduleName)}`;
+  const moduleUpdated = `${camelCase(moduleName)}`;
+  const moduleDeleted = `${camelCase(moduleName)}`;
+  const moduleBulkCreated = `${camelCase(moduleName)}`;
+  const moduleBulkDeleted = `${camelCase(moduleName)}`;
+  const moduleBulkUpdated = `${camelCase(moduleName)}`;
+
   return {
     subscriptions: {
       [`${camelCase(moduleName)}Created`]: {
-        subscribe: () => pubsub.asyncIterator([`${moduleName}Created`])
+        subscribe: () => pubsub.asyncIterator([`${camelCase(moduleName)}Created`])
       },
       [`${camelCase(moduleName)}Updated`]: {
-        subscribe: () => pubsub.asyncIterator([`${moduleName}Updated`])
+        subscribe: () => pubsub.asyncIterator([`${camelCase(moduleName)}Updated`])
       },
       [`${camelCase(moduleName)}Deleted`]: {
-        subscribe: () => pubsub.asyncIterator([`${moduleName}Deleted`])
+        subscribe: () => pubsub.asyncIterator([`${camelCase(moduleName)}Deleted`])
       }
     },
     queries: {
@@ -98,7 +106,7 @@ export default function (info: any) {
         }
         try {
           let createModel = await model.create(args.input);
-          pubsub.publish(`${camelCase(moduleName)}Created`, { data: createModel });
+          pubsub.publish(`${camelCase(moduleName)}Created`, { [`${camelCase(moduleName)}Created`]: createModel });
           return createModel;
         } catch (e) {
           return internalServerError(e);
@@ -112,7 +120,7 @@ export default function (info: any) {
         }
         try {
           let updateModel = await model.update(args.input);
-          pubsub.publish(`${camelCase(moduleName)}Updated`, { data: updateModel });
+          pubsub.publish(`${camelCase(moduleName)}Updated`, { [`${camelCase(moduleName)}Updated`]: updateModel });
           return updateModel;
         } catch (e) {
           return internalServerError(e);
@@ -126,7 +134,7 @@ export default function (info: any) {
         }
         try {
           await model.delete(args.input);
-          pubsub.publish(`${camelCase(moduleName)}Deleted`, { data: args.input });
+          pubsub.publish(`${camelCase(moduleName)}Deleted`, { [`${camelCase(moduleName)}Deleted`]: args.input });
           return;
         } catch (e) {
           return internalServerError(e);

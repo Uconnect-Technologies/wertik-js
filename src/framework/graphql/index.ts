@@ -29,6 +29,7 @@ export default function (rootDirectory: string,app: any,configuration: object) {
 		schema {
 			query: Query
 			mutation: Mutation
+			subscription: Subscription
 		}
 	`;
 	const server = new ApolloServer({ 
