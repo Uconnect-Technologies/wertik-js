@@ -1,6 +1,7 @@
 export default function (moduleName: any,graphql: any) {
 	let {mutations,queries} = graphql;
 	return {
+		subscriptions: graphql.subscriptions,
 		queries: {
 			[`list${moduleName}`]: async (_: any, args: any, g: any) => {
 				return queries[`list${moduleName}`](_,args,g);

@@ -1,12 +1,35 @@
 let {ApolloError} = require("apollo-server");
+const { PubSub } = require('apollo-server');
+const {camelCase} = require('lodash');
 
 import validate from "./../validations/validate";
 import internalServerError from "./../helpers/internalServerError";
 import statusCodes from "./../helpers/statusCodes";
 
+const pubsub = new PubSub();
+
 export default function (info: any) {
+  
   let {moduleName,validations,model} = info;
+  const moduleCrated = `${camelCase(moduleName)}`;
+  const moduleUpdated = `${camelCase(moduleName)}`;
+  const moduleDeleted = `${camelCase(moduleName)}`;
+  const moduleBulkCreated = `${camelCase(moduleName)}`;
+  const moduleBulkDeleted = `${camelCase(moduleName)}`;
+  const moduleBulkUpdated = `${camelCase(moduleName)}`;
+
   return {
+    subscriptions: {
+      [`${camelCase(moduleName)}Created`]: {
+        subscribe: () => pubsub.asyncIterator([`${camelCase(moduleName)}Created`])
+      },
+      [`${camelCase(moduleName)}Updated`]: {
+        subscribe: () => pubsub.asyncIterator([`${camelCase(moduleName)}Updated`])
+      },
+      [`${camelCase(moduleName)}Deleted`]: {
+        subscribe: () => pubsub.asyncIterator([`${camelCase(moduleName)}Deleted`])
+      }
+    },
     queries: {
       [`list${moduleName}`]: async (_:any, args:any, context:any) => {
         try {
@@ -82,7 +105,9 @@ export default function (info: any) {
           throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
         }
         try {
-          return await model.create(args.input);
+          let createModel = await model.create(args.input);
+          pubsub.publish(`${camelCase(moduleName)}Created`, { [`${camelCase(moduleName)}Created`]: createModel });
+          return createModel;
         } catch (e) {
           return internalServerError(e);
         }
@@ -94,7 +119,9 @@ export default function (info: any) {
           throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
         }
         try {
-          return await model.update(args.input);
+          let updateModel = await model.update(args.input);
+          pubsub.publish(`${camelCase(moduleName)}Updated`, { [`${camelCase(moduleName)}Updated`]: updateModel });
+          return updateModel;
         } catch (e) {
           return internalServerError(e);
         }
@@ -106,7 +133,9 @@ export default function (info: any) {
           throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
         }
         try {
-          return await model.delete(args.input);
+          await model.delete(args.input);
+          pubsub.publish(`${camelCase(moduleName)}Deleted`, { [`${camelCase(moduleName)}Deleted`]: args.input });
+          return;
         } catch (e) {
           return internalServerError(e);
         }

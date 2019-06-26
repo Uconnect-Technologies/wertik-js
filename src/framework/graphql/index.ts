@@ -1,9 +1,9 @@
-let {buildSchema} = require("graphql");
 const { ApolloServer } = require('apollo-server');
 
 import mutations from "./loadAllMutations";
 import queries from "./loadAllQueries";
 import resolvers from "./loadAllResolvers";
+import subscriptions from "./loadAllSubscriptions";
 import schemas from "./loadAllSchemas";
 import generalSchema from "./../helpers/generalSchema";
 
@@ -12,11 +12,14 @@ export default function (rootDirectory: string,app: any,configuration: object) {
 	let allQueries=  queries(rootDirectory);
 	let allSchemas = schemas(rootDirectory);
 	let allResolvers = resolvers(rootDirectory);
+	let allSubscriptions = subscriptions(rootDirectory);
 	let {validateAccessToken} = require(`${rootDirectory}/framework/predefinedModules/user/auth`).default;
 	let mainSchema  = `
 		${generalSchema}
 		${allSchemas}
-
+		type Subscription {
+			${allSubscriptions}
+		}
 		type Mutation {
 			${allMutations}
 		}
@@ -26,9 +29,9 @@ export default function (rootDirectory: string,app: any,configuration: object) {
 		schema {
 			query: Query
 			mutation: Mutation
+			subscription: Subscription
 		}
 	`;
-	let schema = buildSchema(mainSchema);
 	const server = new ApolloServer({ 
 		typeDefs: mainSchema, 
 		resolvers: allResolvers,
@@ -36,7 +39,8 @@ export default function (rootDirectory: string,app: any,configuration: object) {
 			await validateAccessToken(a.req);
 		}
 	});
-	server.listen(1209).then((a: any) => {
-	  console.log(`Server ready at ${a.url}`);
+	server.listen(1209).then(({ url, subscriptionsUrl }) => {
+		console.log(`Server ready at ${url}`);
+		console.log(`Subscriptions ready at ${subscriptionsUrl}`);
 	});
 }
