@@ -2,10 +2,6 @@
 
 **💪 Node + GraphQL + Apollo Saas Boilerplate** to kick start your project.
 
-  
-
-  
-
 ### Table of contents
 
 
