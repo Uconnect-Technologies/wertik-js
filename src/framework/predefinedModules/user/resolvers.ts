@@ -25,6 +25,13 @@ export default {
 		}
 	},
 	queries: {
+		listUserPermissions: async (_: any, args: any,g: any) => {
+			try {
+				return [{action: 'asd'}];
+			} catch (e) {
+				return internalServerError(e);
+			}
+		},
 		listUser: async (_: any, args: any, g: any) => {
 			try {
 				let paginate = await userModel.paginate(args);
