@@ -5,13 +5,10 @@ import {join} from "path";
 import fileExists from "./fileExists";
 
 export default function () {
-  var appDir = path.dirname(require.main.filename);
-  let f = process.env.MODULES_ENABLED.split(",");
-  let predefinedModules = process.env.PREDEFINED_MODULES.split(",");
-  let fList = predefinedModules.map((c) => c + "List");
+  let predefinedModules = process.env.predefinedModules.split(",");
   let object = {};
   predefinedModules.forEach((folder) => {
-    let schemaPath = join(__dirname,"../../framework/predefinedModules",folder,"schema.ts");
+    let schemaPath = join(__dirname,"../../framework/predefinedModules",folder,"schema.js");
     if (fileExists(schemaPath)) {
       let file = require(schemaPath).default;
       let schema = gql(file);

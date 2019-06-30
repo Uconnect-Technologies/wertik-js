@@ -1,13 +1,29 @@
 # Wertick
 
-**💪 Node + GraphQL + Apollo Saas Boilerplate** to kick start your project. This boilerplate includes frontend applications in Vue and React so that you can pickup your favorite UI framework to get started with.
+**💪 Node + GraphQL + Apollo Saas Boilerplate** to kick start your project.
+
+### Table of contents
 
 
-### Folder Structure
+1.  [Install](#install)
+2.  [Introduction](#introduction)
+3.  [Concepts](#concepts)
+4.  [Folder Structure](#concepts)
+5.  [Database](#database)
+6.  [GraphQL](#graphql)
+7.  [Rest API](#rest-api)
+8.  [Contributing](#contributing)
 
-1. src: Contains the source code in typescript.
-2. lib: Contains the compiled code for production so users can import it.
-3. examples: Contains the examples to test server.
-4. 
+### Install
 
-You can suggest me a feature you want in Node Boilerplate: https://github.com/ilyaskarim/wertick-js/issues/2
+Install with npm
+
+    npm install --save wertik-js  
+
+Install with yarn
+
+    yarn add wertik-js --dev
+
+### Introduction  
+
+Wertik-js is a Node js boilerplate to buil backend API's in GraphQL as well as Rest API. 

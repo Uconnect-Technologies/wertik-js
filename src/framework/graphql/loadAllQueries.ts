@@ -4,13 +4,10 @@ let {join} = require("path");
 let {camelCase,upperFirst} = require("lodash");
 
 export default function(rootDirectory: any) {
-  let path = `${rootDirectory}/app/modules/`;
-  let frameworkPath = `${rootDirectory}/frameworkPath/`;
-  let modules = process.env.MODULES_ENABLED.split(",");
-  let predefinedModules = process.env.PREDEFINED_MODULES.split(",");
+  let predefinedModules = process.env.predefinedModules.split(",");
   let output = "";
   predefinedModules.forEach(async name => {
-    let filePath = join(__dirname,"../../framework/predefinedModules",name,"query");
+    let filePath = join(__dirname,"../../framework/predefinedModules",name,"query.js");
     let isQueryFileExists = fileExists(filePath);
     let content = "";
     if (!isQueryFileExists) {

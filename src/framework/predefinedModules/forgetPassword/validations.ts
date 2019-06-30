@@ -1,4 +1,3 @@
-const {DIALECT} = process.env;
 export default {
   requestPasswordReset: {
     email: "email|required"

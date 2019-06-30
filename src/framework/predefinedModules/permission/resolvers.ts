@@ -15,11 +15,7 @@ let permissionResolver = dynamic.resolvers({
 });
 
 export default {
-  queries: {
-    ...dynamic.loader("Permission",permissionResolver).queries
-  },
-  mutations: {
-    ...dynamic.loader("Permission",permissionResolver).mutations
-  },
- 
+  Subscription: dynamic.loader("Role", permissionResolver).subscriptions,
+  queries: dynamic.loader("Permission",permissionResolver).queries,
+  mutations: dynamic.loader("Permission",permissionResolver).mutations
 }

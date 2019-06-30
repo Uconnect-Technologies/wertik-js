@@ -5,11 +5,10 @@ let {camelCase,upperFirst} = require("lodash");
 
 
 export default function(rootDirectory: any) {
-  let modules = process.env.MODULES_ENABLED.split(",");
-  let predefinedModules = process.env.PREDEFINED_MODULES.split(",");
+  let predefinedModules = process.env.predefinedModules.split(",");
   let output = "";
   predefinedModules.forEach(async (name: string) => {
-    let filePath = join(__dirname,"../../framework/predefinedModules",name,"mutation.ts");
+    let filePath = join(__dirname,"../../framework/predefinedModules",name,"mutation.js");
     let isMutationFileExist = fileExists(filePath);
     let content = "";
     if (!isMutationFileExist) {

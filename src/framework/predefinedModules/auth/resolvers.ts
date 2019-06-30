@@ -56,12 +56,12 @@ export default {
 				});
 				await sendEmail('twoFactorLogin.hbs',{
 	        twoFactorCode: twoFactorCode,
-	        siteName: process.env.NAME,
+	        siteName: process.env.name,
 	        userName: user.email
 	      },{
-	        from: process.env.MAILER_SERVICE_USERNAME,
+	        from: process.env.mailerServiceUsername,
 	        to: get(args,'input.email',''),
-	        subject: `${process.env.NAME} Two Factor Authorization`
+	        subject: `${process.env.name} Two Factor Authorization`
 	      },null,null);
 	      return {
 	      	successMessageType: "Success",
@@ -116,11 +116,11 @@ export default {
 				});
 				await sendEmail('accountActivated.hbs',{
 	        username: user.email,
-	        siteName: process.env.NAME,
+	        siteName: process.env.name,
 	      },{
-	        from: process.env.MAILER_SERVICE_USERNAME,
+	        from: process.env.mailerServiceUsername,
 	        to: user.email,
-	        subject: `Welcome to ${process.env.NAME}`
+	        subject: `Welcome to ${process.env.name}`
 	      },null,null);
 				return {
 					statusCode: statusCodes.OK.type,
@@ -191,13 +191,13 @@ export default {
 	        email: newUser.email,
 	        username: newUser.email,
 	        date: moment().format("dddd, MMMM Do YYYY, h:mm:ss a"),
-	        siteName: process.env.NAME,
-	        activationUrl: `${process.env.FRONTEND_APP_URL}/activate-account/`,
+	        siteName: process.env.name,
+	        activationUrl: `${process.env.frontendAppUrl}/activate-account/`,
 	        activationToken: newUser.activationToken,
 	      },{
-	        from: process.env.MAILER_SERVICE_USERNAME,
+	        from: process.env.mailerServiceUsername,
 	        to: newUser.email,
-	        subject: `Welcome to ${process.env.NAME}`
+	        subject: `Welcome to ${process.env.name}`
 	      },null,null);
 	      await profileModel.create({
 	      	description: '...',

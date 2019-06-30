@@ -17,6 +17,7 @@ let userPermissionResolver = dynamic.resolvers({
 });
 
 export default {
+  Subscription: dynamic.loader("Role", userPermissionResolver).subscriptions,
   UserPermission: {
     async user(userPermission: any) {
       return await relateResolver(userModel,userPermission,'user')
@@ -25,12 +26,6 @@ export default {
       return await relateResolver(permissionModel,userPermission,'permission')
     }
   },
-  queries: {
-    ...dynamic.loader("UserPermission",userPermissionResolver).queries
-  },
-  
-  mutations: {
-    ...dynamic.loader("UserPermission",userPermissionResolver).mutations
-  },
-  
+  queries: dynamic.loader("UserPermission",userPermissionResolver).queries,
+  mutations: dynamic.loader("UserPermission",userPermissionResolver).mutations
 }

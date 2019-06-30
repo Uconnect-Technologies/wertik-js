@@ -18,15 +18,12 @@ let profileResolver = dynamic.resolvers({
 });
 
 export default {
+  Subscription: dynamic.loader("Role", profileResolver).subscriptions,
 	Profile: {
 		async user(profile: any) {
       return await relateResolver(userModel,profile,'user');
 		}
   },
-  queries: {
-    ...dynamic.loader("Profile",profileResolver).queries
-  },
-  mutations: {
-    ...dynamic.loader("Profile",profileResolver).mutations
-  },
+  queries: dynamic.loader("Profile",profileResolver).queries,
+  mutations: dynamic.loader("Profile",profileResolver).mutations
 }

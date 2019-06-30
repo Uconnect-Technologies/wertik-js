@@ -1,4 +1,4 @@
-const {DIALECT} = process.env;
+const {dialect} = process.env;
 
 export default {
 	creategame: function () {

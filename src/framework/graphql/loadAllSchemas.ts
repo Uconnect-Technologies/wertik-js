@@ -3,12 +3,10 @@ import fileExists from "./../helpers/fileExists";
 import {join} from "path";
 
 export default function(rootDirectory: string) {
-  let path = `${rootDirectory}/app/modules/`;
-  let modules = process.env.MODULES_ENABLED.split(",");
-  let predefinedModules = process.env.PREDEFINED_MODULES.split(",");
+  let predefinedModules = process.env.predefinedModules.split(",");
   let output = "";
   predefinedModules.forEach(async name => {
-    let filePath = join(__dirname,"../../framework/predefinedModules",name,"schema.ts");
+    let filePath = join(__dirname,"../../framework/predefinedModules",name,"schema.js");
   	if (fileExists(filePath)) {
 	    let content = require(filePath).default;
 	    output = output + content;

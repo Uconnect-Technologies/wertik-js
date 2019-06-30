@@ -1,8 +1,11 @@
 node_modules
 package-lock.json
-build
 logs
 dist
 yarn.lock
-frontend/vue/node_modules
-frontend/react/node_modules
+
+frontenn-app/node_modules
+frontend-app/dist
+frontend-app/build
+frontend-app/yarn.lock
+frontend-app/package-lock.json
