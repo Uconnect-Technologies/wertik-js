@@ -10,7 +10,7 @@ wertick.run({
 	dbName: "graphql",
 	dbHost: "localhost",
 	dbPort: "3306",
-	loggin: "false",
+	logging: "false",
 	allowGraphql: "TRUE",
 	modulesEnabled:" ",
 	predefinedModules: "user,forgetPassword,permission,role,rolePermission,userRole,userPermission,profile,auth",
