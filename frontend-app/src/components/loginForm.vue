@@ -21,7 +21,7 @@ import Vue from 'vue';
 import login from "@/graphql/mutations/login.js";
 
 export default Vue.extend({
-  name: 'Login',
+  name: 'LoginForm',
   data() {
   	return {
   		form :{
