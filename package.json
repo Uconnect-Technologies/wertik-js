@@ -21,7 +21,7 @@
     "graphql-tag": "^2.10.0",
     "handlebars": "^4.0.12",
     "jsonwebtoken": "^8.4.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.13",
     "moment": "^2.23.0",
     "mongoose": "^5.4.2",
     "mongoose-paginate": "^5.0.3",
