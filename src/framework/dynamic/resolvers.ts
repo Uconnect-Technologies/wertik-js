@@ -98,7 +98,8 @@ export default function (info: any) {
           }  
         })
       },
-      [`create${moduleName}`]: async (_:any, args:any, context:any) => {
+      [`create${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
+        console.log(info); // This will be undefined
         let v = await validate(validations.create,args.input);
         let {success} = v;
         if (!success) {
