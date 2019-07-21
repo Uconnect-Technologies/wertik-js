@@ -22,7 +22,6 @@ export default `
 	type User {
 		${userFields}
 		profile: Profile
-		assignedPermissions: [UserPermissionList]
 		assignedRoles: [UserRoleList]
 		successMessage: String
 		successMessageType: String

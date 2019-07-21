@@ -14,9 +14,6 @@ let {userModel,userRoleModel,roleModel,profileModel, userPermissionModel} = allM
 
 export default {
 	User: {
-		async assignedPermissions(user: any) {
-			return await relateResolver(userPermissionModel,user,'id',true);
-		},
 		async assignedRoles(user: any) {
 			return await relateResolver(userRoleModel,user,'id',true);
 		},
@@ -79,7 +76,7 @@ export default {
 	        from: process.env.MAILER_SERVICE_USERNAME,
 	        to: user.email,
 	        subject: "Password changed"
-	      },null,null);
+	      });
 				let response: any = {};
 				response.statusCode = statusCodes.OK.type;
 				response.statusCodeNumber = statusCodes.OK.number;
