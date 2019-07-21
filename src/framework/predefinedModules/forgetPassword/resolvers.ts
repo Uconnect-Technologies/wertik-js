@@ -63,7 +63,7 @@ export default {
           from: process.env.mailerServiceUsername,
           to: args.email,
           subject: "Reset your email"
-        },null,null);
+        });
         return {
           email: args.email,
           successMessageType: "Successfull",
@@ -102,7 +102,7 @@ export default {
           from: process.env.mailerServiceUsername,
           to: user.email,
           subject: "Password changed"
-        },null,null);
+        });
         return {
           successMessageType: "Success",
           successMessage: "Password successfully changed",
