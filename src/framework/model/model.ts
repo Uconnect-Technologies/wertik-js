@@ -87,9 +87,9 @@ class Model {
 		}
 	}
 
-	async paginate(args: any) {
+	async paginate(args: any,requestedFields) {
 		try {
-			let response = await paginate(this.model,args);
+			let response = await paginate(this.model,args,requestedFields);
 			return response;
 		} catch (e) {
 			return internalServerError(e);

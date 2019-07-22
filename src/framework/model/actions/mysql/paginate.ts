@@ -1,7 +1,8 @@
 let {get} = require("lodash");
 import convertFiltersIntoSequalizeObject from "./../../../database/mysql/convertFiltersIntoSequalizeObject";
 
-export default async function (model: any,args: any = {}) {
+export default async function (model: any,args: any = {},requestedFields: any = []) {
+  console.log(requestedFields)
   let page = get(args,'pagination.page',1);
   let limit = get(args,'pagination.limit',10);
   let filters = get(args,'filters',[]);

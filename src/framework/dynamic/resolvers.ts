@@ -35,7 +35,7 @@ export default function (info: any) {
       [`list${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         try {
-          return await model.paginate(args);
+          return await model.paginate(args,requestedFields);
         } catch (e) {
           return internalServerError(e);
         }
