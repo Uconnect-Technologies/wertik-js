@@ -1,9 +1,10 @@
 import getListByPaginationAndFiltersSchema from "./../../../framework/graphql/getListByPaginationAndFiltersSchema"
+import getIdName from "./../../../framework/helpers/getIdName"
+import { getIdType } from "./../../../framework/helpers/getIdName"
 
 export default `
 	type Permission {
-		_id: String
-		id: Int
+		${getIdName}: ${getIdType}
 		action: String
 		successMessage: String
 		successMessageType: String
@@ -13,8 +14,7 @@ export default `
 	}
 	${getListByPaginationAndFiltersSchema("Permission")}
 	input PermissionInput {
-		_id: String
-		id: Int
+		${getIdName}: ${getIdType}
 		action: String
 	}
 `;

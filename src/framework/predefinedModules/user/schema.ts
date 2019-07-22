@@ -1,8 +1,9 @@
 import getListByPaginationAndFiltersSchema from "./../../../framework/graphql/getListByPaginationAndFiltersSchema"
+import getIdName from "./../../../framework/helpers/getIdName"
+import { getIdType } from "./../../../framework/helpers/getIdName"
 
 let userFields = `
-	_id: String
-	id: Int
+	${getIdName}: ${getIdType}
 	name: String
 	age: Int
 	username: String

@@ -1,1 +1,1 @@
-{"version":3,"file":"query.js","sourceRoot":"","sources":["../../../../src/framework/predefinedModules/profile/query.ts"],"names":[],"mappings":";;AAAA,kBAAe;;;CAGd,CAAA"}
+{"version":3,"file":"query.js","sourceRoot":"","sources":["../../../../src/framework/predefinedModules/profile/query.ts"],"names":[],"mappings":";;;;;AAAA,+EAAyD;AAEzD,kBAAe;IACX,eAAO,CAAC,OAAO,CAAC,qBAAqB,CAAC,SAAS,CAAC;CACnD,CAAA"}

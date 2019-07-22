@@ -1,1 +1,1 @@
-{"version":3,"file":"schema.js","sourceRoot":"","sources":["../../../../src/framework/predefinedModules/role/schema.ts"],"names":[],"mappings":";;;;;AAAA,2IAAkH;AAElH,kBAAe;;;;;;;;;;;;;GAaZ,6CAAmC,CAAC,MAAM,CAAC;;;;;;;;CAQ7C,CAAC"}
+{"version":3,"file":"schema.js","sourceRoot":"","sources":["../../../../src/framework/predefinedModules/role/schema.ts"],"names":[],"mappings":";;;;;AAAA,2IAAkH;AAClH,uFAA8D;AAC9D,sEAAgE;AAEhE,kBAAe;;IAEX,mBAAS,KAAK,qBAAS;;;;;;;;;;GAUxB,6CAAmC,CAAC,MAAM,CAAC;;;;;;;;CAQ7C,CAAC"}

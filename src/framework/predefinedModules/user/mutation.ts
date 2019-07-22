@@ -1,10 +1,6 @@
-const {dialect} = process.env;
-let relationSchemaType = "Int";
-if (dialect == "MONGO_DB") {
-	relationSchemaType = "String";
-}
+import dynamic from "./../../../framework/dynamic/index";
+
 export default `
-	deleteUser(id: Int,_id: String): User
+	${dynamic.mutations.generateMutationsSchema("User")}
 	changePassword(input: UserInput): User
-	updateUser(input: UserInput): User
 `;

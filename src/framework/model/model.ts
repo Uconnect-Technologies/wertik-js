@@ -21,7 +21,7 @@ class Model {
 	constructor(props: any) {
 		this.instance = null;
 		this.tableName = props.tableName;
-    this.models = props.models;
+    	this.models = props.models;
 		this.model = this.models[this.tableName];
 	}
 

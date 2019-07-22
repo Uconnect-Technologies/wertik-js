@@ -1,9 +1,10 @@
 import getListByPaginationAndFiltersSchema from "./../../../framework/graphql/getListByPaginationAndFiltersSchema"
+import getIdName from "./../../../framework/helpers/getIdName"
+import {getIdType} from "./../../../framework/helpers/getIdName"
 
 export default `
 	type Role {
-		_id: String
-		id: Int
+		${getIdName}: ${getIdType}
 		name: String
 		successMessage: String
 		successMessageType: String

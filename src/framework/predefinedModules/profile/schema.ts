@@ -1,14 +1,10 @@
 import getListByPaginationAndFiltersSchema from "./../../../framework/graphql/getListByPaginationAndFiltersSchema"
-const {dialect} = process.env;
-let relationSchemaType = "Int";
-if (dialect == "MONGO_DB") {
-	relationSchemaType = "String";
-}
+import getIdName from "./../../../framework/helpers/getIdName"
+import { getIdType } from "./../../../framework/helpers/getIdName"
 
 export default `
 	type Profile {
-		_id: String
-		id: Int
+		${getIdName}: ${getIdType}
 		user: User
 		description: String
 		successMessage: String
@@ -19,9 +15,8 @@ export default `
 	}
 	${getListByPaginationAndFiltersSchema("Profile")}
 	input ProfileInput {
-		_id: String
-		id: Int
-		user: ${relationSchemaType}
+		${getIdName}: ${getIdType}
+		user: ${getIdType}
 		description: String
 	}
 `;

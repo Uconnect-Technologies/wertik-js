@@ -8,23 +8,23 @@ import schemas from "./loadAllSchemas";
 import generalSchema from "./../helpers/generalSchema";
 
 export default function (rootDirectory: string,app: any) {
-	let allMutations = mutations(rootDirectory);
-	let allQueries=  queries(rootDirectory);
-	let allSchemas = schemas(rootDirectory);
-	let allResolvers = resolvers(rootDirectory);
-	let allSubscriptions = subscriptions(rootDirectory);
+	let appMutations = mutations(rootDirectory);
+	let appQueries=  queries(rootDirectory);
+	let appSchema = schemas(rootDirectory);
+	let appResolvers = resolvers(rootDirectory);
+	let appSubscriptions = subscriptions(rootDirectory);
 	let {validateAccessToken} = require(`${rootDirectory}/framework/predefinedModules/user/auth`).default;
 	let mainSchema  = `
 		${generalSchema}
-		${allSchemas}
+		${appSchema}
 		type Subscription {
-			${allSubscriptions}
+			${appSubscriptions}
 		}
 		type Mutation {
-			${allMutations}
+			${appMutations}
 		}
 		type Query {
-			${allQueries}
+			${appQueries}
 		}
 		schema {
 			query: Query
@@ -34,7 +34,7 @@ export default function (rootDirectory: string,app: any) {
 	`;
 	const server = new ApolloServer({ 
 		typeDefs: mainSchema, 
-		resolvers: allResolvers,
+		resolvers: appResolvers,
 		context: async (a: any) => {
 			await validateAccessToken(a.req);
 		}

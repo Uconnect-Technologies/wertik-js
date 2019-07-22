@@ -1,12 +1,12 @@
 import wertick from "./main"
 
-wertick.run({
+let a = wertick.run({
 	name: "Wapgee",
 	mode: "development",
 	port: "1200",
 	jwtSecret: "kakoilyas",
 	dbUsername: "root",
-	dbPassword: "root",
+	dbPassword: "",
 	dbName: "graphql",
 	dbHost: "localhost",
 	dbPort: "3306",
@@ -23,3 +23,7 @@ wertick.run({
 	frontendAppUrl: "http://localhost:3000",
 	frontendAppPasswordResetUrl: "/reset-password/",
 });
+
+a.then(() => {
+	console.log("Server is up now yeah")
+})

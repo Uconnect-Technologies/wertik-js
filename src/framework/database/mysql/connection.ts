@@ -3,35 +3,35 @@ import getAllSchemasAsObject from "../../helpers/getAllSchemasAsObject";
 import generateTables from "./generateTables";
 
 const {
-  DB_USERNAME,
-  DB_PASSWORD,
-  DB_NAME,
-  DB_HOST,
-  DB_PORT,
-  MODE
+  dbusername,
+  dbPassword,
+  dbName,
+  dbHost,
+  dbPort,
+  mode
 } = process.env;
 
-const DB_PRODUCTION = new Sequelize(DB_NAME, DB_USERNAME, DB_PASSWORD, {
+const DB_PRODUCTION = new Sequelize(dbName, dbusername, dbPassword, {
   dialect: "mysql",
-  host: DB_HOST,
-  port: DB_PORT,
+  host: dbHost,
+  port: dbPort,
   logging: false,
   operatorsAliases: false
 });
 const DB_DEVELOPMENT = new Sequelize(
-  `${DB_NAME}_dev`,
-  DB_USERNAME,
-  DB_PASSWORD,
+  `${dbName}_dev`,
+  dbusername,
+  dbPassword,
   {
     dialect: "mysql",
-    host: DB_HOST,
-    port: DB_PORT,
+    host: dbHost,
+    port: dbPort,
     logging: false,
     operatorsAliases: false
   }
 );
 
-let CONNECTION = MODE == "development" ? DB_DEVELOPMENT : DB_PRODUCTION;
+let CONNECTION = mode == "development" ? DB_DEVELOPMENT : DB_PRODUCTION;
 
 let f = getAllSchemasAsObject();
 let tables = generateTables(f, CONNECTION);
@@ -42,5 +42,7 @@ tables.forEach((element: any) => {
     freezeTableName: true
   });
 });
+
 export let models = CONNECTION.models;
+export let syncDatabase = CONNECTION.sync
 export default CONNECTION;

@@ -1,14 +1,10 @@
 import getListByPaginationAndFiltersSchema from "./../../../framework/graphql/getListByPaginationAndFiltersSchema"
-const {dialect} = process.env;
-let relationSchemaType = "Int";
-if (dialect == "MONGO_DB") {
-	relationSchemaType = "String";
-}
+import getIdName from "./../../../framework/helpers/getIdName"
+import { getIdType } from "./../../../framework/helpers/getIdName"
 
 export default `
 	type RolePermission {
-		_id: String
-		id: Int
+		${getIdName}: ${getIdType}
 		permission: Permission,
 		role: Role
 		successMessage: String
@@ -20,9 +16,8 @@ export default `
 	}
 	${getListByPaginationAndFiltersSchema("RolePermission")}
 	input RolePermissionInput {
-		_id: String
-		id: Int
-		permission: ${relationSchemaType}
-		role: ${relationSchemaType}
+		${getIdName}: ${getIdType}
+		permission: ${getIdType}
+		role: ${getIdType}
 	}
 `;

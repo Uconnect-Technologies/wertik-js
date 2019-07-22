@@ -41,14 +41,14 @@ export default function (info: any) {
         }
       },
       [`view${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
-        let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        let v = await validate(validations.view,args.input);
+        let requestedFields = getRequestedFieldsFromResolverInfo(info)
+        let v = await validate(validations.view,args);
         let {success} = v;
         if (!success) {
           throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
         }
         try {
-          let view = await model.view(args.input,requestedFields);
+          let view = await model.view(args,requestedFields);
           if (!view) {
             throw new ApolloError(`${moduleName} not found`,statusCodes.NOT_FOUND.number)
           }
@@ -60,7 +60,7 @@ export default function (info: any) {
     },
     mutations: {
       [`updateBulk${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
-        let requestedFields = getRequestedFieldsFromResolverInfo(info);
+        // let requestedFields = getRequestedFieldsFromResolverInfo(info);
         return args.input.map( async (e: any) => {
           let v = await validate(validations.update,e);
           let {success} = v;
@@ -90,7 +90,7 @@ export default function (info: any) {
         });
       },
       [`createBulk${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
-        let requestedFields = getRequestedFieldsFromResolverInfo(info);
+        // let requestedFields = getRequestedFieldsFromResolverInfo(info);
         return args.input.map( async (e: any) => {
           let v = await validate(validations.create,e);
           let {success} = v;
@@ -105,7 +105,7 @@ export default function (info: any) {
         })
       },
       [`create${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
-        let requestedFields = getRequestedFieldsFromResolverInfo(info);
+        // let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let v = await validate(validations.create,args.input);
         let {success} = v;
         if (!success) {
@@ -120,7 +120,7 @@ export default function (info: any) {
         }
       },
       [`update${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
-        let requestedFields = getRequestedFieldsFromResolverInfo(info);
+        // let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let v = await validate(validations.update,args.input);
         let {success} = v;
         if (!success) {
