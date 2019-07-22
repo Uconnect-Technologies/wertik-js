@@ -62,7 +62,7 @@ export default {
 	        from: process.env.mailerServiceUsername,
 	        to: get(args,'input.email',''),
 	        subject: `${process.env.name} Two Factor Authorization`
-	      },null,null);
+	      });
 	      return {
 	      	successMessageType: "Success",
 	      	successMessage: "Email Sent"
@@ -121,7 +121,7 @@ export default {
 	        from: process.env.mailerServiceUsername,
 	        to: user.email,
 	        subject: `Welcome to ${process.env.name}`
-	      },null,null);
+	      });
 				return {
 					statusCode: statusCodes.OK.type,
 					statusCodeNumber: statusCodes.OK.number,
@@ -198,7 +198,7 @@ export default {
 	        from: process.env.mailerServiceUsername,
 	        to: newUser.email,
 	        subject: `Welcome to ${process.env.name}`
-	      },null,null);
+	      });
 	      await profileModel.create({
 	      	description: '...',
 	      	user: newUser[getIdName],

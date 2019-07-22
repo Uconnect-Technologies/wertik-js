@@ -5,6 +5,7 @@ const {camelCase} = require('lodash');
 import validate from "./../validations/validate";
 import internalServerError from "./../helpers/internalServerError";
 import statusCodes from "./../helpers/statusCodes";
+import getRequestedFieldsFromResolverInfo from "./../helpers/getRequestedFieldsFromResolverInfo"
 
 const pubsub = new PubSub();
 
@@ -31,21 +32,23 @@ export default function (info: any) {
       }
     },
     queries: {
-      [`list${moduleName}`]: async (_:any, args:any, context:any) => {
+      [`list${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
+        let requestedFields = getRequestedFieldsFromResolverInfo(info);
         try {
           return await model.paginate(args);
         } catch (e) {
           return internalServerError(e);
         }
       },
-      [`view${moduleName}`]: async (_:any, args:any, context:any) => {
+      [`view${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
+        let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let v = await validate(validations.view,args.input);
         let {success} = v;
         if (!success) {
           throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
         }
         try {
-          let view = await model.view(args.input);
+          let view = await model.view(args.input,requestedFields);
           if (!view) {
             throw new ApolloError(`${moduleName} not found`,statusCodes.NOT_FOUND.number)
           }
@@ -56,7 +59,8 @@ export default function (info: any) {
       }
     },
     mutations: {
-      [`updateBulk${moduleName}`]: async (_:any, args:any, context:any) => {
+      [`updateBulk${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
+        let requestedFields = getRequestedFieldsFromResolverInfo(info);
         return args.input.map( async (e: any) => {
           let v = await validate(validations.update,e);
           let {success} = v;
@@ -70,7 +74,8 @@ export default function (info: any) {
           }
         });
       },
-      [`deleteBulk${moduleName}`]: async (_:any, args:any, context:any) => {
+      [`deleteBulk${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
+        
         return args.input.map( async (item: any) => {
           let v = await validate(validations.delete,item);
           let {success} = v;
@@ -84,7 +89,8 @@ export default function (info: any) {
           }
         });
       },
-      [`createBulk${moduleName}`]: async (_:any, args:any, context:any) => {
+      [`createBulk${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
+        let requestedFields = getRequestedFieldsFromResolverInfo(info);
         return args.input.map( async (e: any) => {
           let v = await validate(validations.create,e);
           let {success} = v;
@@ -98,7 +104,8 @@ export default function (info: any) {
           }  
         })
       },
-      [`create${moduleName}`]: async (_:any, args:any, context:any) => {
+      [`create${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
+        let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let v = await validate(validations.create,args.input);
         let {success} = v;
         if (!success) {
@@ -112,7 +119,8 @@ export default function (info: any) {
           return internalServerError(e);
         }
       },
-      [`update${moduleName}`]: async (_:any, args:any, context:any) => {
+      [`update${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
+        let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let v = await validate(validations.update,args.input);
         let {success} = v;
         if (!success) {
@@ -126,7 +134,7 @@ export default function (info: any) {
           return internalServerError(e);
         }
       },
-      [`delete${moduleName}`]: async (_:any, args:any, context:any) => {
+      [`delete${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
         let v = await validate(validations.delete,args.input);
         let {success} = v;
         if (!success) {

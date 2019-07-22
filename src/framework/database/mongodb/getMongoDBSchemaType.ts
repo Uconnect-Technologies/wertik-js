@@ -1,4 +1,4 @@
-const relations = ['user', 'forgetPassword','permission','role','rolePermission','userRole','userPermission',"profile" ];
+const relations = ['user', 'forgetPassword','permission','role','rolePermission','userRole',"profile" ];
 
 export default function (type: any) {
 	type = type.toLowerCase();

@@ -1,8 +1,6 @@
 import validations from "./validations";
-import getIdName from "./../../../framework/helpers/getIdName";
 import dynamic from "./../../../framework/dynamic/index";
 import allModels from "./../../../framework/dynamic/allModels";
-import relateResolver from "./../../../framework/database/relateResolver";
 let { gameModel } = allModels;
 
 let gameResolver = dynamic.resolvers({
