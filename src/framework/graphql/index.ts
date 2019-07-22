@@ -7,7 +7,7 @@ import subscriptions from "./loadAllSubscriptions";
 import schemas from "./loadAllSchemas";
 import generalSchema from "./../helpers/generalSchema";
 
-export default function (rootDirectory: string,app: any,configuration: object) {
+export default function (rootDirectory: string,app: any) {
 	let allMutations = mutations(rootDirectory);
 	let allQueries=  queries(rootDirectory);
 	let allSchemas = schemas(rootDirectory);

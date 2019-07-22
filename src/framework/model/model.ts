@@ -21,7 +21,7 @@ class Model {
 	constructor(props: any) {
 		this.instance = null;
 		this.tableName = props.tableName;
-    	this.models = props.models;
+    this.models = props.models;
 		this.model = this.models[this.tableName];
 	}
 
@@ -59,9 +59,9 @@ class Model {
 		}
 	}
 
-	async view(args: any) {
+	async view(args: any, requestedFields: any) {
 		try {
-			let response = await view(this.model,args);
+			let response = await view(this.model,args,requestedFields);
 			if (!response) {
 				return null;
 			}

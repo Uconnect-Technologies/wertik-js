@@ -1,3 +1,3 @@
-export default function (appDirectory, app, configuration) {
+export default function (appDirectory, app) {
 
 }
