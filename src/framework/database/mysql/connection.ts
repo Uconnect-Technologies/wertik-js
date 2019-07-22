@@ -8,8 +8,11 @@ const {
   dbName,
   dbHost,
   dbPort,
-  mode
+  mode,
+  dbMysqlSync
 } = process.env;
+
+
 
 const DB_PRODUCTION = new Sequelize(dbName, dbusername, dbPassword, {
   dialect: "mysql",
@@ -33,6 +36,10 @@ const DB_DEVELOPMENT = new Sequelize(
 
 let CONNECTION = mode == "development" ? DB_DEVELOPMENT : DB_PRODUCTION;
 
+if (dbMysqlSync == "true" || dbMysqlSync === true) {
+  CONNECTION.sync();
+}
+
 let f = getAllSchemasAsObject();
 let tables = generateTables(f, CONNECTION);
 tables.forEach((element: any) => {
@@ -44,5 +51,4 @@ tables.forEach((element: any) => {
 });
 
 export let models = CONNECTION.models;
-export let syncDatabase = CONNECTION.sync
 export default CONNECTION;

@@ -11,7 +11,7 @@ export default {
     run: async function (configuration) {
         try {
             await convertConfigurationIntoEnvVariables(configuration);
-            initServers(__dirname, app);
+            return await initServers(__dirname, app);
         } catch (e) {
             console.log(`Something went wrong: ${e.message}`)
         }
