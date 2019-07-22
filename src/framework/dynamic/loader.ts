@@ -3,32 +3,16 @@ export default function (moduleName: any,graphql: any) {
 	return {
 		subscriptions: graphql.subscriptions,
 		queries: {
-			[`list${moduleName}`]: async (_: any, args: any, g: any) => {
-				return queries[`list${moduleName}`](_,args,g);
-			},
-			[`view${moduleName}`]: async (_: any, args: any, g: any) => {
-				return queries[`view${moduleName}`](_,args,g);
-			}
+			[`list${moduleName}`]: queries[`list${moduleName}`],
+			[`view${moduleName}`]: queries[`view${moduleName}`]
 		},
 		mutations: {
-			[`create${moduleName}`]: async (_: any, args: any, g: any) => {
-      	return mutations[`create${moduleName}`](_,args,g);
-	    },
-	    [`delete${moduleName}`]: async (_: any, args: any, g: any) => {
-	      return mutations[`delete${moduleName}`](_,args,g);
-	    },
-	    [`update${moduleName}`]: async (_: any, args: any, g: any) => {
-	      return mutations[`update${moduleName}`](_,args,g);
-	    },
-	    [`updateBulk${moduleName}`]: async (_: any, args: any, g: any) => {
-	      return mutations[`updateBulk${moduleName}`](_,args,g);
-	    },
-	    [`createBulk${moduleName}`]: async (_: any, args: any, g: any) => {
-	      return mutations[`createBulk${moduleName}`](_,args,g);
-	    },
-	    [`deleteBulk${moduleName}`]: async (_: any, args: any, g: any) => {
-	      return mutations[`deleteBulk${moduleName}`](_,args,g);
-	    },
+			[`create${moduleName}`]: mutations[`create${moduleName}`],
+			[`delete${moduleName}`]: mutations[`delete${moduleName}`],
+			[`update${moduleName}`]: mutations[`update${moduleName}`],
+			[`updateBulk${moduleName}`]: mutations[`updateBulk${moduleName}`],
+			[`createBulk${moduleName}`]: mutations[`createBulk${moduleName}`],
+			[`deleteBulk${moduleName}`]: mutations[`deleteBulk${moduleName}`]
 		}
 	}
 }
