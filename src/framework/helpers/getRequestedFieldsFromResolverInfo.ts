@@ -1,7 +1,7 @@
-import {get} from "lodash";
+import graphqlFields from "graphql-fields";
 export default function (info: any) {
-  let fields = get(info,'operation.selectionSet.selections[0].selectionSet.selections',[]);
-  return fields.map((c) => {
-    return get(c,'name.value','');
-  });
+  let fields = graphqlFields(info), null, 2);
+  delete fields['pagination'];
+  delete fields['filters'];
+  return fields;
 }

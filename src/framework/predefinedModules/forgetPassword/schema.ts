@@ -9,8 +9,8 @@ export default `
 		token: String
 		successMessage: String
 		successMessageType: String
-		created_at: String
-		updated_at: String
+		createdAt: String
+		updatedAt: String
 	}
 	${getListByPaginationAndFiltersSchema("ForgetPassword")}
 	input ForgetPasswordInput {

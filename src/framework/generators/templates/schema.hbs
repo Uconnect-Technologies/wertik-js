@@ -12,15 +12,15 @@ export default `
 		{{ mapFieldsToGraphqlSchemaFields moduleFields }}
 		{{ mapRelationFieldsToSchema validations }}
 		created_by: User
-		created_at: String
-		updated_at: String
+		createdAt: String
+		updatedAt: String
 	}
 	input {{ moduleName }}Input {
 		_id: String
 		id: Int
 		{{ mapFieldsToGraphqlSchemaFields moduleFields }}
 		created_by: User
-		created_at: String
-		updated_at: String
+		createdAt: String
+		updatedAt: String
 	}
 `;

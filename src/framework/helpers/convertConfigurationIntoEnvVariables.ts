@@ -10,5 +10,4 @@ export default async function (configuration: object) {
 			}
 		});
 	})
-	// cb();
 }

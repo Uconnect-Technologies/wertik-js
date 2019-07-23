@@ -15,8 +15,8 @@ export default `
 		user: [user]
 		
 		created_by: User
-		created_at: String
-		updated_at: String
+		createdAt: String
+		updatedAt: String
 	}
 	input gameInput {
 		_id: String
@@ -25,7 +25,7 @@ export default `
 			plays: Int
 			
 		created_by: User
-		created_at: String
-		updated_at: String
+		createdAt: String
+		updatedAt: String
 	}
 `;

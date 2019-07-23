@@ -60,7 +60,7 @@ export default function (info: any) {
     },
     mutations: {
       [`updateBulk${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
-        // let requestedFields = getRequestedFieldsFromResolverInfo(info);
+        let requestedFields = getRequestedFieldsFromResolverInfo(info);
         return args.input.map( async (e: any) => {
           let v = await validate(validations.update,e);
           let {success} = v;
@@ -68,14 +68,13 @@ export default function (info: any) {
             throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
           }
           try {
-            return await model.update(e);
+            return await model.update(e,requestedFields);
           } catch (e) {
             return internalServerError(e);
           }
         });
       },
       [`deleteBulk${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
-        
         return args.input.map( async (item: any) => {
           let v = await validate(validations.delete,item);
           let {success} = v;
@@ -90,7 +89,7 @@ export default function (info: any) {
         });
       },
       [`createBulk${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
-        // let requestedFields = getRequestedFieldsFromResolverInfo(info);
+        let requestedFields = getRequestedFieldsFromResolverInfo(info);
         return args.input.map( async (e: any) => {
           let v = await validate(validations.create,e);
           let {success} = v;
@@ -98,21 +97,21 @@ export default function (info: any) {
             throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
           }
           try {
-            return await model.create(e);
+            return await model.create(e,requestedFields);
           } catch (e) {
             return internalServerError(e);
           }  
         })
       },
       [`create${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
-        // let requestedFields = getRequestedFieldsFromResolverInfo(info);
+        let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let v = await validate(validations.create,args.input);
         let {success} = v;
         if (!success) {
           throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
         }
         try {
-          let createModel = await model.create(args.input);
+          let createModel = await model.create(args.input,requestedFields);
           pubsub.publish(`${camelCase(moduleName)}Created`, { [`${camelCase(moduleName)}Created`]: createModel });
           return createModel;
         } catch (e) {
@@ -120,14 +119,14 @@ export default function (info: any) {
         }
       },
       [`update${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
-        // let requestedFields = getRequestedFieldsFromResolverInfo(info);
+        let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let v = await validate(validations.update,args.input);
         let {success} = v;
         if (!success) {
           throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
         }
         try {
-          let updateModel = await model.update(args.input);
+          let updateModel = await model.update(args.input,requestedFields);
           pubsub.publish(`${camelCase(moduleName)}Updated`, { [`${camelCase(moduleName)}Updated`]: updateModel });
           return updateModel;
         } catch (e) {

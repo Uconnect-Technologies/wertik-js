@@ -26,8 +26,8 @@ export default `
 		assignedRoles: [UserRoleList]
 		successMessage: String
 		successMessageType: String
-		created_at: String
-		updated_at: String
+		createdAt: String
+		updatedAt: String
 	}
 	${getListByPaginationAndFiltersSchema("User")}
 	input UserInput {

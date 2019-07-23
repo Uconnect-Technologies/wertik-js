@@ -37,9 +37,9 @@ class Model {
 		}
 	}
 
-	async create(args: any) {
+	async create(args: any, requestedFields: any) {
 		try {
-			let fakeResponse: any = await create(this.model,args,'');
+			let fakeResponse: any = await create(this.model,args,'',requestedFields);
 			fakeResponse.successMessageType = "Success";
 			fakeResponse.successMessage = `${this.tableName} created`;
 			return fakeResponse;
@@ -48,9 +48,9 @@ class Model {
 		}
 	}
 
-	async update(args: any) {
+	async update(args: any, requestedFields: any) {
 		try {
-			let response: any = await update(this.model,args);
+			let response: any = await update(this.model,args,requestedFields);
 			response.successMessageType = "Success";
 			response.successMessage = `${this.tableName} updated`;
 			return response;
@@ -73,9 +73,9 @@ class Model {
 		}
 	}
 
-	async findOne(args: any) {
+	async findOne(args: any, requestedFields: any) {
 		try {
-			let response = await findOne(this.model,args);
+			let response = await findOne(this.model,args,requestedFields);
 			if (!response) {
 				return null;
 			}
@@ -87,7 +87,7 @@ class Model {
 		}
 	}
 
-	async paginate(args: any,requestedFields) {
+	async paginate(args: any,requestedFields: any) {
 		try {
 			let response = await paginate(this.model,args,requestedFields);
 			return response;

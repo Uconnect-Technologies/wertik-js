@@ -9,8 +9,8 @@ export default `
 		successMessage: String
 		successMessageType: String
 		created_by: User
-		created_at: String
-		updated_at: String
+		createdAt: String
+		updatedAt: String
 	}
 	${getListByPaginationAndFiltersSchema("Permission")}
 	input PermissionInput {

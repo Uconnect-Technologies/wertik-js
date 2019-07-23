@@ -11,8 +11,8 @@ export default `
 		successMessageType: String
 		statusCode: String
 		statusCodeNumber: Int
-		created_at: String
-		updated_at: String
+		createdAt: String
+		updatedAt: String
 	}
 	${getListByPaginationAndFiltersSchema("RolePermission")}
 	input RolePermissionInput {
