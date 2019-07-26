@@ -1,23 +1,20 @@
 import getListByPaginationAndFiltersSchema from "./../../../framework/graphql/getListByPaginationAndFiltersSchema"
-import getIdName from "./../../../framework/helpers/getIdName"
-import { getIdType } from "./../../../framework/helpers/getIdName"
+import primaryKey, { primaryKeyType } from "./../../../framework/helpers/primaryKey"
 
 export default `
 	type RolePermission {
-		${getIdName}: ${getIdType}
+		${primaryKey}: ${primaryKeyType}
 		permission: Permission,
 		role: Role
 		successMessage: String
 		successMessageType: String
 		statusCode: String
 		statusCodeNumber: Int
-		createdAt: String
-		updatedAt: String
 	}
 	${getListByPaginationAndFiltersSchema("RolePermission")}
 	input RolePermissionInput {
-		${getIdName}: ${getIdType}
-		permission: ${getIdType}
-		role: ${getIdType}
+		${primaryKey}: ${primaryKeyType}
+		permission: ${primaryKeyType}
+		role: ${primaryKeyType}
 	}
 `;

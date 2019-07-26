@@ -1,0 +1,18 @@
+{
+  "user": [
+    {"id": 1, "password": "pass/12345", "email": "master@gmail.com", "username": "master","isActivated":true, "isSuperUser": true}
+  ],
+  "role": [
+    {"id": 1,"name": "Admin"},
+    {"id": 2,"name": "Guest"}
+  ],
+  "permission": [
+    { "id": 1, "name": "Admin permissions", "can": "role.create role.list role.view","cant": "role.delete"},
+  ],
+  "rolepermission": [
+    { "id": 1, "permission": 1, "role": 1 }
+  ],
+  "userrole": [
+    { "id": 1, "user": 1, "role": 1 }
+  ]
+}

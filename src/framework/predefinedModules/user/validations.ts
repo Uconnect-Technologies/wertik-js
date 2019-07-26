@@ -1,6 +1,7 @@
-import getIdName from "./../../../framework/helpers/getIdName";
+import primaryKey from "./../../../framework/helpers/primaryKey";
+import {primaryKeyType} from "./../../../framework/helpers/primaryKey";
 
-const {DIALECT} = process.env;
+let primaryKeyType2 = primaryKeyType.toLowerCase();
 
 export default {
   twoFactorLogin: {
@@ -24,18 +25,18 @@ export default {
     activationToken: "string|required"
   },
   viewUser: {
-    [getIdName]: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required",
+    [primaryKey]: `${primaryKeyType2}|required`,
   },
   changePassword: {
     oldPassword: "string|min:3|required",
     newPassword: "string|min:3|required",
-    [getIdName]: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required",
+    [primaryKey]: `${primaryKeyType2}|required`,
   },
   deleteUser: {
-    [getIdName]: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required",
+    [primaryKey]: `${primaryKeyType2}|required`,
   },
   updateUser: {
-    [getIdName]: (DIALECT == "MONGO_DB") ? "string|required" : "integer|required",
+    [primaryKey]: `${primaryKeyType2}|required`,
     name: "string|min:3",
     email: "string",
     age: "integer",

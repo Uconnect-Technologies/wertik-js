@@ -1,22 +1,20 @@
 import getListByPaginationAndFiltersSchema from "./../../../framework/graphql/getListByPaginationAndFiltersSchema"
-import getIdName from "./../../../framework/helpers/getIdName"
-import { getIdType } from "./../../../framework/helpers/getIdName"
+import primaryKey from "./../../../framework/helpers/primaryKey"
+import { primaryKeyType } from "./../../../framework/helpers/primaryKey"
 
 export default `
 	type Profile {
-		${getIdName}: ${getIdType}
+		${primaryKey}: ${primaryKeyType}
 		user: User
 		description: String
 		successMessage: String
 		successMessageType: String
 		created_by: User
-		createdAt: String
-		updatedAt: String
 	}
 	${getListByPaginationAndFiltersSchema("Profile")}
 	input ProfileInput {
-		${getIdName}: ${getIdType}
-		user: ${getIdType}
+		${primaryKey}: ${primaryKeyType}
+		user: ${primaryKeyType}
 		description: String
 	}
 `;

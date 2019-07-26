@@ -12,8 +12,6 @@ export default `
 		role: Role
 		successMessage: String
 		successMessageType: String
-		createdAt: String
-		updatedAt: String
 	}
 	${getListByPaginationAndFiltersSchema("UserRole")}
 	input UserRoleInput {

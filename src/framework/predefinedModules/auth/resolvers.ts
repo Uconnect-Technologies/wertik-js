@@ -10,7 +10,7 @@ import isTokenExpired from "./../../../framework/security/isTokenExpired";
 import validate from "./../../../framework/validations/validate";
 import statusCodes from "./../../../framework/helpers/statusCodes";
 import {sendEmail} from "./../../../framework/mailer/index";
-import getIdName from "./../../../framework/helpers/getIdName";
+import primaryKey from "./../../../framework/helpers/primaryKey";
 import allModels from "./../../../framework/dynamic/allModels";
 let {userModel,profileModel} = allModels;
 
@@ -201,7 +201,7 @@ export default {
 	      });
 	      await profileModel.create({
 	      	description: '...',
-	      	user: newUser[getIdName],
+	      	user: newUser[primaryKey],
 	      });
 				newUser.statusCode = statusCodes.OK.type;
 				newUser.statusCodeNumber = statusCodes.OK.number;

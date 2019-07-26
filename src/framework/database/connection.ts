@@ -1,4 +1,5 @@
 const dialect = process.env.dialect;
+
 let db_connect = null;
 let db_models = null;
 
@@ -13,4 +14,5 @@ if (dialect == "MYSQL") {
 export default {
   db_connect
 };
+
 export let models = db_models;

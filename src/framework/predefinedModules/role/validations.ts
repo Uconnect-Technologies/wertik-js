@@ -1,18 +1,21 @@
-import getIdName from "./../../../framework/helpers/getIdName";
+import primaryKey from "./../../../framework/helpers/primaryKey";
+import {primaryKeyType} from "./../../../framework/helpers/primaryKey";
 const {dialect} = process.env;
+
+let primaryKeyType2 = primaryKeyType.toLowerCase();
 
 export default {
   createRole: {
-    name: "string|required",
+    name: "string|required"
   },
   deleteRole: {
-    [getIdName]: (dialect == "MONGO_DB") ? "string|required" : "integer|required",
+    [primaryKey]: `${primaryKeyType2}|required`
   },
   updateRole: {
-    [getIdName]: (dialect == "MONGO_DB") ? "string|required" : "integer|required",
+    [primaryKey]: `${primaryKeyType2}|required`,
     name: "string|required"
   },
   role: {
-    [getIdName]: (dialect == "MONGO_DB") ? "string|required" : "integer|required",
+    [primaryKey]: `${primaryKeyType2}|required`
   }
 }

@@ -9,7 +9,6 @@ export default async function (model: any,args: any = {},requestedFields: any) {
   const {page, limit} = pagination;
   let totalFilters = filters.length;
   let result = {};
-  console.log(model);
   if (totalFilters > 0) {
   	result = await model.paginate(mongodbFilter,{
       page: page,
@@ -24,7 +23,6 @@ export default async function (model: any,args: any = {},requestedFields: any) {
     })
   }
   const response = get(result,'docs',[]);
-  console.log(response);
   return {
     filters: filters,
     pagination: pagination,

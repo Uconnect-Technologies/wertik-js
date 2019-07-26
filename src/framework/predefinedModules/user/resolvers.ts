@@ -7,7 +7,6 @@ import validate from "./../../../framework/validations/validate";
 import statusCodes from "./../../../framework/helpers/statusCodes";
 import dynamic from "./../../../framework/dynamic/index";
 import { sendEmail } from "./../../../framework/mailer/index";
-import getIdName from "./../../../framework/helpers/getIdName";
 import allModels from "./../../../framework/dynamic/allModels";
 import relateResolver from "./../../../framework/database/relateResolver";
 

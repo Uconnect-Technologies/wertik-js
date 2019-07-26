@@ -1,20 +1,17 @@
 import getListByPaginationAndFiltersSchema from "./../../../framework/graphql/getListByPaginationAndFiltersSchema"
-import getIdName from "./../../../framework/helpers/getIdName"
-import { getIdType } from "./../../../framework/helpers/getIdName"
+import primaryKey, { primaryKeyType } from "./../../../framework/helpers/primaryKey"
 
 export default `
 	type ForgetPassword {
-		${getIdName}: ${getIdType}
+		${primaryKey}: ${primaryKeyType}
 		email: String
 		token: String
 		successMessage: String
 		successMessageType: String
-		createdAt: String
-		updatedAt: String
 	}
 	${getListByPaginationAndFiltersSchema("ForgetPassword")}
 	input ForgetPasswordInput {
-		${getIdName}: ${getIdType}
+		${primaryKeyType}: ${primaryKeyType}
 		email: String
 		token: String
 	}

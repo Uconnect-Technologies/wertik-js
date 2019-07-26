@@ -40,6 +40,7 @@ class Model {
 	async create(args: any, requestedFields: any) {
 		try {
 			let fakeResponse: any = await create(this.model,args,'',requestedFields);
+			console.log(fakeResponse);
 			fakeResponse.successMessageType = "Success";
 			fakeResponse.successMessage = `${this.tableName} created`;
 			return fakeResponse;

@@ -1,5 +1,5 @@
 let Validator = require('validatorjs');
-import getIdName from "./../../../framework/helpers/getIdName";
+import primaryKey, { primaryKeyType } from "./../../../framework/helpers/primaryKey";
 
 const {dialect} = process.env;
 
@@ -25,7 +25,7 @@ export default {
     activationToken: "string|required",
   },
   viewUser: {
-    [getIdName]: (dialect == "MONGO_DB") ? "string|required" : "integer|required",
+    [primaryKey]: `${primaryKeyType}|required`
   },
   login: {
     email: "string|required",

@@ -1,20 +1,24 @@
 const {dialect} = process.env;
-import getIdName from "./../../../framework/helpers/getIdName";
+
+import primaryKey from "./../../../framework/helpers/primaryKey";
+import {primaryKeyType} from "./../../../framework/helpers/primaryKey";
+
+let primaryKeyType2 = primaryKeyType.toLowerCase(); 
 
 export default {
   createRolePermission: {
-    role: (dialect == "MONGO_DB") ? "string|required" : "integer|required",
-    permission: (dialect == "MONGO_DB") ? "string|required" : "integer|required"
+    role: `${primaryKeyType2}|required`,
+    permission: `${primaryKeyType2}|required`
   },
   deleteRolePermission: {
-    [getIdName]: (dialect == "MONGO_DB") ? "string|required" : "integer|required",
+    [primaryKey]: `${primaryKeyType2}|required`
   },
   updateRolePermission: {
-    [getIdName]: (dialect == "MONGO_DB") ? "string|required" : "integer|required",
-    role: (dialect == "MONGO_DB") ? "string|required" : "integer|required",
-    permission: (dialect == "MONGO_DB") ? "string|required" : "integer|required"
+    [primaryKey]: `${primaryKeyType2}|required`,
+    role: `${primaryKeyType2}|required`,
+    permission: `${primaryKeyType2}|required`
   },
   rolePermission:  {
-    [getIdName]: (dialect == "MONGO_DB") ? "string|required" : "integer|required",
+    [primaryKey]: `${primaryKeyType2}|required`
   }
 }

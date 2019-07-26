@@ -1,9 +1,9 @@
 import getListByPaginationAndFiltersSchema from "./../../../framework/graphql/getListByPaginationAndFiltersSchema"
-import getIdName from "./../../../framework/helpers/getIdName"
-import { getIdType } from "./../../../framework/helpers/getIdName"
+import primaryKey from "./../../../framework/helpers/primaryKey"
+import { primaryKeyType } from "./../../../framework/helpers/primaryKey"
 
 let userFields = `
-	${getIdName}: ${getIdType}
+	${primaryKey}: ${primaryKeyType}
 	name: String
 	age: Int
 	username: String
@@ -26,8 +26,6 @@ export default `
 		assignedRoles: [UserRoleList]
 		successMessage: String
 		successMessageType: String
-		createdAt: String
-		updatedAt: String
 	}
 	${getListByPaginationAndFiltersSchema("User")}
 	input UserInput {

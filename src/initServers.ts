@@ -7,7 +7,7 @@ export default async function (dir, app) {
     return {
         connection: {
             mysql: {
-                sync: require("./framework/database/mysql/connection").syncDatabase
+                //sync: require("./framework/database/mysql/connection").syncDatabase
             },
             MONGO_DB: {
 

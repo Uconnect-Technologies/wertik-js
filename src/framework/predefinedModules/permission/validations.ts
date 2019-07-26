@@ -1,18 +1,22 @@
 const {dialect} = process.env;
-import getIdName from "./../../../framework/helpers/getIdName";
+import primaryKey from "./../../../framework/helpers/primaryKey";
 
 export default {
   createPermission: {
-    action: "string|required"
+    name: "string|required",
+    cant: "string|required",
+    can: "string|required"
   },
   deletePermission: {
-    [getIdName]: (dialect == "MONGO_DB") ? "string|required" : "integer|required",
+    [primaryKey]: (dialect == "MONGO_DB") ? "string|required" : "integer|required",
   },
   updatePermission: {
-    [getIdName]: (dialect == "MONGO_DB") ? "string|required" : "integer|required",
-    action: "string|required"
+    [primaryKey]: (dialect == "MONGO_DB") ? "string|required" : "integer|required",
+    name: "string|required",
+    cant: "string|required",
+    can: "string|required"
   },
   permission: {
-    [getIdName]: (dialect == "MONGO_DB") ? "string|required" : "integer|required",
+    [primaryKey]: (dialect == "MONGO_DB") ? "string|required" : "integer|required",
   }
 }

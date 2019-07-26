@@ -10,8 +10,7 @@ export default {
         try {
             await convertConfigurationIntoEnvVariables(configuration);
             if (process.env.mode) {
-                let initServers = require("./initServers").default
-                console.log(process.env.mode)
+                let initServers = require("./initServers").default;
                 return await initServers(__dirname, app);
             }
         } catch (e) {

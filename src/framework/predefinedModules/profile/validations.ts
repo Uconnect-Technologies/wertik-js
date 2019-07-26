@@ -1,19 +1,21 @@
-import getIdName from "./../../../framework/helpers/getIdName";
-const {dialect} = process.env;
+import primaryKey from "./../../../framework/helpers/primaryKey";
+import {primaryKeyType} from "./../../../framework/helpers/primaryKey";
+
+let primaryKeyType2 = primaryKeyType.toLowerCase();
 
 export default {
   createProfile: {
-    user: (dialect == "MONGO_DB") ? "string|required" : "integer|required",
+    user: `${primaryKeyType2}|required`,
     description: "string|required"
   },
   deleteProfile: {
-    [getIdName]: (dialect == "MONGO_DB") ? "string|required" : "integer|required",
+    [primaryKey]: `${primaryKeyType2}|required`,
   },
   updateProfile: {
-    [getIdName]: (dialect == "MONGO_DB") ? "string|required" : "integer|required",
+    [primaryKey]: `${primaryKeyType2}|required`,
     description: "string"
   },
   profile: {
-    [getIdName]: (dialect == "MONGO_DB") ? "string|required" : "integer|required",
+    [primaryKey]: `${primaryKeyType2}|required`,
   }
 }
