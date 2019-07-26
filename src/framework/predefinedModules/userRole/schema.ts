@@ -1,13 +1,11 @@
 import getListByPaginationAndFiltersSchema from "./../../../framework/graphql/getListByPaginationAndFiltersSchema"
-const {dialect} = process.env;
-let relationSchemaType = "Int";
-if (dialect == "MONGO_DB") {
-	relationSchemaType = "String";
-}
+import primaryKey from "./../../../framework/helpers/primaryKey"
+import { primaryKeyType } from "./../../../framework/helpers/primaryKey"
+
 export default `
 	type UserRole {
-		_id: String
-		id: Int
+		${primaryKey}: ${primaryKeyType}
+		name: String
 		user: User
 		role: Role
 	}
@@ -15,7 +13,7 @@ export default `
 	input UserRoleInput {
 		_id: String
 		id: Int
-		user: ${relationSchemaType}
-		role: ${relationSchemaType}
+		user: ${primaryKeyType}
+		role: ${primaryKeyType}
 	}
 `;

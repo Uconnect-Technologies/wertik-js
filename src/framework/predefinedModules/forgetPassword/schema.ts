@@ -4,6 +4,7 @@ import primaryKey, { primaryKeyType } from "./../../../framework/helpers/primary
 export default `
 	type ForgetPassword {
 		${primaryKey}: ${primaryKeyType}
+		name: String
 		email: String
 		token: String
 	}

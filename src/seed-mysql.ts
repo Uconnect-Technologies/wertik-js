@@ -4,6 +4,7 @@ import devServerConfiguration from "./dev-server-configuration"
 let a = wertick.run(devServerConfiguration);
 
 a.then(app => {
-  console.log("Server is up now yeah");
-  console.log(app);
+    let mysqlSeedRunner = require("./framework/database/mysql/seed").default
+    console.log("Running seeds for MySQL");
+    mysqlSeedRunner({"asd":"ads"});
 });

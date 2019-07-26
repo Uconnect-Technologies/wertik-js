@@ -11,7 +11,8 @@ export default {
             await convertConfigurationIntoEnvVariables(configuration);
             if (process.env.mode) {
                 let initServers = require("./initServers").default;
-                return await initServers(__dirname, app);
+                let initializedApp = await initServers(__dirname, app);
+                return initializedApp;
             }
         } catch (e) {
             console.log(`Something went wrong: ${e.message}`)

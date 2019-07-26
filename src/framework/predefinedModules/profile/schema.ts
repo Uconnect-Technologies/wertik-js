@@ -5,6 +5,7 @@ import { primaryKeyType } from "./../../../framework/helpers/primaryKey"
 export default `
 	type Profile {
 		${primaryKey}: ${primaryKeyType}
+		name: String
 		user: User
 		age: Int
 		gender: String

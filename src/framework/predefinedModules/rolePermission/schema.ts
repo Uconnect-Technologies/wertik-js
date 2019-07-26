@@ -4,6 +4,7 @@ import primaryKey, { primaryKeyType } from "./../../../framework/helpers/primary
 export default `
 	type RolePermission {
 		${primaryKey}: ${primaryKeyType}
+		name: String
 		permission: Permission,
 		role: Role
 	}
