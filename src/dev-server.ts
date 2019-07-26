@@ -15,7 +15,7 @@ let a = wertick.run({
   allowGraphql: "TRUE",
   modulesEnabled: " ",
   predefinedModules: "user,forgetPassword,permission,role,rolePermission,userRole,profile,auth",
-  dialect: "MYSQL",
+  dialect: "MONGO_DB",
   mongoURI: "mongodb://ilyas:pass1234@ds027719.mlab.com:27719/graphql",
   mailerService: "gmail",
   mailerServiceUsername: "jangonewsmailer@gmail.com",
