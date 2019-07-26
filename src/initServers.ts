@@ -6,12 +6,6 @@ export default async function (dir, app) {
     apiServer(dir, app);
     return {
         connection: {
-            mysql: {
-                //sync: require("./framework/database/mysql/connection").syncDatabase
-            },
-            MONGO_DB: {
-
-            }
         }
     };
 }

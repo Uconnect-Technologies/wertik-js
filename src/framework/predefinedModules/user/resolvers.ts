@@ -29,10 +29,10 @@ let userMutations = userDynamic.mutations;
 export default {
 	User: {
 		async assignedRoles(user: any) {
-			return await relateResolver(userRoleModel, user, 'id', true);
+			// return await relateResolver(userRoleModel, user, 'id', true);
 		},
 		async profile(user: any) {
-			return await relateResolver(profileModel, user, 'profile');
+			// return await relateResolver(profileModel, user, 'profile');
 		}
 	},
 	queries: {
@@ -74,10 +74,6 @@ export default {
 						subject: "Password changed"
 					});
 				let response: any = {};
-				response.statusCode = statusCodes.OK.type;
-				response.statusCodeNumber = statusCodes.OK.number;
-				response.successMessageType = "Success";
-				response.successMessage = "Password changed";
 				return response;
 			} catch (e) {
 				return internalServerError(e);

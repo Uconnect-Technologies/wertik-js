@@ -51,8 +51,6 @@ export default async function(filters: any) {
       } else if (operator == "endswith") {
         f[item.column][Op.endsWith] = item.value;
       }
-
-      console.log(f);
     }
   });
   return f;

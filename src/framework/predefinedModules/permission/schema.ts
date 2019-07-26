@@ -7,8 +7,6 @@ export default `
 		name: String
 		can: String
 		cant: String
-		successMessage: String
-		successMessageType: String
 		created_by: User
 	}
 	${getListByPaginationAndFiltersSchema("Permission")}

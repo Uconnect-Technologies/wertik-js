@@ -20,7 +20,7 @@ export default {
   Subscription: dynamic.loader("Role", roleResolver).subscriptions,
   Role: {
     async permissions(role: any) {
-      return await relateResolver(rolePermissionsModel,role,'permission',true);
+      // return await relateResolver(rolePermissionsModel,role,'permission',true);
     }
   },
   mutations: dynamic.loader("Role",roleResolver).mutations,

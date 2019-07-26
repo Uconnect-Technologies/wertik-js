@@ -6,8 +6,6 @@ export default `
 		${primaryKey}: ${primaryKeyType}
 		email: String
 		token: String
-		successMessage: String
-		successMessageType: String
 	}
 	${getListByPaginationAndFiltersSchema("ForgetPassword")}
 	input ForgetPasswordInput {

@@ -5,8 +5,6 @@ export default `
 	type Role {
 		${primaryKey}: ${primaryKeyType}
 		name: String
-		successMessage: String
-		successMessageType: String
 		permissions: [RolePermissionList]
 		created_by: User
 	}

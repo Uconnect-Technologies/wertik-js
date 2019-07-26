@@ -6,9 +6,10 @@ export default `
 	type Profile {
 		${primaryKey}: ${primaryKeyType}
 		user: User
+		age: Int
+		gender: String
+		dob: Int
 		description: String
-		successMessage: String
-		successMessageType: String
 		created_by: User
 	}
 	${getListByPaginationAndFiltersSchema("Profile")}

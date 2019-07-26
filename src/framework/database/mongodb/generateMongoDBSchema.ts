@@ -3,10 +3,6 @@ import getMongoDBSchemaType from "./getMongoDBSchemaType";
 
 const restrictColumns = [
   "errors",
-  "successMessage",
-  "successMessageType",
-  "statusCode",
-  "statusCodeNumber",
   "created_at",
   "id",
   "updated_at"

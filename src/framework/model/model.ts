@@ -22,8 +22,6 @@ class Model {
     try {
       let fakeResponse: any = {};
       await destroy(this.model, args);
-      fakeResponse.successMessageType = "Success";
-      fakeResponse.successMessage = `${this.tableName} deleted`;
       return fakeResponse;
     } catch (e) {
       return internalServerError(e);
@@ -33,8 +31,6 @@ class Model {
   async create(args: any, requestedFields: any) {
     try {
       let fakeResponse: any = await create(this.model, args, "", requestedFields);
-      fakeResponse.successMessageType = "Success";
-      fakeResponse.successMessage = `${this.tableName} created`;
       return fakeResponse;
     } catch (e) {
       return internalServerError(e);
@@ -44,8 +40,6 @@ class Model {
   async update(args: any, requestedFields: any) {
     try {
       let response: any = await update(this.model, args, requestedFields);
-      response.successMessageType = "Success";
-      response.successMessage = `${this.tableName} updated`;
       return response;
     } catch (e) {
       return internalServerError(e);
@@ -58,8 +52,6 @@ class Model {
       if (!response) {
         return null;
       }
-      response.successMessageType = "Success";
-      response.successMessage = `${this.tableName} fetched`;
       return response;
     } catch (e) {
       return internalServerError(e);
@@ -72,8 +64,6 @@ class Model {
       if (!response) {
         return null;
       }
-      response.successMessageType = "Success";
-      response.successMessage = `${this.tableName} fetched`;
       return response;
     } catch (e) {
       return internalServerError(e);

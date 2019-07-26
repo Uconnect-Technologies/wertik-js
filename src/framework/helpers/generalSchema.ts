@@ -17,7 +17,4 @@ export default `
 		operator: String
 		value: String
 	}
-	type SuccessMessage {
-		successMessage: String
-	}
 `;

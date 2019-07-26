@@ -1,4 +1,5 @@
 import wertick from "./main";
+import runMySQLSeeds from "./framework/database/mysql/runSeeds"
 
 let a = wertick.run({
   name: "Wapgee",
@@ -15,7 +16,7 @@ let a = wertick.run({
   allowGraphql: "TRUE",
   modulesEnabled: " ",
   predefinedModules: "user,forgetPassword,permission,role,rolePermission,userRole,profile,auth",
-  dialect: "MONGO_DB",
+  dialect: "MYSQL",
   mongoURI: "mongodb://ilyas:pass1234@ds027719.mlab.com:27719/graphql",
   mailerService: "gmail",
   mailerServiceUsername: "jangonewsmailer@gmail.com",
@@ -28,3 +29,8 @@ let a = wertick.run({
 a.then(app => {
   console.log("Server is up now yeah");
 });
+
+
+// console.log(require('./seeds.json'));
+
+// runMySQLSeeds(require('./seeds.json'));

@@ -6,10 +6,6 @@ export default `
 		${primaryKey}: ${primaryKeyType}
 		permission: Permission,
 		role: Role
-		successMessage: String
-		successMessageType: String
-		statusCode: String
-		statusCodeNumber: Int
 	}
 	${getListByPaginationAndFiltersSchema("RolePermission")}
 	input RolePermissionInput {

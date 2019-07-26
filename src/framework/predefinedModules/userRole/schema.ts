@@ -10,8 +10,6 @@ export default `
 		id: Int
 		user: User
 		role: Role
-		successMessage: String
-		successMessageType: String
 	}
 	${getListByPaginationAndFiltersSchema("UserRole")}
 	input UserRoleInput {

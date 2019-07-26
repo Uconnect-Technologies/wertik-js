@@ -5,7 +5,6 @@ import { primaryKeyType } from "./../../../framework/helpers/primaryKey"
 let userFields = `
 	${primaryKey}: ${primaryKeyType}
 	name: String
-	age: Int
 	username: String
 	refreshToken: String
 	accessToken: String
@@ -16,7 +15,6 @@ let userFields = `
 	activationToken: String
 	email: String
 	password: String
-	gender: String
 	referer: String
 `
 export default `
@@ -24,8 +22,6 @@ export default `
 		${userFields}
 		profile: Profile
 		assignedRoles: [UserRoleList]
-		successMessage: String
-		successMessageType: String
 	}
 	${getListByPaginationAndFiltersSchema("User")}
 	input UserInput {

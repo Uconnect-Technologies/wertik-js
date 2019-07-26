@@ -24,8 +24,6 @@ export default {
         if (!forgetPassword) {
           throw new ApolloError("Token expired or not found.",statusCodes.NOT_FOUND.number)
         }
-        forgetPassword.successMessageType = "Successfull";
-        forgetPassword.successMessage =  "Forget password item";
         forgetPassword.statusCode = statusCodes.OK.type;
         forgetPassword.statusCodeNumber = statusCodes.OK.number;
         return forgetPassword;
@@ -66,8 +64,6 @@ export default {
         });
         return {
           email: args.email,
-          successMessageType: "Successfull",
-          successMessage:  "Please check your email. We have sent a link to reset your email",
           statusCode: statusCodes.CREATED.type
         };
       } catch (e) {
@@ -104,8 +100,6 @@ export default {
           subject: "Password changed"
         });
         return {
-          successMessageType: "Success",
-          successMessage: "Password successfully changed",
           statusCode: statusCodes.OK.type,
           statusCodeNumber: statusCodes.OK.number
         }

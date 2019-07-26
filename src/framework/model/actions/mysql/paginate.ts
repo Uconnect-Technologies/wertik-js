@@ -7,7 +7,6 @@ export default async function(model: any, args: any = {}, requestedFields: any =
   let limit = get(args, "pagination.limit", 10);
   let filters = get(args, "filters", []);
   let convertedFilters = await convertFiltersIntoSequalizeObject(filters);
-  console.log(convertedFilters);
   let offset = limit * (page - 1);
   let totalFilters = filters.length;
   let list = [];
