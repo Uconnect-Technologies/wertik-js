@@ -1,12 +1,13 @@
-let {get} = require("lodash");
+let { get } = require("lodash");
 import convertFiltersIntoSequalizeObject from "./../../../database/mysql/convertFiltersIntoSequalizeObject";
 
-export default async function (model: any,args: any = {},requestedFields: any = []) {
+export default async function(model: any, args: any = {}, requestedFields: any = []) {
   let baseFields = Object.keys(requestedFields.list);
-  let page = get(args,'pagination.page',1);
-  let limit = get(args,'pagination.limit',10);
-  let filters = get(args,'filters',[]);
+  let page = get(args, "pagination.page", 1);
+  let limit = get(args, "pagination.limit", 10);
+  let filters = get(args, "filters", []);
   let convertedFilters = await convertFiltersIntoSequalizeObject(filters);
+  console.log(convertedFilters);
   let offset = limit * (page - 1);
   let totalFilters = filters.length;
   let list = [];
@@ -17,16 +18,16 @@ export default async function (model: any,args: any = {},requestedFields: any = 
       where: convertedFilters,
       attributes: baseFields
     });
-  }else {
-    list = await model.findAll({ 
-      offset: offset, 
+  } else {
+    list = await model.findAll({
+      offset: offset,
       attributes: baseFields,
-      limit: limit,
+      limit: limit
     });
   }
   return {
     filters,
-    pagination: {page, limit},
+    pagination: { page, limit },
     list
-  }
+  };
 }

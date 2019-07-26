@@ -4,10 +4,10 @@ import dynamic from "./../../../framework/dynamic/index";
 import allModels from "./../../../framework/dynamic/allModels";
 import relateResolver from "./../../../framework/database/relateResolver";
 
-let {rolePermissionModel,permissionModel,roleModel} = allModels;
+let { rolePermissionModel, permissionModel, roleModel } = allModels;
 
 let rolePermissionResolver = dynamic.resolvers({
-  moduleName: 'RolePermission',
+  moduleName: "RolePermission",
   validations: {
     create: validations.createRolePermission,
     delete: validations.deleteRolePermission,
@@ -17,18 +17,24 @@ let rolePermissionResolver = dynamic.resolvers({
   model: rolePermissionModel
 });
 
-
 export default {
   Subscription: dynamic.loader("Role", rolePermissionResolver).subscriptions,
   RolePermission: {
     async permission(rolePermission: any) {
-      return await relateResolver(permissionModel,rolePermission,'permission')
+      return await relateResolver({
+        relateWith: permissionModel,
+        resolverName: "permission",
+        currentInstance: rolePermission
+      });
     },
     async role(rolePermission: any) {
-      return await relateResolver(roleModel,rolePermission,'role')
+      return await relateResolver({
+        relateWith: roleModel,
+        resolverName: "role",
+        currentInstance: rolePermission
+      });
     }
   },
-  queries: dynamic.loader("RolePermission",rolePermissionResolver).queries,
-  mutations: dynamic.loader("RolePermission",rolePermissionResolver).mutations
-  
-}
+  queries: dynamic.loader("RolePermission", rolePermissionResolver).queries,
+  mutations: dynamic.loader("RolePermission", rolePermissionResolver).mutations
+};
