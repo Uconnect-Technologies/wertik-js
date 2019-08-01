@@ -9,8 +9,6 @@
     "build": "npm run clean && npm run build-ts",
     "dev": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\"  \"npm run watch-ts\"",
     "dev-server": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\"  \"npm run watch-ts\"  \"nodemon lib/dev-server.js\" ",
-    "seed-mysql": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\"  \"npm run watch-ts\"  \"nodemon lib/seed-mysql.js\" ",
-    "seed-mongo": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\"  \"npm run watch-ts\"  \"nodemon lib/seed-mongo.js\" ",
     "watch-ts": "tsc -w"
   },
   "dependencies": {

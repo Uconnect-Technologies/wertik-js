@@ -1,34 +1,22 @@
-# my-project
+# wertik-frontend-app-vue-nuxt
 
-## Project setup
-```
-yarn install
-```
+> Convert your app into GraphQL + Rest API 
 
-### Compiles and hot-reloads for development
-```
-yarn run serve
-```
+## Build Setup
 
-### Compiles and minifies for production
-```
-yarn run build
-```
+``` bash
+# install dependencies
+$ yarn install
 
-### Run your tests
-```
-yarn run test
-```
+# serve with hot reload at localhost:3000
+$ yarn run dev
 
-### Lints and fixes files
-```
-yarn run lint
+# build for production and launch server
+$ yarn run build
+$ yarn start
+
+# generate static project
+$ yarn run generate
 ```
 
-### Run your unit tests
-```
-yarn run test:unit
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+For detailed explanation on how things work, checkout [Nuxt.js docs](https://nuxtjs.org).
