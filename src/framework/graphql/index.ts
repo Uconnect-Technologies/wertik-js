@@ -6,6 +6,7 @@ import resolvers from "./loadAllResolvers";
 import subscriptions from "./loadAllSubscriptions";
 import schemas from "./loadAllSchemas";
 import generalSchema from "./../helpers/generalSchema";
+import validateAccessToken from "./../security/validateAccessToken";
 
 export default function (rootDirectory: string,app: any) {
 	let appMutations = mutations(rootDirectory);
@@ -13,7 +14,6 @@ export default function (rootDirectory: string,app: any) {
 	let appSchema = schemas(rootDirectory);
 	let appResolvers = resolvers(rootDirectory);
 	let appSubscriptions = subscriptions(rootDirectory);
-	let {validateAccessToken} = require(`${rootDirectory}/framework/predefinedModules/user/auth`).default;
 	let mainSchema  = `
 		${generalSchema}
 		${appSchema}
@@ -35,8 +35,11 @@ export default function (rootDirectory: string,app: any) {
 	const server = new ApolloServer({ 
 		typeDefs: mainSchema, 
 		resolvers: appResolvers,
-		context: async (a: any) => {
-			await validateAccessToken(a.req);
+		context: async (req: any) => {
+			let validateToken = await validateAccessToken(req);
+			return {
+				...validateToken
+			}
 		}
 	});
 	server.listen(1209).then(({ url, subscriptionsUrl }) => {

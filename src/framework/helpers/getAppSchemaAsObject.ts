@@ -1,6 +1,6 @@
-let {get} = require('lodash');
+let { get, camelCase  } = require('lodash');
 let gql = require("graphql-tag")
-const path = require('path');
+
 import {join} from "path";
 import fileExists from "./fileExists";
 
@@ -18,7 +18,7 @@ export default function () {
       if (fields.length == 0) {
         throw `Fields not found for ${folder}`;
       }
-      object = {...object,[name.toLowerCase()]: fields}
+      object = {...object,[camelCase(name)]: fields}
     }
   });
   return object;

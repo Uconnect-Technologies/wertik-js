@@ -10,6 +10,7 @@ class Model {
   tableName: string;
   models: any;
   model: any;
+  schema: object;
 
   constructor(props: any) {
     this.instance = null;
@@ -78,8 +79,19 @@ class Model {
       return internalServerError(e);
     }
   }
+
   getInstance() {
     return get(this, "instance", null);
+  }
+
+  /*
+    Create a random instance, If this model is under relationship for another instance please use it with promises to save relation data.
+  */
+
+  async seed(initialData) {
+    return new Promise( (resolve, reject) => {
+
+    })
   }
 }
 

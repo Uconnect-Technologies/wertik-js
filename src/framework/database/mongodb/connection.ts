@@ -1,13 +1,12 @@
 let mongoose = require("mongoose");
 let { Schema } = require("mongoose");
 let mongoosePaginate = require("mongoose-paginate");
+
 import getAppSchemaAsObject from "../../helpers/getAppSchemaAsObject";
 import generateMongoDBSchema from "./generateMongoDBSchema";
 
-const mongo = process.env.mongoURI;
-
 let mongoCollections = generateMongoDBSchema(mongoose.connection, getAppSchemaAsObject());
-
+const mongo = process.env.mongoURI;
 let mongodbModels: any = {};
 
 Object.keys(mongoCollections).forEach(item => {
@@ -15,6 +14,7 @@ Object.keys(mongoCollections).forEach(item => {
   schema.plugin(mongoosePaginate);
   mongodbModels[item] = mongoose.model(item, schema);
 });
+
 mongoose
   .connect(mongo, { keepAlive: 1, useNewUrlParser: true })
   .then(() => {
@@ -24,3 +24,4 @@ mongoose
 
 export default mongoose.connection;
 export let models = mongodbModels;
+export let modelsWithSchema = mongoCollections;

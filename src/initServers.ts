@@ -14,7 +14,7 @@ export default async function (dir, app) {
     }else if (dialect == "MONGO_DB") {        
         db.connection = require('./framework/database/mongodb/connection');
     }
-    db.models = require("./framework/dynamic/allModels")
+    db.models = require("./framework/dynamic/allModels").default;
     return {
         ...db
     };

@@ -5,5 +5,5 @@ let a = wertick.run(devServerConfiguration);
 
 a.then(app => {
   console.log("Server is up now yeah");
-  console.log(app);
+  app.models.roleModel.seed()
 });

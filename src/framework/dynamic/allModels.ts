@@ -1,5 +1,5 @@
 import Model from "./../model/model";
-import { models } from "./../database/connection";
+import { models, modelsWithSchema } from "./../database/connection";
 import { join } from "path";
 
 let predefinedModules = process.env.predefinedModules.split(",");

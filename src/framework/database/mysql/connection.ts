@@ -1,6 +1,7 @@
 let Sequelize = require("sequelize");
 import getAppSchemaAsObject from "../../helpers/getAppSchemaAsObject";
 import convertAppSchemaToObject from "../../helpers/convertAppSchemaToObject";
+import camelToSnake from "./../../helpers/camelToSnake";
 
 const { dbusername, dbPassword, dbName, dbHost, dbPort, mode, dbMysqlSync } = process.env;
 
@@ -24,16 +25,20 @@ let CONNECTION = mode == "development" ? DB_DEVELOPMENT : DB_PRODUCTION;
 
 let tables = convertAppSchemaToObject(getAppSchemaAsObject());
 
+
 tables.forEach((element: any, index: any) => {
-  CONNECTION.define(element.tableName, element.fields, {
+  // Create MYSQl table and convert the string into snake from camel case
+  CONNECTION.define(camelToSnake(element.tableName), element.fields, {
     paranoid: true,
+    freezeTableName: true,
     underscored: true,
-    freezeTableName: true
+    timestamps: true
   });
   if (index == tables.length - 1 && dbMysqlSync) {
     CONNECTION.sync();
   }
 });
 
-export let models = CONNECTION.models;
 export default CONNECTION;
+export let models = CONNECTION.models;
+export let modelsWithSchema = tables;
