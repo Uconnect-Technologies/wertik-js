@@ -1,13 +1,14 @@
-let mongoose = require("mongoose");
-let { Schema } = require("mongoose");
 let mongoosePaginate = require("mongoose-paginate");
+let { Schema } = require("mongoose");
+let mongoose = require("mongoose");
 
 import getAppSchemaAsObject from "../../helpers/getAppSchemaAsObject";
 import generateMongoDBSchema from "./generateMongoDBSchema";
 
 let mongoCollections = generateMongoDBSchema(mongoose.connection, getAppSchemaAsObject());
-const mongo = process.env.mongoURI;
 let mongodbModels: any = {};
+
+const mongo = process.env.mongoURI;
 
 Object.keys(mongoCollections).forEach(item => {
   let schema = new Schema(mongoCollections[item], { collection: item, timestamps: true });
@@ -20,7 +21,9 @@ mongoose
   .then(() => {
     console.log("Connected to mongodb successfully");
   })
-  .catch((err: any) => console.log(err.message));
+  .catch((err: any) => {
+    console.log(err.message)
+  });
 
 export default mongoose.connection;
 export let models = mongodbModels;
