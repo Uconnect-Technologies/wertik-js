@@ -4,6 +4,10 @@ export default `
      accessToken
      username
      email
+     profile {
+      id
+      name
+    }
    }
  }
 `

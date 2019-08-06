@@ -1,7 +1,8 @@
 export const state = () => ({
   isLoggedIn: false,
   profile: {},
-  email: ''
+  email: '',
+  accessToken: ''
 })
 
 export const mutations = {
@@ -16,5 +17,15 @@ export const mutations = {
   },
   setLoggedOut(state) {
     state.isLoggedIn = false
+  },
+  setProfile(state, profile) {
+    state.profile = profile
+  },
+  logout(state) {
+    state.profile = null
+    state.email = ''
+    state.isLoggedIn = false
+    state.accessToken = ''
+    localStorage.clear()
   }
 }

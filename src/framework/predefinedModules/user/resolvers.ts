@@ -35,7 +35,8 @@ export default {
       return await relateResolver({
         relateWith: profileModel,
         model: user,
-        type: "single"
+        type: "single",
+        relationName: "user"
       });
     }
   },

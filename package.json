@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "build": "npm run clean && npm run build-ts",
-    "dev-server": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\"  \"npm run watch-ts\"  \"nodemon  lib/dev-server.js --ignore 'frontend-app/'  \" ",
+    "dev-server": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\"  \"npm run watch-ts\"  \"nodemon  lib/dev-server.js --ignore 'frontend-app/' --ignore 'lib/'   \" ",
     "watch-ts": "tsc -w"
   },
   "dependencies": {
