@@ -44,12 +44,12 @@ export default function(info: any) {
         let v = await validate(validations.view, args);
         let { success } = v;
         if (!success) {
-          throw new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
+          return new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
         }
         try {
           let view = await model.view(args, requestedFields);
           if (!view) {
-            throw new ApolloError(`${moduleName} not found`, statusCodes.NOT_FOUND.number);
+            return new ApolloError(`${moduleName} not found`, statusCodes.NOT_FOUND.number);
           }
           return view;
         } catch (e) {
@@ -64,7 +64,7 @@ export default function(info: any) {
           let v = await validate(validations.update, e);
           let { success } = v;
           if (!success) {
-            throw new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
+            return new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
           }
           try {
             return await model.update(e, requestedFields);
@@ -78,7 +78,7 @@ export default function(info: any) {
           let v = await validate(validations.delete, item);
           let { success } = v;
           if (!success) {
-            throw new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
+            return new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
           }
           try {
             return await model.delete(item);
@@ -93,7 +93,7 @@ export default function(info: any) {
           let v = await validate(validations.create, e);
           let { success } = v;
           if (!success) {
-            throw new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
+            return new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
           }
           try {
             return await model.create(e, requestedFields);
@@ -107,7 +107,7 @@ export default function(info: any) {
         let v = await validate(validations.create, args.input);
         let { success } = v;
         if (!success) {
-          throw new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
+          return new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
         }
         try {
           let createModel = await model.create(args.input, requestedFields);
@@ -124,7 +124,7 @@ export default function(info: any) {
         let v = await validate(validations.update, args.input);
         let { success } = v;
         if (!success) {
-          throw new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
+          return new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
         }
         try {
           let updateModel = await model.update(args.input, requestedFields);
@@ -140,7 +140,7 @@ export default function(info: any) {
         let v = await validate(validations.delete, args.input);
         let { success } = v;
         if (!success) {
-          throw new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
+          return new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
         }
         try {
           await model.delete(args.input);

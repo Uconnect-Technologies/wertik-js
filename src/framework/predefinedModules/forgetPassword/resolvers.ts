@@ -17,12 +17,12 @@ export default {
       let v = await validate(validations.forgetPassword,args);
       let {success} = v;
       if (!success) {
-        throw new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
+        return new ApolloError("Validation error",statusCodes.BAD_REQUEST.number,{list: v.errors})
       }
       try {
         let forgetPassword = await forgetPasswordModel.findOne({token: args.token});
         if (!forgetPassword) {
-          throw new ApolloError("Token expired or not found.",statusCodes.NOT_FOUND.number)
+          return new ApolloError("Token expired or not found.",statusCodes.NOT_FOUND.number)
         }
         forgetPassword.statusCode = statusCodes.OK.type;
         forgetPassword.statusCodeNumber = statusCodes.OK.number;
@@ -37,12 +37,12 @@ export default {
       let v = await validate(validations.requestPasswordReset,args);
 			let {success} = v;
 			if (!success) {
-        throw new ApolloError("Validation Errors",statusCodes.BAD_REQUEST.number,{list: v.errors});
+        return new ApolloError("Validation Errors",statusCodes.BAD_REQUEST.number,{list: v.errors});
       }
       try {
         let user = await userModel.findOne({email: args.email});
         if (!user) {
-          throw new ApolloError("User not found", statusCodes.NOT_FOUND.number);
+          return new ApolloError("User not found", statusCodes.NOT_FOUND.number);
         }
         let token = Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2)
         await forgetPasswordModel.create({
@@ -74,16 +74,16 @@ export default {
       let v = await validate(validations.resetPassword,args);
 			let {success} = v;
 			if (!success) {
-        throw new ApolloError("Validation Errors",statusCodes.BAD_REQUEST.number,{list: v.errors});
+        return new ApolloError("Validation Errors",statusCodes.BAD_REQUEST.number,{list: v.errors});
       }
       try {
         let forgetPassword = await forgetPasswordModel.findOne({token: args.token});
         if (!forgetPassword) {
-          throw new ApolloError("Token Expired",statusCodes.NOT_FOUND.number);
+          return new ApolloError("Token Expired",statusCodes.NOT_FOUND.number);
         }
         let user = await userModel.findOne({email: forgetPassword.email});
         if (!forgetPassword) {
-          throw new ApolloError("User not foundd",statusCodes.NOT_FOUND.number);
+          return new ApolloError("User not foundd",statusCodes.NOT_FOUND.number);
         }
         let hash = bcrypt.hashSync(args.password);
         await user.update({

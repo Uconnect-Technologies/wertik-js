@@ -18,6 +18,7 @@
     "cross-env": "^5.2.0",
     "element-ui": "^2.11.1",
     "express": "^4.16.4",
+    "lodash": "^4.17.15",
     "nuxt": "^2.3.4"
   },
   "devDependencies": {

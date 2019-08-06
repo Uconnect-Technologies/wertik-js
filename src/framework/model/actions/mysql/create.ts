@@ -6,6 +6,6 @@ export default async function (model: any,args: any,name: any) {
     let create = await model.create(args);
     return create;
   } catch (e) {
-    throw new ApolloError(e.message, statusCodes.BAD_REQUEST.number, {})
+    return new ApolloError(e.message, statusCodes.BAD_REQUEST.number, {})
   }
 }

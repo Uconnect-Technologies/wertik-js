@@ -19,19 +19,28 @@ export default {
   },
   methods: {
     async login() {
-      console.log(1)
       if (this.email && this.password) {
-        try {
-          let response = await this.$httpGraphql.post('', {
-            query: loginMutation,
-            variables: { email: this.email, password: this.password }
+        let response = await this.$post(loginMutation, {
+          email: this.email,
+          password: this.password
+        })
+        if (response.success) {
+          this.$notify.success({
+            title: 'Success',
+            message: 'Login successfull'
           })
-          let { accessToken, email } = response.data.data.login
+          let { accessToken, email, profile } = response.data.login
           window.localStorage.setItem('accessToken', accessToken)
           window.localStorage.setItem('email', email)
+          window.localStorage.setItem('profile', JSON.stringify(profile))
           this.$router.replace('/')
-        } catch (e) {
-          console.log(e.message)
+        } else {
+          response.errors.forEach(element => {
+            this.$notify.error({
+              title: response.message,
+              message: element
+            })
+          })
         }
       } else {
         alert('Email and/or Password is required')
