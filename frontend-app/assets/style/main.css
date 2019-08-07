@@ -1,0 +1,15 @@
+body {
+  padding: 0;
+  margin: 0;
+}
+
+
+body .el-header {
+  border-bottom: 1px solid #eee;
+}
+body .el-aside {
+  border-right: 1px solid #eee;
+}
+body .el-footer {
+  border-top: 1px solid #eee;
+}

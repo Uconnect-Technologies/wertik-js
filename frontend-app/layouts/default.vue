@@ -1,11 +1,12 @@
 <template>
   <div>
-    {{ isLoggedIn }}
     <el-container v-if="isLoggedIn">
-      <el-aside style="border-right: 1px solid #eee;" width="200px">Aside</el-aside>
+      <el-aside width="280px">
+        <admin-sidebar />
+      </el-aside>
       <el-container>
-        <el-header style="border-bottom: 1px solid #eee;">
-          <el-button style="float: right;" @click="logoutUser" v-if="isLoggedIn">Logout</el-button>
+        <el-header>
+          <admin-navbar />
         </el-header>
         <el-main>
           <router-view />
@@ -21,9 +22,15 @@
 
 <script>
 import { mapMutations, mapState } from 'vuex'
+import AdminSidebar from '@/components/AdminSidebar'
+import AdminNavbar from '@/components/AdminNavbar'
 export default {
   data() {
     return {}
+  },
+  components: {
+    AdminSidebar,
+    AdminNavbar
   },
   methods: {
     ...mapMutations([
