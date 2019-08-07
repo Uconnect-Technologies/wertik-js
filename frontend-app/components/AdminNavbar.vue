@@ -1,9 +1,20 @@
 <template>
-  <div>admin navbar</div>
+  <div>
+    <el-button @click="logoutUser">Logout</el-button>
+  </div>
 </template>
 
 <script>
-export default {}
+import { mapMutations, mapState } from 'vuex'
+export default {
+  methods: {
+    ...mapMutations(['logout']),
+    logoutUser() {
+      this.logout()
+      this.$router.replace('/')
+    }
+  }
+}
 </script>
 
 <style>

@@ -40,10 +40,7 @@ export default {
       'setLoggedIn',
       'setLoggedOut',
       'setProfile'
-    ]),
-    logoutUser() {
-      this.logout()
-    }
+    ])
   },
   computed: {
     ...mapState({

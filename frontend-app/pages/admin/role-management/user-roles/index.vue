@@ -1,9 +1,17 @@
 <template>
-  <div>User Roles</div>
+  <div>
+    <div>User Roles</div>
+    <List />
+  </div>
 </template>
 
 <script>
-export default {}
+import List from '~/components/crud/List'
+export default {
+  components: {
+    List
+  }
+}
 </script>
 
 <style>

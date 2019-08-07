@@ -47,13 +47,14 @@
           </router-link>
         </el-menu-item-group>
       </el-submenu>
-      <el-menu-item index="3" disabled>
-        <i class="el-icon-document"></i>
-        <span slot="title">Navigator Three</span>
-      </el-menu-item>
       <el-menu-item index="4">
         <i class="el-icon-setting"></i>
-        <span slot="title">Navigator Four</span>
+        <span slot="title">Logging</span>
+      </el-menu-item>
+
+      <el-menu-item index="4">
+        <i class="el-icon-setting"></i>
+        <span slot="title">Emails</span>
       </el-menu-item>
     </el-menu>
   </div>
