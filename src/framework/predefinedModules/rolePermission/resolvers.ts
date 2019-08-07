@@ -23,15 +23,17 @@ export default {
     async permission(rolePermission: any) {
       return await relateResolver({
         relateWith: permissionModel,
-        resolverName: "permission",
-        currentInstance: rolePermission
+        model: rolePermission,
+        relationName: "permission",
+        type: "single"
       });
     },
     async role(rolePermission: any) {
       return await relateResolver({
         relateWith: roleModel,
-        resolverName: "role",
-        currentInstance: rolePermission
+        model: rolePermission,
+        relationName: "role",
+        type: "single"
       });
     }
   },

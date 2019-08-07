@@ -4,16 +4,16 @@ import primaryKey, {
 } from "./../../../framework/helpers/primaryKey";
 
 export default `
-	type RolePermission {
+	type UserPermission {
 		${primaryKey}: ${primaryKeyType}
 		name: String
 		permission: Permission,
-		role: Role
+		user: User
 	}
-	${getListByPaginationAndFiltersSchema("RolePermission")}
-	input RolePermissionInput {
+	${getListByPaginationAndFiltersSchema("UserPermission")}
+	input UserPermissionInput {
 		${primaryKey}: ${primaryKeyType}
 		permission: ${primaryKeyType}
-		role: ${primaryKeyType}
+		user: ${primaryKeyType}
 	}
 `;
