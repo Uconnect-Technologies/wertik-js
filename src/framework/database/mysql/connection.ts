@@ -3,7 +3,15 @@ import getAppSchemaAsObject from "../../helpers/getAppSchemaAsObject";
 import convertAppSchemaToObject from "../../helpers/convertAppSchemaToObject";
 import camelToSnake from "./../../helpers/camelToSnake";
 
-const { dbusername, dbPassword, dbName, dbHost, dbPort, mode, dbMysqlSync } = process.env;
+const {
+  dbusername,
+  dbPassword,
+  dbName,
+  dbHost,
+  dbPort,
+  mode,
+  dbMysqlSync
+} = process.env;
 
 const DB_PRODUCTION = new Sequelize(dbName, dbusername, dbPassword, {
   dialect: "mysql",
@@ -25,10 +33,9 @@ let CONNECTION = mode == "development" ? DB_DEVELOPMENT : DB_PRODUCTION;
 
 let tables = convertAppSchemaToObject(getAppSchemaAsObject());
 
-
 tables.forEach((element: any, index: any) => {
   // Create MYSQl table and convert the string into snake from camel case
-  CONNECTION.define(camelToSnake(element.tableName), element.fields, {
+  CONNECTION.define(element.tableName, element.fields, {
     paranoid: true,
     freezeTableName: true,
     underscored: true,

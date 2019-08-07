@@ -4,7 +4,7 @@ import allModels from "./../../../framework/dynamic/allModels";
 let { gameModel } = allModels;
 
 let gameResolver = dynamic.resolvers({
-  moduleName: 'game',
+  moduleName: "game",
   validations: {
     create: validations.creategame,
     delete: validations.deletegame,
@@ -14,15 +14,12 @@ let gameResolver = dynamic.resolvers({
   model: gameModel
 });
 
-
 export default {
-
-	queries: {
-		...dynamic.loader("game",gameResolver).mutations
+  queries: {
+    ...dynamic.loader("game", gameResolver).mutations
   },
 
   mutations: {
-  	...dynamic.loader("game",gameResolver).mutations
-  },
-
-}
+    ...dynamic.loader("game", gameResolver).mutations
+  }
+};

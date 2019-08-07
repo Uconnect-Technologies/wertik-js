@@ -2,7 +2,6 @@ import internalServerError from "./../helpers/internalServerError";
 import getUserWithAccessToken from "./getUserWithAccessToken";
 import isAuthQuery from "./isAuthQuery";
 export default async function({ req, res }) {
-  console.log(isAuthQuery(req.body.query));
   // const token = req.headers.authorization || "";
   // if (!token) {
   //   internalServerError({

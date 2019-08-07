@@ -2,12 +2,13 @@ let { get } = require("lodash");
 
 import actions from "./actions/index";
 import internalServerError from "./../../framework/helpers/internalServerError";
+import camelToSnake from "./../../framework/helpers/camelToSnake";
 
 const { create, update, destroy, findOne, view, paginate } = actions;
 
 class Model {
   instance: any;
-  tableName: string;
+  tableName: any;
   models: any;
   model: any;
   schema: object;
@@ -31,7 +32,12 @@ class Model {
 
   async create(args: any, requestedFields: any) {
     try {
-      let fakeResponse: any = await create(this.model, args, "", requestedFields);
+      let fakeResponse: any = await create(
+        this.model,
+        args,
+        "",
+        requestedFields
+      );
       return fakeResponse;
     } catch (e) {
       return internalServerError(e);
@@ -89,9 +95,7 @@ class Model {
   */
 
   async seed(initialData) {
-    return new Promise( (resolve, reject) => {
-
-    })
+    return new Promise((resolve, reject) => {});
   }
 }
 
