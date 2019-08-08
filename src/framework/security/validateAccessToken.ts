@@ -3,6 +3,7 @@ import getUserWithAccessToken from "./getUserWithAccessToken";
 import { get } from "lodash";
 import isAuthQuery from "./isAuthQuery";
 export default async function({ req, res }) {
+  return {};
   const query = get(req, "body.query", "");
   const isAuth = isAuthQuery(query);
   if (isAuth) {

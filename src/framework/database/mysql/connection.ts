@@ -1,7 +1,6 @@
 let Sequelize = require("sequelize");
 import getAppSchemaAsObject from "../../helpers/getAppSchemaAsObject";
 import convertAppSchemaToObject from "../../helpers/convertAppSchemaToObject";
-import camelToSnake from "./../../helpers/camelToSnake";
 
 const { dbusername, dbPassword, dbName, dbHost, dbPort, mode, dbMysqlSync } = process.env;
 

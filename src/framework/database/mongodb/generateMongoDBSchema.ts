@@ -5,7 +5,10 @@ const restrictColumns = [
   "errors",
   "created_at",
   "id",
-  "updated_at"
+  "assignedRoles",
+  "assignedPermissions",
+  "updated_at",
+  "permissions"
 ];
 
 export default function(mongoose: any, schemas: any) {
@@ -16,7 +19,7 @@ export default function(mongoose: any, schemas: any) {
     let tableColumns: any = {};
     tableColumnsArray.forEach((tableColumn: any) => {
       let tableColumnName = get(tableColumn, "name.value");
-      if (restrictColumns.indexOf(tableColumn) == -1) {
+      if (restrictColumns.indexOf(tableColumnName) == -1) {
         let type: any = "";
         let kind = get(tableColumn, "type.kind");
         if (kind == "NonNullType") {

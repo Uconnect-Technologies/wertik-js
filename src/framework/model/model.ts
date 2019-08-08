@@ -32,12 +32,7 @@ class Model {
 
   async create(args: any, requestedFields: any) {
     try {
-      let fakeResponse: any = await create(
-        this.model,
-        args,
-        "",
-        requestedFields
-      );
+      let fakeResponse: any = await create(this.model, args, "", requestedFields);
       return fakeResponse;
     } catch (e) {
       return internalServerError(e);
