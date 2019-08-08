@@ -38,7 +38,7 @@ export default function(info: any) {
         try {
           return await model.paginate(args, requestedFields);
         } catch (e) {
-          return internalServerError(e);
+          throw internalServerError(e);
         }
       },
       [`view${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
@@ -55,7 +55,7 @@ export default function(info: any) {
           }
           return view;
         } catch (e) {
-          return internalServerError(e);
+          throw internalServerError(e);
         }
       }
     },
@@ -71,7 +71,7 @@ export default function(info: any) {
           try {
             return await model.update(e, requestedFields);
           } catch (e) {
-            return internalServerError(e);
+            throw internalServerError(e);
           }
         });
       },
@@ -85,7 +85,7 @@ export default function(info: any) {
           try {
             return await model.delete(item);
           } catch (e) {
-            return internalServerError(e);
+            throw internalServerError(e);
           }
         });
       },
@@ -100,7 +100,7 @@ export default function(info: any) {
           try {
             return await model.create(e, requestedFields);
           } catch (e) {
-            return internalServerError(e);
+            throw internalServerError(e);
           }
         });
       },
@@ -109,7 +109,7 @@ export default function(info: any) {
         let v = await validate(validations.create, args.input);
         let { success } = v;
         if (!success) {
-          return new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
+          throw new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
         }
         try {
           let createModel = await model.create(args.input, requestedFields);
@@ -118,7 +118,7 @@ export default function(info: any) {
           });
           return createModel;
         } catch (e) {
-          return internalServerError(e);
+          throw internalServerError(e);
         }
       },
       [`update${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
@@ -126,7 +126,7 @@ export default function(info: any) {
         let v = await validate(validations.update, args.input);
         let { success } = v;
         if (!success) {
-          return new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
+          throw new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
         }
         try {
           let updateModel = await model.update(args.input, requestedFields);
@@ -135,14 +135,14 @@ export default function(info: any) {
           });
           return updateModel;
         } catch (e) {
-          return internalServerError(e);
+          throw internalServerError(e);
         }
       },
       [`delete${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
         let v = await validate(validations.delete, args.input);
         let { success } = v;
         if (!success) {
-          return new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
+          throw new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
         }
         try {
           await model.delete(args.input);
@@ -151,7 +151,7 @@ export default function(info: any) {
           });
           return;
         } catch (e) {
-          return internalServerError(e);
+          throw internalServerError(e);
         }
       }
     }

@@ -1,16 +1,15 @@
 import internalServerError from "./../helpers/internalServerError";
 import getUserWithAccessToken from "./getUserWithAccessToken";
+import { get } from "lodash";
 import isAuthQuery from "./isAuthQuery";
 export default async function({ req, res }) {
-  const token = req.headers.authorization || "";
-  if (!token) {
-    internalServerError({
-      message: "Unauthorized, Reason: Missing auth token"
-    });
+  const token = get(req, "headers.authorization", false);
+  if (token === false) {
+    throw internalServerError({ message: "Unauthorized, Reason: Missing auth token" });
   }
   let user = await getUserWithAccessToken(token);
   if (!user) {
-    internalServerError({ message: "Unauthorized, You need to signin." });
+    throw internalServerError({ message: "Unauthorized, You need to signin." });
   }
   return {
     user

@@ -20,14 +20,14 @@ export default {
     loginWithAccessToken: async (_: any, args: any, g: any) => {
       let v = await validate(validations.loginWithAccessToken, args.input);
       if (!v.success) {
-        return new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
+        throw new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
       }
       try {
         let user = await userModel.findOne({
           accessToken: args.input.accessToken
         });
         if (!user) {
-          return new ApolloError("Incorrect Access Token", statusCodes.NOT_FOUND.number);
+          throw new ApolloError("Incorrect Access Token", statusCodes.NOT_FOUND.number);
         }
         if (isTokenExpired(user.accessToken)) {
           await user.update({
@@ -39,19 +39,19 @@ export default {
         }
         return user;
       } catch (e) {
-        return internalServerError(e);
+        throw internalServerError(e);
       }
     },
     twoFactorLogin: async (_: any, args: any, g: any) => {
       let v = await validate(validations.twoFactorLogin, args.input);
       let { success } = v;
       if (!success) {
-        return new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
+        throw new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
       }
       try {
         let user = await userModel.findOne({ email: args.input.email });
         if (!user) {
-          return new ApolloError("User Not found", statusCodes.NOT_FOUND.number);
+          throw new ApolloError("User Not found", statusCodes.NOT_FOUND.number);
         }
         let twoFactorCode = Math.floor(Math.random() * 100000);
         await user.update({
@@ -75,21 +75,21 @@ export default {
           successMessage: "Email Sent"
         };
       } catch (e) {
-        return internalServerError(e);
+        throw internalServerError(e);
       }
     },
     twoFactorLoginValidate: async (_: any, args: any, g: any) => {
       let v = await validate(validations.twoFactorLoginValidate, args.input);
       let { success } = v;
       if (!success) {
-        return new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
+        throw new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
       }
       try {
         let user = await userModel.findOne({
           twoFactorCode: args.input.twoFactorCode
         });
         if (!user) {
-          return new ApolloError("User Not found", statusCodes.NOT_FOUND.number);
+          throw new ApolloError("User Not found", statusCodes.NOT_FOUND.number);
         }
         let token = await createJwtToken({
           email: user.email,
@@ -106,21 +106,21 @@ export default {
         user.statusCodeNumber = statusCodes.OK.number;
         return user;
       } catch (e) {
-        return internalServerError(e);
+        throw internalServerError(e);
       }
     },
     activateAccount: async (_: any, args: any, g: any) => {
       let v = await validate(validations.activateAccount, args.input);
       let { success } = v;
       if (!success) {
-        return new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
+        throw new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
       }
       try {
         let user = await userModel.findOne({
           activationToken: args.input.activationToken
         });
         if (!user) {
-          return new ApolloError("Not found", statusCodes.NOT_FOUND.number);
+          throw new ApolloError("Not found", statusCodes.NOT_FOUND.number);
         }
         await user.update({
           activationToken: "",
@@ -146,25 +146,25 @@ export default {
           successMessageType: "Account successfully isActivated"
         };
       } catch (e) {
-        return internalServerError(e);
+        throw internalServerError(e);
       }
     },
     login: async (_: any, args: any, g: any) => {
       let v = await validate(validations.login, args.input);
       let { success } = v;
       if (!success) {
-        return new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
+        throw new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
       }
       try {
         let { email, password } = args.input;
         let user = await userModel.findOne({ email: email });
         let findEmail = get(user, "email", null);
         if (!user) {
-          return new ApolloError("No User found with such email", statusCodes.NOT_FOUND.number);
+          throw new ApolloError("No User found with such email", statusCodes.NOT_FOUND.number);
         }
         let comparePassword = bcrypt.compareSync(password, user.password);
         if (!comparePassword) {
-          return new ApolloError("Incorrect Password", statusCodes.BAD_REQUEST.number);
+          throw new ApolloError("Incorrect Password", statusCodes.BAD_REQUEST.number);
         }
         let token = await createJwtToken({
           email: email,
@@ -180,20 +180,20 @@ export default {
         user.statusCodeNumber = statusCodes.OK.number;
         return user;
       } catch (e) {
-        return internalServerError(e);
+        throw internalServerError(e);
       }
     },
     signup: async (_: any, args: any, g: any) => {
       let v = await validate(validations.signup, args.input);
       if (!v.success) {
-        return new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
+        throw new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
       }
       try {
         let { email, password, confirmPassword } = args.input;
         let user = await userModel.findOne({
           email: email
         });
-        if (user) return new ApolloError("Email is already used", statusCodes.BAD_REQUEST.number);
+        if (user) throw new ApolloError("Email is already used", statusCodes.BAD_REQUEST.number);
         var hash = bcrypt.hashSync(password);
         let newUser = await userModel.create({
           email: email,
@@ -251,20 +251,20 @@ export default {
         });
         return newUser;
       } catch (e) {
-        return internalServerError(e);
+        throw internalServerError(e);
       }
     },
     refreshToken: async (_: any, args: any, g: any) => {
       let v = await validate(validations.refreshToken, args.input);
       if (!v.success) {
-        return new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
+        throw new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
       }
       try {
         let user = await userModel.findOne({
           refreshToken: get(args, "input.refreshToken", "")
         });
         if (!user) {
-          return new ApolloError("Refresh Token is Incorrect, please login again.", statusCodes.BAD_REQUEST.number);
+          throw new ApolloError("Refresh Token is Incorrect, please login again.", statusCodes.BAD_REQUEST.number);
         }
 
         let token = await createJwtToken({
@@ -280,7 +280,7 @@ export default {
         user.successMessage = "Access token refreshed";
         return user;
       } catch (e) {
-        return internalServerError(e);
+        throw internalServerError(e);
       }
     }
   }
