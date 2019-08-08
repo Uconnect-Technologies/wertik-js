@@ -9,7 +9,7 @@ export default `
 		permissions: RolePermissionList
 	}
 
-	${getListByPaginationAndFiltersSchema("Role")}
+${getListByPaginationAndFiltersSchema("Role")}
 
 	input RoleInput {
 		_id: String
