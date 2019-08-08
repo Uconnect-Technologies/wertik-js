@@ -38,14 +38,9 @@ export default function(rootDirectory: string, app: any) {
     context: async (req: any) => {
       let validateToken = await validateAccessToken(req);
       return {
-        // ...validateToken
+        ...validateToken
       };
     }
-    // formatError(err) {
-    //   console.log(err.extensions.code);
-    //   return err;
-    // },
-    // formatError: err => ({ message: err.message, status: err.status })
   });
   server.listen(1209).then(({ url, subscriptionsUrl }) => {
     console.log(`Server ready at ${url}`);

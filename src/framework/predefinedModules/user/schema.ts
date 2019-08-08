@@ -22,6 +22,7 @@ export default `
 		${userFields}
 		profile: Profile
 		assignedRoles: UserRoleList
+		assignedPermissions: UserPermissionList
 	}
 	${getListByPaginationAndFiltersSchema("User")}
 	input UserInput {

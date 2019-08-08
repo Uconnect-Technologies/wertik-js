@@ -4,7 +4,7 @@ import dynamic from "./../../../framework/dynamic/index";
 import allModels from "./../../../framework/dynamic/allModels";
 import relateResolver from "./../../../framework/database/relateResolver";
 
-let { userPermissionModel, permissionModel, roleModel } = allModels;
+let { userPermissionModel, permissionModel, roleModel, userModel } = allModels;
 
 let userPermissionResolver = dynamic.resolvers({
   moduleName: "UserPermission",
@@ -18,9 +18,25 @@ let userPermissionResolver = dynamic.resolvers({
 });
 
 export default {
-  Subscription: dynamic.loader("UserPermission", userPermissionResolver)
-    .subscriptions,
-  UserPermission: {},
+  UserPermission: {
+    async user(userPermission: any) {
+      return await relateResolver({
+        relateWith: userModel,
+        model: userPermission,
+        relationName: "user",
+        type: "single"
+      });
+    },
+    async permission(userPermission: any) {
+      return await relateResolver({
+        relateWith: permissionModel,
+        model: userPermission,
+        relationName: "permission",
+        type: "single"
+      });
+    }
+  },
+  Subscription: dynamic.loader("UserPermission", userPermissionResolver).subscriptions,
   queries: dynamic.loader("UserPermission", userPermissionResolver).queries,
   mutations: dynamic.loader("UserPermission", userPermissionResolver).mutations
 };

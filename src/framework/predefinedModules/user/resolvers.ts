@@ -11,11 +11,11 @@ import allModels from "./../../../framework/dynamic/allModels";
 import relateResolver from "./../../../framework/database/relateResolver";
 import getRequestedFieldsFromResolverInfo from "./../../helpers/getRequestedFieldsFromResolverInfo";
 
-let { userModel, profileModel, userRoleModel } = allModels;
+let { userModel, profileModel, userRoleModel, userPermissionModel } = allModels;
 
 let userResolver = dynamic.resolvers({
   moduleName: "User",
-  restricedColumns: ["assignedRoles"],
+  restricedColumns: ["assignedRoles", "assignedPermissions"],
   validations: {
     delete: validations.deleteUser,
     update: validations.updateUser,
@@ -38,6 +38,14 @@ export default {
         type: "multiple"
       });
     },
+    async assignedPermissions(user: any, a, b) {
+      return await relateResolver({
+        relateWith: userPermissionModel,
+        model: user,
+        relationName: "user",
+        type: "multiple"
+      });
+    },
     async profile(user: any) {
       return await relateResolver({
         relateWith: profileModel,
@@ -48,15 +56,9 @@ export default {
     }
   },
   queries: {
-    listUserPermissions: async (_: any, args: any, g: any) => {
-      try {
-        return [{ action: "asd" }];
-      } catch (e) {
-        return internalServerError(e);
-      }
-    },
     listUser: userQueries.listUser,
-    viewUser: userQueries.viewUser
+    viewUser: userQueries.viewUser,
+    me: async (_: any, args: any, context: any, info: any) => context.user
   },
   mutations: {
     changePassword: async (_: any, args: any, g: any) => {
