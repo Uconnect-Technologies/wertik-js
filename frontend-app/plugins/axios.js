@@ -32,11 +32,11 @@ Vue.prototype.$post = async function(query, variables) {
       }
     }
   } catch (e) {
-    console.log(e.message)
+    console.log(e)
     return {
       success: false,
       message: e.message,
-      error: e
+      errors: [e.message]
     }
   }
 }

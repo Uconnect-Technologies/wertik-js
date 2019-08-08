@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="page-header">
-      <h2>Roles</h2>
+      <h2>{{ heading }}</h2>
       <div class="buttons">
         <el-button>Create Role</el-button>
       </div>
@@ -44,21 +44,43 @@
 
 <script>
 export default {
+  props: ['query', 'incoming', 'fields', 'limitOptions', 'heading'],
+  mounted() {
+    this.loadEntries()
+  },
+  methods: {
+    async loadEntries() {
+      let query = this.query
+      let filters = this.filters
+      let pagination = this.pagination
+      let response = await this.$post(query, {
+        filters,
+        pagination
+      })
+      console.log(response)
+      if (response.success) {
+        let list = response.data[this.incoming]
+        this.data = list.list
+      } else {
+        response.errors.forEach(element => {
+          this.$notify.error({
+            title: response.message,
+            message: element
+          })
+        })
+      }
+    }
+  },
   data() {
     return {
+      filters: [],
       limit: '20',
+      pagination: {
+        page: 1,
+        limit: 10
+      },
       deleteDialog: false,
-      fields: [
-        { name: 'Name', key: 'name' },
-        { name: 'Age', key: 'age' },
-        { name: 'Title', key: 'title' }
-      ],
-      limitOptions: ['100', '50', '20', '10'],
-      data: [
-        { name: 'Name', age: 12, title: 'asdasd' },
-        { name: 'Name', age: 12, title: 'asdasd' },
-        { name: 'Name', age: 12, title: 'asdasd' }
-      ]
+      data: []
     }
   }
 }
