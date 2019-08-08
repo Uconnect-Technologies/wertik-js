@@ -9,11 +9,13 @@ import dynamic from "./../../../framework/dynamic/index";
 import { sendEmail } from "./../../../framework/mailer/index";
 import allModels from "./../../../framework/dynamic/allModels";
 import relateResolver from "./../../../framework/database/relateResolver";
+import getRequestedFieldsFromResolverInfo from "./../../helpers/getRequestedFieldsFromResolverInfo";
 
-let { userModel, userRoleModel, profileModel } = allModels;
+let { userModel, profileModel, userRoleModel } = allModels;
 
 let userResolver = dynamic.resolvers({
   moduleName: "User",
+  restricedColumns: ["assignedRoles"],
   validations: {
     delete: validations.deleteUser,
     update: validations.updateUser,
@@ -28,14 +30,19 @@ let userMutations = userDynamic.mutations;
 
 export default {
   User: {
-    async assignedRoles(user: any) {
-      // return await relateResolver(userRoleModel, user, 'id', true);
+    async assignedRoles(user: any, a, b) {
+      return await relateResolver({
+        relateWith: userRoleModel,
+        model: user,
+        relationName: "user",
+        type: "multiple"
+      });
     },
     async profile(user: any) {
       return await relateResolver({
         relateWith: profileModel,
         model: user,
-        relationName: "user",
+        relationName: "profile",
         type: "single"
       });
     }
@@ -55,29 +62,16 @@ export default {
     changePassword: async (_: any, args: any, g: any) => {
       let v = await validate(validations.changePassword, args);
       if (!v.success) {
-        return new ApolloError(
-          "Validation error",
-          statusCodes.BAD_REQUEST.number,
-          { list: v.errors }
-        );
+        return new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
       }
       try {
         let user = await userModel.view(args);
         if (!user) {
-          return new ApolloError(
-            "User not found",
-            statusCodes.BAD_REQUEST.number
-          );
+          return new ApolloError("User not found", statusCodes.BAD_REQUEST.number);
         }
-        let correctPassword = bcrypt.compareSync(
-          args.oldPassword,
-          user.password
-        );
+        let correctPassword = bcrypt.compareSync(args.oldPassword, user.password);
         if (!correctPassword) {
-          return new ApolloError(
-            "Password incorrect",
-            statusCodes.BAD_REQUEST.number
-          );
+          return new ApolloError("Password incorrect", statusCodes.BAD_REQUEST.number);
         }
         await user.update({
           password: bcrypt.hashSync(args.newPassword)

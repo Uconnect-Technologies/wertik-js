@@ -1,6 +1,6 @@
-import getListByPaginationAndFiltersSchema from "./../../../framework/graphql/getListByPaginationAndFiltersSchema"
-import primaryKey from "./../../../framework/helpers/primaryKey"
-import { primaryKeyType } from "./../../../framework/helpers/primaryKey"
+import getListByPaginationAndFiltersSchema from "./../../../framework/graphql/getListByPaginationAndFiltersSchema";
+import primaryKey from "./../../../framework/helpers/primaryKey";
+import { primaryKeyType } from "./../../../framework/helpers/primaryKey";
 
 let userFields = `
 	${primaryKey}: ${primaryKeyType}
@@ -16,12 +16,12 @@ let userFields = `
 	email: String
 	password: String
 	referer: String
-`
+`;
 export default `
 	type User {
 		${userFields}
 		profile: Profile
-		assignedRoles: [UserRoleList]
+		assignedRoles: UserRoleList
 	}
 	${getListByPaginationAndFiltersSchema("User")}
 	input UserInput {

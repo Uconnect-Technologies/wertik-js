@@ -3,10 +3,10 @@ import dynamic from "./../../../framework/dynamic/index";
 import allModels from "./../../../framework/dynamic/allModels";
 import relateResolver from "./../../../framework/database/relateResolver";
 
-let {userRoleModel,userModel,roleModel} = allModels;
+let { userRoleModel, userModel, roleModel } = allModels;
 
 let userRoleResolver = dynamic.resolvers({
-  moduleName: 'UserRole',
+  moduleName: "UserRole",
   validations: {
     create: validations.createUserRole,
     delete: validations.deleteUserRole,
@@ -19,17 +19,26 @@ let userRoleResolver = dynamic.resolvers({
 export default {
   UserRole: {
     user: async (userRole: any) => {
-      // return await relateResolver(userModel,userRole,'user')
+      return await relateResolver({
+        relateWith: userModel,
+        model: userRole,
+        relationName: "user",
+        type: "single"
+      });
     },
     role: async (userRole: any) => {
-      // return await relateResolver(roleModel,userRole,'role')
+      return await relateResolver({
+        relateWith: roleModel,
+        model: userRole,
+        relationName: "role",
+        type: "single"
+      });
     }
   },
   queries: {
-    ...dynamic.loader("UserRole",userRoleResolver).queries
+    ...dynamic.loader("UserRole", userRoleResolver).queries
   },
   mutations: {
-    ...dynamic.loader("UserRole",userRoleResolver).mutations
-  },
-  
-}
+    ...dynamic.loader("UserRole", userRoleResolver).mutations
+  }
+};
