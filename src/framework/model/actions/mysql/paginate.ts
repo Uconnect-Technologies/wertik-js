@@ -35,6 +35,12 @@ export default async function(model: any, args: any = {}, requestedFields: any =
   return {
     filters,
     pagination: { page, limit },
-    list
+    list,
+    paginationProperties: {
+      total: 1500,
+      nextPage: 1,
+      previousPage: 2,
+      pages: 4
+    }
   };
 }

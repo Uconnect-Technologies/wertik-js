@@ -10,6 +10,8 @@ Vue.prototype.$axiosGraphql = axiosGraphql
 
 Vue.prototype.$post = async function(query, variables) {
   try {
+    let token = localStorage.getItem("accessToken");
+    axiosGraphql.defaults.headers.common = {'Authorization': `bearer ${token}`}
     let response = await axiosGraphql.post('', {
       query: query,
       variables: variables

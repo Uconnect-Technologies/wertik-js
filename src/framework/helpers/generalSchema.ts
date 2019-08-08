@@ -17,4 +17,10 @@ export default `
 		operator: String
 		value: String
 	}
+	type PaginationProperties {
+		total: Int
+		pages: Int
+		nextPage: Int
+		previousPage: Int
+	}
 `;
