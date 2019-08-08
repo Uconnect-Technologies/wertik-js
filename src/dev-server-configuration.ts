@@ -13,7 +13,7 @@ export default {
   allowGraphql: "TRUE",
   modulesEnabled: " ",
   predefinedModules: "user,forgetPassword,permission,role,rolePermission,userPermission,userRole,profile,auth",
-  dialect: "MONGO_DB",
+  dialect: "MYSQL",
   mongoURI: "mongodb://ilyas:pass1234@ds027719.mlab.com:27719/graphql",
   mailerService: "gmail",
   mailerServiceUsername: "jangonewsmailer@gmail.com",

@@ -31,7 +31,7 @@ export default function(rootDirectory: string, app: any) {
 			mutation: Mutation
 			subscription: Subscription
 		}
-	`;
+  `;
   const server = new ApolloServer({
     typeDefs: mainSchema,
     resolvers: appResolvers,
