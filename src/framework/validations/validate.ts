@@ -3,7 +3,9 @@ let Validator = require("validatorjs");
 export default async function(schema: any, args: any) {
   let keys = Object.keys(schema);
   keys.forEach(element => {
-    schema[element] = schema[element].replace("int", "integer");
+    if (schema[element].indexOf("integer") == -1) {
+      schema[element] = schema[element].replace("int", "integer");
+    }
   });
   let validate = new Validator(args, schema);
   if (validate.passes()) {

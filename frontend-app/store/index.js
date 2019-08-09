@@ -1,4 +1,5 @@
 export const state = () => ({
+  primaryKey: 'id',
   isLoggedIn: false,
   profile: {},
   email: '',

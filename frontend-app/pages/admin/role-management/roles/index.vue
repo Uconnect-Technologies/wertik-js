@@ -1,11 +1,13 @@
 <template>
   <div>
     <list
+      url-resource="/admin/role-management/roles"
       heading="Roles"
       :query="query"
       incoming="listRole"
       :fields="fields"
       :limit-options="limitOptions"
+      :delete-query="deleteQuery"
     />
   </div>
 </template>
