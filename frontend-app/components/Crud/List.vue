@@ -180,7 +180,7 @@ export default {
   data() {
     return {
       filters: [],
-      limit: '20',
+      limit: '10',
       pagination: {
         page: 1,
         limit: 10
