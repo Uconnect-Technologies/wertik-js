@@ -44,7 +44,32 @@
 
 <script>
 export default {
-  props: ['query', 'incoming', 'fields', 'limitOptions', 'heading'],
+  props: {
+    deleteQuery: {
+      type: String,
+      default: ''
+    },
+    query: {
+      type: String,
+      default: ''
+    },
+    incoming: {
+      type: String,
+      default: ''
+    },
+    fields: {
+      type: Array,
+      default: () => []
+    },
+    limitOptions: {
+      type: Array,
+      default: () => []
+    },
+    heading: {
+      type: String,
+      default: ''
+    }
+  },
   mounted() {
     this.loadEntries()
   },
@@ -92,8 +117,6 @@ export default {
   border-left: 1px solid rgb(204, 204, 204);
 }
 .column {
-  min-width: 100px;
-  display: inline-block;
   border-top: 1px solid rgb(204, 204, 204);
   border-right: 1px solid rgb(204, 204, 204);
   border-bottom: 1px solid rgb(204, 204, 204);
@@ -107,6 +130,7 @@ export default {
   height: 28px;
   border-bottom: 1px solid rgb(204, 204, 204);
   padding: 10px 9px;
+  overflow: hidden;
 }
 .data:last-child {
   border-bottom: none;
@@ -128,6 +152,6 @@ export default {
   padding: 10px 7px;
 }
 .actions {
-  width: 100%;
+  flex: auto;
 }
 </style>
