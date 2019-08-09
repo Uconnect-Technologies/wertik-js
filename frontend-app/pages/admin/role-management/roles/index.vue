@@ -36,6 +36,11 @@ export default {
               id
               name
             }
+            filters {
+              operator
+              value
+              column
+            }
             pagination {
               limit
               page

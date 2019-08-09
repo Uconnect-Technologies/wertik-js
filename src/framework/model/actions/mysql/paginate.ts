@@ -39,6 +39,7 @@ export default async function(model: any, args: any = {}, requestedFields: any =
     paginationProperties: {
       total: list.count,
       nextPage: page + 1,
+      page: page,
       previousPage: page == 1 ? 1 : page - 1,
       pages: Math.ceil(list.count / limit)
     }

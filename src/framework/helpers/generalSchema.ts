@@ -20,6 +20,7 @@ export default `
 	type PaginationProperties {
 		total: Int
 		pages: Int
+		page: Int
 		nextPage: Int
 		previousPage: Int
 	}

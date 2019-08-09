@@ -33,6 +33,7 @@ export default async function(model: any, args: any = {}, requestedFields: any) 
     list: response,
     paginationProperties: {
       total: total,
+      page: page,
       nextPage: page + 1,
       previousPage: page == 1 ? 1 : page - 1,
       pages: Math.ceil(total / limit)

@@ -8,7 +8,7 @@
     </div>
     <div class="grid">
       <div class="columns">
-        <div class="column" v-bind:key="index" v-for="(field,index) in fields">
+        <div class="column resizable" v-bind:key="index" v-for="(field,index) in fields">
           <div class="head">{{ field.name }}</div>
           <div class="data" v-bind:key="index" v-for="(i,index) in data">
             <span class="data-entry">{{ i[field.key] }}</span>
@@ -206,6 +206,9 @@ export default {
   border-top: 1px solid rgb(204, 204, 204);
   border-right: 1px solid rgb(204, 204, 204);
   border-bottom: 1px solid rgb(204, 204, 204);
+}
+.column.resizable {
+  resize: horizontal;
 }
 .head {
   padding: 10px 8px;
