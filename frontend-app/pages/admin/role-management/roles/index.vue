@@ -27,6 +27,16 @@ export default {
               id
               name
             }
+            pagination {
+              limit
+              page
+            }
+            paginationProperties {
+              total
+              nextPage
+              previousPage
+              pages
+            }
           }
         }
       `
