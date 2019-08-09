@@ -20,6 +20,13 @@ export default {
     return {
       limitOptions: ['100', '50', '20', '10'],
       fields: [{ name: 'Id', key: 'id' }, { name: 'Name', key: 'name' }],
+      deleteQuery: `
+        mutation($id: Int) {
+          deleteRole(input: {id: $id}) {
+            id
+          }
+        }
+      `,
       query: `
         query Roles($pagination: PaginationInput,$filters: [FilterInput]) {
           listRole(pagination: $pagination, filters: $filters) {
