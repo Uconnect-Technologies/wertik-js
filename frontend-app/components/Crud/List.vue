@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="some-content-container" >
     <div class="page-header">
       <h2>{{ heading }}</h2>
       <div class="buttons">

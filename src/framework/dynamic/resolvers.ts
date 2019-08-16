@@ -5,7 +5,9 @@ import removeRestrictedColumnsFromRequestedFields from "./../helpers/removeRestr
 import getRequestedFieldsFromResolverInfo from "./../helpers/getRequestedFieldsFromResolverInfo";
 import internalServerError from "./../helpers/internalServerError";
 import statusCodes from "./../helpers/statusCodes";
+import logger from "./../helpers/logger";
 import validate from "./../validations/validate";
+import primaryKey from "../helpers/primaryKey";
 
 const pubsub = new PubSub();
 
@@ -36,7 +38,12 @@ export default function(info: any) {
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         requestedFields.list = await removeRestrictedColumnsFromRequestedFields(requestedFields.list, restricedColumns);
         try {
-          return await model.paginate(args, requestedFields);
+          let paginate = await model.paginate(args, requestedFields);
+          logger.info(`List ${moduleName}`, {
+            pagination: paginate.paginate,
+            paginationProperties: paginate.paginationProperties
+          });
+          return paginate;
         } catch (e) {
           throw internalServerError(e);
         }
@@ -53,6 +60,9 @@ export default function(info: any) {
           if (!view) {
             return new ApolloError(`${moduleName} not found`, statusCodes.NOT_FOUND.number);
           }
+          logger.info(`View ${moduleName}`, {
+            [primaryKey]: view[primaryKey]
+          });
           return view;
         } catch (e) {
           throw internalServerError(e);
@@ -63,6 +73,9 @@ export default function(info: any) {
       [`updateBulk${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         return args.input.map(async (e: any) => {
+          logger.info(`Update ${moduleName} with bulk update`, {
+            [primaryKey]: e[primaryKey]
+          });
           let v = await validate(validations.update, e);
           let { success } = v;
           if (!success) {
@@ -77,6 +90,9 @@ export default function(info: any) {
       },
       [`deleteBulk${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
         return args.input.map(async (item: any) => {
+          logger.info(`Delete ${moduleName} with bulk update`, {
+            [primaryKey]: item[primaryKey]
+          });
           let v = await validate(validations.delete, item);
           let { success } = v;
           if (!success) {
@@ -98,7 +114,11 @@ export default function(info: any) {
             return new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
           }
           try {
-            return await model.create(e, requestedFields);
+            let createModel = await model.create(e, requestedFields);
+            logger.info(`Create ${moduleName} with bulk update`, {
+              [primaryKey]: createModel[primaryKey]
+            });
+            return createModel;
           } catch (e) {
             throw internalServerError(e);
           }
@@ -115,6 +135,9 @@ export default function(info: any) {
           let createModel = await model.create(args.input, requestedFields);
           pubsub.publish(`${camelCase(moduleName)}Created`, {
             [`${camelCase(moduleName)}Created`]: createModel
+          });
+          logger.info(`Create ${moduleName}`, {
+            [primaryKey]: createModel[primaryKey]
           });
           return createModel;
         } catch (e) {
@@ -133,6 +156,9 @@ export default function(info: any) {
           pubsub.publish(`${camelCase(moduleName)}Updated`, {
             [`${camelCase(moduleName)}Updated`]: updateModel
           });
+          logger.info(`Update ${moduleName}`, {
+            [primaryKey]: updateModel[primaryKey]
+          });
           return updateModel;
         } catch (e) {
           throw internalServerError(e);
@@ -148,6 +174,9 @@ export default function(info: any) {
           await model.delete(args.input);
           pubsub.publish(`${camelCase(moduleName)}Deleted`, {
             [`${camelCase(moduleName)}Deleted`]: args.input
+          });
+          logger.info(`Delete ${moduleName}`, {
+            [primaryKey]: args.input[primaryKey]
           });
           return;
         } catch (e) {
