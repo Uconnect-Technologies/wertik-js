@@ -7,6 +7,7 @@ import subscriptions from "./loadAllSubscriptions";
 import schemas from "./loadAllSchemas";
 import generalSchema from "./../helpers/generalSchema";
 import validateAccessToken from "./../security/validateAccessToken";
+import logger from "./../helpers/logger";
 
 export default function(rootDirectory: string, app: any) {
   let appMutations = mutations(rootDirectory);
@@ -35,6 +36,12 @@ export default function(rootDirectory: string, app: any) {
   const server = new ApolloServer({
     typeDefs: mainSchema,
     resolvers: appResolvers,
+    formatError: e => {
+      logger.error(`Something went wrong`, {
+        error: e
+      });
+      return e;
+    },
     context: async (req: any) => {
       let validateToken = await validateAccessToken(req);
       return {
