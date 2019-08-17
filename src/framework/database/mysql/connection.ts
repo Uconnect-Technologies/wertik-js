@@ -26,12 +26,21 @@ let tables = convertAppSchemaToObject(getAppSchemaAsObject());
 
 tables.forEach((element: any, index: any) => {
   // Create MYSQl table and convert the string into snake from camel case
-  CONNECTION.define(element.tableName, element.fields, {
-    paranoid: true,
-    freezeTableName: true,
-    underscored: true,
-    timestamps: true
-  });
+  CONNECTION.define(
+    element.tableName,
+    {
+      ...element.fields,
+      created_at: { type: Sequelize.DATE, field: "created_at" },
+      updated_at: { type: Sequelize.DATE, field: "updated_at" },
+      deleted_at: { type: Sequelize.DATE, field: "deleted_at" }
+    },
+    {
+      paranoid: true,
+      freezeTableName: true,
+      underscored: true,
+      timestamps: true
+    }
+  );
   if (index == tables.length - 1 && dbMysqlSync) {
     CONNECTION.sync();
   }

@@ -7,8 +7,6 @@ export default `
 		name: String
 		created_by: User
 		permissions: RolePermissionList
-		created_at: String
-		updated_at: String
 	}
 
 	${getListByPaginationAndFiltersSchema("Role")}

@@ -222,6 +222,7 @@ export default {
               .substring(2),
           password: hash
         });
+        console.log(newUser);
         await sendEmail(
           "welcome.hbs",
           {

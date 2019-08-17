@@ -1,5 +1,4 @@
 export default `
-	scalar DateTime
 	input PaginationInput {
 		page: Int
 		limit: Int
