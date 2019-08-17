@@ -2,7 +2,7 @@
   <div>
     <list
       url-resource="/admin/role-management/roles"
-      heading="Roles"
+      heading="Role"
       :query="query"
       incoming="listRole"
       :fields="fields"
