@@ -84,14 +84,6 @@ class Model {
   getInstance() {
     return get(this, "instance", null);
   }
-
-  /*
-    Create a random instance, If this model is under relationship for another instance please use it with promises to save relation data.
-  */
-
-  async seed(initialData) {
-    return new Promise((resolve, reject) => {});
-  }
 }
 
 export default Model;
