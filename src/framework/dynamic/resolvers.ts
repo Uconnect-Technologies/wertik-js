@@ -39,6 +39,7 @@ export default function(info: any) {
         requestedFields.list = await removeRestrictedColumnsFromRequestedFields(requestedFields.list, restricedColumns);
         try {
           let paginate = await model.paginate(args, requestedFields);
+          console.log(context.permissions);
           logger.info(`List ${moduleName}`, {
             pagination: paginate.paginate,
             paginationProperties: paginate.paginationProperties,

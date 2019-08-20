@@ -48,12 +48,12 @@ export default function(rootDirectory: string, app: any) {
     context: async (req: any) => {
       let authorization: any = await validateAccessToken(req);
       let user = get(authorization, "user");
-      let permisions = await listUserPermissions({
+      let permissions = await listUserPermissions({
         [primaryKey]: get(user, primaryKey)
       });
       return {
         authorization: authorization,
-        permisions: permisions
+        permissions: permissions
       };
     }
   });
