@@ -1,4 +1,5 @@
 const { ApolloServer } = require("apollo-server");
+const { get } = require("lodash");
 
 import mutations from "./loadAllMutations";
 import queries from "./loadAllQueries";
@@ -8,6 +9,8 @@ import schemas from "./loadAllSchemas";
 import generalSchema from "./../helpers/generalSchema";
 import validateAccessToken from "./../security/validateAccessToken";
 import logger from "./../helpers/logger";
+import listUserPermissions from "../security/listUserPermissions";
+import primaryKey from "../helpers/primaryKey";
 
 export default function(rootDirectory: string, app: any) {
   let appMutations = mutations(rootDirectory);
@@ -43,9 +46,14 @@ export default function(rootDirectory: string, app: any) {
       return e;
     },
     context: async (req: any) => {
-      let validateToken = await validateAccessToken(req);
+      let authorization: any = await validateAccessToken(req);
+      let user = get(authorization, "user");
+      let permisions = await listUserPermissions({
+        [primaryKey]: get(user, primaryKey)
+      });
       return {
-        ...validateToken
+        authorization: authorization,
+        permisions: permisions
       };
     }
   });

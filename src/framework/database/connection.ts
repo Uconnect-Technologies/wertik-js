@@ -15,7 +15,7 @@ if (dialect == "MYSQL") {
 }
 
 export default {
-  db_connect
+  database: db_connect
 };
 
 export let models = db_models;

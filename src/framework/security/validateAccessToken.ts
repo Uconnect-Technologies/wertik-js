@@ -18,6 +18,7 @@ export default async function({ req, res }) {
     throw internalServerError({ message: "Unauthorized, You need to signin." }, 401);
   }
   return {
-    user
+    user: user,
+    isAuthQuery: isAuth
   };
 }

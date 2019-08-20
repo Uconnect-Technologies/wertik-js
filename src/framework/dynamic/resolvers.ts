@@ -41,7 +41,8 @@ export default function(info: any) {
           let paginate = await model.paginate(args, requestedFields);
           logger.info(`List ${moduleName}`, {
             pagination: paginate.paginate,
-            paginationProperties: paginate.paginationProperties
+            paginationProperties: paginate.paginationProperties,
+            args: args
           });
           return paginate;
         } catch (e) {

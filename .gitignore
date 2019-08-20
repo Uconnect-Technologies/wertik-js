@@ -4,7 +4,7 @@ logs
 dist
 yarn.lock
 
-frontenn-app/node_modules
+frontend-app/node_modules
 frontend-app/dist
 frontend-app/build
 frontend-app/yarn.lock
