@@ -1,7 +1,10 @@
 <template>
   <div class="some-content-container">
     <div class="page-header">
-      <h2>{{ heading }}</h2>
+      <h2>
+        {{ heading }}
+
+      </h2>
       <div class="buttons">
         <el-button>Create {{ heading.toLowerCase() }}</el-button>
       </div>

@@ -9,3 +9,12 @@ frontend-app/dist
 frontend-app/build
 frontend-app/yarn.lock
 frontend-app/package-lock.json
+
+
+crit.log
+debug.log
+emerg.log
+error.log
+notice.log
+info.log
+warning.log

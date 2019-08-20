@@ -28,10 +28,10 @@ export default function getSequalizeType(type: any) {
       return Sequelize.BLOB;
     case "json":
       return Sequelize.tsON;
-    case "uuid":
-      return Sequelize.UUID;
     case "geometry":
       return Sequelize.GEOMETRY;
+    case "uuid":
+      return Sequelize.UUID;
     default:
       return Sequelize.STRING;
   }
