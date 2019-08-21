@@ -11,6 +11,7 @@ import validateAccessToken from "./../security/validateAccessToken";
 import logger from "./../helpers/logger";
 import listUserPermissions from "../security/listUserPermissions";
 import primaryKey from "../helpers/primaryKey";
+import isActionAllowed from "../security/isActionAllowed";
 
 export default function(rootDirectory: string, app: any) {
   let appMutations = mutations(rootDirectory);
@@ -51,6 +52,10 @@ export default function(rootDirectory: string, app: any) {
       let permissions = await listUserPermissions({
         [primaryKey]: get(user, primaryKey)
       });
+      let isAllowed = await isActionAllowed(permissions, "listUser");
+      if (!isAllowed) {
+        throw new Error("Permission Denied!");
+      }
       return {
         authorization: authorization,
         permissions: permissions

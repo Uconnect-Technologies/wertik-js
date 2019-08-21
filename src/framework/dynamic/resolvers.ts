@@ -35,11 +35,11 @@ export default function(info: any) {
     },
     queries: {
       [`list${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
+        console.log(context);
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         requestedFields.list = await removeRestrictedColumnsFromRequestedFields(requestedFields.list, restricedColumns);
         try {
           let paginate = await model.paginate(args, requestedFields);
-          console.log(context.permissions);
           logger.info(`List ${moduleName}`, {
             pagination: paginate.paginate,
             paginationProperties: paginate.paginationProperties,

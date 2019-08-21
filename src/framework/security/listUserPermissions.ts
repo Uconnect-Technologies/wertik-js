@@ -39,7 +39,7 @@ export default async function(props) {
     `;
     if (typeof id == "number") {
       sqlQuery = sqlQuery.replace(/___user_id/g, id + "");
-      permissions = await database.query(sqlQuery);
+      permissions = await database.query(sqlQuery, { type: database.QueryTypes.SELECT });
     }
   } else {
   }
