@@ -1,4 +1,4 @@
-const { ApolloServer } = require("apollo-server");
+const { ApolloServer, ApolloError } = require("apollo-server");
 const { get } = require("lodash");
 
 import mutations from "./loadAllMutations";
@@ -12,6 +12,7 @@ import logger from "./../helpers/logger";
 import listUserPermissions from "../security/listUserPermissions";
 import primaryKey from "../helpers/primaryKey";
 import isActionAllowed from "../security/isActionAllowed";
+let gql = require("graphql-tag");
 
 export default function(rootDirectory: string, app: any) {
   let appMutations = mutations(rootDirectory);
@@ -46,15 +47,19 @@ export default function(rootDirectory: string, app: any) {
       });
       return e;
     },
-    context: async (req: any) => {
-      let authorization: any = await validateAccessToken(req);
+    context: async (graphqlCall: any) => {
+      let parsed = gql`
+        ${graphqlCall.req.body.query}
+      `;
+      let queryName = get(parsed, "definitions[0].selectionSet.selections[0].name.value", "");
+      let authorization: any = await validateAccessToken(graphqlCall);
       let user = get(authorization, "user");
       let permissions = await listUserPermissions({
         [primaryKey]: get(user, primaryKey)
       });
-      let isAllowed = await isActionAllowed(permissions, "listUser");
+      let isAllowed = queryName == "__schema" ? true : await isActionAllowed(permissions, queryName);
       if (!isAllowed) {
-        throw new Error("Permission Denied!");
+        throw new ApolloError("You are not allowed to do this action", 401, {});
       }
       return {
         authorization: authorization,

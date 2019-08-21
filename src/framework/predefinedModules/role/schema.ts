@@ -5,6 +5,8 @@ export default `
 	type Role {
 		${primaryKey}: ${primaryKeyType}
 		name: String
+		hasFullRights: Boolean
+		defaultPermissions: String
 		created_by: User
 		permissions: RolePermissionList
 	}

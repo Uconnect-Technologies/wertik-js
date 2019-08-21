@@ -15,10 +15,6 @@ export default {
       if (process.env.mode) {
         let initServers = require("./initServers").default;
         let initializedApp = await initServers(__dirname, app);
-        let listUserPermissions = require("./framework/security/listUserPermissions").default;
-        listUserPermissions({
-          id: 1
-        });
         return initializedApp;
       }
     } catch (e) {
