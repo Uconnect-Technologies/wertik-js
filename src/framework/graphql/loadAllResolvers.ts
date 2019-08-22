@@ -17,6 +17,7 @@ export default function(rootDirectory: any) {
     output.Mutation = { ...output.Mutation, ...mutations };
     delete content["queries"];
     delete content["mutations"];
+
     output = { ...output, ...content };
   });
   return output;
