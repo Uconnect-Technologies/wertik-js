@@ -1,5 +1,3 @@
-import primaryKey, { primaryKeyType } from "./../../../framework/helpers/primaryKey";
-
 export default {
   schema: {
     permission: {
