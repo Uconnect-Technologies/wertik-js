@@ -18,10 +18,5 @@ export default {
       schema: ``
     }
   },
-  validations: {
-    createPermission: {},
-    permission: {},
-    updatePermission: {}
-  },
   fields: {}
 };
