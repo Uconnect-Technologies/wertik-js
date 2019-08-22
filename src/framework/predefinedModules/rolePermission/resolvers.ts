@@ -1,4 +1,3 @@
-import validations from "./validations";
 import dynamic from "./../../../framework/dynamic/index";
 //@ts-ignore
 import allModels from "./../../../framework/dynamic/allModels";
@@ -8,12 +7,6 @@ let { rolePermissionModel, permissionModel, roleModel } = allModels;
 
 let rolePermissionResolver = dynamic.resolvers({
   moduleName: "RolePermission",
-  validations: {
-    create: validations.createRolePermission,
-    delete: validations.deleteRolePermission,
-    update: validations.updateRolePermission,
-    view: validations.rolePermission
-  },
   model: rolePermissionModel
 });
 

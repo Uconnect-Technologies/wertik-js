@@ -1,4 +1,3 @@
-import validations from "./validations";
 import dynamic from "./../../../framework/dynamic/index";
 import allModels from "./../../../framework/dynamic/allModels";
 import relateResolver from "./../../../framework/database/relateResolver";
@@ -7,12 +6,6 @@ let { userRoleModel, userModel, roleModel } = allModels;
 
 let userRoleResolver = dynamic.resolvers({
   moduleName: "UserRole",
-  validations: {
-    create: validations.createUserRole,
-    delete: validations.deleteUserRole,
-    update: validations.updateUserRole,
-    view: validations.userRole
-  },
   model: userRoleModel
 });
 

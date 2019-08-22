@@ -4,10 +4,8 @@ let { get } = require("lodash");
 let { ApolloError } = require("apollo-server");
 
 import internalServerError from "./../../../framework/helpers/internalServerError";
-import validations from "./validations";
 import createJwtToken from "./../../../framework/security/createJwtToken";
 import isTokenExpired from "./../../../framework/security/isTokenExpired";
-import validate from "./../../../framework/validations/validate";
 import statusCodes from "./../../../framework/helpers/statusCodes";
 import { sendEmail } from "./../../../framework/mailer/index";
 import primaryKey from "./../../../framework/helpers/primaryKey";
@@ -18,10 +16,6 @@ export default {
   queries: {},
   mutations: {
     loginWithAccessToken: async (_: any, args: any, g: any) => {
-      let v = await validate(validations.loginWithAccessToken, args.input);
-      if (!v.success) {
-        throw new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
-      }
       try {
         let user = await userModel.findOne({
           accessToken: args.input.accessToken
@@ -43,11 +37,6 @@ export default {
       }
     },
     twoFactorLogin: async (_: any, args: any, g: any) => {
-      let v = await validate(validations.twoFactorLogin, args.input);
-      let { success } = v;
-      if (!success) {
-        throw new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
-      }
       try {
         let user = await userModel.findOne({ email: args.input.email });
         if (!user) {
@@ -79,11 +68,6 @@ export default {
       }
     },
     twoFactorLoginValidate: async (_: any, args: any, g: any) => {
-      let v = await validate(validations.twoFactorLoginValidate, args.input);
-      let { success } = v;
-      if (!success) {
-        throw new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
-      }
       try {
         let user = await userModel.findOne({
           twoFactorCode: args.input.twoFactorCode
@@ -110,11 +94,6 @@ export default {
       }
     },
     activateAccount: async (_: any, args: any, g: any) => {
-      let v = await validate(validations.activateAccount, args.input);
-      let { success } = v;
-      if (!success) {
-        throw new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
-      }
       try {
         let user = await userModel.findOne({
           activationToken: args.input.activationToken
@@ -150,11 +129,6 @@ export default {
       }
     },
     login: async (_: any, args: any, g: any) => {
-      let v = await validate(validations.login, args.input);
-      let { success } = v;
-      if (!success) {
-        throw new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
-      }
       try {
         let { email, password } = args.input;
         let user = await userModel.findOne({ email: email });
@@ -184,10 +158,6 @@ export default {
       }
     },
     signup: async (_: any, args: any, g: any) => {
-      let v = await validate(validations.signup, args.input);
-      if (!v.success) {
-        throw new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
-      }
       try {
         let { email, password, confirmPassword } = args.input;
         let user = await userModel.findOne({
@@ -256,10 +226,6 @@ export default {
       }
     },
     refreshToken: async (_: any, args: any, g: any) => {
-      let v = await validate(validations.refreshToken, args.input);
-      if (!v.success) {
-        throw new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
-      }
       try {
         let user = await userModel.findOne({
           refreshToken: get(args, "input.refreshToken", "")

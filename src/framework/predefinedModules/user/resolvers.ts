@@ -2,25 +2,17 @@ let bcrypt = require("bcrypt-nodejs");
 let { ApolloError } = require("apollo-server");
 
 import internalServerError from "./../../../framework/helpers/internalServerError";
-import validations from "./validations";
-import validate from "./../../../framework/validations/validate";
 import statusCodes from "./../../../framework/helpers/statusCodes";
 import dynamic from "./../../../framework/dynamic/index";
 import { sendEmail } from "./../../../framework/mailer/index";
 import allModels from "./../../../framework/dynamic/allModels";
 import relateResolver from "./../../../framework/database/relateResolver";
-import getRequestedFieldsFromResolverInfo from "./../../helpers/getRequestedFieldsFromResolverInfo";
 
 let { userModel, profileModel, userRoleModel, userPermissionModel } = allModels;
 
 let userResolver = dynamic.resolvers({
   moduleName: "User",
   restricedColumns: ["assignedRoles", "assignedPermissions"],
-  validations: {
-    delete: validations.deleteUser,
-    update: validations.updateUser,
-    view: validations.viewUser
-  },
   model: userModel
 });
 
@@ -62,10 +54,6 @@ export default {
   },
   mutations: {
     changePassword: async (_: any, args: any, g: any) => {
-      let v = await validate(validations.changePassword, args);
-      if (!v.success) {
-        return new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
-      }
       try {
         let user = await userModel.view(args);
         if (!user) {

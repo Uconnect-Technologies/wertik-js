@@ -6,13 +6,12 @@ import getRequestedFieldsFromResolverInfo from "./../helpers/getRequestedFieldsF
 import internalServerError from "./../helpers/internalServerError";
 import statusCodes from "./../helpers/statusCodes";
 import logger from "./../helpers/logger";
-import validate from "./../validations/validate";
 import primaryKey from "../helpers/primaryKey";
 
 const pubsub = new PubSub();
 
 export default function(info: any) {
-  let { moduleName, validations, model } = info;
+  let { moduleName, model } = info;
   let restricedColumns = get(info, "restricedColumns", []);
   const moduleCreated = `${camelCase(moduleName)}`;
   const moduleUpdated = `${camelCase(moduleName)}`;
@@ -52,11 +51,6 @@ export default function(info: any) {
       },
       [`view${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        let v = await validate(validations.view, args);
-        let { success } = v;
-        if (!success) {
-          return new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
-        }
         try {
           let view = await model.view(args, requestedFields);
           if (!view) {
@@ -78,11 +72,6 @@ export default function(info: any) {
           logger.info(`Update ${moduleName} with bulk update`, {
             [primaryKey]: e[primaryKey]
           });
-          let v = await validate(validations.update, e);
-          let { success } = v;
-          if (!success) {
-            return new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
-          }
           try {
             return await model.update(e, requestedFields);
           } catch (e) {
@@ -95,11 +84,6 @@ export default function(info: any) {
           logger.info(`Delete ${moduleName} with bulk update`, {
             [primaryKey]: item[primaryKey]
           });
-          let v = await validate(validations.delete, item);
-          let { success } = v;
-          if (!success) {
-            return new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
-          }
           try {
             return await model.delete(item);
           } catch (e) {
@@ -110,11 +94,6 @@ export default function(info: any) {
       [`createBulk${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         return args.input.map(async (e: any) => {
-          let v = await validate(validations.create, e);
-          let { success } = v;
-          if (!success) {
-            return new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
-          }
           try {
             let createModel = await model.create(e, requestedFields);
             logger.info(`Create ${moduleName} with bulk update`, {
@@ -128,11 +107,6 @@ export default function(info: any) {
       },
       [`create${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        let v = await validate(validations.create, args.input);
-        let { success } = v;
-        if (!success) {
-          throw new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
-        }
         try {
           let createModel = await model.create(args.input, requestedFields);
           pubsub.publish(`${camelCase(moduleName)}Created`, {
@@ -148,11 +122,6 @@ export default function(info: any) {
       },
       [`update${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        let v = await validate(validations.update, args.input);
-        let { success } = v;
-        if (!success) {
-          throw new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
-        }
         try {
           let updateModel = await model.update(args.input, requestedFields);
           pubsub.publish(`${camelCase(moduleName)}Updated`, {
@@ -167,11 +136,6 @@ export default function(info: any) {
         }
       },
       [`delete${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
-        let v = await validate(validations.delete, args.input);
-        let { success } = v;
-        if (!success) {
-          throw new ApolloError("Validation error", statusCodes.BAD_REQUEST.number, { list: v.errors });
-        }
         try {
           await model.delete(args.input);
           pubsub.publish(`${camelCase(moduleName)}Deleted`, {
