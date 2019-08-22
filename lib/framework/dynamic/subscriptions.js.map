@@ -1,1 +1,0 @@
-{"version":3,"file":"subscriptions.js","sourceRoot":"","sources":["../../../src/framework/dynamic/subscriptions.ts"],"names":[],"mappings":";;AAAA,IAAI,EAAE,SAAS,EAAE,GAAG,OAAO,CAAC,QAAQ,CAAC,CAAC;AACtC,kBAAe;IACb,2BAA2B,CAAC,MAAc;QACxC,OAAO;QACH,SAAS,CAAC,MAAM,CAAC,YAAY,MAAM;QACnC,SAAS,CAAC,MAAM,CAAC,YAAY,MAAM;QACnC,SAAS,CAAC,MAAM,CAAC,YAAY,MAAM;KACtC,CAAA;IACH,CAAC;CACF,CAAA"}
