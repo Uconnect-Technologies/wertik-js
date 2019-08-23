@@ -1,3 +1,7 @@
+/*
+  Generates basic CRUD resolver and Subscrtipion for each module.
+*/
+
 const { ApolloError, PubSub } = require("apollo-server");
 const { camelCase, get } = require("lodash");
 
@@ -10,18 +14,11 @@ import primaryKey from "../helpers/primaryKey";
 
 const pubsub = new PubSub();
 
-export default function(info: any) {
+export default function(info) {
   let { moduleName, model } = info;
   let restricedColumns = get(info, "restricedColumns", []);
-  const moduleCreated = `${camelCase(moduleName)}`;
-  const moduleUpdated = `${camelCase(moduleName)}`;
-  const moduleDeleted = `${camelCase(moduleName)}`;
-  const moduleBulkCreated = `${camelCase(moduleName)}`;
-  const moduleBulkDeleted = `${camelCase(moduleName)}`;
-  const moduleBulkUpdated = `${camelCase(moduleName)}`;
-
   return {
-    subscriptions: {
+    Subscrtipion: {
       [`${camelCase(moduleName)}Created`]: {
         subscribe: () => pubsub.asyncIterator([`${camelCase(moduleName)}Created`])
       },
@@ -32,7 +29,7 @@ export default function(info: any) {
         subscribe: () => pubsub.asyncIterator([`${camelCase(moduleName)}Deleted`])
       }
     },
-    queries: {
+    Query: {
       [`list${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         requestedFields.list = await removeRestrictedColumnsFromRequestedFields(requestedFields.list, restricedColumns);
@@ -64,7 +61,7 @@ export default function(info: any) {
         }
       }
     },
-    mutations: {
+    Mutation: {
       [`updateBulk${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         return args.input.map(async (e: any) => {

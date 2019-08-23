@@ -12,6 +12,7 @@ import logger from "./../helpers/logger";
 import listUserPermissions from "../security/listUserPermissions";
 import primaryKey from "../helpers/primaryKey";
 import isActionAllowed from "../security/isActionAllowed";
+import p from "../predefinedModules/permission/permission";
 let gql = require("graphql-tag");
 
 export default function(rootDirectory: string, app: any) {

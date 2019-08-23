@@ -1,20 +1,41 @@
-export default {
+import getListByPaginationAndFiltersSchema from "./../../../framework/graphql/getListByPaginationAndFiltersSchema";
+import primaryKey, { primaryKeyType } from "./../../../framework/helpers/primaryKey";
+
+let object = {
   schema: {
     permission: {
-      schema: "",
+      schema: `
+        type Permission {
+          ${primaryKey}: ${primaryKeyType}
+          name: String
+          can: String
+          cant: String
+          created_by: User
+        }
+        ${getListByPaginationAndFiltersSchema("Permission")}
+        input PermissionInput {
+          ${primaryKey}: ${primaryKeyType}
+          name: String
+          can: String
+          cant: String
+        }
+      `,
       resolvers: {}
     },
     query: {
-      schema: ``,
+      schema: {},
       resolvers: {}
     },
     mutation: {
-      schema: ``,
+      schema: {},
       resolvers: {}
     },
     subscriptions: {
-      schema: ``
+      schema: ``,
+      resolvers: {}
     }
   },
   fields: {}
 };
+
+export default object;
