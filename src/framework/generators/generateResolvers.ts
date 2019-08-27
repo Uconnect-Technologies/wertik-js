@@ -5,11 +5,11 @@
 const { ApolloError, PubSub } = require("apollo-server");
 const { camelCase, get } = require("lodash");
 
-import removeRestrictedColumnsFromRequestedFields from "./../helpers/removeRestrictedColumnsFromRequestedFields";
-import getRequestedFieldsFromResolverInfo from "./../helpers/getRequestedFieldsFromResolverInfo";
-import internalServerError from "./../helpers/internalServerError";
-import statusCodes from "./../helpers/statusCodes";
-import logger from "./../helpers/logger";
+import removeRestrictedColumnsFromRequestedFields from "../helpers/removeRestrictedColumnsFromRequestedFields";
+import getRequestedFieldsFromResolverInfo from "../helpers/getRequestedFieldsFromResolverInfo";
+import internalServerError from "../helpers/internalServerError";
+import statusCodes from "../helpers/statusCodes";
+import logger from "../helpers/logger";
 import primaryKey from "../helpers/primaryKey";
 
 const pubsub = new PubSub();
