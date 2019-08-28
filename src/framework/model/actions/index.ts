@@ -8,7 +8,6 @@ let view = require(`${path}/${action}/view`).default;
 let destroy = require(`${path}/${action}/destroy`).default;
 let findOne = require(`${path}/${action}/findOne`).default;
 
-
 export default {
   create,
   update,
@@ -16,4 +15,4 @@ export default {
   view,
   destroy,
   findOne
-}
+};

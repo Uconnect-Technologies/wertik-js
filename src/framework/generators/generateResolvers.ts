@@ -11,11 +11,13 @@ import internalServerError from "../helpers/internalServerError";
 import statusCodes from "../helpers/statusCodes";
 import logger from "../helpers/logger";
 import primaryKey from "../helpers/primaryKey";
+import allModels from "../../framework/dynamic/allModels";
 
 const pubsub = new PubSub();
 
 export default function(info) {
-  let { moduleName, model } = info;
+  let { moduleName, modelName } = info;
+  let model = allModels[modelName];
   let restricedColumns = get(info, "restricedColumns", []);
   return {
     Subscrtipion: {
