@@ -1,9 +1,9 @@
 import primaryKey, { primaryKeyType } from "./../../../framework/helpers/primaryKey";
 import generateListType from "./../../../framework/generators/generateListType";
-import generateQuerySchema from "./../../../framework/generators/generateQuerySchema";
-import generateMutationSchema from "./../../../framework/generators/generateMutationSchema";
+// import generateQuerySchema from "./../../../framework/generators/generateQuerySchema";
+// import generateMutationSchema from "./../../../framework/generators/generateMutationSchema";
 import generateResolvers from "./../../../framework/generators/generateResolvers";
-import generateSubscriptionSchema from "./../../../framework/generators/generateSubscriptionSchema";
+// import generateSubscriptionSchema from "./../../../framework/generators/generateSubscriptionSchema";
 
 let PermissionResolver = generateResolvers({
   moduleName: "Permission",
@@ -33,7 +33,6 @@ let object = {
     },
     query: {
       schema: `
-        ${generateQuerySchema("Permission")}
       `,
       resolvers: {
         ...PermissionResolver.Query
@@ -41,7 +40,6 @@ let object = {
     },
     mutation: {
       schema: `
-        ${generateMutationSchema("Permission")}
       `,
       resolvers: {
         ...PermissionResolver.Mutation
@@ -49,7 +47,6 @@ let object = {
     },
     subscription: {
       schema: `
-        ${generateSubscriptionSchema("Permission")}
       `,
       resolvers: {
         ...PermissionResolver.Mutation

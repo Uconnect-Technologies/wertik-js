@@ -20,6 +20,9 @@ export default function(info) {
   let model = allModels[modelName];
   let restricedColumns = get(info, "restricedColumns", []);
   return {
+    SubscrtipionSchema: ``,
+    MutationSchema: ``,
+    QuerySchema: ``,
     Subscrtipion: {
       [`${camelCase(moduleName)}Created`]: {
         subscribe: () => pubsub.asyncIterator([`${camelCase(moduleName)}Created`])
