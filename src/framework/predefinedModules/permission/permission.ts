@@ -1,5 +1,14 @@
-import getListByPaginationAndFiltersSchema from "./../../../framework/graphql/getListByPaginationAndFiltersSchema";
 import primaryKey, { primaryKeyType } from "./../../../framework/helpers/primaryKey";
+import generateListType from "./../../../framework/generators/generateListType";
+// import generateQuerySchema from "./../../../framework/generators/generateQuerySchema";
+// import generateMutationSchema from "./../../../framework/generators/generateMutationSchema";
+import generateResolvers from "./../../../framework/generators/generateResolvers";
+// import generateSubscriptionSchema from "./../../../framework/generators/generateSubscriptionSchema";
+
+let PermissionResolver = generateResolvers({
+  moduleName: "Permission",
+  modelName: "permissionModel"
+});
 
 let object = {
   schema: {
@@ -12,7 +21,7 @@ let object = {
           cant: String
           created_by: User
         }
-        ${getListByPaginationAndFiltersSchema("Permission")}
+        ${generateListType("Permission")}
         input PermissionInput {
           ${primaryKey}: ${primaryKeyType}
           name: String
@@ -23,19 +32,32 @@ let object = {
       resolvers: {}
     },
     query: {
-      schema: {},
-      resolvers: {}
+      schema: `
+      `,
+      resolvers: {
+        ...PermissionResolver.Query
+      }
     },
     mutation: {
-      schema: {},
-      resolvers: {}
+      schema: `
+      `,
+      resolvers: {
+        ...PermissionResolver.Mutation
+      }
     },
-    subscriptions: {
-      schema: ``,
-      resolvers: {}
+    subscription: {
+      schema: `
+      `,
+      resolvers: {
+        ...PermissionResolver.Mutation
+      }
     }
   },
-  fields: {}
+  fields: {
+    name: String,
+    can: String,
+    cant: String
+  }
 };
 
 export default object;

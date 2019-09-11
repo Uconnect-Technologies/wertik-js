@@ -1,6 +1,9 @@
 import graphqlServer from "./framework/graphql/index";
 import apiServer from "./framework/api-server/index";
 import logger from "./framework/helpers/logger";
+import permission from "./framework/predefinedModules/permission/permission";
+
+console.log(permission);
 
 export default async function(dir, app) {
   graphqlServer(dir, app);
