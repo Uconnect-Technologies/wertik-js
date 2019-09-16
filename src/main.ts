@@ -1,24 +1,17 @@
-import express from "express";
-import convertConfigurationIntoEnvVariables from "./framework/helpers/convertConfigurationIntoEnvVariables";
 import validateConfigurationObject from "./framework/helpers/validateConfigurationObject";
-
-import morgan from "morgan";
-
-const app = express();
-app.use(morgan("combined"));
-
-export default {
-  run: async function(configuration) {
-    try {
-      await validateConfigurationObject(configuration);
-      await convertConfigurationIntoEnvVariables(configuration);
-      if (process.env.mode) {
-        let initServers = require("./initServers").default;
-        let initializedApp = await initServers(__dirname, app);
-        return initializedApp;
-      }
-    } catch (e) {
-      console.log(`Something went wrong: ${e.message}`);
-    }
-  }
-};
+import convertConfigurationIntoEnvVariables from "./framework/helpers/convertConfigurationIntoEnvVariables";
+export default function (app,configuration) {
+    validateConfigurationObject(configuration).then(() => {
+        convertConfigurationIntoEnvVariables(configuration).then(() => {
+            let graphql = require("./framework/graphql/index").default;
+            let restApi = require("./framework/restApi/index").default;
+            graphql(app,configuration);
+            restApi(app,configuration);
+        }).catch((err2) => {
+            console.log("Something went wrong while setting data to env, Please node version.");
+            console.log(err2);
+        })
+    }).catch((err) => {
+        console.log(err);
+    })
+}
