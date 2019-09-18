@@ -1,6 +1,6 @@
-const {ApolloServer} = require("apollo-server");
-import loadAllModules from "./loadAllModules";
+let {ApolloServer} = require("apollo-server");
+let a = require("./loadAllModules");
+
 export default function () {
-    let graphqlModules = loadAllModules();
-    console.log("Setting up graphql");
+
 }

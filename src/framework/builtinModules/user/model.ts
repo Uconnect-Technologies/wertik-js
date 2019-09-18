@@ -18,6 +18,6 @@ class User extends Model {
             email: "String",
             password: "String",
             referer: "String"
-        },
+        }
     }
 }
