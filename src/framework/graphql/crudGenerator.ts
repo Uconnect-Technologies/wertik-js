@@ -22,15 +22,37 @@ export const generateMutationsCrudSchema = (moduleName: String) => {
 export const generateCrudResolvers = (moduleName: any) => {
     return {
         mutations: {
-            [`create${moduleName}`]: async (_:any, args:any, context:any) => {},
-            [`delete${moduleName}`]: async (_:any, args:any, context:any) => {},
-            [`update${moduleName}`]: async (_:any, args:any, context:any) => {},
-            [`deleteBulk${moduleName}`]: async (_:any, args:any, context:any) => {},
-            [`createBulk${moduleName}`]: async (_:any, args:any, context:any) => {},
-            [`updateBulk${moduleName}`]: async (_:any, args:any, context:any) => {}
+            [`create${moduleName}`]: async (_:any, args:any, context:any) => {
+                
+            },
+            [`delete${moduleName}`]: async (_:any, args:any, context:any) => {
+                
+            },
+            [`update${moduleName}`]: async (_:any, args:any, context:any) => {
+                
+            },
+            [`deleteBulk${moduleName}`]: async (_:any, args:any, context:any) => {
+                
+            },
+            [`createBulk${moduleName}`]: async (_:any, args:any, context:any) => {
+                
+            },
+            [`updateBulk${moduleName}`]: async (_:any, args:any, context:any) => {
+                
+            }
         },
         queries: {
-            [`view${moduleName}`]: async (_:any, args:any, context:any) => {},
+            [`view${moduleName}`]: async (_:any, args:any, context:any) => {
+                try {
+                let view = await context.models[moduleName].view(args.input);
+                if (!view) {
+                    throw generateError({message: `${moduleName} not found`});
+                }
+                return view;
+                } catch (e) {
+                return generateError(e);
+                }
+            },
             [`list${moduleName}`]: async (_:any, args:any, context:any) => {
                 try {
                     return await context.models[moduleName].paginate(args);
