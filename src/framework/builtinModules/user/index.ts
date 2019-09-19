@@ -1,8 +1,7 @@
 export default {
     name: "User",
     graphql: {
-        generateCrudMutations: true,
-        generateCrudQueries: true,
+        crud: {generate: true, operations: ["*"]},
         schema: `
             type User {
                 _id: String

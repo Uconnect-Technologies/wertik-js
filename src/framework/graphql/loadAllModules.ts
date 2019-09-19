@@ -1,3 +1,4 @@
+const {get} = require("lodash");
 let modules = process.env.builtinModules.split(",");
 let appSchema = "";
 let appMutations = {};
@@ -10,7 +11,13 @@ modules.forEach(element => {
     let schema = graphql.schema;
     let mutations = graphql.mutations;
     let queries = graphql.queries;
-    let generateCrudMutations=  graphql.generateCrudMutations;
-    let generateCrudQueries = graphql.generateCrudQueries;
+    let crud = graphql.crud;    
+
+    console.log(appSchema)
 });
 
+
+export default {
+    schema: ``,
+    resolvers: {}
+}
