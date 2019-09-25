@@ -44,13 +44,13 @@ export const generateCrudResolvers = (moduleName: any) => {
         queries: {
             [`view${moduleName}`]: async (_:any, args:any, context:any) => {
                 try {
-                let view = await context.models[moduleName].view(args.input);
-                if (!view) {
-                    throw generateError({message: `${moduleName} not found`});
-                }
-                return view;
+                    let view = await context.models[moduleName].view(args.input);
+                    if (!view) {
+                        throw generateError({message: `${moduleName} not found`});
+                    }
+                    return view;
                 } catch (e) {
-                return generateError(e);
+                    return generateError(e);
                 }
             },
             [`list${moduleName}`]: async (_:any, args:any, context:any) => {

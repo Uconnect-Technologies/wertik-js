@@ -4,6 +4,7 @@
 
 const {get} = require("lodash");
 import generalSchema from "./generalSchema"
+import {generateQueriesCrudSchema, generateMutationsCrudSchema, generateCrudResolvers} from "./crudGenerator";
 let modulesSchema = ``;
 let modulesQuerySchema = ``;
 let modulesMutationSchema = ``;
@@ -29,6 +30,7 @@ modules.forEach(element => {
     let module = require(`./../builtinModules/${element}/index`).default;
     // require information
     let graphql = module.graphql;
+    let moduleName = module.name;
     let schema = graphql.schema;
     let currentGenerateQuery = get(graphql,'crud.query.generate',true);
     let currentGenerateQueryOperations = get(graphql,'crud.query.operations',"*");
@@ -38,18 +40,32 @@ modules.forEach(element => {
     let currentMutationResolvers = get(graphql,'mutation.resolvers',{});
     let currentQuerySchema = get(graphql,'queries.schema','');
     let currentQueryResolvers = get(graphql,'queries.resolvers',{});
+    let currentModuleCrudResolvers = generateCrudResolvers(moduleName);
     // require information
     // crud
+    if (currentGenerateQuery) {
+        modulesQuerySchema = modulesQuerySchema + generateQueriesCrudSchema(moduleName);
+        appQueries = {...appQueries, ...currentModuleCrudResolvers.queries};
+    }
+    if (currentGenerateMutation) {
+        modulesMutationSchema = modulesMutationSchema + generateMutationsCrudSchema(moduleName);
+        appMutations = {...appMutations,...currentModuleCrudResolvers.mutations}
+    }
     // crud
     modulesSchema = modulesSchema + schema;
 });
 
 
+
 schemaMap = schemaMap.replace("[generalSchema__replace]",generalSchema);
 schemaMap = schemaMap.replace("[modulesSchema__replace]",modulesSchema);
-
+schemaMap = schemaMap.replace("[mutation__replace]",modulesMutationSchema);
+schemaMap = schemaMap.replace("[query__replace]",modulesQuerySchema);
 
 export default {
     // schema: schemaMap,
-    resolvers: {}
+    // resolvers: {
+    //     ...appMutations,
+    //     ...appQueries
+    // }
 }
