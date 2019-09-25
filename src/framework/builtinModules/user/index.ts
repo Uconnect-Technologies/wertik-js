@@ -13,7 +13,6 @@ export default {
         },
         schema: `
             type User {
-                _id: String
                 id: Int
                 name: String
                 age: Int
@@ -30,15 +29,40 @@ export default {
                 gender: String
                 referer: String
             }
+            input UserInput {
+                id: Int
+                name: String
+                age: Int
+                username: String
+                refreshToken: String
+                accessToken: String
+                isActivated: Boolean
+                activatedOn: String
+                twoFactorCode: String
+                isSuperUser: Boolean
+                activationToken: String
+                email: String
+                password: String
+                gender: String
+                referer: String
+            }
+            input UserSignupInput {
+                email: String
+                password: String
+                confirmPassword: String
+            }
         `,
-        mutations: {
+        mutation: {
             schema: ``,
             resolvers: {
+                
             }
         },
-        queries: {
+        query: {
             schema: ``,
-            resolvers: {}
+            resolvers: {
+                
+            }
         }
     },
     restApi: {

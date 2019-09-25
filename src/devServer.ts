@@ -5,5 +5,5 @@ let app = express();
 
 wertik(app, {
     name: "Wertik",
-    builtinModules: "user"
+    builtinModules: "user,role,auth,forgetPassword"
 });

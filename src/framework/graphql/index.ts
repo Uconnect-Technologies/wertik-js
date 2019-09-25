@@ -1,6 +1,12 @@
 let {ApolloServer} = require("apollo-server");
-let a = require("./loadAllModules");
+let modules = require("./loadAllModules").default;
 
-export default function () {
-    console.log(a);
+export default function (expressApp,configuration) {
+    let apollo = new ApolloServer({
+        typeDefs: modules.schema,
+        resolvers: modules.resolvers
+    });
+    apollo.listen().then(({url}) => {
+        console.log("Server started at " + url);
+    });
 }
