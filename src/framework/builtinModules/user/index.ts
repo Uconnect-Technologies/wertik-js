@@ -1,5 +1,6 @@
 export default {
     name: "User",
+    
     graphql: {
         crud: {
             query: {
@@ -15,7 +16,6 @@ export default {
             type User {
                 id: Int
                 name: String
-                age: Int
                 username: String
                 refreshToken: String
                 accessToken: String
@@ -32,7 +32,6 @@ export default {
             input UserInput {
                 id: Int
                 name: String
-                age: Int
                 username: String
                 refreshToken: String
                 accessToken: String
@@ -67,5 +66,48 @@ export default {
     },
     restApi: {
         
+    },
+    fields: {
+        sql: {
+            name: {
+                type: "STRING",
+            },
+            username: {
+                type: "String",
+            },
+            refreshToken: {
+                type: "String",
+            },
+            accessToken: {
+                type: "String",
+            },
+            isActivated: {
+                type: "BOOLEAN"
+            },
+            activatedOn: {
+                type: "String",
+            },
+            twoFactorCode: {
+                type: "String",
+            },
+            isSuperUser: {
+                type: "BOOLEAN"
+            },
+            activationToken: {
+                type: "String",
+            },
+            email: {
+                type: "String",
+            },
+            password: {
+                type: "String",
+            },
+            gender: {
+                type: "String",
+            },
+            referer: {
+                type: "String",
+            },
+        }
     },
 }

@@ -23,7 +23,7 @@ export const generateCrudResolvers = (moduleName: any) => {
     return {
         mutations: {
             [`create${moduleName}`]: async (_:any, args:any, context:any) => {
-                
+                return await context.models[moduleName].create(args.input);
             },
             [`delete${moduleName}`]: async (_:any, args:any, context:any) => {
                 

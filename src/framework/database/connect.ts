@@ -1,3 +1,4 @@
+
 let Sequelize = require("sequelize");
 
 const {
@@ -31,3 +32,4 @@ const DB_DEVELOPMENT = new Sequelize( `${db_name}_dev`, db_username, db_password
 
 let connection = (mode == "development") ? DB_DEVELOPMENT : DB_PRODUCTION;
 
+export default connection;

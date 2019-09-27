@@ -5,5 +5,10 @@ let app = express();
 
 wertik(app, {
     name: "Wertik",
-    builtinModules: "user,role,auth,forgetPassword"
+    builtinModules: "user",
+    db_username: "root",
+    db_password: "",
+    db_name: "graphql",
+    db_host: "localhost",
+    db_port: "3306",
 });

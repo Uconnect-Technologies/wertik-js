@@ -75,7 +75,6 @@ schemaMap = schemaMap.replace("[modulesSchema__replace]",modulesSchema);
 schemaMap = schemaMap.replace("[mutation__replace]",modulesMutationSchema);
 schemaMap = schemaMap.replace("[query__replace]",modulesQuerySchema);
 
-
 export default {
     schema: schemaMap,
     resolvers: {
