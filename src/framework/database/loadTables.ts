@@ -1,5 +1,5 @@
 
-import convertFieldsIntoSequelizeFields from "./helpers/convertFieldsIntoSequelizeFields";
+import {convertFieldsIntoSequelizeFields} from "./helpers/index";
 export default function () {
   let connection = require("./connect").default;
   let modules = process.env.builtinModules.split(",");
