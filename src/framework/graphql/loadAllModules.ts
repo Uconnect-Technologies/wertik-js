@@ -17,6 +17,9 @@ let schemaMap = `
         message: String
         version: String
     }
+    type SuccessReponse {
+        message: String
+    }
     [generalSchema__replace]
     [modulesSchema__replace]
     type Mutation {
