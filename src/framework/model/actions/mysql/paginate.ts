@@ -15,7 +15,7 @@ export default async function(model: any, args: any = {}, requestedFields: any =
   let offset = limit * (page - 1);
   let totalFilters = filters.length;
   let list: any = {};
-  if (baseFields) {
+  if (baseFields == "*") {
     delete attributesObject["attributes"];
   }
   if (totalFilters > 0) {

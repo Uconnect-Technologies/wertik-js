@@ -1,8 +1,9 @@
 import {generateError} from "./../helpers/index"
+import getRequestedFieldsFromResolverInfo from "./../helpers/getRequestedFieldsFromResolverInfo";
 
 export const generateQueriesCrudSchema = (moduleName: String) => {
     return `
-        view${moduleName}(id: Int, action: String,_id: String): ${moduleName}
+        view${moduleName}(id: Int): ${moduleName}
         list${moduleName}(pagination: PaginationInput, filters: [FilterInput]): ${moduleName}List
     `;
 }
@@ -22,43 +23,38 @@ export const generateMutationsCrudSchema = (moduleName: String) => {
 export const generateCrudResolvers = (moduleName: any) => {
     return {
         mutations: {
-            [`create${moduleName}`]: async (_:any, args:any, context:any) => {
-                return await context.models[moduleName].create(args.input);
+            [`create${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
+                let requestedFields = getRequestedFieldsFromResolverInfo(info);
+                return await context.models[moduleName].create(args.input,requestedFields);
             },
-            [`delete${moduleName}`]: async (_:any, args:any, context:any) => {
-                
+            [`delete${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
+                return await context.models[moduleName].delete(args.input);
             },
-            [`update${moduleName}`]: async (_:any, args:any, context:any) => {
-                
+            [`update${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
+                let requestedFields = getRequestedFieldsFromResolverInfo(info);
+                return await context.models[moduleName].update(args.input,requestedFields);
             },
-            [`deleteBulk${moduleName}`]: async (_:any, args:any, context:any) => {
-                
+            [`deleteBulk${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
+                let requestedFields = getRequestedFieldsFromResolverInfo(info);
+                return await context.models[moduleName].deleteBulk(args.input,requestedFields);
             },
-            [`createBulk${moduleName}`]: async (_:any, args:any, context:any) => {
-                
+            [`createBulk${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
+                let requestedFields = getRequestedFieldsFromResolverInfo(info);
+                return await context.models[moduleName].createBulk(args.input,requestedFields);
             },
-            [`updateBulk${moduleName}`]: async (_:any, args:any, context:any) => {
-                
+            [`updateBulk${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
+                let requestedFields = getRequestedFieldsFromResolverInfo(info);
+                return await context.models[moduleName].updateBulk$(args.input,requestedFields);
             }
         },
         queries: {
-            [`view${moduleName}`]: async (_:any, args:any, context:any) => {
-                try {
-                    let view = await context.models[moduleName].view(args.input);
-                    if (!view) {
-                        throw generateError({message: `${moduleName} not found`});
-                    }
-                    return view;
-                } catch (e) {
-                    return generateError(e);
-                }
+            [`view${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
+                let requestedFields = getRequestedFieldsFromResolverInfo(info);
+                return await context.models[moduleName].view(args,requestedFields);
             },
-            [`list${moduleName}`]: async (_:any, args:any, context:any) => {
-                try {
-                    return await context.models[moduleName].paginate(args);
-                } catch (e) {
-                    return generateError(e);
-                }
+            [`list${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
+                let requestedFields = getRequestedFieldsFromResolverInfo(info);
+                return await context.models[moduleName].paginate(args,requestedFields);
             }
         }
     }

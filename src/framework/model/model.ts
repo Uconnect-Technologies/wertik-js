@@ -1,5 +1,6 @@
 import actions from "./actions/index";
 import {get} from "lodash";
+import internalServerError from "./../../framework/helpers/internalServerError";
 
 const { create, update, destroy, findOne, view, paginate } = actions;
 
@@ -21,7 +22,7 @@ class Model {
       await destroy(this.model, args);
       return fakeResponse;
     } catch (e) {
-      // return internalServerError(e);
+      return internalServerError(e);
     }
   }
 
@@ -30,7 +31,7 @@ class Model {
       let fakeResponse: any = await create(this.model, args, "", requestedFields);
       return fakeResponse;
     } catch (e) {
-      // return internalServerError(e);
+      return internalServerError(e);
     }
   }
 
@@ -39,19 +40,20 @@ class Model {
       let response: any = await update(this.model, args, requestedFields);
       return response;
     } catch (e) {
-      // return internalServerError(e);
+      return internalServerError(e);
     }
   }
 
   async view(args: any, requestedFields: any) {
     try {
+      console.log(args);
       let response = await view(this.model, args, requestedFields);
       if (!response) {
         return null;
       }
       return response;
     } catch (e) {
-      // return internalServerError(e);
+      return internalServerError(e);
     }
   }
 
@@ -63,7 +65,7 @@ class Model {
       }
       return response;
     } catch (e) {
-      // return internalServerError(e);
+      return internalServerError(e);
     }
   }
 
@@ -72,7 +74,7 @@ class Model {
       let response = await paginate(this.model, args, requestedFields);
       return response;
     } catch (e) {
-      // return internalServerError(e);
+      return internalServerError(e);
     }
   }
 
