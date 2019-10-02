@@ -30,6 +30,26 @@ let schemaMap = `
         response: Response
         [query__replace]
     }
+    input EmailInput {
+        email: String!
+    }
+    input TwoFactorCodeInput {
+        twoFactorCode: String!
+    }
+    input AccessTokenInput {
+        accessToken: String!
+    }
+    input ActivationTokenInput {
+        activationToken: String!
+    }
+    input RefreshTokenInput {
+        refreshToken: String!
+    }
+    input SignupInput {
+        email: String!
+        password: String!
+        confirmPassword: String!
+    }
     schema {
         query: Query
         mutation: Mutation
@@ -38,8 +58,8 @@ let schemaMap = `
 let appMutations = {};
 let appQueries = {};
 
-modules.forEach(element => {
-    let module = require(`./../builtinModules/${element}/index`).default;
+
+const processModule = function (module) {
     // require information
     let graphql = module.graphql;
     let moduleName = module.name;
@@ -71,6 +91,11 @@ modules.forEach(element => {
     modulesMutationSchema = modulesMutationSchema + currentMutationSchema;
     appQueries = {...appQueries, ...currentQueryResolvers};
     appMutations = {...appMutations, ...currentMutationResolvers};
+}
+
+modules.forEach(element => {
+    let module = require(`./../builtinModules/${element}/index`).default;
+    processModule(module);
 });
 
 schemaMap = schemaMap.replace("[generalSchema__replace]",generalSchema);

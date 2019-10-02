@@ -3,6 +3,7 @@ import convertConfigurationIntoEnvVariables from "./framework/helpers/convertCon
 export default function (app,configuration) {
     validateConfigurationObject(configuration).then(() => {
         convertConfigurationIntoEnvVariables(configuration).then(() => {
+            console.log(configuration);
             let graphql = require("./framework/graphql/index").default;
             let restApi = require("./framework/restApi/index").default;
             let dbTables = require("./framework/database/loadTables").default()

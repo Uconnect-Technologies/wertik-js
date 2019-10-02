@@ -1,4 +1,5 @@
 
+import {get} from "lodash";
 import {convertFieldsIntoSequelizeFields} from "./helpers/index";
 export default function () {
   let connection = require("./connect").default;
@@ -7,8 +8,11 @@ export default function () {
   modules.forEach(element => {
     let module = require(`./../builtinModules/${element}/index`).default;
     let tableName = module.name;
-    let tableFields= convertFieldsIntoSequelizeFields(module.fields.sql);
-    tables[tableName] = connection.define(tableName,tableFields);
+    let useDatabase = get(module,'useDatabase',true);
+    if (useDatabase) {
+      let tableFields= convertFieldsIntoSequelizeFields(module.fields.sql);
+      tables[tableName] = connection.define(tableName,tableFields);
+    }
   });
   connection.sync();
   return tables;
