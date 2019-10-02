@@ -4,6 +4,7 @@ import wertik from "./main";
 let app = express();
 
 wertik(app, {
+    dialect: "mysql",
     name: "Wertik",
     builtinModules: "user",
     db_username: "root",

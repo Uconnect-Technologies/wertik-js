@@ -5,9 +5,10 @@ export default function (app,configuration) {
         convertConfigurationIntoEnvVariables(configuration).then(() => {
             let graphql = require("./framework/graphql/index").default;
             let restApi = require("./framework/restApi/index").default;
-            let models = require("./framework/database/loadTables").default()
-            graphql(app,configuration,models);
-            restApi(app,configuration,models);
+            let dbTables = require("./framework/database/loadTables").default()
+            let models = require("./framework/database/models").default(dbTables);
+            graphql(app,configuration,dbTables,models);
+            restApi(app,configuration,dbTables,models);
             app.listen(3000);
         }).catch((err2) => {
             console.log("Something went wrong while setting data to env, Please node version.");
