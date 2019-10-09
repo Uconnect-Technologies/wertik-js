@@ -35,12 +35,16 @@ export default {
             `,
             resolvers: {
                 twoFactorLogin:  async (_:any, args:any, context:any,info: any) => {
+
                 },
                 twoFactorLoginValidate:  async (_:any, args:any, context:any,info: any) => {
+
                 },
                 loginWithAccessToken:  async (_:any, args:any, context:any,info: any) => {
+                    
                 },
                 activateAccount:  async (_:any, args:any, context:any,info: any) => {
+
                 },
                 signup:  async (_:any, args:any, context:any,info: any) => {
                     let { email, password, confirmPassword } = args.input;

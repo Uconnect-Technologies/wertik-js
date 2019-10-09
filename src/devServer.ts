@@ -12,4 +12,46 @@ wertik(app, {
     db_name: "graphql",
     db_host: "localhost",
     db_port: "3306",
+    modules: [
+        {
+            name: "Article",
+            graphql: {
+                crud: {
+                    query: {
+                        generate: true,
+                        operations: "*"
+                    },
+                    mutation: {
+                        generate: true,
+                        operations: "*"
+                    }
+                },
+                schema: `
+                    type Article {
+                        title: String
+                        description: String
+                    }
+                    input ArticleInput {
+                        title: String
+                        description: String
+                    }
+                `,
+                mutation: {
+                    resolvers: {
+
+                    },
+                    schema: ``
+                },
+                query: {
+                    resolvers: {
+
+                    },
+                    schema: ``
+                }
+            },
+            restApi: {
+                //
+            }
+        }
+    ]
 });
