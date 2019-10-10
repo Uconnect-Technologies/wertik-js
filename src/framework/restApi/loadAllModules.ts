@@ -1,6 +1,7 @@
 import {get,kebabCase} from "lodash";
 export default function (expressApp, configuration) {
   let modules = configuration.builtinModules.split(",");
+  modules = [...modules, ...get(configuration,'modules', [])]
 
   const processModule = (module) => {
     expressApp.post(`/api/v1/${kebabCase(module.name)}/create`, async (req,res) => {
@@ -37,7 +38,7 @@ export default function (expressApp, configuration) {
       let model = req.models[module.name];
       res.json({
         message: `${module.name} list`,
-        list: await model.paginate({},"*")
+        result: await model.paginate({},"*")
       });
     });
   }

@@ -11,7 +11,7 @@ export default function (app,configuration) {
             restApi(app,configuration,dbTables,models);
             app.listen(3000);
         }).catch((err2) => {
-            console.log("Something went wrong while setting data to env, Please node version.");
+            console.log("Something went wrong while initializing Wertik js, Please check docs, and make sure you that you pass correct configuration.");
             console.log(err2);
         })
     }).catch((err) => {

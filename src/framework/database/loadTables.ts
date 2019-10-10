@@ -18,13 +18,13 @@ export default function (configuration) {
         created_at: {
           type: Sequelize.DATE,
           get() {
-            return moment(this.getDataValue('createdAt')).format();
+            return moment(this.getDataValue('created_at')).format();
           }
         },
         updated_at: {
           type: Sequelize.DATE,
           get() {
-            return moment(this.getDataValue('updatedAt')).format();
+            return moment(this.getDataValue('updated_at')).format();
           }
         }
       },{
