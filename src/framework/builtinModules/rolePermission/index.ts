@@ -17,6 +17,9 @@ export default {
               name: String
               role: Role
               permission: Permission
+              
+              created_at: String
+              updated_at: String
           }
           input RolePermissionInput {
               id: Int

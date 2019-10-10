@@ -15,6 +15,8 @@ export default {
             type Role {
                 id: Int
                 name: String
+                created_at: String
+                updated_at: String
             }
             input RoleInput {
                 id: Int

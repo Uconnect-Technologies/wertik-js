@@ -17,6 +17,9 @@ export default {
               name: String
               user: User
               permission: Permission
+              
+              created_at: String
+              updated_at: String
           }
           input UserPermissionInput {
               id: Int

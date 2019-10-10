@@ -44,7 +44,7 @@ export const generateCrudResolvers = (moduleName: any) => {
             },
             [`updateBulk${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
                 let requestedFields = getRequestedFieldsFromResolverInfo(info);
-                return await context.models[moduleName].updateBulk$(args.input,requestedFields);
+                return await context.models[moduleName].updateBulk(args.input,requestedFields);
             }
         },
         queries: {

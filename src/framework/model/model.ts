@@ -46,7 +46,6 @@ class Model {
 
   async view(args: any, requestedFields: any) {
     try {
-      console.log(args);
       let response = await view(this.model, args, requestedFields);
       if (!response) {
         return null;
@@ -72,6 +71,28 @@ class Model {
   async paginate(args: any, requestedFields: any) {
     try {
       let response = await paginate(this.model, args, requestedFields);
+      return response;
+    } catch (e) {
+      return internalServerError(e);
+    }
+  }
+
+  async updateBulk(args: any, requestedFields: any) {
+    try {
+      let response = args.map(async(item) => {
+        return await this.update(item, requestedFields);
+      });
+      return response;
+    } catch (e) {
+      return internalServerError(e);
+    }
+  }
+
+  async createBulk(args: any, requestedFields: any) {
+    try {
+      let response = args.map(async (item) => {
+        return await this.create(item,requestedFields);
+      });
       return response;
     } catch (e) {
       return internalServerError(e);

@@ -28,6 +28,8 @@ export default {
                 password: String
                 gender: String
                 referer: String
+                created_at: String
+                updated_at: String
             }
             input UserInput {
                 id: Int

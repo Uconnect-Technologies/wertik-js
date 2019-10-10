@@ -17,6 +17,8 @@ export default {
                 name: String
                 email: String
                 token: String
+                created_at: String
+                updated_at: String
             }
             input ForgetPasswordInput {
                 id: Int

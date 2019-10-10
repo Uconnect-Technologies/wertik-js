@@ -17,6 +17,8 @@ export default {
               name: String
               cant: String
               can: String
+              created_at: String
+              updated_at: String
           }
           input PermissionInput {
               id: Int

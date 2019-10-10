@@ -28,8 +28,11 @@ wertik(app, {
                 },
                 schema: `
                     type Article {
+                        id: Int
                         title: String
                         description: String
+                        created_at: String
+                        updated_at: String
                     }
                     input ArticleInput {
                         title: String
@@ -51,6 +54,16 @@ wertik(app, {
             },
             restApi: {
                 //
+            },
+            fields: {
+                sql: {
+                    title: {
+                        type: "STRING"
+                    },
+                    description: {
+                        type: "STRING"
+                    },
+                }
             }
         }
     ]
