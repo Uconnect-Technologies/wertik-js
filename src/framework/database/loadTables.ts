@@ -9,7 +9,7 @@ export default function (configuration) {
   modules = [...modules, ...get(configuration,'modules', [])]
   let tables = {};
   const processModule = (module) => {
-    let tableName = module.name;
+    let tableName = get(module,'databaseTableName',module.name);
     let useDatabase = get(module,'useDatabase',true);
     if (useDatabase) {
       let tableFields= convertFieldsIntoSequelizeFields(module.fields.sql);
