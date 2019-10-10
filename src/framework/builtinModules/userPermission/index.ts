@@ -1,5 +1,5 @@
 export default {
-  name: "Permission",
+  name: "UserPermission",
   graphql: {
       crud: {
           query: {
@@ -12,17 +12,17 @@ export default {
           }
       },
       schema: `
-          type Permission {
+          type UserPermission {
               id: Int
               name: String
-              cant: String
-              can: String
+              user: User
+              permission: Permission
           }
-          input PermissionInput {
+          input UserPermissionInput {
               id: Int
               name: String
-              cant: String
-              can: String
+              user: Int
+              permission: Int
           }
       `,
       mutation: {
@@ -32,23 +32,24 @@ export default {
       },
       query: {
           schema: ``,
-          resolvers: {}
+          resolvers: {
+          }
       }
   },
   restApi: {
       
   },
   fields: {
-    sql: {
-        name: {
-            type: "STRING"
-        },
-        cant: {
-            type: "STRING"
-        },
-        can: {
-            type: "STRING"
-        }
-    }
-}
+      sql: {
+          name: {
+              type: "STRING"
+          },
+          user: {
+              type: "INTEGER"
+          },
+          permission: {
+              type: "INTEGER"
+          },
+      }
+  }
 }
