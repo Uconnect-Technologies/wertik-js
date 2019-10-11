@@ -2,6 +2,8 @@
 
 **💪 Node + GraphQL + Apollo Saas Boilerplate** to kick start your project.
 
+**** This is in progress library
+
 ### Table of contents
 
 
@@ -26,4 +28,4 @@ Install with yarn
 
 ### Introduction  
 
-Wertik-js is a Node js boilerplate to buil backend API's in GraphQL as well as Rest API. 
+Wertik-js is a Node js boilerplate to build backend API's in GraphQL as well as Rest API. 

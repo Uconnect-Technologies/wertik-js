@@ -1,1 +1,0 @@
-{"version":3,"file":"validations.js","sourceRoot":"","sources":["../../../../src/framework/predefinedModules/forgetPassword/validations.ts"],"names":[],"mappings":";;AAAA,kBAAe;IACb,oBAAoB,EAAE;QACpB,KAAK,EAAE,gBAAgB;KACxB;IACD,cAAc,EAAE;QACd,KAAK,EAAE,iBAAiB;KACzB;IACD,aAAa,EAAE;QACb,QAAQ,EAAE,uBAAuB;QACjC,eAAe,EAAE,uBAAuB;QACxC,KAAK,EAAE,iBAAiB;KACzB;CACF,CAAA"}

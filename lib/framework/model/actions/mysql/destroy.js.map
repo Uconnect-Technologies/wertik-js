@@ -1,1 +1,0 @@
-{"version":3,"file":"destroy.js","sourceRoot":"","sources":["../../../../../src/framework/model/actions/mysql/destroy.ts"],"names":[],"mappings":";;;;;;;;;;AAAA,mBAA+B,KAAU,EAAC,IAAS;;QACjD,MAAM,KAAK,CAAC,OAAO,CAAC;YAClB,KAAK,EAAE,IAAI;SACZ,CAAC,CAAC;QACH,OAAO;YACL,iBAAiB,EAAE,SAAS;YAC5B,aAAa,EAAE,qBAAqB;SACrC,CAAA;IACH,CAAC;CAAA;AARD,4BAQC"}

@@ -1,31 +1,47 @@
-let {get} = require("lodash");
+let { get } = require("lodash");
 import convertFiltersIntoSequalizeObject from "./../../../database/mysql/convertFiltersIntoSequalizeObject";
 
-export default async function (model: any,args: any = {}) {
-  let pagination = get(args,'pagination',{page: 1, limit: 10});
-  const {page, limit} = pagination;
-  let filters = get(args,'filters',[]);
+export default async function(model: any, args: any = {}, requestedFields: any = []) {
+  let baseFields: any = "*";
+  let attributesObject = {};
+  if (requestedFields.constructor === Object) {
+    baseFields = Object.keys(requestedFields.list);
+    attributesObject["attributes"] = baseFields;
+  }
+  let page = get(args, "pagination.page", 1);
+  let limit = get(args, "pagination.limit", 10);
+  let filters = get(args, "filters", []);
   let convertedFilters = await convertFiltersIntoSequalizeObject(filters);
-  let data = await model.findAndCountAll();
-  let pages = Math.ceil(data.count / limit);
   let offset = limit * (page - 1);
   let totalFilters = filters.length;
-  let find = [];
-  if (totalFilters === 0) {
-    find = await model.findAll({ 
-      offset: offset, 
-      limit: limit,
-    });
-  }else {
-    find = await model.findAll({
+  let list: any = {};
+  if (baseFields == "*") {
+    delete attributesObject["attributes"];
+  }
+  if (totalFilters > 0) {
+    list = await model.findAndCountAll({
       offset: offset,
       limit: limit,
-      where: convertedFilters
+      where: convertedFilters,
+      ...attributesObject
+    });
+  } else {
+    list = await model.findAndCountAll({
+      offset: offset,
+      limit: limit,
+      ...attributesObject
     });
   }
   return {
-    filters: filters,
-    pagination,
-    list: find
-  }
+    filters,
+    pagination: { page, limit },
+    list: list.rows,
+    paginationProperties: {
+      total: list.count,
+      nextPage: page + 1,
+      page: page,
+      previousPage: page == 1 ? 1 : page - 1,
+      pages: Math.ceil(list.count / limit)
+    }
+  };
 }

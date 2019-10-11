@@ -1,1 +1,0 @@
-{"version":3,"file":"view.js","sourceRoot":"","sources":["../../../../../src/framework/model/actions/mongo_db/view.ts"],"names":[],"mappings":";;;;;;;;;;AAAA,mBAA+B,KAAU,EAAC,IAAS;;QAClD,MAAM,EAAC,GAAG,EAAC,GAAG,IAAI,CAAC;QACnB,IAAI,QAAQ,GAAG,MAAM,KAAK,CAAC,OAAO,CAAC,EAAC,GAAG,EAAE,GAAG,EAAC,CAAC,CAAC;QAC/C,OAAO,QAAQ,CAAC;IACjB,CAAC;CAAA;AAJD,4BAIC"}

@@ -1,0 +1,17 @@
+error: Public error to share
+error: This is super secret - hide it. {"private":true}
+error: Public error to share
+error: This is super secret - hide it. {"private":true}
+info: Will not be logged in either transport!
+info: Create Role with id: 55
+info: Create Role with id: 56
+info: Create Role with id: 57
+info: Create Role with id: 58
+info: Delete Role with id: 12
+info: List Role with pagination {"page":1,"limit":10}
+info: List Role with pagination {"page":1,"limit":10}
+info: List Role with pagination {"page":1,"limit":10}
+info: List Role with pagination {"page":1,"limit":10}
+{"message":"List Role with pagination {\"page\":1,\"limit\":10}","level":"info","timestamp":"2019-08-16 23:15:48"}
+{"message":"List Role with pagination {\"page\":1,\"limit\":10}","level":"info","timestamp":"2019-08-16 23:15:48"}
+{"message":"List Role with pagination {\"page\":1,\"limit\":50}","level":"info","timestamp":"2019-08-16 23:16:02"}
