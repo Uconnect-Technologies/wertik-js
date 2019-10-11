@@ -1,5 +1,8 @@
+var bodyParser = require('body-parser')
 var morgan = require('morgan')
 export default function (app,configuration,dbTables, models) {
+    app.use(bodyParser.urlencoded({ extended: false }))
+    app.use(bodyParser.json())
     app.use(morgan('combined'))
     app.use(function (req, res, next) {
         req.dbTables = dbTables;
