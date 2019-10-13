@@ -1,9 +1,17 @@
 import {get,kebabCase} from "lodash";
+import customApi from "./customApi";
 export default function (expressApp, configuration) {
   let modules = configuration.builtinModules.split(",");
   modules = [...modules, ...get(configuration,'modules', [])]
 
   const processModule = (module) => {
+    const restApi = get(module,'restApi',{});
+    const restApisInArray = Object.keys(restApi);
+    restApisInArray.forEach(element => {
+      const currentApi = restApi[element];
+      const url = element;
+      customApi(module,expressApp,url,currentApi);
+    });
     expressApp.post(`/api/v1/${kebabCase(module.name)}/create`, async (req,res) => {
       res.json({
         message: `${module.name} created`,

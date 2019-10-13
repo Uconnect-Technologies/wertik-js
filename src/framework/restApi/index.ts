@@ -20,6 +20,8 @@ export default function (app,configuration,dbTables, models) {
             message: 'Welcome to wertik, You have successfully running Wertik rest api!'
         });
     });
+
+
     
     app.get('*', function(req, res){
         res.status(404).json({

@@ -55,7 +55,22 @@ wertik(app, {
                 }
             },
             restApi: {
-                //
+                'apple/11/1': {
+                    type: 'get',
+                    handler: function (req, res) {
+                        res.json({
+                            message: true
+                        })
+                    }
+                },
+                'people': {
+                    type: 'put',
+                    handler: function (req, res) {
+                        res.json({
+                            message: true
+                        })
+                    }
+                }
             },
             fields: {
                 sql: {
