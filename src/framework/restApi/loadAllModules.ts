@@ -48,7 +48,6 @@ export default function (expressApp, configuration) {
       });
     });
     expressApp.get(`/api/v1/${kebabCase(module.name)}/view`, async (req,res) => {
-      console.log(req.body.input);
       let model = req.models[module.name];
       res.json({
         message: `${module.name} view`,
