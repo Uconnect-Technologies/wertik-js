@@ -1,10 +1,16 @@
 export default async function (model: any,id: any,requestedFields: any) {
-  let object = {};
-  object = await model.findOne({
+  let attributes = {
+    attributes: Object.keys(requestedFields)
+  };
+  if (requestedFields == "*") {
+    delete attributes['attributes'];
+  }
+  
+  const object = await model.findOne({
     where: {
       id: id,
     },
-    attributes: Object.keys(requestedFields)
+    ...attributes
   })
   return object;
 }

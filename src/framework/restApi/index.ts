@@ -1,9 +1,15 @@
-var morgan = require('morgan')
+const {get} = require("lodash");
+var bodyParser = require('body-parser');
+var morgan = require('morgan');
 export default function (app,configuration,dbTables, models) {
+    const context = get(configuration,'context', {});
+    app.use(bodyParser.urlencoded({ extended: false }))
+    app.use(bodyParser.json())
     app.use(morgan('combined'))
     app.use(function (req, res, next) {
         req.dbTables = dbTables;
         req.models = models;
+        req.context = context;
         next();
     });
     

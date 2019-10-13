@@ -12,6 +12,9 @@ wertik(app, {
     db_name: "graphql",
     db_host: "localhost",
     db_port: "3306",
+    context: {
+        myName: "My powerful app"
+    },
     modules: [
         {
             name: "Article",
@@ -48,7 +51,6 @@ wertik(app, {
                 query: {
                     schema: ``,
                     resolvers: {
-
                     }
                 }
             },

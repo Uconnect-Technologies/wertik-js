@@ -52,6 +52,7 @@ class Model {
       }
       return response;
     } catch (e) {
+      console.log(e.message);
       return internalServerError(e);
     }
   }
@@ -64,6 +65,7 @@ class Model {
       }
       return response;
     } catch (e) {
+      
       return internalServerError(e);
     }
   }
@@ -77,7 +79,7 @@ class Model {
     }
   }
 
-  async updateBulk(args: any, requestedFields: any) {
+  async bulkUpdate(args: any, requestedFields: any) {
     try {
       let response = args.map(async(item) => {
         return await this.update(item, requestedFields);
@@ -88,7 +90,7 @@ class Model {
     }
   }
 
-  async createBulk(args: any, requestedFields: any) {
+  async bulkCreate(args: any, requestedFields: any) {
     try {
       let response = args.map(async (item) => {
         return await this.create(item,requestedFields);
