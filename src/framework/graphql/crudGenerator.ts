@@ -1,11 +1,23 @@
 import {generateError} from "./../helpers/index"
 import getRequestedFieldsFromResolverInfo from "./../helpers/getRequestedFieldsFromResolverInfo";
+import { subscribe } from "graphql";
 
 export const generateQueriesCrudSchema = (moduleName: String) => {
     return `
         view${moduleName}(id: Int): ${moduleName}
         list${moduleName}(pagination: PaginationInput, filters: [FilterInput]): ${moduleName}List
     `;
+}
+
+export const generateMutationsCrudSubscriptionSchema = (moduleName: String) => {
+    return `
+        created${moduleName}: ${moduleName}
+        deleted${moduleName}: ${moduleName}
+        updated${moduleName}: ${moduleName}
+        bulkUpdated${moduleName}:  [${moduleName}]
+        bulkCreated${moduleName}:  [${moduleName}]
+        bulkDeleted${moduleName}:  [${moduleName}]
+    `
 }
 
 export const generateMutationsCrudSchema = (moduleName: String) => {
@@ -20,31 +32,81 @@ export const generateMutationsCrudSchema = (moduleName: String) => {
 
 }
 
-export const generateCrudResolvers = (moduleName: any) => {
+export const generateCrudResolvers = (moduleName: any, pubsub) => {
+    const createdModule = `created${moduleName}`;
+    const deletedModule = `deleted${moduleName}`;
+    const updatedModule = `updated${moduleName}`;
+    const bulkCreatedModule = `bulkUpdated${moduleName}`;
+    const bulkUpdatedModule = `bulkCreated${moduleName}`;
+    const bulkDeletedModule = `bulkDeleted${moduleName}`;
     return {
+        subscriptions: {
+            [createdModule]: {
+                subscribe: () => pubsub.asyncIterator(`create${moduleName}`)
+            },
+            [deletedModule]: {
+                subscribe: () => pubsub.asyncIterator(`delete${moduleName}`)
+            },
+            [updatedModule]: {
+                subscribe: () => pubsub.asyncIterator(`update${moduleName}`)
+            },
+            [bulkCreatedModule]: {
+                subscribe: () => pubsub.asyncIterator(`bulkUpdate${moduleName}`)
+            },
+            [bulkUpdatedModule]: {
+                subscribe: () => pubsub.asyncIterator(`bulkCreate${moduleName}`)
+            },
+            [bulkDeletedModule]: {
+                subscribe: () => pubsub.asyncIterator(`bulkDelete${moduleName}`)
+            }
+        },
         mutations: {
             [`create${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
                 let requestedFields = getRequestedFieldsFromResolverInfo(info);
-                return await context.models[moduleName].create(args.input,requestedFields);
+                let result = await context.models[moduleName].create(args.input,requestedFields);
+                pubsub.publish(createdModule,{
+                    [createdModule]: result
+                });
+                return result;
             },
             [`delete${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
-                return await context.models[moduleName].delete(args.input);
+                let result = await context.models[moduleName].delete(args.input);
+                pubsub.publish(deletedModule,{
+                    [deletedModule]: result
+                });
+                return result;
             },
             [`update${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
                 let requestedFields = getRequestedFieldsFromResolverInfo(info);
-                return await context.models[moduleName].update(args.input,requestedFields);
+                let result = await context.models[moduleName].update(args.input,requestedFields);
+                pubsub.publish(updatedModule,{
+                    [updatedModule]: result
+                });
+                return result;
             },
             [`bulkDelete${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
                 let requestedFields = getRequestedFieldsFromResolverInfo(info);
-                return await context.models[moduleName].bulkDelete(args.input,requestedFields);
+                let result = await context.models[moduleName].bulkDelete(args.input,requestedFields);
+                pubsub.publish(bulkCreatedModule,{
+                    [bulkCreatedModule]: result
+                });
+                return result;
             },
             [`bulkCreate${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
                 let requestedFields = getRequestedFieldsFromResolverInfo(info);
-                return await context.models[moduleName].bulkCreate(args.input,requestedFields);
+                let result = await context.models[moduleName].bulkCreate(args.input,requestedFields);
+                pubsub.publish(bulkUpdatedModule,{
+                    [bulkUpdatedModule]: result
+                });
+                return result;
             },
             [`bulkUpdate${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
                 let requestedFields = getRequestedFieldsFromResolverInfo(info);
-                return await context.models[moduleName].bulkUpdate(args.input,requestedFields);
+                let result = await context.models[moduleName].bulkUpdate(args.input,requestedFields);
+                pubsub.publish(bulkDeletedModule,{
+                    [bulkDeletedModule]: result
+                });
+                return result;
             }
         },
         queries: {

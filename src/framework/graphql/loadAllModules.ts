@@ -4,12 +4,15 @@
 
 const {get} = require("lodash");
 import generalSchema from "./generalSchema"
-import {generateQueriesCrudSchema, generateListTypeForModule, generateMutationsCrudSchema, generateCrudResolvers} from "./crudGenerator";
+import {generateQueriesCrudSchema, generateListTypeForModule,generateMutationsCrudSubscriptionSchema, generateMutationsCrudSchema, generateCrudResolvers} from "./crudGenerator";
+let {PubSub} = require("apollo-server");
+const pubsub = new PubSub();
 
 export default function (configuration) {
     let modulesSchema = ``;
     let modulesQuerySchema = ``;
     let modulesMutationSchema = ``;
+    let modulesSubscriptionSchema = ``;
     let modules = process.env.builtinModules.split(",");
     modules = [...modules, ...get(configuration,'modules', [])]
     let response = () => {
@@ -32,6 +35,9 @@ export default function (configuration) {
         type Query {
             response: Response
             [query__replace]
+        }
+        type Subscription {
+            [subscription__replace]
         }
         input EmailInput {
             email: String!
@@ -56,11 +62,13 @@ export default function (configuration) {
         schema {
             query: Query
             mutation: Mutation
+            subscription: Subscription
         }
     `;
 
     let appMutations = {};
     let appQueries = {};
+    let appSubscriptions = {};
 
     const processModule = function (module) {
         // require information
@@ -79,7 +87,7 @@ export default function (configuration) {
         let currentMutationResolvers = get(graphql,'mutation.resolvers',{});
         let currentQuerySchema = get(graphql,'query.schema','');
         let currentQueryResolvers = get(graphql,'query.resolvers',{});
-        let currentModuleCrudResolvers = generateCrudResolvers(moduleName);
+        let currentModuleCrudResolvers = generateCrudResolvers(moduleName,pubsub);
         let currentModuleListSchema = (currentGenerateQuery || currentGenerateMutation) ? generateListTypeForModule(moduleName) : '';
         // require information
         // crud
@@ -92,12 +100,20 @@ export default function (configuration) {
             appMutations = {...appMutations,...currentModuleCrudResolvers.mutations}
         }
         // crud
+        // Subscription
+
+        let currentModuleCrudSubscription = (currentGenerateMutation) ? generateMutationsCrudSubscriptionSchema(moduleName) : '';
+        // Subscription
         modulesSchema = modulesSchema + schema;
         modulesSchema = modulesSchema + currentModuleListSchema;
         modulesQuerySchema = modulesQuerySchema + currentQuerySchema;
         modulesMutationSchema = modulesMutationSchema + currentMutationSchema;
+        modulesSubscriptionSchema = modulesSubscriptionSchema + currentModuleCrudSubscription;
         appQueries = {...appQueries, ...currentQueryResolvers};
         appMutations = {...appMutations, ...currentMutationResolvers};
+        if (currentGenerateMutation) {
+            appSubscriptions = {...appSubscriptions, ...currentModuleCrudResolvers.subscriptions}
+        }
     }
 
     modules.forEach(element => {
@@ -114,6 +130,8 @@ export default function (configuration) {
     schemaMap = schemaMap.replace("[modulesSchema__replace]",modulesSchema);
     schemaMap = schemaMap.replace("[mutation__replace]",modulesMutationSchema);
     schemaMap = schemaMap.replace("[query__replace]",modulesQuerySchema);
+    schemaMap = schemaMap.replace("[subscription__replace]",modulesSubscriptionSchema);
+
     return {
         schema: schemaMap,
         resolvers: {
@@ -124,6 +142,9 @@ export default function (configuration) {
             Query: {
                 ...appQueries,
                 response: response
+            },
+            Subscription: {
+                ...appSubscriptions
             }
         }
     }
