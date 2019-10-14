@@ -1,8 +1,10 @@
 const {get} = require("lodash");
-var bodyParser = require('body-parser');
-var morgan = require('morgan');
+const cors = require('cors')
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
 export default function (app,configuration,dbTables, models) {
     const context = get(configuration,'context', {});
+    app.use(cors())
     app.use(bodyParser.urlencoded({ extended: false }))
     app.use(bodyParser.json())
     app.use(morgan('combined'))
@@ -20,8 +22,6 @@ export default function (app,configuration,dbTables, models) {
             message: 'Welcome to wertik, You have successfully running Wertik rest api!'
         });
     });
-
-
     
     app.get('*', function(req, res){
         res.status(404).json({
