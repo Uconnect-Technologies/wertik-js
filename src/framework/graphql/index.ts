@@ -14,7 +14,8 @@ export default function (expressApp,configuration,dbTables,models) {
             ...context
         }
     });
-    apollo.listen().then(({url}) => {
-        console.log("Server started at " + url);
+    apollo.listen().then(({url,subscriptionUrl}) => {
+        console.log("GraphQL server started at " + url);
+        console.log("GraphQL subscriptions started at " + url);
     });
 }

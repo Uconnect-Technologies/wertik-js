@@ -31,7 +31,7 @@ export default function (app,configuration,dbTables, models) {
     });
 
     app.listen(5000, () => {
-      console.log('Api server running at 5000!');
+      console.log('Api server running at htt://localhost:5000!');
     });
     
 }
