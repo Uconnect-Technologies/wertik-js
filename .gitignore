@@ -24,3 +24,4 @@ error.log
 notice.log
 info.log
 warning.log
+.env

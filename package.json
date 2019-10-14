@@ -1,6 +1,6 @@
 {
   "name": "wertik-js",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "lib/main.js",
   "repository": "https://github.com/ilyaskarim/wertik-js.git",
   "author": "Ilyas Karim <ilyas.datoo@gmail.com> ",
@@ -16,7 +16,6 @@
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
-    "cross-env": "^5.2.0",
     "express": "^4.16.4",
     "faker": "^4.1.0",
     "graphql": "^14.1.1",
@@ -30,7 +29,6 @@
     "mysql2": "^1.6.4",
     "nodemailer": "^5.0.0",
     "nodemon": "^1.18.9",
-    "validatorjs": "^3.15.1",
     "winston": "^3.1.0"
   },
   "devDependencies": {
