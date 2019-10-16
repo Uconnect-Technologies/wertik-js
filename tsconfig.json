@@ -10,9 +10,7 @@
 		"baseUrl": "./",
 		"types": [
 			"node",
-		],
-		"paths": {
-		}
+		]
 	},
 	"include": [
 		"src/**/*"

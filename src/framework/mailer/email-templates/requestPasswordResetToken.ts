@@ -1,3 +1,4 @@
+export default `
 <p>
   Hi,
 </p>
@@ -16,3 +17,4 @@
 <p>
   {{siteName}}
 </p>
+`

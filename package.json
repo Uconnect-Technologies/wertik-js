@@ -1,6 +1,6 @@
 {
   "name": "wertik-js",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "main": "lib/main.js",
   "repository": "https://github.com/ilyaskarim/wertik-js.git",
   "author": "Ilyas Karim <ilyas.datoo@gmail.com> ",
@@ -21,6 +21,7 @@
     "faker": "^4.1.0",
     "graphql": "^14.1.1",
     "graphql-fields": "^2.0.3",
+    "handlebars": "^4.4.3",
     "jsonwebtoken": "^8.4.0",
     "lodash": "^4.17.11",
     "moment": "^2.23.0",
@@ -37,6 +38,7 @@
     "@types/cors": "^2.8.4",
     "@types/dotenv": "^4.0.3",
     "@types/express": "^4.16.0",
+    "@types/graphql": "^14.5.0",
     "@types/http-codes": "^1.0.1",
     "@types/jsonwebtoken": "^7.2.8",
     "@types/knex": "^0.14.19",

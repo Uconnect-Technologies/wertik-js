@@ -2,7 +2,7 @@ const {get} = require("lodash");
 const cors = require('cors')
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-export default function (app,configuration,dbTables, models) {
+export default function (app,configuration,dbTables, models, allEmailTemplates,sendEmail) {
     const context = get(configuration,'context', {});
     const port = get(configuration,'ports.restApi',5000);
     app.use(cors())
@@ -13,6 +13,8 @@ export default function (app,configuration,dbTables, models) {
         req.dbTables = dbTables;
         req.models = models;
         req.context = context;
+        req.sendEmail = sendEmail;
+        req.allEmailTemplates = allEmailTemplates;
         next();
     });
     
