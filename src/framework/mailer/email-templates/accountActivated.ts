@@ -1,3 +1,4 @@
+export default `
 <p>
   Hi {{userName}},
 </p>
@@ -9,3 +10,4 @@
   Thanks <br />
   {{ siteName }} Team.
 </p>
+`

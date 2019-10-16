@@ -1,12 +1,13 @@
+export default `
 <p>
   Hi {{userName}},
 </p>
 <p>
-  Your password was recently changed on {{siteName}}.
-  Your email {{email}}
+  Use <b>{{twoFactorCode}}</b> to login as {{userName}}.
 </p>
 
 <p>
   Thanks <br />
   {{ siteName }} Team.
 </p>
+`

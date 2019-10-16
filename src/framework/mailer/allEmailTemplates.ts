@@ -7,11 +7,10 @@ export default function (configuration,rootPath) {
  let templatesObject = {};
  allEmailTemplates.forEach(element => {
     let name = element.split(".")[0];
-    let filePath = join("../../../email-templates", name + ".hbs",);
-    
-    let template = fs.readFileSync(`${__dirname}/email-templates/${name}.hbs`,'utf-8');
+    let template = require(`./email-templates/${name}`).default;
     templatesObject[name] = template;
  });
+ 
  return {
    ...templatesObject,
    ...get(configuration,'emailTemplates',{})
