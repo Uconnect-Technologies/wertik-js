@@ -12,6 +12,7 @@ wertik(app, {
     db_name: "graphql",
     db_host: "localhost",
     db_port: "3306",
+    frontendAppUrl: "http://localhost:8080/",
     context: {
         myName: "My powerful app"
     },

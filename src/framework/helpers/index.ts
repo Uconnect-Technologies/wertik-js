@@ -6,9 +6,13 @@ export const generateError = (e: any,statusCode: Number = 404) => {
 }
 
 export const getDirectoriesInFolder = (path: string) => {
-    return fs.readdirSync(path).filter(function (file: any) {
+	return fs.readdirSync(path).filter(function (file: any) {
 		return fs.statSync(path+'/'+file).isDirectory();
 	});
+}
+
+export const filesInAFolder = (path: string) => {
+	return fs.readdirSync(path);
 }
 
 export const exists = (path: any) => {

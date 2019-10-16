@@ -2,7 +2,7 @@ let {ApolloServer} = require("apollo-server");
 let {get} = require("lodash");
 let loadAllModules = require("./loadAllModules").default;
 
-export default function (expressApp,configuration,dbTables,models) {
+export default function (expressApp,configuration,dbTables,models,allEmailTemplates,sendEmail) {
     const port = get(configuration,'ports.graphql',4000);
     const modules = loadAllModules(configuration);  
     const context = get(configuration,'context', {});
@@ -15,6 +15,8 @@ export default function (expressApp,configuration,dbTables,models) {
         context:  {
             dbTables,
             models,
+            sendEmail: sendEmail,
+            allEmailTemplates: allEmailTemplates,
             ...context
         }
     });

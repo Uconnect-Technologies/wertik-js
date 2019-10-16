@@ -1,4 +1,5 @@
 let bcrypt = require("bcrypt-nodejs");
+import moment from "moment";
 import statusCodes from "./../../../framework/helpers/statusCodes";
 import createJwtToken from "./../../../framework/security/createJwtToken";
 import {ApolloError} from "apollo-server";
@@ -80,6 +81,22 @@ export default {
                             .substring(2),
                         password: hash
                       });
+                    await context.sendEmail(
+                        context.allEmailTemplates.welcome,
+                        {
+                            email: newUser.email,
+                            username: newUser.email,
+                            date: moment().format("dddd, MMMM Do YYYY, h:mm:ss a"),
+                            siteName: process.env.name,
+                            activationUrl: `${process.env.frontendAppUrl}/activate-account/`,
+                            activationToken: newUser.activationToken
+                        },
+                        {
+                            from: process.env.mailerServiceUsername,
+                            to: newUser.email,
+                            subject: `Welcome to ${process.env.name}`
+                        }
+                    );
                     return newUser;
                 },
                 login:  async (_:any, args:any, context:any,info: any) => {
