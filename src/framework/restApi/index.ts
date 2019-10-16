@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 export default function (app,configuration,dbTables, models) {
     const context = get(configuration,'context', {});
+    const port = get(configuration,'ports.restApi',5000);
     app.use(cors())
     app.use(bodyParser.urlencoded({ extended: false }))
     app.use(bodyParser.json())
@@ -30,8 +31,8 @@ export default function (app,configuration,dbTables, models) {
         });
     });
 
-    app.listen(5000, () => {
-      console.log('Api server running at htt://localhost:5000!');
+    app.listen(port, () => {
+      console.log(`Api server running at htt://localhost:${port}!`);
     });
     
 }

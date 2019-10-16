@@ -6,8 +6,9 @@
   "author": "Ilyas Karim <ilyas.datoo@gmail.com> ",
   "license": "MIT",
   "scripts": {
+    "dev": "concurrently \"npm run watch-ts\"  \"nodemon  lib/devServer.js\" ",
     "build": "npm run clean && npm run build-ts",
-    "dev-server": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\"  \"npm run watch-ts\"  \"nodemon  lib/devServer.js\" ",
+    "production": "node lib/devServer.js",
     "watch-ts": "tsc -w"
   },
   "dependencies": {

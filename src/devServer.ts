@@ -15,6 +15,10 @@ wertik(app, {
     context: {
         myName: "My powerful app"
     },
+    ports: {
+        graphql: 4000,
+        restApi: 5000,
+    },
     modules: [
         {
             name: "Article",

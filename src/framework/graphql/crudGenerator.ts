@@ -20,6 +20,41 @@ export const generateMutationsCrudSubscriptionSchema = (moduleName: String) => {
     `
 }
 
+export const getSubscriptionConstants = (moduleName: String) => {
+    return {
+        createdModule: `created${moduleName}`,
+        deletedModule: `deleted${moduleName}`,
+        updatedModule: `updated${moduleName}`,
+        bulkCreatedModule: `bulkUpdated${moduleName}`,
+        bulkUpdatedModule: `bulkCreated${moduleName}`,
+        bulkDeletedModule: `bulkDeleted${moduleName}`,
+    }
+}
+
+export const generateSubscriptionsCrudResolvers = (moduleName: String, pubsub: any) => {
+    const {createdModule, deletedModule ,updatedModule , bulkCreatedModule ,bulkUpdatedModule ,bulkDeletedModule} = getSubscriptionConstants(moduleName);
+    return {
+        [createdModule]: {
+            subscribe: () => pubsub.asyncIterator(`create${moduleName}`)
+        },
+        [deletedModule]: {
+            subscribe: () => pubsub.asyncIterator(`delete${moduleName}`)
+        },
+        [updatedModule]: {
+            subscribe: () => pubsub.asyncIterator(`update${moduleName}`)
+        },
+        [bulkCreatedModule]: {
+            subscribe: () => pubsub.asyncIterator(`bulkUpdate${moduleName}`)
+        },
+        [bulkUpdatedModule]: {
+            subscribe: () => pubsub.asyncIterator(`bulkCreate${moduleName}`)
+        },
+        [bulkDeletedModule]: {
+            subscribe: () => pubsub.asyncIterator(`bulkDelete${moduleName}`)
+        }
+    }
+}
+
 export const generateMutationsCrudSchema = (moduleName: String) => {
     return `
         create${moduleName}(input: ${moduleName}Input): ${moduleName}
@@ -29,16 +64,10 @@ export const generateMutationsCrudSchema = (moduleName: String) => {
         bulkCreate${moduleName}(input: [${moduleName}Input]): [${moduleName}]
         bulkDelete${moduleName}(input: [${moduleName}Input]): [${moduleName}]
     `;
-
 }
 
 export const generateCrudResolvers = (moduleName: any, pubsub) => {
-    const createdModule = `created${moduleName}`;
-    const deletedModule = `deleted${moduleName}`;
-    const updatedModule = `updated${moduleName}`;
-    const bulkCreatedModule = `bulkUpdated${moduleName}`;
-    const bulkUpdatedModule = `bulkCreated${moduleName}`;
-    const bulkDeletedModule = `bulkDeleted${moduleName}`;
+    const {createdModule, deletedModule ,updatedModule , bulkCreatedModule ,bulkUpdatedModule ,bulkDeletedModule} = getSubscriptionConstants(moduleName);
     return {
         subscriptions: {
             [createdModule]: {
