@@ -1,6 +1,7 @@
 let {ApolloServer} = require("apollo-server");
 let {get} = require("lodash");
 let loadAllModules = require("./loadAllModules").default;
+let getUserWithAccessToken = require("./../security/getUserWithAccessToken").default;
 
 export default function (expressApp,configuration,dbTables,models,allEmailTemplates,sendEmail) {
     const port = get(configuration,'ports.graphql',4000);
@@ -12,16 +13,21 @@ export default function (expressApp,configuration,dbTables,models,allEmailTempla
         subscriptions: {
             path: '/subscriptions'
         },
-        context:  {
-            dbTables,
-            models,
-            sendEmail: sendEmail,
-            allEmailTemplates: allEmailTemplates,
-            ...context
+        context: async ({req, res}) => {
+            let user = await getUserWithAccessToken(models.User, get(req,'headers.authorization',''));
+            return {
+                user: user,
+                dbTables,
+                models,
+                sendEmail: sendEmail,
+                allEmailTemplates: allEmailTemplates,
+                ...context
+            }
         }
     });
-    apollo.listen(port).then(({url,subscriptionsUrl ,subscriptionsPath}) => {
+    apollo.listen(port).then(({url,subscriptionsUrl}) => {
         console.log("GraphQL server started at " + url);
         console.log("GraphQL subscriptions started at " + subscriptionsUrl);
     });
+    return apollo;
 }
