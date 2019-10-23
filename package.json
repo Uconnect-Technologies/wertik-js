@@ -25,7 +25,7 @@
     "jsonwebtoken": "^8.4.0",
     "lodash": "^4.17.11",
     "moment": "^2.23.0",
-    "mongoose": "^5.4.2",
+    "mongoose": "^5.7.5",
     "mongoose-paginate": "^5.0.3",
     "morgan": "^1.9.1",
     "mysql2": "^1.6.4",
