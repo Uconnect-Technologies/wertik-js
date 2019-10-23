@@ -6,7 +6,7 @@ let app = express();
 wertik(app, {
     dialect: "mysql",
     name: "Wertik",
-    builtinModules: "user,auth,permission,role,rolePermission,userPermission",
+    builtinModules: "user,auth,permission,role,rolePermission,userPermission,userRole",
     db_username: "root",
     db_password: "",
     db_name: "graphql",

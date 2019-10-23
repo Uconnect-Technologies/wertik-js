@@ -7,11 +7,12 @@ export default function (app,configuration) {
             let graphql = require("./framework/graphql/index").default;
             let restApi = require("./framework/restApi/index").default;
             let dbTables = require("./framework/database/loadTables").default(configuration);
+            let database = require("./framework/database/connect").default;
             let models = require("./framework/database/models").default(dbTables);
             let sendEmail = require("./framework/mailer/send").default;
             let allEmailTemplates = require("./framework/mailer/allEmailTemplates").default(configuration,__dirname);
-            let graphqlAppInstance = graphql(app,configuration,dbTables,models,allEmailTemplates,sendEmail);
-            let restApiInstance = restApi(app,configuration,dbTables,models,allEmailTemplates,sendEmail);
+            let graphqlAppInstance = graphql(app,configuration,dbTables,models,allEmailTemplates,sendEmail,database);
+            let restApiInstance = restApi(app,configuration,dbTables,models,allEmailTemplates,sendEmail,database);
             app.listen(3000);
             resolve({
                 graphql: graphqlAppInstance,
