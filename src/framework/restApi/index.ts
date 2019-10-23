@@ -2,14 +2,21 @@ const {get} = require("lodash");
 const cors = require('cors')
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-export default function (app,configuration,dbTables, models, allEmailTemplates,sendEmail) {
+let getUserWithAccessToken = require("./../security/getUserWithAccessToken").default;
+let getUserAllPermissions = require("./../security/getUserAllPermissions").default
+
+export default function (app,configuration,dbTables, models, allEmailTemplates,sendEmail,database) {
     const context = get(configuration,'context', {});
     const port = get(configuration,'ports.restApi',5000);
     app.use(cors())
     app.use(bodyParser.urlencoded({ extended: false }))
     app.use(bodyParser.json())
     app.use(morgan('combined'))
-    app.use(function (req, res, next) {
+    app.use(async function (req, res, next) {
+        let user = await getUserWithAccessToken(models.User, get(req,'headers.authorization',''));
+        let permissions = (user) ? await getUserAllPermissions(user.id,database) : [];
+        req.user = user;
+        req.permissions = permissions;
         req.dbTables = dbTables;
         req.models = models;
         req.context = context;
