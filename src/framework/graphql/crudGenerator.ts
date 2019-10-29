@@ -35,22 +35,22 @@ export const generateSubscriptionsCrudResolvers = (moduleName: String, pubsub: a
     const {createdModule, deletedModule ,updatedModule , bulkCreatedModule ,bulkUpdatedModule ,bulkDeletedModule} = getSubscriptionConstants(moduleName);
     return {
         [createdModule]: {
-            subscribe: () => pubsub.asyncIterator(`create${moduleName}`)
+            subscribe: () => pubsub.asyncIterator([createdModule])
         },
         [deletedModule]: {
-            subscribe: () => pubsub.asyncIterator(`delete${moduleName}`)
+            subscribe: () => pubsub.asyncIterator([deletedModule])
         },
         [updatedModule]: {
-            subscribe: () => pubsub.asyncIterator(`update${moduleName}`)
+            subscribe: () => pubsub.asyncIterator([updatedModule])
         },
         [bulkCreatedModule]: {
-            subscribe: () => pubsub.asyncIterator(`bulkUpdate${moduleName}`)
+            subscribe: () => pubsub.asyncIterator([bulkCreatedModule])
         },
         [bulkUpdatedModule]: {
-            subscribe: () => pubsub.asyncIterator(`bulkCreate${moduleName}`)
+            subscribe: () => pubsub.asyncIterator([bulkCreatedModule])
         },
         [bulkDeletedModule]: {
-            subscribe: () => pubsub.asyncIterator(`bulkDelete${moduleName}`)
+            subscribe: () => pubsub.asyncIterator([bulkDeletedModule])
         }
     }
 }
@@ -69,26 +69,6 @@ export const generateMutationsCrudSchema = (moduleName: String) => {
 export const generateCrudResolvers = (moduleName: any, pubsub) => {
     const {createdModule, deletedModule ,updatedModule , bulkCreatedModule ,bulkUpdatedModule ,bulkDeletedModule} = getSubscriptionConstants(moduleName);
     return {
-        subscriptions: {
-            [createdModule]: {
-                subscribe: () => pubsub.asyncIterator(`create${moduleName}`)
-            },
-            [deletedModule]: {
-                subscribe: () => pubsub.asyncIterator(`delete${moduleName}`)
-            },
-            [updatedModule]: {
-                subscribe: () => pubsub.asyncIterator(`update${moduleName}`)
-            },
-            [bulkCreatedModule]: {
-                subscribe: () => pubsub.asyncIterator(`bulkUpdate${moduleName}`)
-            },
-            [bulkUpdatedModule]: {
-                subscribe: () => pubsub.asyncIterator(`bulkCreate${moduleName}`)
-            },
-            [bulkDeletedModule]: {
-                subscribe: () => pubsub.asyncIterator(`bulkDelete${moduleName}`)
-            }
-        },
         mutations: {
             [`create${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
                 let requestedFields = getRequestedFieldsFromResolverInfo(info);

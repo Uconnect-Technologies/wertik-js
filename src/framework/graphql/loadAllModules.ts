@@ -4,7 +4,7 @@
 
 const {get} = require("lodash");
 import generalSchema from "./generalSchema"
-import {generateQueriesCrudSchema, generateListTypeForModule,generateMutationsCrudSubscriptionSchema, generateMutationsCrudSchema, generateCrudResolvers} from "./crudGenerator";
+import {generateSubscriptionsCrudResolvers, generateQueriesCrudSchema, generateListTypeForModule,generateMutationsCrudSubscriptionSchema, generateMutationsCrudSchema, generateCrudResolvers} from "./crudGenerator";
 let {PubSub} = require("apollo-server");
 const pubsub = new PubSub();
 
@@ -89,6 +89,7 @@ export default function (configuration) {
         let currentQueryResolvers = get(graphql,'query.resolvers',{});
         let currentModuleCrudResolvers = generateCrudResolvers(moduleName,pubsub);
         let currentModuleListSchema = (currentGenerateQuery || currentGenerateMutation) ? generateListTypeForModule(moduleName) : '';
+        let currentModuleSubscriptionResolvers = generateSubscriptionsCrudResolvers(moduleName, pubsub);
         // require information
         // crud
         if (currentGenerateQuery) {
@@ -112,7 +113,7 @@ export default function (configuration) {
         appQueries = {...appQueries, ...currentQueryResolvers};
         appMutations = {...appMutations, ...currentMutationResolvers};
         if (currentGenerateMutation) {
-            appSubscriptions = {...appSubscriptions, ...currentModuleCrudResolvers.subscriptions}
+            appSubscriptions = {...appSubscriptions, ...currentModuleSubscriptionResolvers}
         }
     }
 
