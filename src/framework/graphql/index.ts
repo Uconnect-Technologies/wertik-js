@@ -22,7 +22,7 @@ export default function (expressApp,configuration,dbTables,models,allEmailTempla
                 dbTables,
                 models,
                 sendEmail: sendEmail,
-                allEmailTemplates: allEmailTemplates,
+                emailTemplates: allEmailTemplates,
                 ...context,
                 permissions: permissions
             }

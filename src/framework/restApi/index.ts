@@ -21,7 +21,7 @@ export default function (app,configuration,dbTables, models, allEmailTemplates,s
         req.models = models;
         req.context = context;
         req.sendEmail = sendEmail;
-        req.allEmailTemplates = allEmailTemplates;
+        req.emailTemplates = allEmailTemplates;
         next();
     });
     
