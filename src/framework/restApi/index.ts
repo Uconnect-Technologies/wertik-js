@@ -28,9 +28,10 @@ export default function (app,configuration,dbTables, models, allEmailTemplates,s
     let modules = require("./loadAllModules").default(app,configuration);
     
     app.get('/', (req, res) => {
-        res.json({
-            message: 'Welcome to wertik, You have successfully running Wertik rest api!'
-        });
+        // res.json({
+        //     message: 'Welcome to wertik, You have successfully running Wertik rest api!'
+        // });
+        res.sendFile(__dirname + '/index.html');
     });
     
     app.get('*', function(req, res){
@@ -43,5 +44,5 @@ export default function (app,configuration,dbTables, models, allEmailTemplates,s
     app.listen(port, () => {
       console.log(`Api server running at htt://localhost:${port}!`);
     });
-    
+    return app;
 }
