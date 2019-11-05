@@ -28,10 +28,9 @@ export default function (app,configuration,dbTables, models, allEmailTemplates,s
     let modules = require("./loadAllModules").default(app,configuration);
     
     app.get('/', (req, res) => {
-        // res.json({
-        //     message: 'Welcome to wertik, You have successfully running Wertik rest api!'
-        // });
-        res.sendFile(__dirname + '/index.html');
+        res.json({
+            message: 'Welcome to wertik, You have successfully running Wertik rest api!'
+        });
     });
     
     app.get('*', function(req, res){
