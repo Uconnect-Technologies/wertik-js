@@ -18,7 +18,7 @@ wertik(app, {
     },
     ports: {
         graphql: 4000,
-        restApi: 5000,
+        restApi: 7000,
     },
     modules: [
         {

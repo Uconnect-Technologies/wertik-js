@@ -43,5 +43,5 @@ export default function (app,configuration,dbTables, models, allEmailTemplates,s
     app.listen(port, () => {
       console.log(`Api server running at htt://localhost:${port}!`);
     });
-    
+    return app;
 }

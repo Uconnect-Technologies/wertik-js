@@ -30,8 +30,8 @@
     "morgan": "^1.9.1",
     "mysql2": "^1.6.4",
     "nodemailer": "^5.0.0",
-    "nodemon": "^1.18.9",
-    "winston": "^3.1.0"
+    "winston": "^3.1.0",
+    "ws": "^7.2.0"
   },
   "devDependencies": {
     "@types/body-parser": "^1.16.8",
@@ -64,6 +64,7 @@
     "sequelize": "^5.21.2",
     "sequelize-cli": "^5.4.0",
     "tslint": "^5.17.0",
+    "nodemon": "^1.18.9",
     "typescript": "^3.5.1"
   }
 }
