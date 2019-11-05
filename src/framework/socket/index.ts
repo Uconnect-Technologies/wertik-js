@@ -1,3 +1,2 @@
-export default function (expressApp {
-  
+export default function () {
 }
