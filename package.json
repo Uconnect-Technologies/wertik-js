@@ -30,8 +30,8 @@
     "morgan": "^1.9.1",
     "mysql2": "^1.6.4",
     "nodemailer": "^5.0.0",
-    "socket.io": "^2.3.0",
-    "winston": "^3.1.0"
+    "winston": "^3.1.0",
+    "ws": "^7.2.0"
   },
   "devDependencies": {
     "@types/body-parser": "^1.16.8",

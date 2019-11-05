@@ -14,7 +14,7 @@ export default function (app,configuration) {
             let allEmailTemplates = require("./framework/mailer/allEmailTemplates").default(configuration,__dirname);
             let graphqlAppInstance = graphql(app,configuration,dbTables,models,allEmailTemplates,sendEmail,database);
             let restApiInstance = restApi(app,configuration,dbTables,models,allEmailTemplates,sendEmail,database);
-            let socket = socketIO()
+            let socket = socketIO(app);
             resolve({
                 graphql: graphqlAppInstance,
                 restApi: restApiInstance,
