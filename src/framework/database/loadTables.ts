@@ -12,7 +12,7 @@ export default function (configuration) {
     let tableName = get(module,'databaseTableName',module.name);
     let useDatabase = get(module,'useDatabase',true);
     if (useDatabase) {
-      let tableFields= convertFieldsIntoSequelizeFields(module.fields.sql);
+      let tableFields = convertFieldsIntoSequelizeFields(module.fields.sql);
       tables[tableName] = connection.define(snakeCase(tableName),{
         ...tableFields,
         created_at: {

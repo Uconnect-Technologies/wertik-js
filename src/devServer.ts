@@ -13,6 +13,8 @@ wertik(app, {
     db_host: "localhost",
     db_port: "3306",
     frontendAppUrl: "http://localhost:8080/",
+    frontendAppActivationUrl: "http://localhost:8080/activate-account",
+    frontendAppPasswordResetUrl: "http://localhost:8080",
     context: {
         myName: "My powerful app"
     },

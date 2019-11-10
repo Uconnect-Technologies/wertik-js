@@ -2,6 +2,7 @@ export default `
   <p>
     Hi {{userName}}, Welcome to {{siteName}}
   </p>
+  
   <p>
   Thanks for joining {{siteName}}, This email is to inform you that you have joined {{siteName}} on {{ date }}, <a
     href="{{activationUrl}}?token={{activationToken}}">Click Here</a> to verify your account.
@@ -9,6 +10,6 @@ export default `
 
   <p>
   Thanks <br />
-    {{ siteName }} Team.
+  {{ siteName }} Team.
   </p>
 `;
