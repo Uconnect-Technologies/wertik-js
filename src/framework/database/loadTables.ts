@@ -12,7 +12,7 @@ export default function (configuration) {
     let tableName = get(module,'databaseTableName',module.name);
     let useDatabase = get(module,'useDatabase',true);
     if (useDatabase) {
-      let tableFields= convertFieldsIntoSequelizeFields(module.fields.sql);
+      let tableFields = convertFieldsIntoSequelizeFields(module.fields.sql);
       tables[tableName] = connection.define(snakeCase(tableName),{
         ...tableFields,
         created_at: {
@@ -35,7 +35,6 @@ export default function (configuration) {
       });
     }
   }
-  //1
   modules.forEach(element => {
     let module;
     if (element.constructor === String) {
@@ -45,7 +44,6 @@ export default function (configuration) {
     }
     processModule(module);
   });
-  //1
   connection.sync();
   return tables;
 }

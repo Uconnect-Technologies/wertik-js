@@ -9,7 +9,7 @@ export default `
 </p>
 
 <p>
-  You can reset your password <a href="{{returnUrl}}{{frontendAppPasswordResetUrl}}?token={{token}}">Here</a>. This
+  You can reset your password <a href="{{frontendAppPasswordResetUrl}}?token={{token}}">Here</a>. This
   email is valid for next 30 minutes until {{nextMinutes}}.
 </p>
 
