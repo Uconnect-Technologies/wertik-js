@@ -25,7 +25,7 @@ export default function (app,configuration,dbTables, models, allEmailTemplates,s
         next();
     });
     
-    let modules = require("./loadAllModules").default(app,configuration);
+    require("./loadAllModules").default(app,configuration);
     
     app.get('/', (req, res) => {
         res.json({

@@ -35,7 +35,6 @@ export default function (configuration) {
       });
     }
   }
-  //1
   modules.forEach(element => {
     let module;
     if (element.constructor === String) {
@@ -45,7 +44,6 @@ export default function (configuration) {
     }
     processModule(module);
   });
-  //1
   connection.sync();
   return tables;
 }
