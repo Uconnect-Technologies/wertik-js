@@ -19,7 +19,7 @@ export default {
       return axios.post(url, data);
     },
     RoleDelete: (url, data) => {
-      return axios.post(url, data);
+      return axios.post(url, data);;
     },
   },
   User: {
