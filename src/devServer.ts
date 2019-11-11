@@ -90,7 +90,14 @@ wertik(app, {
                 }
             }
         }
-    ]
-}).then((p) => {
-    
+    ],
+    events: {
+        GRAPHQL_READY: () => {
+            console.log("graphql ready");
+        },
+        REST_API_READY: () => {
+            console.log("rest api ready");
+        },
+    }
+}).then((p: any) => {
 })

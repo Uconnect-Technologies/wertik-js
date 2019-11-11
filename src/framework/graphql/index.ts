@@ -4,7 +4,7 @@ let loadAllModules = require("./loadAllModules").default;
 let getUserWithAccessToken = require("./../security/getUserWithAccessToken").default;
 let getUserAllPermissions = require("./../security/getUserAllPermissions").default
 
-export default function (expressApp,configuration,dbTables,models,allEmailTemplates,sendEmail,database) {
+export default function (expressApp,configuration,dbTables,models,allEmailTemplates,sendEmail,database,WertikEventEmitter) {
     const port = get(configuration,'ports.graphql',4000);
     const modules = loadAllModules(configuration);  
     const context = get(configuration,'context', {});
@@ -32,5 +32,6 @@ export default function (expressApp,configuration,dbTables,models,allEmailTempla
         console.log("GraphQL server started at " + url);
         console.log("GraphQL subscriptions started at " + subscriptionsUrl);
     });
+    WertikEventEmitter.emit("GRAPHQL_READY");
     return apollo;
 }

@@ -1,9 +1,14 @@
 import validateConfigurationObject from "./framework/helpers/validateConfigurationObject";
 import convertConfigurationIntoEnvVariables from "./framework/helpers/convertConfigurationIntoEnvVariables";
+
+
 export default function (app,configuration) {
     return new Promise((resolve, reject) => {
     validateConfigurationObject(configuration).then(() => {
-        convertConfigurationIntoEnvVariables(configuration).then(() => {
+        convertConfigurationIntoEnvVariables(configuration).then(() => { 
+            const EventEmitter = require('events');
+            const WertikEventEmitter = new EventEmitter();
+            require("./framework/events/prepareEvents").default(configuration,WertikEventEmitter);
             let graphql = require("./framework/graphql/index").default;
             let restApi = require("./framework/restApi/index").default;
             let socketIO = require("./framework/socket/index").default;
@@ -12,8 +17,8 @@ export default function (app,configuration) {
             let models = require("./framework/database/models").default(dbTables);
             let sendEmail = require("./framework/mailer/send").default;
             let allEmailTemplates = require("./framework/mailer/allEmailTemplates").default(configuration,__dirname);
-            let graphqlAppInstance = graphql(app,configuration,dbTables,models,allEmailTemplates,sendEmail,database);
-            let restApiInstance = restApi(app,configuration,dbTables,models,allEmailTemplates,sendEmail,database);
+            let graphqlAppInstance = graphql(app,configuration,dbTables,models,allEmailTemplates,sendEmail,database, WertikEventEmitter);
+            let restApiInstance = restApi(app,configuration,dbTables,models,allEmailTemplates,sendEmail,database, WertikEventEmitter);
             let socket = socketIO(app);
             resolve({
                 graphql: graphqlAppInstance,
@@ -23,7 +28,8 @@ export default function (app,configuration) {
                 models: models,
                 emailTemplates: allEmailTemplates,
                 sendEmail: sendEmail,
-                database: database
+                database: database,
+                events: WertikEventEmitter
             });
         }).catch((err2) => {
             console.log("Something went wrong while initializing Wertik js, Please check docs, and make sure you that you pass correct configuration.");

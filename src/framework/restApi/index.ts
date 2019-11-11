@@ -5,7 +5,7 @@ const morgan = require('morgan');
 let getUserWithAccessToken = require("./../security/getUserWithAccessToken").default;
 let getUserAllPermissions = require("./../security/getUserAllPermissions").default
 
-export default function (app,configuration,dbTables, models, allEmailTemplates,sendEmail,database) {
+export default function (app,configuration,dbTables, models, allEmailTemplates,sendEmail,database,WertikEventEmitter) {
     const context = get(configuration,'context', {});
     const port = get(configuration,'ports.restApi',5000);
     app.use(cors())
@@ -43,5 +43,6 @@ export default function (app,configuration,dbTables, models, allEmailTemplates,s
     app.listen(port, () => {
       console.log(`Api server running at htt://localhost:${port}!`);
     });
+    WertikEventEmitter.emit("REST_API_READY");
     return app;
 }
