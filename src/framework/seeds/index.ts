@@ -3,6 +3,10 @@ export default function (configuration, models) {
     const seeds = configuration.seeds;
     const modules = Object.keys(seeds);
     return new Promise((resolve, reject) => {
+      if (modules.length == 0) {
+        resolve("No Seeds provided.");
+        return;
+      }
       modules.forEach((currentModule,index) => {
         let isEnd = modules.length - 1 == index;
         let moduleData = seeds[currentModule];
