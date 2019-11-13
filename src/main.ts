@@ -16,6 +16,7 @@ export default function (app,configuration) {
             let database = require("./framework/database/connect").default;
             let models = require("./framework/database/models").default(dbTables);
             let sendEmail = require("./framework/mailer/send").default;
+            let seeds = require("./framework/seeds/index").default(configuration, models)
             let allEmailTemplates = require("./framework/mailer/allEmailTemplates").default(configuration,__dirname);
             let graphqlAppInstance = graphql(app,configuration,dbTables,models,allEmailTemplates,sendEmail,database, WertikEventEmitter);
             let restApiInstance = restApi(app,configuration,dbTables,models,allEmailTemplates,sendEmail,database, WertikEventEmitter);
@@ -29,7 +30,8 @@ export default function (app,configuration) {
                 emailTemplates: allEmailTemplates,
                 sendEmail: sendEmail,
                 database: database,
-                events: WertikEventEmitter
+                events: WertikEventEmitter,
+                seeds: seeds
             });
         }).catch((err2) => {
             console.log("Something went wrong while initializing Wertik js, Please check docs, and make sure you that you pass correct configuration.");

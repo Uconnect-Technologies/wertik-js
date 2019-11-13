@@ -98,6 +98,20 @@ wertik(app, {
         REST_API_READY: () => {
             console.log("rest api ready");
         },
+    },
+    seeds: {
+        Role: [
+            {name: "Admin"},
+            {name: "Kako"}
+        ],
+        Permission: [
+            {name: "ca",cant: "true", can: "true"},
+            {name: "ca1",cant: "true1", can: "true1"},
+            {name: "ca2",cant: "true2", can: "true2"},
+        ]
     }
 }).then((p: any) => {
+    p.seeds().then((e) => {
+        console.log("Message from seeds", e);
+    });
 })
