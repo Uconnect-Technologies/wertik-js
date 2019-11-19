@@ -3,7 +3,9 @@ import wertik from "./main";
 
 let app = express();
 
-wertik(app, {
+wertik({
+    expressApp: app
+}, {
     dialect: "mysql",
     name: "Wertik",
     builtinModules: "user,auth,permission,role,rolePermission,userPermission,userRole,me",

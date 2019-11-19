@@ -1,8 +1,10 @@
 import validateConfigurationObject from "./framework/helpers/validateConfigurationObject";
 import convertConfigurationIntoEnvVariables from "./framework/helpers/convertConfigurationIntoEnvVariables";
-import initiateLogger from "./framework/logger/index"
+import initiateLogger from "./framework/logger/index";
 
-export default function (app,configuration) {
+
+export default function (apps,configuration) {
+    let expressApp = apps.expressApp ? apps.expressApp : require("express").default(); 
     return new Promise((resolve, reject) => {
     validateConfigurationObject(configuration).then(() => {
         convertConfigurationIntoEnvVariables(configuration).then(() => { 
@@ -19,9 +21,9 @@ export default function (app,configuration) {
                 let sendEmail = require("./framework/mailer/send").default;
                 let seeds = require("./framework/seeds/index").default(configuration, models)
                 let allEmailTemplates = require("./framework/mailer/allEmailTemplates").default(configuration,__dirname);
-                let graphqlAppInstance = graphql(app,configuration,dbTables,models,allEmailTemplates,sendEmail,database, WertikEventEmitter);
-                let restApiInstance = restApi(app,configuration,dbTables,models,allEmailTemplates,sendEmail,database, WertikEventEmitter);
-                let socket = socketIO(app);
+                let graphqlAppInstance = graphql(expressApp,configuration,dbTables,models,allEmailTemplates,sendEmail,database, WertikEventEmitter);
+                let restApiInstance = restApi(expressApp,configuration,dbTables,models,allEmailTemplates,sendEmail,database, WertikEventEmitter);
+                let socket = socketIO(expressApp);
                 resolve({
                     graphql: graphqlAppInstance,
                     restApi: restApiInstance,

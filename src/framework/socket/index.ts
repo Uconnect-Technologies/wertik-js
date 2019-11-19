@@ -1,4 +1,4 @@
-export default function (app) {
+export default function (expressApp) {
   const WebSocket = require('ws');
 
   const wss = new WebSocket.Server({
