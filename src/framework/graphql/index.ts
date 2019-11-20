@@ -23,8 +23,8 @@ export default function (expressApp,configuration,dbTables,models,allEmailTempla
                 models,
                 sendEmail: sendEmail,
                 emailTemplates: allEmailTemplates,
-                ...context,
-                permissions: permissions
+                permissions: permissions,
+                ...context
             }
         }
     });
