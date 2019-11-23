@@ -1,6 +1,6 @@
 {
   "name": "wertik-js",
-  "version": "1.1.9",
+  "version": "1.2.0",
   "main": "lib/main.js",
   "repository": "https://github.com/Uconnect-Technologies/wertik-js.git",
   "keywords": ["mysql","graphql","nodejs","boilerplate","javascript","starter-kit","mongodb","api","saas","saas-boilerplate","concepts","wertik-js","database","express-js","express-graphql","express-graphql-boilerplate","mongodb-database","mongoose","reactjs","vuejs"],
