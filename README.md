@@ -3,9 +3,14 @@
 
 **💪 GraphQL + Rest API** framework to kick start your project.
 
-<img style="float: right;" src="https://img.shields.io/github/downloads/ilyaskarim/wertik-js/total?style=flat-square">
-<img style="float: right;" src="https://img.shields.io/npm/dw/wertik-js?style=flat-square">
-<img style="float: right;" src="https://img.shields.io/github/issues-raw/ilyaskarim/wertik-js?style=flat-square">
+<div>
+	<img style="float: left;" src="https://img.shields.io/github/downloads/ilyaskarim/wertik-js/total?style=flat-square">
+	<img style="float: left;" src="https://img.shields.io/npm/dw/wertik-js?style=flat-square">
+	<img style="float: left;" src="https://img.shields.io/github/issues-raw/ilyaskarim/wertik-js?style=flat-square">
+</div>
+
+<br />
+<br />
 
 ### Table of contents
 
