@@ -37,6 +37,21 @@ Install with yarn
 
 Wertik-js is a node js library to kick start your project using GraphQL and Rest API. You can use Weritk-js with running project, Wertik-js relies on [Express](https://expressjs.com/) and [Apollo GraphQL](https://www.apollographql.com/). Wertik-js also comes with socket, logger, seeds and events feature.
 
+### Documentation
+
+You can find Wertik documentation on <a href="http://www.wapgee.com" target="_blank" >Wapgee</a>, Documentation Details:
+
+* <a href="http://www.wapgee.com/wertik-js/" target="_blank" >Main Page</a>
+* <a href="http://www.wapgee.com/wertik-js/getting-started/installation" target="_blank" >Installation</a>
+* <a href="http://www.wapgee.com/wertik-js/getting-started/configuration" target="_blank" >Configuration</a>
+* <a href="http://www.wapgee.com/wertik-js/getting-started/context" target="_blank" >Context</a>
+* <a href="http://www.wapgee.com/wertik-js/getting-started/built-in-modules" target="_blank" >Built in modules</a>
+* <a href="http://www.wapgee.com/wertik-js/getting-started/custom-modules" target="_blank" >Custom modules</a>
+* <a href="http://www.wapgee.com/wertik-js/how-wertik-works/folder-structure" target="_blank" >How Wertik Works / Folder Structure</a>
+* <a href="http://www.wapgee.com/wertik-js/how-wertik-works/graphql" target="_blank" >How Wertik Works / GraphQL</a>
+* <a href="http://www.wapgee.com/wertik-js/how-wertik-works/rest-api" target="_blank" >How Wertik Works / RestAPI</a>
+
+
 ### Folder Structure
 
 It is good to know how Wertik-js works, [Here](http://www.wapgee.com/wertik-js/how-wertik-works/folder-structure) is a guide to know how wertik works. 
