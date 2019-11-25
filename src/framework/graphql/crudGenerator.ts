@@ -121,7 +121,8 @@ export const generateCrudResolvers = (moduleName: any, pubsub) => {
         queries: {
             [`view${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
                 let requestedFields = getRequestedFieldsFromResolverInfo(info);
-                return await context.models[moduleName].view(args,requestedFields);
+                let view = await context.models2[moduleName].view(args,requestedFields);
+                return view;
             },
             [`list${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
                 let requestedFields = getRequestedFieldsFromResolverInfo(info);

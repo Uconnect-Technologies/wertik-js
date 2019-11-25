@@ -18,11 +18,12 @@ export default function (apps,configuration) {
                 let dbTables = require("./framework/database/loadTables").default(configuration);
                 let database = require("./framework/database/connect").default;
                 let models = require("./framework/database/models").default(dbTables);
+                let models2 = require("./framework/database/models2").default(dbTables);
                 let sendEmail = require("./framework/mailer/send").default;
                 let seeds = require("./framework/seeds/index").default(configuration, models)
                 let allEmailTemplates = require("./framework/mailer/allEmailTemplates").default(configuration,__dirname);
-                let graphqlAppInstance = graphql(expressApp,configuration,dbTables,models,allEmailTemplates,sendEmail,database, WertikEventEmitter);
-                let restApiInstance = restApi(expressApp,configuration,dbTables,models,allEmailTemplates,sendEmail,database, WertikEventEmitter);
+                let graphqlAppInstance = graphql(expressApp,configuration,dbTables,models,allEmailTemplates,sendEmail,database, WertikEventEmitter,models2);
+                let restApiInstance = restApi(expressApp,configuration,dbTables,models,allEmailTemplates,sendEmail,database, WertikEventEmitter,models2);
                 let socket = socketIO(expressApp);
                 resolve({
                     graphql: graphqlAppInstance,
@@ -30,6 +31,7 @@ export default function (apps,configuration) {
                     socket: socket,
                     dbTables: dbTables,
                     models: models,
+                    models2: models2,
                     emailTemplates: allEmailTemplates,
                     sendEmail: sendEmail,
                     database: database,

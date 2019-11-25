@@ -52,7 +52,6 @@ class Model {
       }
       return response;
     } catch (e) {
-      console.log(e.message);
       return internalServerError(e);
     }
   }
