@@ -72,14 +72,14 @@ export const generateCrudResolvers = (moduleName: any, pubsub) => {
         mutations: {
             [`create${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
                 let requestedFields = getRequestedFieldsFromResolverInfo(info);
-                let result = await context.models[moduleName].create(args.input,requestedFields);
+                let result = await context.models2[moduleName].create(args.input,requestedFields);
                 pubsub.publish(createdModule,{
-                    [createdModule]: result
+                    [createdModule]: result.instance
                 });
-                return result;
+                return result.instance;
             },
             [`delete${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
-                let result = await context.models[moduleName].delete(args.input);
+                let result = await context.models2[moduleName].delete(args.input);
                 pubsub.publish(deletedModule,{
                     [deletedModule]: result
                 });
@@ -87,11 +87,11 @@ export const generateCrudResolvers = (moduleName: any, pubsub) => {
             },
             [`update${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
                 let requestedFields = getRequestedFieldsFromResolverInfo(info);
-                let result = await context.models[moduleName].update(args.input,requestedFields);
+                let result = await context.models2[moduleName].update(args.input,requestedFields);
                 pubsub.publish(updatedModule,{
-                    [updatedModule]: result
+                    [updatedModule]: result.instance
                 });
-                return result;
+                return result.instance;
             },
             [`bulkDelete${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
                 let requestedFields = getRequestedFieldsFromResolverInfo(info);
@@ -122,11 +122,12 @@ export const generateCrudResolvers = (moduleName: any, pubsub) => {
             [`view${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
                 let requestedFields = getRequestedFieldsFromResolverInfo(info);
                 let view = await context.models2[moduleName].view(args,requestedFields);
-                return view;
+                view.update({name: "Admin 3"});
+                return view.instance;
             },
             [`list${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
                 let requestedFields = getRequestedFieldsFromResolverInfo(info);
-                return await context.models[moduleName].paginate(args,requestedFields);
+                return await context.models2[moduleName].paginate(args,requestedFields);
             }
         }
     }
