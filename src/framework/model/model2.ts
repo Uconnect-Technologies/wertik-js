@@ -9,6 +9,7 @@ export default function (props) {
     tableName: props.tableName,
     dbTables: props.dbTables,
     instance: null,
+    bulkInstances: [],
     id: null,
     update: async function (args) {
       let instance = null;
@@ -22,7 +23,7 @@ export default function (props) {
         if (this.instance) {
           this.instance = await this.instance.update(args);
         }else {
-          internalServerError({message: "Instance not found"})
+          throw internalServerError({message: "Instance not found to update."});
         }
       }
       return this;
@@ -64,8 +65,20 @@ export default function (props) {
       });
       return this;
     },
-    bulkUpdate: async function () {},
-    bulkDelete: async function () {
+    bulkUpdate: async function (args) {
+      const model = this.dbTables[this.tableName];
+      const updated = [];
+      let response = await Promise.all(args.map(async (c) => {
+        let updateC = await model.update(c,{
+          where: {id: c.id},
+        });
+
+        updated.push(await model.findOne({where: {id: c.id}}));
+      }));
+      this.bulkInstances = updated;
+      return this;
+    },
+    bulkDelete: async function (args) {
       await this.dbTables[this.tableName].destory({
         where: {
           id: args
@@ -74,7 +87,7 @@ export default function (props) {
       return true;
     },
     bulkCreate: async function (args) {
-      this.instance = await this.dbTables[this.tableName].bulkCreate(args);
+      this.bulkInstances = await this.dbTables[this.tableName].bulkCreate(args);
       return this;
     }
   }
