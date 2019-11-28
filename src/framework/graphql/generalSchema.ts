@@ -24,4 +24,9 @@ export default `
 		nextPage: Int
 		previousPage: Int
 	}
+	type SuccessResponse {
+        message: String
+        statusCode: Int
+	}
+	
 `;

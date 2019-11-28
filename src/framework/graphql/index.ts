@@ -4,7 +4,7 @@ let loadAllModules = require("./loadAllModules").default;
 let getUserWithAccessToken = require("./../security/getUserWithAccessToken").default;
 let getUserAllPermissions = require("./../security/getUserAllPermissions").default
 
-export default function (expressApp,configuration,dbTables,models,allEmailTemplates,sendEmail,database,WertikEventEmitter,models2) {
+export default function (expressApp,configuration,dbTables,models,allEmailTemplates,sendEmail,database,WertikEventEmitter) {
     const port = get(configuration,'ports.graphql',4000);
     const modules = loadAllModules(configuration);  
     const context = get(configuration,'context', {});
@@ -24,7 +24,6 @@ export default function (expressApp,configuration,dbTables,models,allEmailTempla
                 user: user,
                 dbTables,
                 models,
-                models2,
                 sendEmail: sendEmail,
                 emailTemplates: allEmailTemplates,
                 permissions: permissions,
