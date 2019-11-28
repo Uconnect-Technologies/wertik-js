@@ -65,7 +65,17 @@ export default function (props) {
       return this;
     },
     bulkUpdate: async function () {},
-    bulkDelete: async function () {},
-    bulkCreate: async function () {}
+    bulkDelete: async function () {
+      await this.dbTables[this.tableName].destory({
+        where: {
+          id: args
+        }
+      });
+      return true;
+    },
+    bulkCreate: async function (args) {
+      this.instance = await this.dbTables[this.tableName].bulkCreate(args);
+      return this;
+    }
   }
 }
