@@ -13,36 +13,40 @@ export default function (expressApp, configuration) {
       customApi(module,expressApp,url,currentApi);
     });
     expressApp.post(`/api/v1/${kebabCase(module.name)}/create`, async (req,res) => {
+      let result = await req.models[module.name].create(req.body.input);
       res.json({
         message: `${module.name} created`,
-        result: await req.models[module.name].create(req.body.input)
+        result: result.instance
       });
     });
-    expressApp.post(`/api/v1/${kebabCase(module.name)}/bulkCreate`, async (req,res) => {
+    expressApp.post(`/api/v1/${kebabCase(module.name)}/bulk-create`, async (req,res) => {
+      let result = await req.models[module.name].bulkCreate(req.body.input);
       res.json({
         message: `${module.name} created`,
-        result: await req.models[module.name].bulkCreate(req.body.input)
+        result: result.bulkInstances
       });
     });
     expressApp.put(`/api/v1/${kebabCase(module.name)}/update`, async (req,res) => {
+      let result = await req.models[module.name].update(req.body.input);
       res.json({
         message: `${module.name} updated`,
-        result: await req.models[module.name].update(req.body.input)
+        result: result.instance
       });
     });
-    expressApp.put(`/api/v1/${kebabCase(module.name)}/bulkUpdate`, async (req,res) => {
+    expressApp.put(`/api/v1/${kebabCase(module.name)}/bulk-update`, async (req,res) => {
+      let result = await req.models[module.name].bulkUpdate(req.body.input);
       res.json({
         message: `${module.name} updated`,
-        result: await req.models[module.name].bulkUpdate(req.body.input)
+        result: result.bulkInstances
       });
     });
-    expressApp.delete(`/api/v1/${kebabCase(module.name)}/delete`, async (req,res) => {
+    expressApp.delete(`/api/v1/${kebabCase(module.name)}/:id/delete`, async (req,res) => {
       res.json({
         message: `${module.name} deleted`,
-        result: await req.models[module.name].delete(req.body.input)
+        result: await req.models[module.name].delete({id: req.params.id})
       });
     });
-    expressApp.delete(`/api/v1/${kebabCase(module.name)}/bulkDelete`, async (req,res) => {
+    expressApp.delete(`/api/v1/${kebabCase(module.name)}/bulk-delete`, async (req,res) => {
       res.json({
         message: `${module.name} deleted`,
         result: await req.models[module.name].bulkDelete(req.body.input)
@@ -52,14 +56,17 @@ export default function (expressApp, configuration) {
       let model = req.models[module.name];
       res.json({
         message: `${module.name} list`,
-        result: await model.paginate(get(req.body,'pagination',{}),"*")
+        result: await model.paginate({
+          pagination: get(req.body,'pagination',{}),
+          filters: get(req.body,'filters',[])
+        },"*")
       });
     });
-    expressApp.get(`/api/v1/${kebabCase(module.name)}/view`, async (req,res) => {
-      let model = req.models[module.name];
+    expressApp.get(`/api/v1/${kebabCase(module.name)}/:id`, async (req,res) => {
+      let result = await req.models[module.name].view({id: req.params.id}, "*");
       res.json({
         message: `${module.name} view`,
-        result: await req.models[module.name].view(req.body.input, "*")
+        result: result.instance
       });
     });
   }
