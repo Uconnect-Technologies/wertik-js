@@ -62,7 +62,7 @@ export const generateMutationsCrudSchema = (moduleName: String) => {
         update${moduleName}(input: ${moduleName}Input): ${moduleName}
         bulkUpdate${moduleName}(input: [${moduleName}Input]): [${moduleName}]
         bulkCreate${moduleName}(input: [${moduleName}Input]): [${moduleName}]
-        bulkDelete${moduleName}(input: [${moduleName}Input]): [${moduleName}]
+        bulkDelete${moduleName}(input: [Int]): SuccessResponse
     `;
 }
 
@@ -72,11 +72,12 @@ export const generateCrudResolvers = (moduleName: any, pubsub) => {
         mutations: {
             [`create${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
                 let requestedFields = getRequestedFieldsFromResolverInfo(info);
+                context.models[moduleName].instance = null;
                 let result = await context.models[moduleName].create(args.input,requestedFields);
                 pubsub.publish(createdModule,{
-                    [createdModule]: result
+                    [createdModule]: result.instance
                 });
-                return result;
+                return result.instance;
             },
             [`delete${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
                 let result = await context.models[moduleName].delete(args.input);
@@ -87,11 +88,12 @@ export const generateCrudResolvers = (moduleName: any, pubsub) => {
             },
             [`update${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
                 let requestedFields = getRequestedFieldsFromResolverInfo(info);
+                context.models[moduleName].instance = null;
                 let result = await context.models[moduleName].update(args.input,requestedFields);
                 pubsub.publish(updatedModule,{
-                    [updatedModule]: result
+                    [updatedModule]: result.instance
                 });
-                return result;
+                return result.instance;
             },
             [`bulkDelete${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
                 let requestedFields = getRequestedFieldsFromResolverInfo(info);
@@ -107,7 +109,7 @@ export const generateCrudResolvers = (moduleName: any, pubsub) => {
                 pubsub.publish(bulkUpdatedModule,{
                     [bulkUpdatedModule]: result
                 });
-                return result;
+                return result.bulkInstances;
             },
             [`bulkUpdate${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
                 let requestedFields = getRequestedFieldsFromResolverInfo(info);
@@ -115,13 +117,15 @@ export const generateCrudResolvers = (moduleName: any, pubsub) => {
                 pubsub.publish(bulkDeletedModule,{
                     [bulkDeletedModule]: result
                 });
-                return result;
+                return result.bulkInstances;
             }
         },
         queries: {
             [`view${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
                 let requestedFields = getRequestedFieldsFromResolverInfo(info);
-                return await context.models[moduleName].view(args,requestedFields);
+                let view = await context.models[moduleName].view(args,requestedFields);
+                view.update({name: "Admin 3"});
+                return view.instance;
             },
             [`list${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
                 let requestedFields = getRequestedFieldsFromResolverInfo(info);

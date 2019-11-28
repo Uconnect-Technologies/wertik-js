@@ -1,6 +1,6 @@
 export default `
 <p>
-  Hi {{userName}},
+  Hi {{username}},
 </p>
 <p>
   Your account is successfully activated on {{siteName}}
