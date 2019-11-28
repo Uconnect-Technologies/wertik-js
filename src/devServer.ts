@@ -103,13 +103,13 @@ wertik({
     },
     seeds: {
         Role: [
-            // {name: "Admin"},
-            // {name: "Kako"}
+            {name: "Admin"},
+            {name: "Kako"}
         ],
         Permission: [
-            // {name: "ca",cant: "true", can: "true"},
-            // {name: "ca1",cant: "true1", can: "true1"},
-            // {name: "ca2",cant: "true2", can: "true2"},
+            {name: "ca",cant: "true", can: "true"},
+            {name: "ca1",cant: "true1", can: "true1"},
+            {name: "ca2",cant: "true2", can: "true2"},
         ]
     }
 }).then((p: any) => {

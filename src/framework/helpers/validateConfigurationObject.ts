@@ -1,4 +1,3 @@
-import {get} from "lodash";
 
 export const requiredFields = {
     name: "required",
@@ -13,15 +12,8 @@ export const requiredFields = {
 export default function (object) {
     return new Promise((resolve, reject) => {
         const {name, dialect} = object;
-        const db_name = get(object,'db_name','');
-        const db_host = get(object,'db_host','');
-        const db_port = get(object,'db_port','');
         if (name && dialect) {
-            if (dialect == "mysql" && db_name && db_host && db_port ) {
-                resolve("Configuration object passed");
-            }else {
-                reject(["Missing db_name/db_host/db_port for MYSQL dialect."]);
-            }
+            resolve("Configuration object passed");
         }else {
             reject(["Missing name", "Missing Dialect"]);
         }
