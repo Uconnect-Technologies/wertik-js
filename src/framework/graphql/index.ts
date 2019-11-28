@@ -14,6 +14,9 @@ export default function (expressApp,configuration,dbTables,models,allEmailTempla
         subscriptions: {
             path: '/subscriptions'
         },
+        cacheControl: {
+            defaultMaxAge: 0,
+        },
         context: async ({req, res}) => {
             let user = await getUserWithAccessToken(models.User, get(req,'headers.authorization',''));
             let permissions = (user) ? await getUserAllPermissions(user.id,database) : [];

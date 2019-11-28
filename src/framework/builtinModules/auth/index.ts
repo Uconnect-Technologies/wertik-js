@@ -2,6 +2,7 @@ let bcrypt = require("bcrypt-nodejs");
 import moment from "moment";
 import statusCodes from "./../../../framework/helpers/statusCodes";
 import createJwtToken from "./../../../framework/security/createJwtToken";
+import getRequestedFieldsFromResolverInfo from "./../../helpers/getRequestedFieldsFromResolverInfo";
 import {ApolloError} from "apollo-server";
 import {get} from "lodash";
 export default {
@@ -45,7 +46,29 @@ export default {
                     
                 },
                 activateAccount:  async (_:any, args:any, context:any,info: any) => {
-
+                    let requestedFields = getRequestedFieldsFromResolverInfo(info);
+                    const {input: {activationToken}} = args;
+                    let user = await context.models['User'].findOne({
+                        activationToken: activationToken
+                    });
+                    if (user) {
+                        await context.models['User'].update({activate: "", is_Activated: true,id: user.id},requestedFields);
+                        await context.sendEmail(
+                            context.emailTemplates.accountActivated,
+                            {
+                                username: user.email,
+                                siteName: process.env.name,
+                            },
+                            {
+                                from: process.env.mailerServiceUsername,
+                                to: user.email,
+                                subject: `Your account has been activated.`
+                            }
+                        );
+                        return user;
+                    }else {
+                        throw new ApolloError("Activation token mismatched.");
+                    }
                 },
                 signup:  async (_:any, args:any, context:any,info: any) => {
                     let { email, password, confirmPassword } = args.input;
@@ -82,7 +105,7 @@ export default {
                         password: hash
                       });
                     await context.sendEmail(
-                        context.allEmailTemplates.welcome,
+                        context.emailTemplates.welcome,
                         {
                             email: newUser.email,
                             username: newUser.email,
