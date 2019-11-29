@@ -7,7 +7,7 @@ const morgan = require('morgan');
 let getUserWithAccessToken = require("./../security/getUserWithAccessToken").default;
 let getUserAllPermissions = require("./../security/getUserAllPermissions").default
 
-export default function (expressApp,configuration,dbTables, models, allEmailTemplates,sendEmail,database,WertikEventEmitter,models2) {
+export default function (expressApp,configuration,dbTables, models, allEmailTemplates,sendEmail,database,WertikEventEmitter) {
     const context = get(configuration,'context', {});
     const port = get(configuration,'ports.restApi',5000);
     expressApp.use(cors())
@@ -24,10 +24,8 @@ export default function (expressApp,configuration,dbTables, models, allEmailTemp
         req.context = context;
         req.sendEmail = sendEmail;
         req.emailTemplates = allEmailTemplates;
-        req.models2 = models2;
         next();
     });
-
     
     require("./versions/v1/loadAllModules").default(expressApp,configuration,customApi);
     
