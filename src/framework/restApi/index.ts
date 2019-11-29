@@ -1,3 +1,5 @@
+import customApi from "./customApi";
+
 const {get} = require("lodash");
 const cors = require('cors')
 const bodyParser = require('body-parser');
@@ -25,7 +27,7 @@ export default function (expressApp,configuration,dbTables, models, allEmailTemp
         next();
     });
     
-    require("./loadAllModules").default(expressApp,configuration);
+    require("./versions/v1/loadAllModules").default(expressApp,configuration,customApi);
     
     expressApp.get('/', (req, res) => {
         res.json({

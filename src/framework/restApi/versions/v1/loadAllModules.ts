@@ -1,6 +1,5 @@
 import {get,kebabCase} from "lodash";
-import customApi from "./customApi";
-export default function (expressApp, configuration) {
+export default function (expressApp, configuration,customApi) {
   let modules = configuration.builtinModules.split(",");
   modules = [...modules, ...get(configuration,'modules', [])]
 
@@ -74,7 +73,7 @@ export default function (expressApp, configuration) {
   modules.forEach(element => {
     let module;
     if (element.constructor === String) {
-      module = require(`./../builtinModules/${element}/index`).default;
+      module = require(`./../../../builtinModules/${element}/index`).default;
     }else if (element.constructor === Object) {
       module = element;
     }
