@@ -3,8 +3,7 @@ import {get,snakeCase} from "lodash";
 import Sequelize from "sequelize";
 import moment from "moment";
 import {convertFieldsIntoSequelizeFields} from "./helpers/index";
-export default function (configuration) {
-  let connection = require("./connect").default;
+export default function (connection,configuration) {
   let modules = process.env.builtinModules.split(",");
   modules = [...modules, ...get(configuration,'modules', [])]
   let tables = {};
