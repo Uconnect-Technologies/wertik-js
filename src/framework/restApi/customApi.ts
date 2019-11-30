@@ -1,12 +1,17 @@
 import {get,kebabCase} from "lodash";
-export default (module,expressApp,url, info) => {
+export default (expressApp, restApiEndpointsElement,module) => {
   const versionPath = 'api/v1';
-  const type = get(info,'type','get');
-  const handler = get(info,'handler',() => {});
+  const type = get(restApiEndpointsElement,'type','get');
+  const handler = get(restApiEndpointsElement,'handler',() => {});
+  const path = get(restApiEndpointsElement,'path','');
   const types = ["get","post","put","delete","copy","head","options","link","unlink","purge","lock","unlock","view"];
   if (types.indexOf(type) > -1) {
-    expressApp[type](`/${versionPath}/${kebabCase(module.name)}/${url}`,handler)
+    let apiPath = `/${versionPath}/${kebabCase(module.name)}/${path}`;
+    let find = '//';
+    let re = new RegExp(find, 'g');
+    apiPath = apiPath.replace(re, '/');
+    expressApp[type](apiPath,handler);
   }else {
-    console.warn(`On module ${module.name}, Api endpoint ${url}, has undefined type ${type}`);
+    console.warn(`On module ${module.name}, Api endpoint ${path}, has undefined type ${type}`);
   }
 }
