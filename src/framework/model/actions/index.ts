@@ -1,4 +1,4 @@
-const dialect = process.env.dialect;
+const dialect = process.env.dbDialect;
 let action = dialect.toLowerCase();
 let path = __dirname;
 

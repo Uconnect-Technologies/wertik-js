@@ -11,11 +11,12 @@ export const requiredFields = {
 
 export default function (object) {
     return new Promise((resolve, reject) => {
-        const {name, dialect} = object;
-        if (name && dialect) {
-            resolve("Configuration object passed");
-        }else {
-            reject(["Missing name", "Missing Dialect"]);
-        }
+        resolve();
+        // const {name, dialect} = object;
+        // if (name && dialect) {
+        //     resolve("Configuration object passed");
+        // }else {
+        //     reject(["Missing name", "Missing Dialect"]);
+        // }
     })
 }
