@@ -82,7 +82,7 @@ export default {
                         password: hash
                       });
                     await context.sendEmail(
-                        context.allEmailTemplates.welcome,
+                        context.emailTemplates.welcome,
                         {
                             email: newUser.email,
                             username: newUser.email,
