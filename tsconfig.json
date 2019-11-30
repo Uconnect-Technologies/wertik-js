@@ -8,8 +8,12 @@
 		"sourceMap": true,
 		"outDir": "lib",
 		"baseUrl": "./",
+		"lib": ["es6", "dom", "esnext.asynciterable"],
 		"types": [
 			"node",
+			"es2017",
+			"dom",
+			"esnext"
 		]
 	},
 	"include": [
