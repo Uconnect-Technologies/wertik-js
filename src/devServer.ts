@@ -20,6 +20,7 @@ wertik({
     context: {
         myName: "My powerful app"
     },
+    forceStart: true,
     ports: {
         graphql: 4000,
         restApi: 7000,
@@ -64,22 +65,26 @@ wertik({
                 }
             },
             restApi: {
-                'apple/11/1': {
-                    type: 'get',
-                    handler: function (req, res) {
-                        res.json({
-                            message: true
-                        })
+                endpoints: [
+                    {   
+                        path: '/apple/11/1',
+                        type: 'get',
+                        handler: function (req, res) {
+                          res.json({
+                              message: true
+                          })
+                        }
+                    },
+                    {
+                        path: '/people/',
+                        type: 'put',
+                        handler: function (req, res) {
+                            res.json({
+                                message: true
+                            })
+                        }
                     }
-                },
-                'people': {
-                    type: 'put',
-                    handler: function (req, res) {
-                        res.json({
-                            message: true
-                        })
-                    }
-                }
+                ]
             },
             fields: {
                 sql: {

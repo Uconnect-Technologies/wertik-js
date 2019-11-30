@@ -5,11 +5,9 @@ export default function (expressApp, configuration,customApi) {
 
   const processModule = (module) => {
     const restApi = get(module,'restApi',{});
-    const restApisInArray = Object.keys(restApi);
-    restApisInArray.forEach(element => {
-      const currentApi = restApi[element];
-      const url = element;
-      customApi(module,expressApp,url,currentApi);
+    const restApiEndpoints = get(restApi,'endpoints',[]);
+    restApiEndpoints.forEach(restApiEndpointsElement => {
+      customApi(expressApp, restApiEndpointsElement,module);
     });
     expressApp.post(`/api/v1/${kebabCase(module.name)}/create`, async (req,res) => {
       let result = await req.models[module.name].create(req.body.input);

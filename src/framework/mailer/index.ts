@@ -15,11 +15,7 @@ const defaultMailerInstance = async function ()  {
   return transporter;
 }
 
-export default async function mailerInstance() {
-  return await defaultMailerInstance();
-}
-
-export const sendEmail = async function (template: string, variables: any, credentials: any) {
+const defaultSendEmailMethod = async function (template: string, variables: any, credentials: any) {
   let transporter: any = await mailerInstance();
 	let compiled = handlebars.compile(template);
 	let resultTemplate = compiled(variables);
@@ -36,4 +32,12 @@ export const sendEmail = async function (template: string, variables: any, crede
 	} catch (e) {
 		console.log(`Failed sending email: ${e.message}`);
 	}
+}
+
+export default async function mailerInstance() {
+  return await defaultMailerInstance();
+}
+
+export const sendEmail = async function (template: string, variables: any, credentials: any) {
+  return await defaultSendEmailMethod(template, variables, credentials);
 }

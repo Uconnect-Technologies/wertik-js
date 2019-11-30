@@ -45,6 +45,8 @@ export default function (expressApp,configuration,dbTables, models, allEmailTemp
     expressApp.listen(port, () => {
       console.log(`Api server running at htt://localhost:${port}!`);
     });
+
     WertikEventEmitter.emit("REST_API_READY");
+    
     return expressApp;
 }
