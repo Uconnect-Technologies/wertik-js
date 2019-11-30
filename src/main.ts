@@ -1,7 +1,6 @@
 import validateConfigurationObject from "./framework/helpers/validateConfigurationObject";
 import convertConfigurationIntoEnvVariables from "./framework/helpers/convertConfigurationIntoEnvVariables";
 import initiateLogger from "./framework/logger/index";
-const startDatabase = require("./framework/database/connect").default;
 
 export default function (apps,configuration) {
     let expressApp = apps.expressApp ? apps.expressApp : require("express").default(); 
