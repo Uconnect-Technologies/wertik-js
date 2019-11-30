@@ -1,6 +1,6 @@
 export default `
   <p>
-    Hi {{userName}}, Welcome to {{siteName}}
+    Hi {{username}}, Welcome to {{siteName}}
   </p>
   
   <p>
