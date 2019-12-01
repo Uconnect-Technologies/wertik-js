@@ -3,12 +3,14 @@ let {get} = require("lodash");
 let loadAllModules = require("./loadAllModules").default;
 let getUserWithAccessToken = require("./../security/getUserWithAccessToken").default;
 let getUserAllPermissions = require("./../security/getUserAllPermissions").default
+import {IGraphQLInitialize} from "./../types/servers";
 
-export default function (expressApp,configuration,dbTables,models,allEmailTemplates,sendEmail,database,WertikEventEmitter) {
-    const {forceStartGraphqlServer} = configuration;
-    const port = get(configuration,'ports.graphql',4000);
+
+//expressApp,configuration,dbTables,models,emailTemplates,sendEmail,database,WertikEventEmitter
+
+export default function (options: IGraphQLInitialize) {
+    const {configuration,context,dbTables, models, sendEmail, emailTemplates,database, WertikEventEmitter} = options;
     const modules = loadAllModules(configuration);  
-    const context = get(configuration,'context', {});
     let apollo = new ApolloServer({
         typeDefs: modules.schema,
         resolvers: modules.resolvers,
@@ -23,14 +25,14 @@ export default function (expressApp,configuration,dbTables,models,allEmailTempla
                 dbTables,
                 models,
                 sendEmail: sendEmail,
-                emailTemplates: allEmailTemplates,
+                emailTemplates: emailTemplates,
                 permissions: permissions,
                 ...context
             }
         }
     });
-    if (forceStartGraphqlServer == true) {
-        apollo.listen(port).then(({url,subscriptionsUrl}) => {
+    if (configuration.forceStartGraphqlServer == true) {
+        apollo.listen(configuration.ports.graphql).then(({url,subscriptionsUrl}) => {
             console.log("GraphQL server started at " + url);
             console.log("GraphQL subscriptions started at " + subscriptionsUrl);
         });

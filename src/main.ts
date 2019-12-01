@@ -20,8 +20,25 @@ export default function (apps,configuration) {
                     let {sendEmail} = require("./framework/mailer/index");
                     let seeds = require("./framework/seeds/index").default(configuration, models)
                     let emailTemplates = require("./framework/mailer/emailTemplates").default(configuration,__dirname);
-                    let graphqlAppInstance = graphql(expressApp,configuration,dbTables,models,emailTemplates,sendEmail,database, WertikEventEmitter);
-                    let restApiInstance = restApi(expressApp,configuration,dbTables,models,emailTemplates,sendEmail,database, WertikEventEmitter);
+                    let graphqlAppInstance = graphql({
+                        expressApp: expressApp,
+                        configuration: configuration,
+                        dbTables: dbTables,
+                        models: models,
+                        emailTemplates: emailTemplates,
+                        database: database,
+                        WertikEventEmitter: WertikEventEmitter
+                    });
+                    let restApiInstance = restApi({
+                        expressApp: expressApp,
+                        configuration: configuration,
+                        dbTables: dbTables,
+                        models: models,
+                        emailTemplates: emailTemplates,
+                        sendEmail: sendEmail,
+                        database: database,
+                        WertikEventEmitter
+                    });
                     let socket = socketIO(expressApp);
                     resolve({
                         graphql: graphqlAppInstance,
