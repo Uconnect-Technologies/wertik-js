@@ -71,7 +71,7 @@ wertik({
                 endpoints: [
                     {   
                         path: '/apple/11/1',
-                        type: 'get',
+                        methodType: 'get',
                         handler: function (req, res) {
                           res.json({
                               message: true
@@ -80,7 +80,7 @@ wertik({
                     },
                     {
                         path: '/people/',
-                        type: 'put',
+                        methodType: 'put',
                         handler: function (req, res) {
                             res.json({
                                 message: true
@@ -119,6 +119,17 @@ wertik({
             {name: "ca1",cant: "true1", can: "true1"},
             {name: "ca2",cant: "true2", can: "true2"},
         ]
+    },
+    sockets: {
+        onClientConnected: function (req, wss) {
+            console.log("on client connected",`Total connections right now ${wss.clients.size}`);
+        },
+        onMessageReceived: function (message) {
+            console.log("on message received: " + message);
+        },
+        onClientDisconnect: function (wss) {
+            console.log("on client disconnected",`Total connections right now ${wss.clients.size}`);
+        }
     }
 }).then((p: any) => {
     p.seeds().then((e) => {

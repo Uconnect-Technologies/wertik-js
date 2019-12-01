@@ -1,8 +1,9 @@
 import validateConfigurationObject from "./framework/helpers/validateConfigurationObject";
 import convertConfigurationIntoEnvVariables from "./framework/helpers/convertConfigurationIntoEnvVariables";
 import initiateLogger from "./framework/logger/index";
+import {IConfiguration} from "./framework/types/configuration"
 
-export default function (apps,configuration) {
+export default function (apps,configuration: IConfiguration) {
     let expressApp = apps.expressApp ? apps.expressApp : require("express").default(); 
     return new Promise((resolve, reject) => {
         validateConfigurationObject(configuration).then(() => {
@@ -13,7 +14,7 @@ export default function (apps,configuration) {
                     require("./framework/events/prepareEvents").default(configuration,WertikEventEmitter);
                     let graphql = require("./framework/graphql/index").default;
                     let restApi = require("./framework/restApi/index").default;
-                    let socketIO = require("./framework/socket/index").default;
+                    let socket = require("./framework/socket/index").default(configuration.sockets);
                     let database = require("./framework/database/connect").default(configuration);
                     let dbTables = require("./framework/database/loadTables").default(database, configuration);
                     let models = require("./framework/database/models").default(dbTables);
@@ -39,7 +40,6 @@ export default function (apps,configuration) {
                         database: database,
                         WertikEventEmitter
                     });
-                    let socket = socketIO(expressApp);
                     resolve({
                         graphql: graphqlAppInstance,
                         restApi: restApiInstance,

@@ -23,3 +23,16 @@ export interface IRestApiInitialize {
   WertikEventEmitter: any;
   context: any;
 }
+
+export interface ISocketInitializeOptions {
+  onMessageReceived: Function;
+  onClientConnected: Function;
+  onClientDisconnect: Function;
+  send: Function;
+}
+
+export interface ISocketConfiguration {
+  onMessageReceived: Function;
+  onClientConnected: Function;
+  onClientDisconnect: Function;
+}

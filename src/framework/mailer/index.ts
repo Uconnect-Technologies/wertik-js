@@ -1,7 +1,7 @@
 let nodemailer = require('nodemailer');
 let handlebars = require("handlebars");
 
-const defaultMailerInstance = async function ()  {
+export const defaultMailerInstance = async function ()  {
   let testAccount = await nodemailer.createTestAccount();
   let transporter = nodemailer.createTransport({
     host: "smtp.ethereal.email",

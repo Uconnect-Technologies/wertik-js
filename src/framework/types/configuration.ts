@@ -1,3 +1,4 @@
+import {ISocketConfiguration} from "./servers";
 export interface IConfigurationPorts {
   graphql: Number;
   restApi: Number;
@@ -85,5 +86,6 @@ export interface IConfiguration {
   ports: IConfigurationPorts;
   modules: Array<IConfigurationCustomModule>;
   events: IConfigurationEvents;
-  seeds: any
+  seeds: any;
+  sockets: ISocketConfiguration
 }
