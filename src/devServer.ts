@@ -9,11 +9,6 @@ wertik({
     dbDialect: "mysql",
     name: "Wertik",
     builtinModules: "user,auth,permission,role,rolePermission,userPermission,userRole,me",
-    db_username: "root",
-    db_password: "",
-    db_name: "graphql",
-    db_host: "localhost",
-    db_port: "3306",
     mysqlOptions: {
         dbUsername: "root",
         dbPassword: "",
@@ -27,7 +22,8 @@ wertik({
     context: {
         myName: "My powerful app"
     },
-    forceStart: true,
+    forceStartGraphqlServer: true,
+    forceStartRestApiServer: true,
     ports: {
         graphql: 4000,
         restApi: 7000,

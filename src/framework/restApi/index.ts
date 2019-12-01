@@ -8,6 +8,7 @@ let getUserWithAccessToken = require("./../security/getUserWithAccessToken").def
 let getUserAllPermissions = require("./../security/getUserAllPermissions").default
 
 export default function (expressApp,configuration,dbTables, models, allEmailTemplates,sendEmail,database,WertikEventEmitter) {
+    const {forceStartRestApiServer} = configuration;
     const context = get(configuration,'context', {});
     const port = get(configuration,'ports.restApi',5000);
     expressApp.use(cors())
@@ -41,10 +42,11 @@ export default function (expressApp,configuration,dbTables, models, allEmailTemp
             detail: "Request page didn't found"
         });
     });
-
-    expressApp.listen(port, () => {
-      console.log(`Api server running at htt://localhost:${port}!`);
-    });
+    if (forceStartRestApiServer == true) {
+        expressApp.listen(port, () => {
+            console.log(`Api server running at htt://localhost:${port}!`);
+        });
+    }
 
     WertikEventEmitter.emit("REST_API_READY");
     
