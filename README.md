@@ -1,9 +1,9 @@
 ﻿# Wertick JS
 
+**💪 GraphQL + Rest API** framework to kick start your project.
+
 
 #### Beta Version. Stable version will be launched after 1.5. Current vesrion: 1.2
-
-**💪 GraphQL + Rest API** framework to kick start your project.
 
 <div>
 	<img style="float: left;" src="https://img.shields.io/github/downloads/ilyaskarim/wertik-js/total?style=flat-square">
@@ -12,7 +12,7 @@
 </div>
 
 <br />
-<br />
+
 
 ### Table of contents
 
