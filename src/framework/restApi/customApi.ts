@@ -1,7 +1,7 @@
 import {get,kebabCase} from "lodash";
 export default (expressApp, restApiEndpointsElement,module) => {
   const versionPath = 'api/v1';
-  const type = get(restApiEndpointsElement,'type','get');
+  const type = get(restApiEndpointsElement,'methodType','get');
   const handler = get(restApiEndpointsElement,'handler',() => {});
   const path = get(restApiEndpointsElement,'path','');
   const types = ["get","post","put","delete","copy","head","options","link","unlink","purge","lock","unlock","view"];

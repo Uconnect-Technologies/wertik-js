@@ -1,4 +1,6 @@
-export default function (expressApp) {
+import {ISocketInitializeOptions,ISocketConfiguration } from "../types/servers";
+
+export const defaultSocketInstance = (options: ISocketInitializeOptions) => {
   const WebSocket = require('ws');
 
   const wss = new WebSocket.Server({
@@ -23,15 +25,30 @@ export default function (expressApp) {
       // should not be compressed.
     }
   });
-  wss.on('connection', function connection(ws) {
+  wss.on('connection', function connection(ws,req) {
     ws.on('message', function incoming(message) {
-      console.log('received: %s', message);
+      options.onMessageReceived(message, wss);
     });
+
+    ws.on('close', function close() {
+      options.onClientDisconnect(wss);
+    });
+
+    options.onClientConnected(req,wss);
   
-    ws.send('something');
+    ws.send('Socket connected, message from server side.');
   });
 
   console.log("Websocket server is running at ws://localhost:2000 ")
 
   return wss;
+}
+
+export default function (options: ISocketConfiguration) {
+  let ws = defaultSocketInstance({
+    onClientConnected: options.onClientConnected,
+    onMessageReceived: options.onMessageReceived,
+    onClientDisconnect: options.onClientDisconnect
+  });
+  return ws;
 }
