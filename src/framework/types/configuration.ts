@@ -66,6 +66,11 @@ export interface IConfigurationMysqlOptions {
   dbPort: String;
 }
 
+export interface IConfigurationEvents {
+  beforeRestApiStart: Function;
+  beforeGraphqlStart: Function;
+}
+
 export interface IConfiguration {
   dbDialect: String;
   name: String;
@@ -77,6 +82,8 @@ export interface IConfiguration {
   context: Object;
   forceStartGraphqlServer: Boolean;
   forceStartRestApiServer: Boolean;
-  ports: IConfigurationPorts
-  modules: Array<IConfigurationCustomModule>
+  ports: IConfigurationPorts;
+  modules: Array<IConfigurationCustomModule>;
+  events: IConfigurationEvents;
+  seeds: any
 }
