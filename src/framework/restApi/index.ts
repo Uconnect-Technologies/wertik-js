@@ -1,4 +1,5 @@
 import customApi from "./customApi";
+import {IRestApiInitialize} from "./../types/servers";
 
 const {get} = require("lodash");
 const cors = require('cors')
@@ -7,10 +8,11 @@ const morgan = require('morgan');
 let getUserWithAccessToken = require("./../security/getUserWithAccessToken").default;
 let getUserAllPermissions = require("./../security/getUserAllPermissions").default
 
-export default function (expressApp,configuration,dbTables, models, allEmailTemplates,sendEmail,database,WertikEventEmitter) {
-    const {forceStartRestApiServer} = configuration;
-    const context = get(configuration,'context', {});
-    const port = get(configuration,'ports.restApi',5000);
+//expressApp,configuration,dbTables, models, allEmailTemplates,sendEmail,database,WertikEventEmitter
+export default function (options: IRestApiInitialize) {
+    const {
+        context,configuration, WertikEventEmitter, dbTables, models, sendEmail, emailTemplates, expressApp, database
+    } = options;
     expressApp.use(cors())
     expressApp.use(bodyParser.urlencoded({ extended: false }))
     expressApp.use(bodyParser.json())
@@ -24,7 +26,7 @@ export default function (expressApp,configuration,dbTables, models, allEmailTemp
         req.models = models;
         req.context = context;
         req.sendEmail = sendEmail;
-        req.emailTemplates = allEmailTemplates;
+        req.emailTemplates = emailTemplates;
         next();
     });
     
@@ -42,9 +44,9 @@ export default function (expressApp,configuration,dbTables, models, allEmailTemp
             detail: "Request page didn't found"
         });
     });
-    if (forceStartRestApiServer == true) {
-        expressApp.listen(port, () => {
-            console.log(`Api server running at htt://localhost:${port}!`);
+    if (configuration.forceStartRestApiServer === true) {
+        expressApp.listen(configuration.ports.restApi, () => {
+            console.log(`Api server running at htt://localhost:${configuration.ports.restApi}!`);
         });
     }
 

@@ -13,7 +13,7 @@ export default function (expressApp, configuration,customApi) {
       let result = await req.models[module.name].create(req.body.input);
       res.json({
         message: `${module.name} created`,
-        result: result.instance
+        result: result.instance 
       });
     });
     expressApp.post(`/api/v1/${kebabCase(module.name)}/bulk-create`, async (req,res) => {
