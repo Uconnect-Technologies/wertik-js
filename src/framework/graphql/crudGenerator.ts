@@ -66,11 +66,11 @@ export const generateMutationsCrudSchema = (moduleName: String) => {
     `;
 }
 
-export const generateCrudResolvers = (moduleName: any, pubsub) => {
+export const generateCrudResolvers = (moduleName: string, pubsub) => {
     const {createdModule, deletedModule ,updatedModule , bulkCreatedModule ,bulkUpdatedModule ,bulkDeletedModule} = getSubscriptionConstants(moduleName);
     return {
         mutations: {
-            [`create${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
+            [`create${moduleName}`]: async (_:any, args: any, context: any,info: any) => {
                 let requestedFields = getRequestedFieldsFromResolverInfo(info);
                 let result = await context.models[moduleName].create(args.input,requestedFields);
                 pubsub.publish(createdModule,{
