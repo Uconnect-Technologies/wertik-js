@@ -5,6 +5,7 @@ let getUserWithAccessToken = require("./../security/getUserWithAccessToken").def
 let getUserAllPermissions = require("./../security/getUserAllPermissions").default
 
 export default function (expressApp,configuration,dbTables,models,allEmailTemplates,sendEmail,database,WertikEventEmitter) {
+    const {forceStartGraphqlServer} = configuration;
     const port = get(configuration,'ports.graphql',4000);
     const modules = loadAllModules(configuration);  
     const context = get(configuration,'context', {});
@@ -28,10 +29,12 @@ export default function (expressApp,configuration,dbTables,models,allEmailTempla
             }
         }
     });
-    apollo.listen(port).then(({url,subscriptionsUrl}) => {
-        console.log("GraphQL server started at " + url);
-        console.log("GraphQL subscriptions started at " + subscriptionsUrl);
-    });
+    if (forceStartGraphqlServer == true) {
+        apollo.listen(port).then(({url,subscriptionsUrl}) => {
+            console.log("GraphQL server started at " + url);
+            console.log("GraphQL subscriptions started at " + subscriptionsUrl);
+        });
+    }
     WertikEventEmitter.emit("GRAPHQL_READY");
     return apollo;
 }

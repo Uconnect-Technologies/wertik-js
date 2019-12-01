@@ -76,7 +76,7 @@ export interface IConfiguration {
   frontendAppPasswordResetUrl: String;
   context: Object;
   forceStartGraphqlServer: Boolean;
-  forceStartRestAPiServer: Boolean;
+  forceStartRestApiServer: Boolean;
   ports: IConfigurationPorts
   modules: Array<IConfigurationCustomModule>
 }

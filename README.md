@@ -1,5 +1,7 @@
+﻿# Wertick JS
 
-# Wertick JS
+
+#### Beta Version. Stable version will be launched after 1.5. Current vesrion: 1.2
 
 **💪 GraphQL + Rest API** framework to kick start your project.
 

@@ -16,7 +16,7 @@ export default function (configuration) {
     let modules = process.env.builtinModules.split(",");
     modules = [...modules, ...get(configuration,'modules', [])]
     let response = () => {
-        return {message: "Welcome to Wertik",version: "1.0 Beta"};
+        return {message: "Welcome to wertik, You have successfully running Wertik rest api!",version: "1.2 Beta"};
     }
     let schemaMap = `
         type Response {
