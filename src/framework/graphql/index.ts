@@ -1,8 +1,8 @@
 let {ApolloServer} = require("apollo-server");
 let {get} = require("lodash");
 let loadAllModules = require("./loadAllModules").default;
-let getUserWithAccessToken = require("./../security/getUserWithAccessToken").default;
-let getUserAllPermissions = require("./../security/getUserAllPermissions").default
+import getUserWithAccessToken from "./../security/getUserWithAccessToken"
+import getUserAllPermissions from "./../security/getUserAllPermissions"
 import {IGraphQLInitialize} from "./../types/servers";
 
 
