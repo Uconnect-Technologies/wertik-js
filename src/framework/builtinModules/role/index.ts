@@ -36,11 +36,13 @@ export default {
     restApi: {
         
     },
-    fields: {
+    database: {
         sql: {
-            name: {
-                type: "STRING"
-            },
+            fields: {
+                name: {
+                    type: "STRING"
+                },
+            }
         }
     }
 }
