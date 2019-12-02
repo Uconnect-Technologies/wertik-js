@@ -40,6 +40,21 @@ export default {
   restApi: {
       
   },
+    database: {
+        sql: {
+            fields: {
+                name: {
+                    type: "STRING"
+                },
+                cant: {
+                    type: "STRING"
+                },
+                can: {
+                    type: "STRING"
+                }
+            }
+        }
+    },
   fields: {
     sql: {
         name: {

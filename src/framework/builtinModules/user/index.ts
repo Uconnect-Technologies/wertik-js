@@ -69,47 +69,49 @@ export default {
     restApi: {
         
     },
-    fields: {
+    database: {
         sql: {
-            name: {
-                type: "STRING",
-            },
-            username: {
-                type: "String",
-            },
-            refreshToken: {
-                type: "String",
-            },
-            accessToken: {
-                type: "String",
-            },
-            isActivated: {
-                type: "BOOLEAN"
-            },
-            activatedOn: {
-                type: "String",
-            },
-            twoFactorCode: {
-                type: "String",
-            },
-            isSuperUser: {
-                type: "BOOLEAN"
-            },
-            activationToken: {
-                type: "String",
-            },
-            email: {
-                type: "String",
-            },
-            password: {
-                type: "String",
-            },
-            gender: {
-                type: "String",
-            },
-            referer: {
-                type: "String",
-            },
+            fields: {
+                name: {
+                    type: "STRING",
+                },
+                username: {
+                    type: "String",
+                },
+                refreshToken: {
+                    type: "String",
+                },
+                accessToken: {
+                    type: "String",
+                },
+                isActivated: {
+                    type: "BOOLEAN"
+                },
+                activatedOn: {
+                    type: "String",
+                },
+                twoFactorCode: {
+                    type: "String",
+                },
+                isSuperUser: {
+                    type: "BOOLEAN"
+                },
+                activationToken: {
+                    type: "String",
+                },
+                email: {
+                    type: "String",
+                },
+                password: {
+                    type: "String",
+                },
+                gender: {
+                    type: "String",
+                },
+                referer: {
+                    type: "String",
+                },
+            }
         }
     },
 }

@@ -41,17 +41,19 @@ export default {
   restApi: {
       
   },
-  fields: {
-      sql: {
-          name: {
-              type: "STRING"
-          },
-          role: {
-              type: "INTEGER"
-          },
-          permission: {
-              type: "INTEGER"
-          },
-      }
-  }
+  database: {
+    sql: {
+        fields: {
+            name: {
+                type: "STRING"
+            },
+            role: {
+                type: "INTEGER"
+            },
+            permission: {
+                type: "INTEGER"
+            },
+        }
+    }
+},
 }

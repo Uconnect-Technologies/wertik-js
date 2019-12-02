@@ -89,14 +89,16 @@ wertik({
                     }
                 ]
             },
-            fields: {
+            database: {
                 sql: {
-                    title: {
-                        type: "STRING"
-                    },
-                    description: {
-                        type: "STRING"
-                    },
+                    fields: {
+                        title: {
+                            type: "STRING"
+                        },
+                        description: {
+                            type: "STRING"
+                        },    
+                    }
                 }
             }
         }
