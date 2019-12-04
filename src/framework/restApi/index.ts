@@ -20,13 +20,15 @@ export default function (options: IRestApiInitialize) {
     expressApp.use(async function (req, res, next) {
         let user = await getUserWithAccessToken(models.User, get(req,'headers.authorization',''));
         let permissions = (user) ? await getUserAllPermissions(user.id,database) : [];
+        let createContext = await get(configuration.context,'createContext',() => {})();
         req.user = user;
         req.permissions = permissions;
         req.dbTables = dbTables;
         req.models = models;
-        req.context = context;
+        req.context = get(configuration.context,'data',{});
         req.sendEmail = sendEmail;
         req.emailTemplates = emailTemplates;
+        req.createContext = createContext;
         next();
     });
     
