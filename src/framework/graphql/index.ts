@@ -20,6 +20,7 @@ export default function (options: IGraphQLInitialize) {
         context: async ({req, res}) => {
             let user = await getUserWithAccessToken(models.User, get(req,'headers.authorization',''));
             let permissions = (user) ? await getUserAllPermissions(user.id,database) : [];
+            let createContext = await get(configuration.context,'createContext',() => {})();
             return {
                 user: user,
                 dbTables,
@@ -27,7 +28,8 @@ export default function (options: IGraphQLInitialize) {
                 sendEmail: sendEmail,
                 emailTemplates: emailTemplates,
                 permissions: permissions,
-                ...context
+                ...get(configuration.context,'data',{}),
+                createContext: createContext
             }
         }
     });

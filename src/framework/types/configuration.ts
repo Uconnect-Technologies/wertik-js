@@ -72,6 +72,11 @@ export interface IConfigurationEvents {
   beforeGraphqlStart: Function;
 }
 
+export interface IConfigurationContext {
+  data: Object;
+  createContext: Function
+}
+
 export interface IConfiguration {
   dbDialect: String;
   name: String;

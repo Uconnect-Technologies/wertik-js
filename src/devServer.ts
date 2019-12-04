@@ -20,7 +20,14 @@ wertik({
     frontendAppActivationUrl: "http://localhost:8080/activate-account",
     frontendAppPasswordResetUrl: "http://localhost:8080",
     context: {
-        myName: "My powerful app"
+        data: {
+            myName: "My powerful app"
+        },
+        createContext: async function () {
+            return {
+                value: "Value 1"
+            }
+        }
     },
     forceStartGraphqlServer: true,
     forceStartRestApiServer: true,
