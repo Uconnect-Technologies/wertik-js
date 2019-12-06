@@ -9,7 +9,7 @@ import {IGraphQLInitialize} from "./../types/servers";
 //expressApp,configuration,dbTables,models,emailTemplates,sendEmail,database,WertikEventEmitter
 
 export default function (options: IGraphQLInitialize) {
-    const {configuration,context,dbTables, models, sendEmail, emailTemplates,database, WertikEventEmitter} = options;
+    const {configuration,context,dbTables, models, sendEmail, emailTemplates,database, runEvent} = options;
     const modules = loadAllModules(configuration);  
     let apollo = new ApolloServer({
         typeDefs: modules.schema,
@@ -39,6 +39,5 @@ export default function (options: IGraphQLInitialize) {
             console.log("GraphQL subscriptions started at " + subscriptionsUrl);
         });
     }
-    WertikEventEmitter.emit("GRAPHQL_READY");
     return apollo;
 }
