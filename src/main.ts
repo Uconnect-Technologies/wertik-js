@@ -9,9 +9,8 @@ export default function (apps,configuration: IConfiguration) {
         validateConfigurationObject(configuration).then(() => {
             convertConfigurationIntoEnvVariables(configuration).then(() => { 
                 initiateLogger().then((logger) => {
-                    const EventEmitter = require('events');
-                    const WertikEventEmitter = new EventEmitter();
-                    require("./framework/events/prepareEvents").default(configuration,WertikEventEmitter);
+
+                    let runEvent = require("./framework/events/runEvent").default(configuration.events);
                     let graphql = require("./framework/graphql/index").default;
                     let restApi = require("./framework/restApi/index").default;
                     let socket = require("./framework/socket/index").default(configuration.sockets);
@@ -28,7 +27,7 @@ export default function (apps,configuration: IConfiguration) {
                         models: models,
                         emailTemplates: emailTemplates,
                         database: database,
-                        WertikEventEmitter: WertikEventEmitter
+                        runEvent: runEvent
                     });
                     let restApiInstance = restApi({
                         expressApp: expressApp,
@@ -38,7 +37,7 @@ export default function (apps,configuration: IConfiguration) {
                         emailTemplates: emailTemplates,
                         sendEmail: sendEmail,
                         database: database,
-                        WertikEventEmitter
+                        runEvent: runEvent
                     });
                     resolve({
                         graphql: graphqlAppInstance,
@@ -49,9 +48,9 @@ export default function (apps,configuration: IConfiguration) {
                         emailTemplates: emailTemplates,
                         sendEmail: sendEmail,
                         database: database,
-                        events: WertikEventEmitter,
                         seeds: seeds,
-                        logger: logger
+                        logger: logger,
+                        runEvent: runEvent
                     });
                 })
             }).catch((err2) => {

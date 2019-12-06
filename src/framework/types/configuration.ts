@@ -68,8 +68,11 @@ export interface IConfigurationMysqlOptions {
 }
 
 export interface IConfigurationEvents {
-  beforeRestApiStart: Function;
-  beforeGraphqlStart: Function;
+  beforeRestApiStart?: Function;
+  beforeGraphqlStart?: Function;
+  crud?: {
+    [Key: string]: Function
+  }
 }
 
 export interface IConfigurationContext {

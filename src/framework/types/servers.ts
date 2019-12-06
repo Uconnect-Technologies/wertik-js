@@ -10,6 +10,7 @@ export interface IGraphQLInitialize {
   database: any;
   WertikEventEmitter: any;
   context: any;
+  runEvent: Function;
 }
 
 export interface IRestApiInitialize {
@@ -22,6 +23,7 @@ export interface IRestApiInitialize {
   database: any;
   WertikEventEmitter: any;
   context: any;
+  runEvent: Function;
 }
 
 export interface ISocketInitializeOptions {

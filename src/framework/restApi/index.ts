@@ -11,7 +11,7 @@ let getUserAllPermissions = require("./../security/getUserAllPermissions").defau
 //expressApp,configuration,dbTables, models, allEmailTemplates,sendEmail,database,WertikEventEmitter
 export default function (options: IRestApiInitialize) {
     const {
-        context,configuration, WertikEventEmitter, dbTables, models, sendEmail, emailTemplates, expressApp, database
+        context,configuration, dbTables, models, sendEmail, emailTemplates, expressApp, database,runEvent
     } = options;
     expressApp.use(cors())
     expressApp.use(bodyParser.urlencoded({ extended: false }))
@@ -52,7 +52,5 @@ export default function (options: IRestApiInitialize) {
         });
     }
 
-    WertikEventEmitter.emit("REST_API_READY");
-    
     return expressApp;
 }

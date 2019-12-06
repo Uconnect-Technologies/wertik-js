@@ -111,12 +111,12 @@ wertik({
         }
     ],
     events: {
-        GRAPHQL_READY: () => {
-            console.log("graphql ready");
+        beforeGraphqlStart: function () {
+            console.log('beforeGraphqlStart');
         },
-        REST_API_READY: () => {
-            console.log("rest api ready");
-        },
+        beforeRestApiStart: function () {
+            console.log('beforeRestApiStart');
+        }
     },
     seeds: {
         Role: [
