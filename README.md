@@ -35,6 +35,8 @@ Install with yarn
 
     yarn add wertik-js --dev
 
+Please see <a href="https://github.com/Uconnect-Technologies/wertik-js/blob/master/Demo.md" >Demo</a> file for dev server configuration example.
+
 ### Introduction  
 
 Wertik-js is a node js library to kick start your project using GraphQL and Rest API. You can use Weritk-js with running project, Wertik-js relies on [Express](https://expressjs.com/) and [Apollo GraphQL](https://www.apollographql.com/). Wertik-js also comes with socket, logger, seeds and events feature.
