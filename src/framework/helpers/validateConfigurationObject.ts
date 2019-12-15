@@ -1,3 +1,4 @@
+import checkInstalledPackages from "./../initialization/checkInstalledPackages";
 
 export const requiredFields = {
     name: "required",
@@ -9,14 +10,10 @@ export const requiredFields = {
     db_port: "required",
 }
 
-export default function (object) {
+export default function (Configuration) {
     return new Promise((resolve, reject) => {
-        resolve();
-        // const {name, dialect} = object;
-        // if (name && dialect) {
-        //     resolve("Configuration object passed");
-        // }else {
-        //     reject(["Missing name", "Missing Dialect"]);
-        // }
-    })
+        checkInstalledPackages(Configuration).then(() => {
+            resolve();
+        });
+    });
 }
