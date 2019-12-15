@@ -1,4 +1,5 @@
-export default function (configuration: object) {
+import {IConfiguration} from "./../types/configuration";
+export default function (configuration: IConfiguration) {
     return new Promise((resolve, reject) => {
         try {
             let keys = Object.keys(configuration);
