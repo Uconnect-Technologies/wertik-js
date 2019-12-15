@@ -55,7 +55,7 @@ export default function (apps,configurationOriginal: IConfiguration) {
                         });
                     })
                 }).catch((err2) => {
-                    console.log("Something went wrong while initializing Wertik js, Please check docs, and make sure you that you pass correct configuration.");
+                    console.log("[Wertik-js] Something went wrong while initializing Wertik js, Please check docs, and make sure you that you pass correct configuration.");
                     console.log(err2);
                     reject(err2);
                 })
@@ -63,7 +63,7 @@ export default function (apps,configurationOriginal: IConfiguration) {
                 reject(err);
             });
         }).catch((err: any) => {
-            console.error('Something went wrong while verifying default configuration \n','Received: '+err.message);
+            console.error('[Wertik-js] Something went wrong while verifying default configuration \n','Received: '+err.message);
         });    
     });
 }
