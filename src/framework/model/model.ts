@@ -54,13 +54,13 @@ export default function (props) {
       return this;
     },
     findOneByArgs: async function (args) {
-      this.response = await this.dbTables[this.tableName].findOne({
+      this.instance = await this.dbTables[this.tableName].findOne({
         where: args
       });
       return this;
     },
     findOneById: async function (id: Number) {
-      this.response = await this.dbTables[this.tableName].findOne({
+      this.instance = await this.dbTables[this.tableName].findOne({
         where: {id: id}
       });
       return this;
@@ -68,7 +68,7 @@ export default function (props) {
     bulkUpdate: async function (args) {
       const model = this.dbTables[this.tableName];
       const updated = [];
-      let response = await Promise.all(args.map(async (c) => {
+      let instance = await Promise.all(args.map(async (c) => {
         let updateC = await model.update(c,{
           where: {id: c.id},
         });
