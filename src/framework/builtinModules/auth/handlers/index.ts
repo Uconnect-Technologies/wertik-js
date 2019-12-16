@@ -108,9 +108,25 @@ export const twoFactorLogin = async function (obj) {
     message: `A code has been sent to your email which is ${userInstance.email}`
   };
 }
-export const twoFactorLoginValidate = function (obj) {
+export const twoFactorLoginValidate = async function (obj) {
   const {userModel, data} = obj;
-  
+  const {twoFactorCode} = data;
+  let user = await userModel.findOneByArgs({ twoFactorCode: twoFactorCode});
+  if (!user.instance) {
+    throw new ApolloError("Incorrect twoFactorCode or already used.");
+  }
+  user = await user.update({
+    twoFactorCode: "",
+    accessToken: await createJwtToken({
+      email: user.instance.email,
+      for: "authentication"
+    }),
+    refreshToken: await createJwtToken({
+      email: user.instance.email,
+      for: "authentication"
+    }),
+  });
+  return user.instance;
 }
 export const loginWithAccessToken = async function (obj) {
   const {userModel, data} = obj;

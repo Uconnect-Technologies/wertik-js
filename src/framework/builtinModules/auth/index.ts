@@ -42,7 +42,7 @@ export default {
         mutation: {
             schema: `
                 twoFactorLogin(input: EmailInput): SuccessReponse
-                twoFactorLoginValidate(input: UserInput): User
+                twoFactorLoginValidate(input: TwoFactorCodeInput): User
                 loginWithAccessToken(input: AccessTokenInput): User
                 activateAccount(input: ActivationTokenInput): User
                 signup(input: SignupInput): User
@@ -102,6 +102,171 @@ export default {
         }
     },
     restApi: {
-        
+        endpoints: [
+            {
+                path: '/two-factor-login',
+                methodType: 'post',
+                handler: async function (req, res) {
+                    try {
+                        let response = await twoFactorLogin({
+                            userModel: req.models['User'],
+                            emailTemplates: req.emailTemplates,
+                            sendEmail: req.sendEmail,
+                            data: req.body
+                        });
+                        res.json({
+                            success: true,
+                            message: "Activate account",
+                            result: response
+                        });
+                    } catch (e) {
+                        res.json({
+                            success: false,
+                            message: e.message,
+                            result: {}
+                        })
+                    }
+                }
+            },
+            {
+                path: '/two-factor-login-validate',
+                methodType: 'post',
+                handler: async function (req, res) {
+                    try {
+                        let response = await twoFactorLoginValidate({
+                            userModel: req.models['User'],
+                            data: req.body
+                        });
+                        res.json({
+                            success: true,
+                            message: "Activate account",
+                            result: response
+                        });
+                    } catch (e) {
+                        res.json({
+                            success: false,
+                            message: e.message,
+                            result: {}
+                        })
+                    }
+                }
+            },
+            {
+                path: '/login-with-access-token',
+                methodType: 'post',
+                handler: async function (req, res) {
+                    try {
+                        let response = await loginWithAccessToken({
+                            userModel: req.models['User'],
+                            data: req.body
+                        });
+                        res.json({
+                            success: true,
+                            message: "Activate account",
+                            result: response
+                        });
+                    } catch (e) {
+                        res.json({
+                            success: false,
+                            message: e.message,
+                            result: {}
+                        })
+                    }
+                }
+            },
+            {
+                path: "/activate-account",
+                methodType: "post",
+                handler: async function (req, res) {
+                    try {
+                        let response = await activateAccount({
+                            userModel: req.models['User'],
+                            emailTemplates: req.emailTemplates,
+                            sendEmail: req.sendEmail,
+                            data: req.body
+                        });
+                        res.json({
+                            success: true,
+                            message: "Activate account",
+                            result: response
+                        });
+                    } catch (e) {
+                        res.json({
+                            success: false,
+                            message: e.message,
+                            result: {}
+                        });
+                    }
+                }
+            },
+            {
+                path: "/refresh-token",
+                methodType: "post",
+                handler: async function (req, res) {
+                    try {
+                        let response = await refreshTokenHandler({
+                            userModel: req.models['User'], 
+                            data: req.body
+                        });
+                        res.json({
+                            success: true,
+                            message: "Refresh token",
+                            result: response
+                        });
+                    } catch (e) {
+                        res.json({
+                            success: false,
+                            message: e.message,
+                            result: {}
+                        });
+                    }
+                }
+            },
+            {
+                path: "/login",
+                methodType: "post",
+                handler: async function (req, res) {
+                    try {
+                        let response = await login({userModel: req.models['User'], data: req.body});
+                        res.json({
+                            success: true,
+                            message: "You are logged in",
+                            result: response
+                        });
+                    } catch (e) {
+                        res.json({
+                            success: false,
+                            message: e.message,
+                            result: {}
+                        });
+                    }
+                }
+            },
+            {
+                path: "/signup",
+                methodType: "post",
+                handler: async function (req, res) {
+                    try {
+                        let response = await signup({
+                            userModel: req.models['User'], 
+                            emailTemplates: req.emailTemplates,
+                            sendEmail: req.sendEmail,
+                            data: req.body
+                        });
+                        res.json({
+                            success: true,
+                            message: "Welcome to app",
+                            result: response
+                        });
+                    } catch (e) {
+                        res.json({
+                            success: false,
+                            message: e.message,
+                            result: {}
+                        });
+                    }
+                }
+            }
+        ]
     },
 }
