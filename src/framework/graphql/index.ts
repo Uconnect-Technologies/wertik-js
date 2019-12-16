@@ -5,7 +5,6 @@ import getUserWithAccessToken from "./../security/getUserWithAccessToken"
 import getUserAllPermissions from "./../security/getUserAllPermissions"
 import {IGraphQLInitialize} from "./../types/servers";
 
-
 //expressApp,configuration,dbTables,models,emailTemplates,sendEmail,database,WertikEventEmitter
 
 export default function (options: IGraphQLInitialize) {

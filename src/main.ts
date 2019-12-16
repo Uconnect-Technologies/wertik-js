@@ -18,7 +18,7 @@ export default function (apps,configurationOriginal: IConfiguration) {
                         let database = require("./framework/database/connect").default(configuration);
                         let dbTables = require("./framework/database/loadTables").default(database, configuration);
                         let models = require("./framework/database/models").default(dbTables);
-                        let {sendEmail} = require("./framework/mailer/index");
+                        let sendEmail = require("./framework/mailer/index").sendEmail;
                         let seeds = require("./framework/seeds/index").default(configuration, models)
                         let emailTemplates = require("./framework/mailer/emailTemplates").default(configuration,__dirname);
                         let graphqlAppInstance = graphql({
@@ -26,6 +26,7 @@ export default function (apps,configurationOriginal: IConfiguration) {
                             configuration: configuration,
                             dbTables: dbTables,
                             models: models,
+                            sendEmail: sendEmail,
                             emailTemplates: emailTemplates,
                             database: database,
                             runEvent: runEvent

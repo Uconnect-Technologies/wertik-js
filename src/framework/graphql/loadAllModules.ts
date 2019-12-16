@@ -42,18 +42,6 @@ export default function (configuration) {
         input EmailInput {
             email: String!
         }
-        input TwoFactorCodeInput {
-            twoFactorCode: String!
-        }
-        input AccessTokenInput {
-            accessToken: String!
-        }
-        input ActivationTokenInput {
-            activationToken: String!
-        }
-        input RefreshTokenInput {
-            refreshToken: String!
-        }
         input SignupInput {
             email: String!
             password: String!
