@@ -112,6 +112,22 @@ export const activateAccount = async function (obj) {
   );
   return user;
 }
-export const refreshToken = function (data) {
-
+export const refreshTokenHandler = async function (obj) {
+  const {userModel, data} = obj;
+  const {refreshToken} = data;
+  let user = await userModel.findOne({ refreshToken:  refreshToken});
+  if (!user) {
+    throw new ApolloError("Unauthorized, Missing refresh token.");
+  }
+  user = await user.update({
+    accessToken: await createJwtToken({
+      email: user.email,
+      for: "authentication"
+    }),
+    refreshToken: await createJwtToken({
+      email: user.email,
+      for: "authentication"
+    }),
+  });
+  return user;
 }
