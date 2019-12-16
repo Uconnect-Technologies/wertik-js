@@ -5,7 +5,7 @@ import createJwtToken from "./../../../framework/security/createJwtToken";
 import {ApolloError} from "apollo-server";
 import {get} from "lodash";
 
-import {login, signup, activateAccount,refreshTokenHandler} from "./handlers/index"
+import {login, signup, loginWithAccessToken , activateAccount,refreshTokenHandler} from "./handlers/index"
 
 export default {
     name: "Auth",
@@ -45,7 +45,10 @@ export default {
 
                 },
                 loginWithAccessToken:  async (_:any, args:any, context:any,info: any) => {
-                    
+                  return await loginWithAccessToken({
+                    userModel: context.models['User'],
+                    data: args.input
+                  });
                 },
                 activateAccount:  async (_:any, args:any, context:any,info: any) => {
                     return await activateAccount({

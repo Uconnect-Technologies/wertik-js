@@ -80,18 +80,34 @@ export const login = async function (obj) {
   return user.instance;
 }
 export const twoFactorLogin = function (data) {
-
+  
 }
 export const twoFactorLoginValidate = function (data) {
 
 }
-export const loginWithAccessToken = function (data) {
-
+export const loginWithAccessToken = async function (obj) {
+  const {userModel, data} = obj;
+  const {accessToken} = data;
+  let user = await userModel.findOneByArgs({ accessToken: accessToken});
+  if (!user.instance) {
+    throw new ApolloError("Access token is missing.");
+  }
+  user = await user.update({
+    accessToken: await createJwtToken({
+      email: user.instance.email,
+      for: "authentication"
+    }),
+    refreshToken: await createJwtToken({
+      email: user.instance.email,
+      for: "authentication"
+    }),
+  });
+  return user.instance;
 }
 export const activateAccount = async function (obj) {
   const {userModel,emailTemplates,sendEmail,data} = obj;
   const {activationToken} = data;
-  let user = await userModel.findOneByArgs({ activationToken:  activationToken});
+  let user = await userModel.findOneByArgs({ activationToken: activationToken});
   if (!user.instance) {
     throw new ApolloError("No User found or account is already is activated.");
   }
@@ -123,11 +139,11 @@ export const refreshTokenHandler = async function (obj) {
   }
   user = await user.update({
     accessToken: await createJwtToken({
-      email: user.email,
+      email: user.instance.email,
       for: "authentication"
     }),
     refreshToken: await createJwtToken({
-      email: user.email,
+      email: user.instance.email,
       for: "authentication"
     }),
   });
