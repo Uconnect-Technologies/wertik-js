@@ -3,8 +3,8 @@ export default function (dbTables) {
   let allTables = Object.keys(dbTables);
   let models = {};
   allTables.forEach(element => {
-    models[element] = new Model({
-      model: dbTables[element],
+    models[element] = Model({
+      dbTables: dbTables,
       tableName: element
     });
   });
