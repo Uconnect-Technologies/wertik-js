@@ -4,6 +4,9 @@ import statusCodes from "./../../../framework/helpers/statusCodes";
 import createJwtToken from "./../../../framework/security/createJwtToken";
 import {ApolloError} from "apollo-server";
 import {get} from "lodash";
+
+import {login, signup, activateAccount} from "./handlers/index"
+
 export default {
     name: "Auth",
     useDatabase: false,
@@ -45,78 +48,23 @@ export default {
                     
                 },
                 activateAccount:  async (_:any, args:any, context:any,info: any) => {
-
+                    return await activateAccount({
+                        userModel: context.models['User'],
+                        emailTemplates: context.emailTemplates,
+                        sendEmail: context.sendEmail,
+                        data: args.input
+                    });
                 },
                 signup:  async (_:any, args:any, context:any,info: any) => {
-                    let { email, password, confirmPassword } = args.input;
-                    let user = await context.models['User'].findOne({
-                        email: email
+                    return await signup({
+                        userModel: context.models['User'], 
+                        emailTemplates: context.emailTemplates,
+                        sendEmail: context.sendEmail,
+                        data: args.input
                     });
-                    if (user) throw new ApolloError("Email is already used");
-                    var hash = bcrypt.hashSync(password);
-                    let newUser = await context.models['User'].create({
-                        email: email,
-                        referer: get(args.input, "referer", ""),
-                        superUser: false,
-                        name: get(args.input, "name", ""),
-                        accessToken: await createJwtToken({
-                          email: email,
-                          for: "authentication"
-                        }),
-                        refreshToken: await createJwtToken({
-                          email: email,
-                          for: "refreshToken"
-                        }),
-                        isActivated: false,
-                        isSuperUser: get(args.input, "isSuperUser", false),
-                        activationToken:
-                          Math.random()
-                            .toString(36)
-                            .substring(2) +
-                          Math.random()
-                            .toString(36)
-                            .substring(2) +
-                          Math.random()
-                            .toString(36)
-                            .substring(2),
-                        password: hash
-                      });
-                    await context.sendEmail(
-                        context.emailTemplates.welcome,
-                        {
-                            email: newUser.email,
-                            username: newUser.email,
-                            date: moment().format("dddd, MMMM Do YYYY, h:mm:ss a"),
-                            siteName: process.env.name,
-                            activationUrl: `${process.env.frontendAppUrl}/activate-account/`,
-                            activationToken: newUser.activationToken
-                        },
-                        {
-                            from: process.env.mailerServiceUsername,
-                            to: newUser.email,
-                            subject: `Welcome to ${process.env.name}`
-                        }
-                    );
-                    return newUser;
                 },
                 login:  async (_:any, args:any, context:any,info: any) => {
-                    let { email, password } = args.input;
-                    let user = await context.models['User'].findOne({ email: email });
-                    if (!user) {
-                        throw new ApolloError("No User found with such email");
-                    }
-                    let comparePassword = bcrypt.compareSync(password, user.password);
-                    if (!comparePassword) {
-                        throw new ApolloError("Incorrect Password");
-                    }
-                    let token = await createJwtToken({
-                        email: email,
-                        for: "authentication"
-                    });
-                    await user.update({
-                        accessToken: token
-                    });
-                    return user;
+                    return await login({userModel: context.models['User'], data: args.input});
                 },
                 refreshToken:  async (_:any, args:any, context:any,info: any) => {
                 }

@@ -15,6 +15,7 @@ export default {
             type Role {
                 id: Int
                 name: String
+                defaultPermissions: String
                 created_at: String
                 updated_at: String
             }
@@ -42,6 +43,9 @@ export default {
                 name: {
                     type: "STRING"
                 },
+                defaultPermissions: {
+                    type: "STRING"
+                }
             }
         }
     }
