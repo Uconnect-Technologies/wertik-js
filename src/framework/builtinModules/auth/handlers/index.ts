@@ -79,11 +79,38 @@ export const login = async function (obj) {
   });
   return user.instance;
 }
-export const twoFactorLogin = function (data) {
-  
+export const twoFactorLogin = async function (obj) {
+  const {userModel,emailTemplates,sendEmail,data} = obj;
+  const {email} = data; 
+  let user = await userModel.findOneByArgs({ email: email});
+  if (!user.instance) {
+    throw new ApolloError("Incorrect email.");
+  }
+  const twoFactorCode = `Code-` + Math.floor((Math.random() * 60000) + 5000);
+  user = await user.update({
+    twoFactorCode: twoFactorCode
+  });
+  let userInstance = user.instance;
+  await sendEmail(
+    emailTemplates.twoFactorLogin,
+    {
+      username: user.instance.email,
+      siteName: process.env.name,
+      twoFactorCode: twoFactorCode
+    },
+    {
+      from: process.env.mailerServiceUsername,
+      to: user.instance.email,
+      subject: `${twoFactorCode} is your authentication number - ${process.env.name}`
+    }
+  );
+  return {
+    message: `A code has been sent to your email which is ${userInstance.email}`
+  };
 }
-export const twoFactorLoginValidate = function (data) {
-
+export const twoFactorLoginValidate = function (obj) {
+  const {userModel, data} = obj;
+  
 }
 export const loginWithAccessToken = async function (obj) {
   const {userModel, data} = obj;
