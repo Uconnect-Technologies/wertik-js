@@ -58,11 +58,11 @@ export const generateSubscriptionsCrudResolvers = (moduleName: String, pubsub: a
 export const generateMutationsCrudSchema = (moduleName: String) => {
     return `
         create${moduleName}(input: ${moduleName}Input): ${moduleName}
-        delete${moduleName}(input: ${moduleName}Input): ${moduleName}
+        delete${moduleName}(input: ${moduleName}Input): SuccessReponse
         update${moduleName}(input: ${moduleName}Input): ${moduleName}
         bulkUpdate${moduleName}(input: [${moduleName}Input]): [${moduleName}]
         bulkCreate${moduleName}(input: [${moduleName}Input]): [${moduleName}]
-        bulkDelete${moduleName}(input: [${moduleName}Input]): [${moduleName}]
+        bulkDelete${moduleName}(input: [Int]): SuccessReponse
     `;
 }
 
@@ -76,22 +76,23 @@ export const generateCrudResolvers = (moduleName: string, pubsub) => {
                 pubsub.publish(createdModule,{
                     [createdModule]: result
                 });
-                return result;
+                return result.instance;
             },
             [`delete${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
                 let result = await context.models[moduleName].delete(args.input);
                 pubsub.publish(deletedModule,{
                     [deletedModule]: result
                 });
-                return result;
+                return {message: `${moduleName} successfully deleted`};
             },
             [`update${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
                 let requestedFields = getRequestedFieldsFromResolverInfo(info);
-                let result = await context.models[moduleName].update(args.input,requestedFields);
+                let model = context.models[moduleName];
+                let result = await  model.update(args.input,requestedFields);
                 pubsub.publish(updatedModule,{
                     [updatedModule]: result
                 });
-                return result;
+                return result.instance;
             },
             [`bulkDelete${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
                 let requestedFields = getRequestedFieldsFromResolverInfo(info);
@@ -99,7 +100,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub) => {
                 pubsub.publish(bulkCreatedModule,{
                     [bulkCreatedModule]: result
                 });
-                return result;
+                return {message: `${moduleName} bulk items deleted successfully.`};
             },
             [`bulkCreate${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
                 let requestedFields = getRequestedFieldsFromResolverInfo(info);
@@ -107,7 +108,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub) => {
                 pubsub.publish(bulkUpdatedModule,{
                     [bulkUpdatedModule]: result
                 });
-                return result;
+                return result.bulkInstances;
             },
             [`bulkUpdate${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
                 let requestedFields = getRequestedFieldsFromResolverInfo(info);
@@ -115,13 +116,14 @@ export const generateCrudResolvers = (moduleName: string, pubsub) => {
                 pubsub.publish(bulkDeletedModule,{
                     [bulkDeletedModule]: result
                 });
-                return result;
+                return result.bulkInstances;
             }
         },
         queries: {
             [`view${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
                 let requestedFields = getRequestedFieldsFromResolverInfo(info);
-                return await context.models[moduleName].view(args,requestedFields);
+                let view = await context.models[moduleName].view(args,requestedFields);
+                return view.instance;
             },
             [`list${moduleName}`]: async (_:any, args:any, context:any,info: any) => {
                 let requestedFields = getRequestedFieldsFromResolverInfo(info);
