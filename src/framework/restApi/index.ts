@@ -5,8 +5,9 @@ const {get} = require("lodash");
 const cors = require('cors')
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-let getUserWithAccessToken = require("./../security/getUserWithAccessToken").default;
-let getUserAllPermissions = require("./../security/getUserAllPermissions").default
+import getUserWithAccessToken from "./../security/getUserWithAccessToken"
+import getUserAllPermissions from "./../security/getUserAllPermissions"
+import getUserRoles from "./../security/getUserRoles"
 
 //expressApp,configuration,dbTables, models, allEmailTemplates,sendEmail,database,WertikEventEmitter
 export default function (options: IRestApiInitialize) {
@@ -19,10 +20,12 @@ export default function (options: IRestApiInitialize) {
     expressApp.use(morgan('combined'))
     expressApp.use(async function (req, res, next) {
         let user = await getUserWithAccessToken(models.User, get(req,'headers.authorization',''));
-        let permissions = (user) ? await getUserAllPermissions(user.id,database) : [];
+        let userPermissions = (user) ? await getUserAllPermissions(user.id,database) : [];
         let createContext = await get(configuration.context,'createContext',() => {})();
+        let userRoles = await getUserRoles(user.id, database);
         req.user = user;
-        req.permissions = permissions;
+        req.userPermissions = userPermissions;
+        req.userRoles = userRoles;
         req.dbTables = dbTables;
         req.models = models;
         req.context = get(configuration.context,'data',{});

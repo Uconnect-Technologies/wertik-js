@@ -3,6 +3,7 @@ let {get} = require("lodash");
 let loadAllModules = require("./loadAllModules").default;
 import getUserWithAccessToken from "./../security/getUserWithAccessToken"
 import getUserAllPermissions from "./../security/getUserAllPermissions"
+import getUserRoles from "./../security/getUserRoles"
 import {IGraphQLInitialize} from "./../types/servers";
 
 //expressApp,configuration,dbTables,models,emailTemplates,sendEmail,database,WertikEventEmitter
@@ -18,15 +19,17 @@ export default function (options: IGraphQLInitialize) {
         },
         context: async ({req, res}) => {
             let user = await getUserWithAccessToken(models.User, get(req,'headers.authorization',''));
-            let permissions = (user) ? await getUserAllPermissions(user.id,database) : [];
+            let userPermissions = (user) ? await getUserAllPermissions(user.id,database) : [];
             let createContext = await get(configuration.context,'createContext',() => {})();
+            let userRoles = (user) ? await getUserRoles(user.id, database) : [];
             return {
                 user: user,
                 dbTables,
                 models,
                 sendEmail: sendEmail,
                 emailTemplates: emailTemplates,
-                permissions: permissions,
+                userPermissions: userPermissions,
+                userRoles: userRoles,
                 ...get(configuration.context,'data',{}),
                 createContext: createContext
             }

@@ -13,7 +13,6 @@ export default function (props) {
     id: null,
     update: async function (args) {
       let instance = null;
-      // console.log(this.instance.constructor);
       if (this.instance) {
         instance = await this.instance.update(args);
       }else {
