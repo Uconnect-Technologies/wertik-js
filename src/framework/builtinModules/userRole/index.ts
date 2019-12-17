@@ -1,3 +1,4 @@
+import getRequestedFieldsFromResolverInfo from "./../../helpers/getRequestedFieldsFromResolverInfo";
 export default {
   name: "UserRole",
   graphql: {
@@ -28,6 +29,18 @@ export default {
               role: Int
           }
       `,
+      relations: {
+        role: async function (userRole,args,context,info) {
+            let requestedFields = getRequestedFieldsFromResolverInfo(info);
+            let view = await context.models['Role'].view(args,requestedFields);
+            return view.instance;
+        },
+        user: async function (userRole,args,context,info) {
+            let requestedFields = getRequestedFieldsFromResolverInfo(info);
+            let view = await context.models['User'].view(args,requestedFields);
+            return view.instance;
+        }
+      },
       mutation: {
           schema: ``,
           resolvers: {

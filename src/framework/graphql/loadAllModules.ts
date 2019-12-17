@@ -57,6 +57,7 @@ export default function (configuration) {
     let appMutations = {};
     let appQueries = {};
     let appSubscriptions = {};
+    let appRelations = {}
 
     const processModule = function (module) {
         // require information
@@ -78,6 +79,12 @@ export default function (configuration) {
         let currentModuleCrudResolvers = generateCrudResolvers(moduleName,pubsub);
         let currentModuleListSchema = (currentGenerateQuery || currentGenerateMutation) ? generateListTypeForModule(moduleName) : '';
         let currentModuleSubscriptionResolvers = generateSubscriptionsCrudResolvers(moduleName, pubsub);
+        // relations
+        let relations = get(graphql,'relations',{});
+        if (module.name !== "Auth") {
+            appRelations[module.name] = relations;
+        }
+        // relations
         // require information
         // crud
         if (currentGenerateQuery) {
@@ -134,7 +141,8 @@ export default function (configuration) {
             },
             Subscription: {
                 ...appSubscriptions
-            }
+            },
+            ...appRelations
         }
     }
 }

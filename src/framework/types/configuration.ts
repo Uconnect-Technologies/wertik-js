@@ -30,6 +30,9 @@ export interface IConfigurationCustomModuleGraphqlQuery {
 export interface IConfigurationCustomModuleGraphql {
   crud: IConfigurationCustomModuleGraphqlCrud
   schema: String
+  relations: {
+    [Key: string]: Function
+  }
   mutation: IConfigurationCustomModuleGraphqlMutation
   query: IConfigurationCustomModuleGraphqlQuery
 }
