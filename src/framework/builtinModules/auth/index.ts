@@ -113,9 +113,9 @@ export default {
         path: "/two-factor-login",
         methodType: "post",
         docs: {
-          description: "A long description",
-          params: `@apiParam {Object} input Email of the user, like: {email: EMAIL}.`,
-          response: `@apiSuccess {String} lastname  Lastname of the User.`,
+          description: "Creates two factor code and send it on user email for 2 factor auth.",
+          params: `@apiParam {Object} input Email of the user, like: {email: String}.`,
+          response: `@apiSuccess {Object} returns object with message {message: String}.`,
           title: "Two factor login"
         },
         handler: async function(req, res) {
@@ -143,6 +143,12 @@ export default {
       {
         path: "/two-factor-login-validate",
         methodType: "post",
+        docs: {
+          description: "Allows login with two factor code.",
+          params: `@apiParam {Object} input two factor code, like: {twoFactorCode: String}.`,
+          response: `@apiSuccess {Object} returns a user object.`,
+          title: "Two factor validate"
+        },
         handler: async function(req, res) {
           try {
             let response = await twoFactorLoginValidate({
@@ -166,6 +172,12 @@ export default {
       {
         path: "/login-with-access-token",
         methodType: "post",
+        docs: {
+          description: "Login with access token.",
+          params: `@apiParam {Object} input with accessToken, like: {accessToken: String}.`,
+          response: `@apiSuccess {Object} returns a user object.`,
+          title: "Login with access token"
+        },
         handler: async function(req, res) {
           try {
             let response = await loginWithAccessToken({
@@ -189,6 +201,12 @@ export default {
       {
         path: "/activate-account",
         methodType: "post",
+        docs: {
+          description: "Activates a user account..",
+          params: `@apiParam {Object} input with user activatation token, like: {activationToken: String}.`,
+          response: `@apiSuccess {Object} returns a user object.`,
+          title: "Activate account"
+        },
         handler: async function(req, res) {
           try {
             let response = await activateAccount({
@@ -214,6 +232,12 @@ export default {
       {
         path: "/refresh-token",
         methodType: "post",
+        docs: {
+          description: "Refreshes access and refresh token based on users previous refresh token.",
+          params: `@apiParam {Object} input  like: {refreshToken: String}.`,
+          response: `@apiSuccess {Object} returns a user object.`,
+          title: "Refresh token"
+        },
         handler: async function(req, res) {
           try {
             let response = await refreshTokenHandler({
@@ -237,6 +261,12 @@ export default {
       {
         path: "/login",
         methodType: "post",
+        docs: {
+          description: "Allows login a user..",
+          params: `@apiParam {Object} input user email and password, like: {email: String, password: String}.`,
+          response: `@apiSuccess {Object} returns a user object.`,
+          title: "Login"
+        },
         handler: async function(req, res) {
           try {
             let response = await login({ userModel: req.models["User"], data: req.body });
@@ -257,6 +287,12 @@ export default {
       {
         path: "/signup",
         methodType: "post",
+        docs: {
+          description: "Allows registering/signup  a user..",
+          params: `@apiParam {Object} input user email, password and confirmpassword, like: {email: String, password: String, confirmPassword: }.`,
+          response: `@apiSuccess {Object} returns a user object.`,
+          title: "Signup"
+        },
         handler: async function(req, res) {
           try {
             let response = await signup({

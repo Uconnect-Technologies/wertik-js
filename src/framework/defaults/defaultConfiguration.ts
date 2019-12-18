@@ -67,17 +67,13 @@ export default {
       restApi: {
         endpoints: [
           {
-            path: "/apple/11/1",
+            docs: {
+              title: "Apple module response",
+              description: "Just a message. Smile.",
+              response: `@apiSuccess {Object} returns an object {message: true}.`
+            },
+            path: "/apple/response",
             methodType: "get",
-            handler: function(req, res) {
-              res.json({
-                message: true
-              });
-            }
-          },
-          {
-            path: "/people/",
-            methodType: "put",
             handler: function(req, res) {
               res.json({
                 message: true
