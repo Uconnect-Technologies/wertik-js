@@ -23,3 +23,34 @@ export const exists = (path: any) => {
 	}
 	return true;
 }
+
+export const appendToFileSync = function (path: string, content: string) {
+  // try {
+    fs.appendFileSync(path, content);
+  //   return true;
+  // } catch (e) {
+  //   return false;
+  // }
+}
+
+export const createEmptyFile = function (path: string,cb: Function) {
+  fs.writeFile(path, '', function (err) {
+    if (err) throw err;
+    cb();
+  });
+}
+
+export const deleteFile = async (path: string, cb: Function) => {
+  if (exists(path)) {
+    try {
+      fs.unlink(path, function (err) {
+        cb();
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }else {
+    return true;
+  }
+}
