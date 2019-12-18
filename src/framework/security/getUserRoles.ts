@@ -1,4 +1,4 @@
-export default async function (userId, database) {
+export default async function(userId, database) {
   let sqlQuery = `SELECT  r.*, ur.id as ur_id, 
       ur.name as ur_name, 
       ur.created_at as ur_created_at, 

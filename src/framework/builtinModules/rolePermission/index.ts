@@ -1,23 +1,23 @@
 export default {
   name: "RolePermission",
   graphql: {
-      crud: {
-          query: {
-              generate: true,
-              operations: "*"
-          },
-          mutation: {
-              generate: true,
-              operations: "*"
-          }
+    crud: {
+      query: {
+        generate: true,
+        operations: "*"
       },
-      schema: `
+      mutation: {
+        generate: true,
+        operations: "*"
+      }
+    },
+    schema: `
           type RolePermission {
               id: Int
               name: String
               role: Role
               permission: Permission
-              
+              createdBy: User
               created_at: String
               updated_at: String
           }
@@ -28,32 +28,32 @@ export default {
               permission: Int
           }
       `,
-      mutation: {
-          schema: ``,
-          resolvers: {
-          }
-      },
-      query: {
-          schema: ``,
-          resolvers: {}
-      }
+    mutation: {
+      schema: ``,
+      resolvers: {}
+    },
+    query: {
+      schema: ``,
+      resolvers: {}
+    }
   },
-  restApi: {
-      
-  },
+  restApi: {},
   database: {
     sql: {
-        fields: {
-            name: {
-                type: "STRING"
-            },
-            role: {
-                type: "INTEGER"
-            },
-            permission: {
-                type: "INTEGER"
-            },
+      fields: {
+        name: {
+          type: "STRING"
+        },
+        role: {
+          type: "INTEGER"
+        },
+        permission: {
+          type: "INTEGER"
+        },
+        createdBy: {
+          type: "INTEGER"
         }
+      }
     }
-},
-}
+  }
+};

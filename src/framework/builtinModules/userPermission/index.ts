@@ -1,23 +1,23 @@
 export default {
   name: "UserPermission",
   graphql: {
-      crud: {
-          query: {
-              generate: true,
-              operations: "*"
-          },
-          mutation: {
-              generate: true,
-              operations: "*"
-          }
+    crud: {
+      query: {
+        generate: true,
+        operations: "*"
       },
-      schema: `
+      mutation: {
+        generate: true,
+        operations: "*"
+      }
+    },
+    schema: `
           type UserPermission {
               id: Int
               name: String
               user: User
               permission: Permission
-              
+              createdBy: User
               created_at: String
               updated_at: String
           }
@@ -28,33 +28,32 @@ export default {
               permission: Int
           }
       `,
-      mutation: {
-          schema: ``,
-          resolvers: {
-          }
-      },
-      query: {
-          schema: ``,
-          resolvers: {
-          }
-      }
-  },
-  restApi: {
-      
-  },
-  database: {
-    sql: {
-        fields: {
-            name: {
-                type: "STRING"
-            },
-            user: {
-                type: "INTEGER"
-            },
-            permission: {
-                type: "INTEGER"
-            },
-        }
+    mutation: {
+      schema: ``,
+      resolvers: {}
+    },
+    query: {
+      schema: ``,
+      resolvers: {}
     }
   },
-}
+  restApi: {},
+  database: {
+    sql: {
+      fields: {
+        name: {
+          type: "STRING"
+        },
+        user: {
+          type: "INTEGER"
+        },
+        permission: {
+          type: "INTEGER"
+        },
+        createdBy: {
+          type: "INTEGER"
+        }
+      }
+    }
+  }
+};
