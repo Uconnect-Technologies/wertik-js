@@ -1,0 +1,3 @@
+{   
+  "ignore": ["lib/framework/apiDocs/docs.js","doc/*"] 
+}

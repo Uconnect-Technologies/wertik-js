@@ -1,0 +1,27 @@
+import fs from "fs";
+import {exists, deleteFile, createEmptyFile, appendToFileSync} from "./../helpers/index";
+
+let dirname = __dirname;
+let docFileSource = `${dirname}/docs.js`;
+
+export const addContentsToDoc = async function (doc: string) {
+  setTimeout(() => {
+    appendToFileSync(docFileSource, doc)
+  },600)
+}
+
+export const resetDocFile = async function () {
+    deleteDocFile(function () {
+      createEmptyFile(docFileSource, function () {
+        addContentsToDoc('//empty file');
+      });
+    });
+}
+
+export const deleteDocFile = async function (cb: Function) {
+  if (exists(docFileSource)) {
+    deleteFile(docFileSource, cb);
+  }else {
+    cb();
+  }
+}

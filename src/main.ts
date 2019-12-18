@@ -3,6 +3,9 @@ import convertConfigurationIntoEnvVariables from "./framework/helpers/convertCon
 import initiateLogger from "./framework/logger/index";
 import {IConfiguration} from "./framework/types/configuration";
 import loadDefaults from "./framework/defaults/loadDefaults";
+import {resetDocFile, addContentsToDoc} from "./framework/apiDocs/index"
+
+resetDocFile();
 
 export default function (apps,configurationOriginal: IConfiguration) {
     let expressApp = apps.expressApp ? apps.expressApp : require("express").default(); 
