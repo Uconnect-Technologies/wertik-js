@@ -1,5 +1,5 @@
 let { get } = require("lodash");
-export default async function (user: any, token: string) { 
-	let find = await user.findOneByArgs({ accessToken: token });
+export default async function (UserModel: any, token: string) { 
+  let find = await UserModel.findOneByArgs({ accessToken: token });
 	return get(find,'instance',null);
 } 

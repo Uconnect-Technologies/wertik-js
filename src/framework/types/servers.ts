@@ -26,13 +26,9 @@ export interface IRestApiInitialize {
   runEvent: Function;
 }
 
-export interface ISocketInitializeOptions {
-  onMessageReceived: Function;
-  onClientConnected: Function;
-  onClientDisconnect: Function;
-  send: Function;
-}
-
+// export interface IWSConfiguration {
+//   port: Number
+// }
 export interface ISocketConfiguration {
   onMessageReceived: Function;
   onClientConnected: Function;

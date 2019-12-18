@@ -43,18 +43,18 @@ export default {
           }
         },
         schema: `
-                  type Article {
-                      id: Int
-                      title: String
-                      description: String
-                      created_at: String
-                      updated_at: String
-                  }
-                  input ArticleInput {
-                      title: String
-                      description: String
-                  }
-              `,
+          type Article {
+            id: Int
+            title: String
+            description: String
+            created_at: String
+            updated_at: String
+          }
+          input ArticleInput {
+            title: String
+            description: String
+          }
+        `,
         mutation: {
           schema: ``,
           resolvers: {}

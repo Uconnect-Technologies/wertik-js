@@ -12,19 +12,20 @@ export default {
       }
     },
     schema: `
-            type Role {
-                id: Int
-                name: String
-                defaultPermissions: String
-                createdBy: User
-                created_at: String
-                updated_at: String
-            }
-            input RoleInput {
-                id: Int
-                name: String
-            }
-        `,
+      type Role {
+        id: Int
+        name: String
+        defaultPermissions: String
+        createdBy: User
+        created_at: String
+        updated_at: String
+      }
+      input RoleInput {
+        id: Int
+        defaultPermissions: String
+        name: String
+      }
+    `,
     mutation: {
       schema: ``,
       resolvers: {}
