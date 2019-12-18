@@ -2,9 +2,10 @@
   {
     "type": "get",
     "url": "/api/v1/article/apple/11/1",
-    "title": "Request User information",
+    "title": "Title for /api/v1/article/apple/11/1",
     "name": "_apple_11_1",
     "group": "Article",
+    "description": "<p>Empty Description</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -45,9 +46,10 @@
   {
     "type": "put",
     "url": "/api/v1/article/people/",
-    "title": "Request User information",
+    "title": "Title for /api/v1/article/people/",
     "name": "_people_",
     "group": "Article",
+    "description": "<p>Empty Description</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -88,9 +90,10 @@
   {
     "type": "post",
     "url": "/api/v1/auth/activate-account",
-    "title": "Request User information",
+    "title": "Title for /api/v1/auth/activate-account",
     "name": "_activate_account",
     "group": "Auth",
+    "description": "<p>Empty Description</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -131,9 +134,10 @@
   {
     "type": "post",
     "url": "/api/v1/auth/login",
-    "title": "Request User information",
+    "title": "Title for /api/v1/auth/login",
     "name": "_login",
     "group": "Auth",
+    "description": "<p>Empty Description</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -174,9 +178,10 @@
   {
     "type": "post",
     "url": "/api/v1/auth/login-with-access-token",
-    "title": "Request User information",
+    "title": "Title for /api/v1/auth/login-with-access-token",
     "name": "_login_with_access_token",
     "group": "Auth",
+    "description": "<p>Empty Description</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -217,9 +222,10 @@
   {
     "type": "post",
     "url": "/api/v1/auth/refresh-token",
-    "title": "Request User information",
+    "title": "Title for /api/v1/auth/refresh-token",
     "name": "_refresh_token",
     "group": "Auth",
+    "description": "<p>Empty Description</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -260,9 +266,10 @@
   {
     "type": "post",
     "url": "/api/v1/auth/signup",
-    "title": "Request User information",
+    "title": "Title for /api/v1/auth/signup",
     "name": "_signup",
     "group": "Auth",
+    "description": "<p>Empty Description</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -303,9 +310,10 @@
   {
     "type": "post",
     "url": "/api/v1/auth/two-factor-login",
-    "title": "Request User information",
+    "title": "Two factor login",
     "name": "_two_factor_login",
     "group": "Auth",
+    "description": "<p>A long description</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -346,9 +354,10 @@
   {
     "type": "post",
     "url": "/api/v1/auth/two-factor-login-validate",
-    "title": "Request User information",
+    "title": "Title for /api/v1/auth/two-factor-login-validate",
     "name": "_two_factor_login_validate",
     "group": "Auth",
+    "description": "<p>Empty Description</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -389,9 +398,10 @@
   {
     "type": "${type",
     "url": "}",
-    "title": "${apiPath} Request User information",
+    "title": "${apiPath} ${lodash_1.get(restApiEndpointsElement.docs, 'title', `Title for ${apiPath}`)}",
     "name": "__path_",
     "group": "__module_name_",
+    "description": "<p>${lodash_1.get(restApiEndpointsElement.docs, 'description', 'Empty Description')}</p>",
     "parameter": {
       "fields": {
         "Parameter": [

@@ -106,6 +106,11 @@ export default {
             {
                 path: '/two-factor-login',
                 methodType: 'post',
+                docs: {
+                  description: "A long description",
+                  params: "",
+                  title: "Two factor login"
+                },
                 handler: async function (req, res) {
                     try {
                         let response = await twoFactorLogin({

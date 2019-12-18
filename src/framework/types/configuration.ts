@@ -37,9 +37,17 @@ export interface IConfigurationCustomModuleGraphql {
   query: IConfigurationCustomModuleGraphqlQuery
 }
 
+export interface IConfigurationCustomModuleRestApiDocs {
+  description: String;
+  params: String;
+  response: String;
+  title: String
+}
+
 export interface IConfigurationCustomModuleRestApiEndpoint {
   path: String;
   methodType: String;
+  docs: IConfigurationCustomModuleRestApiDocs
   handler: Function;
 }
 

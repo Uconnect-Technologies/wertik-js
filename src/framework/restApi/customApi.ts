@@ -27,14 +27,14 @@ export default (expressApp, restApiEndpointsElement, module) => {
     apiPath = apiPath.replace(re, "/");
       addContentsToDoc(`
       /**
-       * @api {${type}} ${apiPath} Request User information
+       * @api {${type}} ${apiPath} ${get(restApiEndpointsElement.docs,'title',`Title for ${apiPath}`)}
        * @apiName ${path}
        * @apiGroup ${module.name}
+       * @apiDescription ${get(restApiEndpointsElement.docs,'description','Empty Description')}
        *
-       * @apiParam {Number} id User's unique ID.
+       * ${get(restApiEndpointsElement,'params','')}
        *
-       * @apiSuccess {String} firstname Firstname of the User.
-       * @apiSuccess {String} lastname  Lastname of the User.
+       * ${get(restApiEndpointsElement,'response','')}
        */
     `);
     expressApp[type](apiPath, handler);
