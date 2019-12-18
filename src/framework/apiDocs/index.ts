@@ -6,6 +6,8 @@ let docFileSource = `${dirname}/docs.js`;
 
 export const addContentsToDoc = async function (doc: string) {
   setTimeout(() => {
+    doc = doc.replace("first________", "/**");
+    doc = doc.replace("last________", "*/");
     appendToFileSync(docFileSource, doc)
   },600)
 }

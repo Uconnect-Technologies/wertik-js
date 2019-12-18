@@ -32,6 +32,7 @@
     "dev": "concurrently \"npm run watch-ts\"  \"nodemon  lib/devServer.js\" ",
     "build": "npm run clean && npm run build-ts",
     "production": "node lib/devServer.js",
+    "generate-docs": "apidoc -i lib/ -o doc/",
     "watch-ts": "tsc -w"
   },
   "dependencies": {

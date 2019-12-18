@@ -1,5 +1,11 @@
 import { get, kebabCase } from "lodash";
 import {addContentsToDoc} from "./../apiDocs/index"
+
+const getNameFromApiUrl = function (url: string) {
+  let s = url.split("/");
+  return s[s.length-1] || "Empty";
+}
+
 export default (expressApp, restApiEndpointsElement, module) => {
   const versionPath = "api/v1";
   const type = get(restApiEndpointsElement, "methodType", "get");
@@ -26,16 +32,16 @@ export default (expressApp, restApiEndpointsElement, module) => {
     let re = new RegExp(find, "g");
     apiPath = apiPath.replace(re, "/");
       addContentsToDoc(`
-      /**
-       * @api {${type}} ${apiPath} ${get(restApiEndpointsElement.docs,'title',`Title for ${apiPath}`)}
-       * @apiName ${path}
+      first________
+       * @api {${type}} ${apiPath} ${get(restApiEndpointsElement, "docs.title", getNameFromApiUrl(apiPath))}
+       * @apiName ${getNameFromApiUrl(apiPath)}
        * @apiGroup ${module.name}
-       * @apiDescription ${get(restApiEndpointsElement.docs,'description','Empty Description')}
+       * @apiDescription ${get(restApiEndpointsElement, "docs.description", "No description provided")}
        *
-       * ${get(restApiEndpointsElement,'params','')}
+       * ${get(restApiEndpointsElement, "docs.params", "")}
        *
-       * ${get(restApiEndpointsElement,'response','')}
-       */
+       * ${get(restApiEndpointsElement, "docs.response", "")}
+      last________
     `);
     expressApp[type](apiPath, handler);
   } else {
