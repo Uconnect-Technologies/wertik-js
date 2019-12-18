@@ -1,6 +1,6 @@
 import {ISocketInitializeOptions,ISocketConfiguration } from "../types/servers";
 
-export const defaultSocketInstance = (options: ISocketInitializeOptions) => {
+export const defaultSocketInstance = (options: ISocketConfiguration) => {
   const WebSocket = require('ws');
 
   const wss = new WebSocket.Server({
