@@ -1,3 +1,3 @@
 {   
-  "ignore": ["lib/framework/apiDocs/docs.js","doc/*"] 
+  "ignore": ["lib/framework/apiDocs/docs.js","doc/*","lib/framework/apiDocs/docs/*"] 
 }

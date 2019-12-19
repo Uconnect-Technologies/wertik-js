@@ -262,7 +262,7 @@ export default {
         path: "/login",
         methodType: "post",
         docs: {
-          description: "Allows login a user..",
+          description: "Allows login a user from..",
           params: `@apiParam {Object} input user email and password, like: {email: String, password: String}.`,
           response: `@apiSuccess {Object} returns a user object.`,
           title: "Login"
