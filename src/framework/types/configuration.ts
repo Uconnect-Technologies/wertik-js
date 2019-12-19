@@ -78,6 +78,11 @@ export interface IConfigurationMysqlOptions {
   dbPort: String;
 }
 
+export interface IDocServerConfiguration {
+  expressApp: any;
+  configuration: IConfiguration;
+}
+
 export interface IConfigurationEvents {
   beforeRestApiStart?: Function;
   beforeGraphqlStart?: Function;
@@ -89,6 +94,11 @@ export interface IConfigurationEvents {
 export interface IConfigurationContext {
   data: Object;
   createContext: Function
+}
+
+export interface IConfigurationDocs {
+  port: Number;
+  disable: Boolean;
 }
 
 export interface IConfiguration {
@@ -106,5 +116,6 @@ export interface IConfiguration {
   modules: Array<IConfigurationCustomModule>;
   events: IConfigurationEvents;
   seeds: any;
-  sockets: ISocketConfiguration
+  sockets: ISocketConfiguration;
+  docs: IConfigurationDocs
 }

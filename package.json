@@ -1,6 +1,6 @@
 {
   "name": "wertik-js",
-  "version": "1.4.8",
+  "version": "1.4.9",
   "main": "lib/main.js",
   "repository": "https://github.com/Uconnect-Technologies/wertik-js.git",
   "keywords": [
@@ -29,10 +29,11 @@
   "author": "Ilyas Karim <ilyas.datoo@gmail.com> ",
   "license": "MIT",
   "scripts": {
-    "dev": "concurrently \"npm run watch-ts\"  \"nodemon  lib/devServer.js\" ",
+    "dev": "concurrently \"npm run watch-ts\"  \"nodemon lib/devServer.js\" ",
+    "dev-without-nodemon": "concurrently \"npm run watch-ts\"  \"node lib/devServer.js\" ",
     "build": "npm run clean && npm run build-ts",
     "production": "node lib/devServer.js",
-    "generate-docs": "apidoc -i lib/ -o doc/",
+    "generate-docs": "apidoc -i lib/ -o lib/framework/apiDocs/docs/",
     "watch-ts": "tsc -w"
   },
   "dependencies": {
@@ -54,6 +55,7 @@
     "morgan": "^1.9.1",
     "mysql2": "^1.6.4",
     "nodemailer": "^5.0.0",
+    "shelljs": "^0.8.3",
     "winston": "^3.1.0",
     "ws": "^7.2.0"
   },

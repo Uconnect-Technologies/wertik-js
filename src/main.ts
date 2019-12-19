@@ -3,7 +3,9 @@ import convertConfigurationIntoEnvVariables from "./framework/helpers/convertCon
 import initiateLogger from "./framework/logger/index";
 import {IConfiguration} from "./framework/types/configuration";
 import loadDefaults from "./framework/defaults/loadDefaults";
-import {resetDocFile, addContentsToDoc} from "./framework/apiDocs/index"
+import {resetDocFile, startDocsServer} from "./framework/apiDocs/index";
+import shell from "shelljs";
+import {get} from "lodash";
 
 resetDocFile();
 
@@ -44,6 +46,13 @@ export default function (apps,configurationOriginal: IConfiguration) {
                             database: database,
                             runEvent: runEvent
                         });
+                        if (get(configuration,"docs.disable",false) === false) {
+                          require("./framework/apiDocs/docs/index").default(configuration.docs, function () {
+                            setTimeout(() => {
+                              shell.exec('npm run-script generate-docs');
+                            }, 1000);
+                          });
+                        }
                         resolve({
                             graphql: graphqlAppInstance,
                             restApi: restApiInstance,

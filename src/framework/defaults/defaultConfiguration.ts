@@ -122,5 +122,9 @@ export default {
     onClientDisconnect: function(wss) {
       console.log("on client disconnected", `Total connections right now ${wss.clients.size}`);
     }
+  },
+  docs: {
+    port: 5200,
+    disable: false
   }
 };

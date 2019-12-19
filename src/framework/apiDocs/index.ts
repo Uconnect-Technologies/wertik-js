@@ -1,5 +1,7 @@
 import fs from "fs";
 import {exists, deleteFile, createEmptyFile, appendToFileSync} from "./../helpers/index";
+import {IDocServerConfiguration} from "./../types/configuration";
+
 
 let dirname = __dirname;
 let docFileSource = `${dirname}/docs.js`;
