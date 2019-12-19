@@ -22,6 +22,11 @@ export default function(options: IRestApiInitialize) {
     database,
     runEvent
   } = options;
+  let {restApi} = configuration;
+  const port = get(restApi,'port',4000);
+  if (get(restApi,'disable', true) === true) {
+    return expressApp;
+  }
   expressApp.use(cors());
   expressApp.use(bodyParser.urlencoded({ extended: false }));
   expressApp.use(bodyParser.json());
@@ -58,8 +63,8 @@ export default function(options: IRestApiInitialize) {
     });
   });
   if (configuration.forceStartRestApiServer === true) {
-    expressApp.listen(configuration.ports.restApi, () => {
-      console.log(`Api server running at htt://localhost:${configuration.ports.restApi}!`);
+    expressApp.listen(port, () => {
+      console.log(`Rest API server started at http://localhost:${port}!`);
     });
   }
 

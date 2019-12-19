@@ -101,6 +101,16 @@ export interface IConfigurationDocs {
   disable: Boolean;
 }
 
+export interface IConfigurationRestApi {
+  disable: Boolean;
+  port: Number;
+}
+
+export interface IConfigurationGraphql {
+  disable: Boolean;
+  port: Number;
+}
+
 export interface IConfiguration {
   dbDialect: String;
   name: String;
@@ -109,7 +119,11 @@ export interface IConfiguration {
   frontendAppUrl: String;
   frontendAppActivationUrl: String;
   frontendAppPasswordResetUrl: String;
-  context: Object;
+  context: {
+    [Key: string]: any
+  };
+  restApi: IConfigurationRestApi;
+  graphql: IConfigurationGraphql;
   forceStartGraphqlServer: Boolean;
   forceStartRestApiServer: Boolean;
   ports: IConfigurationPorts;

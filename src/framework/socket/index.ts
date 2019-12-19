@@ -1,10 +1,16 @@
 import {ISocketInitializeOptions,ISocketConfiguration } from "../types/servers";
+import {get} from "lodash";
 
 export const defaultSocketInstance = (options: ISocketConfiguration) => {
   const WebSocket = require('ws');
+  const port = get(options,'port',2000);
+  const disable = get(options,'disable',false);
+  if (disable === true) {
+    return null;
+  }
 
   const wss = new WebSocket.Server({
-    port: 2000,
+    port: port,
     perMessageDeflate: {
       zlibDeflateOptions: {
         // See zlib defaults.
@@ -22,7 +28,6 @@ export const defaultSocketInstance = (options: ISocketConfiguration) => {
       // Below options specified as default values.
       concurrencyLimit: 10, // Limits zlib concurrency for perf.
       threshold: 1024 // Size (in bytes) below which messages
-      // should not be compressed.
     }
   });
   wss.on('connection', function connection(ws,req) {
@@ -39,7 +44,7 @@ export const defaultSocketInstance = (options: ISocketConfiguration) => {
     ws.send('Socket connected, message from server side.');
   });
 
-  console.log("Websocket server is running at ws://localhost:2000 ")
+  console.log(`WebSocket server started at ws://localhost:${port}`)
 
   return wss;
 }
@@ -48,7 +53,9 @@ export default function (options: ISocketConfiguration) {
   let ws = defaultSocketInstance({
     onClientConnected: options.onClientConnected,
     onMessageReceived: options.onMessageReceived,
-    onClientDisconnect: options.onClientDisconnect
+    onClientDisconnect: options.onClientDisconnect,
+    disable: options.disable,
+    port: options.port
   });
   return ws;
 }

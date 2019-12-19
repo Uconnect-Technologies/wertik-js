@@ -22,6 +22,14 @@ export default {
       };
     }
   },
+  graphql: {
+    disable: false,
+    port: 4000,
+  },
+  restApi: {
+    disable: false,
+    port: 7000
+  },
   forceStartGraphqlServer: true,
   forceStartRestApiServer: true,
   ports: {
@@ -113,6 +121,8 @@ export default {
     ]
   },
   sockets: {
+    disable: false,
+    port: 2000,
     onClientConnected: function(req, wss) {
       console.log("on client connected", `Total connections right now ${wss.clients.size}`);
     },

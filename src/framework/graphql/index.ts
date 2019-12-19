@@ -10,6 +10,11 @@ import { IGraphQLInitialize } from "./../types/servers";
 
 export default function(options: IGraphQLInitialize) {
   const { configuration, context, dbTables, models, sendEmail, emailTemplates, database, runEvent } = options;
+  let {graphql} = configuration;
+  const port = get(graphql,'port',4000);
+  if (get(graphql,'disable',true) === true) {
+    return null;
+  }
   const modules = loadAllModules(configuration);
   let apollo = new ApolloServer({
     typeDefs: modules.schema,
@@ -36,7 +41,7 @@ export default function(options: IGraphQLInitialize) {
     }
   });
   if (configuration.forceStartGraphqlServer == true) {
-    apollo.listen(configuration.ports.graphql).then(({ url, subscriptionsUrl }) => {
+    apollo.listen(port).then(({ url, subscriptionsUrl }) => {
       console.log("GraphQL server started at " + url);
       console.log("GraphQL subscriptions started at " + subscriptionsUrl);
     });
