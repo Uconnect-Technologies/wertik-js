@@ -4,6 +4,7 @@ logs
 dist
 lib
 yarn.lock
+lib/framework/apiDocs/docs
 
 frontend-app/vue-app/node_modules
 frontend-app/vue-app/dist
