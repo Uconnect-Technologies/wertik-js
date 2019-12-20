@@ -51,6 +51,7 @@
     "handlebars": "^4.5.3",
     "jsonwebtoken": "^8.4.0",
     "lodash": "^4.17.15",
+    "log-symbols": "^3.0.0",
     "moment": "^2.23.0",
     "mongoose": "^5.7.5",
     "mongoose-paginate": "^5.0.3",
