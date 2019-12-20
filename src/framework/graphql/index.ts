@@ -1,4 +1,4 @@
-let { ApolloServer } = require("apollo-server");
+let { ApolloServer,ApolloError } = require("apollo-server");
 let { get } = require("lodash");
 let loadAllModules = require("./loadAllModules").default;
 import getUserWithAccessToken from "./../security/getUserWithAccessToken";
@@ -27,12 +27,7 @@ export default function(options: IGraphQLInitialize) {
     },
     context: async ({ req, res }) => {
       const ip = req.connection.remoteAddress;
-      const isAllowed = isIPAllowed(ip, configuration.security.allowedIpAddresses)
-      if (isAllowed === false) {
-        console.log(`${ip} is not whitelisted, closing connection for ${ip}`);
-        res.connection.destroy();
-        return;
-      }
+      isIPAllowed(ip, configuration.security.allowedIpAddresses,'graphql',{});
       let user = await getUserWithAccessToken(models.User, get(req, "headers.authorization", ""));
       let userPermissions = user ? await getUserAllPermissions(user.id, database) : [];
       let createContext = await get(configuration.context, "createContext", () => {})();

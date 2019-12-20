@@ -138,6 +138,7 @@ export default {
     disable: false
   },
   security: {
+    // allowedIpAddresses: ["::1","::ffff:127.0.0.1"]
     allowedIpAddresses: []
   }
 };

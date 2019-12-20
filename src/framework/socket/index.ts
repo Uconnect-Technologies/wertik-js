@@ -1,5 +1,7 @@
-import {ISocketInitializeOptions,ISocketConfiguration } from "../types/servers";
+import {ISocketConfiguration } from "../types/servers";
 import {get} from "lodash";
+import isIPAllowed from "../security/isIPAllowed";
+import { IConfiguration } from "../types/configuration";
 
 export const defaultSocketInstance = (options: ISocketConfiguration) => {
   const WebSocket = require('ws');
@@ -31,17 +33,17 @@ export const defaultSocketInstance = (options: ISocketConfiguration) => {
     }
   });
   wss.on('connection', function connection(ws,req) {
-    ws.on('message', function incoming(message) {
-      options.onMessageReceived(message, wss);
-    });
-
-    ws.on('close', function close() {
-      options.onClientDisconnect(wss);
-    });
-
-    options.onClientConnected(req,wss);
-  
-    ws.send('Socket connected, message from server side.');
+    let f = isIPAllowed(req.connection.remoteAddress,options.security.allowedIpAddresses,'ws',{ws});
+    if (f === true) {
+      ws.on('message', function incoming(message) {
+        options.onMessageReceived(message, wss);
+      });
+      ws.on('close', function close() {
+        options.onClientDisconnect(wss);
+      });
+      options.onClientConnected(req,wss);
+      ws.send('Socket connected, message from server side.');
+    }
   });
 
   console.log(`WebSocket server started at ws://localhost:${port}`)
@@ -49,13 +51,14 @@ export const defaultSocketInstance = (options: ISocketConfiguration) => {
   return wss;
 }
 
-export default function (options: ISocketConfiguration) {
+export default function (options: IConfiguration) {
   let ws = defaultSocketInstance({
-    onClientConnected: options.onClientConnected,
-    onMessageReceived: options.onMessageReceived,
-    onClientDisconnect: options.onClientDisconnect,
-    disable: options.disable,
-    port: options.port
+    onClientConnected: options.sockets.onClientConnected,
+    onMessageReceived: options.sockets.onMessageReceived,
+    onClientDisconnect: options.sockets.onClientDisconnect,
+    disable: options.sockets.disable,
+    port: options.sockets.port,
+    security: options.security
   });
   return ws;
 }

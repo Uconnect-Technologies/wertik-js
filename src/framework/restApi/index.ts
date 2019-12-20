@@ -34,11 +34,7 @@ export default function(options: IRestApiInitialize) {
   expressApp.use(morgan("combined"));
   expressApp.use(async function(req, res, next) {
     const ip = req.connection.remoteAddress;
-    const isAllowed = isIPAllowed(ip, configuration.security.allowedIpAddresses)
-    if (isAllowed === false) {
-      console.log(`${ip} is not whitelisted, closing connection for ${ip}`);
-      res.connection.destroy();
-    }
+    isIPAllowed(ip, configuration.security.allowedIpAddresses,'express',{res})
     let user = await getUserWithAccessToken(models.User, get(req, "headers.authorization", ""));
     let userPermissions = user ? await getUserAllPermissions(user.id, database) : [];
     let createContext = await get(configuration.context, "createContext", () => {})();

@@ -19,7 +19,7 @@ export default function(apps, configurationOriginal: IConfiguration) {
                   let runEvent = require("./framework/events/runEvent").default(configuration.events);
                   let graphql = require("./framework/graphql/index").default;
                   let restApi = require("./framework/restApi/index").default;
-                  let socket = require("./framework/socket/index").default(configuration.sockets);
+                  let socket = require("./framework/socket/index").default(configuration);
                   let database = require("./framework/database/connect").default(configuration);
                   let dbTables = require("./framework/database/loadTables").default(database, configuration);
                   let models = require("./framework/database/models").default(dbTables);

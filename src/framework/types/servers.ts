@@ -1,4 +1,4 @@
-import {IConfiguration} from "./configuration";
+import {IConfiguration, IConfigurationSecurity} from "./configuration";
 
 export interface IGraphQLInitialize {
   expressApp: any;
@@ -35,4 +35,5 @@ export interface ISocketConfiguration {
   onClientDisconnect: Function;
   disable: Boolean;
   port: Number;
+  security: IConfigurationSecurity
 }
