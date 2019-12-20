@@ -136,5 +136,8 @@ export default {
   docs: {
     port: 5200,
     disable: false
+  },
+  security: {
+    allowedIpAddresses: []
   }
 };

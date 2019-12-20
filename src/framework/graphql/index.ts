@@ -6,6 +6,7 @@ import getUserAllPermissions from "./../security/getUserAllPermissions";
 import getUserRoles from "./../security/getUserRoles";
 import { IGraphQLInitialize } from "./../types/servers";
 import {get} from "lodash";
+import isIPAllowed from "./../security/isIPAllowed";
 
 //expressApp,configuration,dbTables,models,emailTemplates,sendEmail,database,WertikEventEmitter
 
@@ -25,6 +26,13 @@ export default function(options: IGraphQLInitialize) {
       path: "/subscriptions"
     },
     context: async ({ req, res }) => {
+      const ip = req.connection.remoteAddress;
+      const isAllowed = isIPAllowed(ip, configuration.security.allowedIpAddresses)
+      if (isAllowed === false) {
+        console.log(`${ip} is not whitelisted, closing connection for ${ip}`);
+        res.connection.destroy();
+        return;
+      }
       let user = await getUserWithAccessToken(models.User, get(req, "headers.authorization", ""));
       let userPermissions = user ? await getUserAllPermissions(user.id, database) : [];
       let createContext = await get(configuration.context, "createContext", () => {})();

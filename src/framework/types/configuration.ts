@@ -111,6 +111,10 @@ export interface IConfigurationGraphql {
   port: Number;
 }
 
+export interface IConfigurationSecurity {
+  allowedIpAddresses: Array<String>;
+}
+
 export interface IConfiguration {
   dbDialect: String;
   name: String;
@@ -131,5 +135,6 @@ export interface IConfiguration {
   events: IConfigurationEvents;
   seeds: any;
   sockets: ISocketConfiguration;
-  docs: IConfigurationDocs
+  docs: IConfigurationDocs;
+  security: IConfigurationSecurity;
 }

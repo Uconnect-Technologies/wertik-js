@@ -8,6 +8,7 @@ const morgan = require("morgan");
 import getUserWithAccessToken from "./../security/getUserWithAccessToken";
 import getUserAllPermissions from "./../security/getUserAllPermissions";
 import getUserRoles from "./../security/getUserRoles";
+import isIPAllowed from "../security/isIPAllowed";
 
 //expressApp,configuration,dbTables, models, allEmailTemplates,sendEmail,database,WertikEventEmitter
 export default function(options: IRestApiInitialize) {
@@ -32,6 +33,12 @@ export default function(options: IRestApiInitialize) {
   expressApp.use(bodyParser.json());
   expressApp.use(morgan("combined"));
   expressApp.use(async function(req, res, next) {
+    const ip = req.connection.remoteAddress;
+    const isAllowed = isIPAllowed(ip, configuration.security.allowedIpAddresses)
+    if (isAllowed === false) {
+      console.log(`${ip} is not whitelisted, closing connection for ${ip}`);
+      res.connection.destroy();
+    }
     let user = await getUserWithAccessToken(models.User, get(req, "headers.authorization", ""));
     let userPermissions = user ? await getUserAllPermissions(user.id, database) : [];
     let createContext = await get(configuration.context, "createContext", () => {})();
@@ -51,7 +58,6 @@ export default function(options: IRestApiInitialize) {
   require("./versions/v1/loadAllModules").default(expressApp, configuration, customApi);
 
   expressApp.get("/", (req, res) => {
-    console.log(req.connection.remoteAddress);
     res.json({
       message: require("./../../../package.json").welcomeResponse,
       version: require("./../../../package.json").version
