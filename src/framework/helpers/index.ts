@@ -1,5 +1,6 @@
 let {ApolloError} = require("apollo-server");
 import fs from "fs";
+import { IConfiguration } from "../types/configuration";
 
 export const generateError = (e: any,statusCode: Number = 404) => {
     return new ApolloError(e.message);
@@ -38,6 +39,18 @@ export const createEmptyFile = function (path: string,cb: Function) {
     if (err) throw err;
     cb();
   });
+}
+
+export const checkIfModuleIsValid = function (object: IConfiguration) {
+  if (!module) {
+    console.log("Module must be object")
+    return false;
+  }
+  if (module && module.constructor !== Object) {
+    console.log("Module must be object")
+    return false;
+  }
+  return true;
 }
 
 export const deleteFile = async (path: string, cb: Function) => {

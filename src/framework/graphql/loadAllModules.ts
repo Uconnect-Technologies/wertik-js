@@ -6,6 +6,7 @@ const {get} = require("lodash");
 import generalSchema from "./generalSchema"
 import {generateSubscriptionsCrudResolvers, generateQueriesCrudSchema, generateListTypeForModule,generateMutationsCrudSubscriptionSchema, generateMutationsCrudSchema, generateCrudResolvers} from "./crudGenerator";
 let {PubSub} = require("apollo-server");
+import {checkIfModuleIsValid} from "./../helpers/index"
 const pubsub = new PubSub();
 
 export default function (configuration) {
@@ -60,11 +61,6 @@ export default function (configuration) {
     let appRelations = {}
 
     const processModule = function (module) {
-        // require information
-        if (!module) {
-            console.log(module, " passed no unknown")
-            return;
-        }
         let graphql = module.graphql;
         let moduleName = module.name;
         let schema = graphql.schema;

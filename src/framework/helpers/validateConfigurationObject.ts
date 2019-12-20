@@ -1,4 +1,5 @@
 import checkInstalledPackages from "./../initialization/checkInstalledPackages";
+import checkModules from "./../initialization/checkModules";
 
 export const requiredFields = {
     name: "required",
@@ -11,9 +12,9 @@ export const requiredFields = {
 }
 
 export default function (Configuration) {
-    return new Promise((resolve, reject) => {
-        checkInstalledPackages(Configuration).then(() => {
-            resolve();
-        });
+    return new Promise( async (resolve, reject) => {
+        let responseCheckInstalledPackages = await checkInstalledPackages(Configuration);
+        let responseCheckModules = await checkModules(Configuration);
+        resolve();
     });
 }

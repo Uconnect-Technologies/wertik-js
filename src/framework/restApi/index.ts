@@ -62,6 +62,7 @@ export default function(options: IRestApiInitialize) {
       detail: "Request page didn't found"
     });
   });
+  
   if (configuration.forceStartRestApiServer === true) {
     expressApp.listen(port, () => {
       console.log(`Rest API server started at http://localhost:${port}!`);

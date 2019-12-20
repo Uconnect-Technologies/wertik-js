@@ -5,11 +5,13 @@ import getUserWithAccessToken from "./../security/getUserWithAccessToken";
 import getUserAllPermissions from "./../security/getUserAllPermissions";
 import getUserRoles from "./../security/getUserRoles";
 import { IGraphQLInitialize } from "./../types/servers";
+import {get} from "lodash";
 
 //expressApp,configuration,dbTables,models,emailTemplates,sendEmail,database,WertikEventEmitter
 
 export default function(options: IGraphQLInitialize) {
   const { configuration, context, dbTables, models, sendEmail, emailTemplates, database, runEvent } = options;
+  const forceStartGraphqlServer = get(configuration,'forceStartGraphqlServer', true);
   let {graphql} = configuration;
   const port = get(graphql,'port',4000);
   if (get(graphql,'disable',true) === true) {
@@ -40,7 +42,7 @@ export default function(options: IGraphQLInitialize) {
       };
     }
   });
-  if (configuration.forceStartGraphqlServer == true) {
+  if (forceStartGraphqlServer == true) {
     apollo.listen(port).then(({ url, subscriptionsUrl }) => {
       console.log("GraphQL server started at " + url);
       console.log("GraphQL subscriptions started at " + subscriptionsUrl);
