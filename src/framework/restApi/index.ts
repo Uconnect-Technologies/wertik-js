@@ -51,8 +51,10 @@ export default function(options: IRestApiInitialize) {
   require("./versions/v1/loadAllModules").default(expressApp, configuration, customApi);
 
   expressApp.get("/", (req, res) => {
+    console.log(req.connection.remoteAddress);
     res.json({
-      message: "Welcome to wertik, You have successfully running Wertik rest api!"
+      message: require("./../../../package.json").welcomeResponse,
+      version: require("./../../../package.json").version
     });
   });
 

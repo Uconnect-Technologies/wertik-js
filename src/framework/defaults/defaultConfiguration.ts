@@ -76,8 +76,8 @@ export default {
         endpoints: [
           {
             docs: {
-              title: "Apple module response",
-              description: "Just a message. Smile.",
+              title: "Apple module response.",
+              description: "Just a message.",
               response: `@apiSuccess {Object} returns an object {message: true}.`
             },
             path: "/apple/response",
