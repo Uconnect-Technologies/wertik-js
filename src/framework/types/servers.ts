@@ -1,16 +1,15 @@
 import { IConfiguration, IConfigurationSecurity } from "./configuration";
 
 export interface IGraphQLInitialize {
+  sendEmail: Function;
+  runEvent: Function;
   expressApp: any;
   configuration: IConfiguration;
   dbTables: Array<any>;
   models: any;
   emailTemplates: Object;
-  sendEmail: Function;
   database: any;
   WertikEventEmitter: any;
-  context: any;
-  runEvent: Function;
 }
 
 export interface IRestApiInitialize {
@@ -23,7 +22,6 @@ export interface IRestApiInitialize {
   models: any;
   database: any;
   WertikEventEmitter: any;
-  context: any;
 }
 
 // export interface IWSConfiguration {

@@ -11,7 +11,7 @@ import isIPAllowed from "./../security/isIPAllowed";
 //expressApp,configuration,dbTables,models,emailTemplates,sendEmail,database,WertikEventEmitter
 
 export default function(options: IGraphQLInitialize) {
-  const { configuration, context, dbTables, models, sendEmail, emailTemplates, database, runEvent } = options;
+  const { configuration, dbTables, models, sendEmail, emailTemplates, database, runEvent } = options;
   const forceStartGraphqlServer = get(configuration, "forceStartGraphqlServer", true);
   let { graphql } = configuration;
   const port = get(graphql, "port", 4000);
