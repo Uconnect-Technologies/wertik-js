@@ -1,21 +1,21 @@
-let { ApolloServer,ApolloError } = require("apollo-server");
+let { ApolloServer, ApolloError } = require("apollo-server");
 let { get } = require("lodash");
 let loadAllModules = require("./loadAllModules").default;
 import getUserWithAccessToken from "./../security/getUserWithAccessToken";
 import getUserAllPermissions from "./../security/getUserAllPermissions";
 import getUserRoles from "./../security/getUserRoles";
 import { IGraphQLInitialize } from "./../types/servers";
-import {get} from "lodash";
+import { get } from "lodash";
 import isIPAllowed from "./../security/isIPAllowed";
 
 //expressApp,configuration,dbTables,models,emailTemplates,sendEmail,database,WertikEventEmitter
 
 export default function(options: IGraphQLInitialize) {
   const { configuration, context, dbTables, models, sendEmail, emailTemplates, database, runEvent } = options;
-  const forceStartGraphqlServer = get(configuration,'forceStartGraphqlServer', true);
-  let {graphql} = configuration;
-  const port = get(graphql,'port',4000);
-  if (get(graphql,'disable',true) === true) {
+  const forceStartGraphqlServer = get(configuration, "forceStartGraphqlServer", true);
+  let { graphql } = configuration;
+  const port = get(graphql, "port", 4000);
+  if (get(graphql, "disable", true) === true) {
     return null;
   }
   const modules = loadAllModules(configuration);
@@ -27,7 +27,7 @@ export default function(options: IGraphQLInitialize) {
     },
     context: async ({ req, res }) => {
       const ip = req.connection.remoteAddress;
-      isIPAllowed(ip, configuration.security.allowedIpAddresses,'graphql',{});
+      isIPAllowed(ip, configuration.security.allowedIpAddresses, "graphql", {});
       let user = await getUserWithAccessToken(models.User, get(req, "headers.authorization", ""));
       let userPermissions = user ? await getUserAllPermissions(user.id, database) : [];
       let createContext = await get(configuration.context, "createContext", () => {})();
