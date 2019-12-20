@@ -1,4 +1,4 @@
-export default async function (userId,database) {
+export default async function(userId, database) {
   let sqlQuery = `
         SELECT permissionTable.id        AS permission_id, 
           permissionTable.NAME           AS permission_name, 
@@ -29,7 +29,7 @@ export default async function (userId,database) {
         WHERE  userroleTable.USER = _________user_ID
           OR userpermissionTable.USER = _________user_ID 
     `;
-    sqlQuery = sqlQuery.replace(/_________user_ID/g, userId + "");
-    const permissions = await database.query(sqlQuery, { type: database.QueryTypes.SELECT });
-    return permissions;
+  sqlQuery = sqlQuery.replace(/_________user_ID/g, userId + "");
+  const permissions = await database.query(sqlQuery, { type: database.QueryTypes.SELECT });
+  return permissions;
 }

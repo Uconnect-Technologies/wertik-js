@@ -23,9 +23,9 @@ export default function(options: IRestApiInitialize) {
     database,
     runEvent
   } = options;
-  let {restApi} = configuration;
-  const port = get(restApi,'port',4000);
-  if (get(restApi,'disable', true) === true) {
+  let { restApi } = configuration;
+  const port = get(restApi, "port", 4000);
+  if (get(restApi, "disable", true) === true) {
     return expressApp;
   }
   expressApp.use(cors());
@@ -34,7 +34,7 @@ export default function(options: IRestApiInitialize) {
   expressApp.use(morgan("combined"));
   expressApp.use(async function(req, res, next) {
     const ip = req.connection.remoteAddress;
-    isIPAllowed(ip, configuration.security.allowedIpAddresses,'express',{res})
+    isIPAllowed(ip, configuration.security.allowedIpAddresses, "express", { res });
     let user = await getUserWithAccessToken(models.User, get(req, "headers.authorization", ""));
     let userPermissions = user ? await getUserAllPermissions(user.id, database) : [];
     let createContext = await get(configuration.context, "createContext", () => {})();
@@ -66,7 +66,7 @@ export default function(options: IRestApiInitialize) {
       detail: "Request page didn't found"
     });
   });
-  
+
   if (configuration.forceStartRestApiServer === true) {
     expressApp.listen(port, () => {
       console.log(`Rest API server started at http://localhost:${port}!`);

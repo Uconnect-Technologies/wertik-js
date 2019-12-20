@@ -12,22 +12,22 @@ export default {
       }
     },
     schema: `
-          type RolePermission {
-              id: Int
-              name: String
-              role: Role
-              permission: Permission
-              createdBy: User
-              created_at: String
-              updated_at: String
-          }
-          input RolePermissionInput {
-              id: Int
-              name: String
-              role: Int
-              permission: Int
-          }
-      `,
+      type RolePermission {
+        id: Int
+        name: String
+        role: Role
+        permission: Permission
+        createdBy: User
+        created_at: String
+        updated_at: String
+      }
+      input RolePermissionInput {
+        id: Int
+        name: String
+        role: Int
+        permission: Int
+      }
+    `,
     mutation: {
       schema: ``,
       resolvers: {}

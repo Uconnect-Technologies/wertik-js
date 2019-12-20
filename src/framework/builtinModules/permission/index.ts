@@ -12,21 +12,21 @@ export default {
       }
     },
     schema: `
-          type Permission {
-              id: Int
-              name: String
-              cant: String
-              can: String
-              createdBy: User
-              created_at: String
-              updated_at: String
-          }
-          input PermissionInput {
-              id: Int
-              name: String
-              cant: String
-              can: String
-          }
+      type Permission {
+        id: Int
+        name: String
+        cant: String
+        can: String
+        createdBy: User
+        created_at: String
+        updated_at: String
+      }
+      input PermissionInput {
+        id: Int
+        name: String
+        cant: String
+        can: String
+      }
       `,
     mutation: {
       schema: ``,

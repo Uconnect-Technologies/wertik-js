@@ -1,12 +1,12 @@
-import {ISocketConfiguration } from "../types/servers";
-import {get} from "lodash";
+import { ISocketConfiguration } from "../types/servers";
+import { get } from "lodash";
 import isIPAllowed from "../security/isIPAllowed";
 import { IConfiguration } from "../types/configuration";
 
 export const defaultSocketInstance = (options: ISocketConfiguration) => {
-  const WebSocket = require('ws');
-  const port = get(options,'port',2000);
-  const disable = get(options,'disable',false);
+  const WebSocket = require("ws");
+  const port = get(options, "port", 2000);
+  const disable = get(options, "disable", false);
   if (disable === true) {
     return null;
   }
@@ -32,26 +32,26 @@ export const defaultSocketInstance = (options: ISocketConfiguration) => {
       threshold: 1024 // Size (in bytes) below which messages
     }
   });
-  wss.on('connection', function connection(ws,req) {
-    let f = isIPAllowed(req.connection.remoteAddress,options.security.allowedIpAddresses,'ws',{ws});
+  wss.on("connection", function connection(ws, req) {
+    let f = isIPAllowed(req.connection.remoteAddress, options.security.allowedIpAddresses, "ws", { ws });
     if (f === true) {
-      ws.on('message', function incoming(message) {
+      ws.on("message", function incoming(message) {
         options.onMessageReceived(message, wss);
       });
-      ws.on('close', function close() {
+      ws.on("close", function close() {
         options.onClientDisconnect(wss);
       });
-      options.onClientConnected(req,wss);
-      ws.send('Socket connected, message from server side.');
+      options.onClientConnected(req, wss);
+      ws.send("Socket connected, message from server side.");
     }
   });
 
-  console.log(`WebSocket server started at ws://localhost:${port}`)
+  console.log(`WebSocket server started at ws://localhost:${port}`);
 
   return wss;
-}
+};
 
-export default function (options: IConfiguration) {
+export default function(options: IConfiguration) {
   let ws = defaultSocketInstance({
     onClientConnected: options.sockets.onClientConnected,
     onMessageReceived: options.sockets.onMessageReceived,

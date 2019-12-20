@@ -12,9 +12,12 @@ resetDocFile();
 export default function(apps, configurationOriginal: IConfiguration) {
   let expressApp = apps.expressApp ? apps.expressApp : require("express").default();
   return new Promise((resolve, reject) => {
-    loadDefaults(configurationOriginal).then(configuration => {
-        validateConfigurationObject(configuration).then(() => {
-            convertConfigurationIntoEnvVariables(configuration).then(() => {
+    loadDefaults(configurationOriginal)
+      .then(configuration => {
+        validateConfigurationObject(configuration)
+          .then(() => {
+            convertConfigurationIntoEnvVariables(configuration)
+              .then(() => {
                 initiateLogger().then(logger => {
                   let runEvent = require("./framework/events/runEvent").default(configuration.events);
                   let graphql = require("./framework/graphql/index").default;
