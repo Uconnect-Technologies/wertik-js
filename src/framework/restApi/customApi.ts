@@ -1,10 +1,10 @@
 import { get, kebabCase } from "lodash";
-import {addContentsToDoc} from "./../apiDocs/index"
+import { addContentsToDoc } from "./../apiDocs/index";
 
-const getNameFromApiUrl = function (url: string) {
+const getNameFromApiUrl = function(url: string) {
   let s = url.split("/");
-  return s[s.length-1] || "Empty";
-}
+  return s[s.length - 1] || "Empty";
+};
 
 export default (expressApp, restApiEndpointsElement, module) => {
   const versionPath = "api/v1";
@@ -31,7 +31,7 @@ export default (expressApp, restApiEndpointsElement, module) => {
     let find = "//";
     let re = new RegExp(find, "g");
     apiPath = apiPath.replace(re, "/");
-      addContentsToDoc(`
+    addContentsToDoc(`
       first________
        * @api {${type}} ${apiPath} ${get(restApiEndpointsElement, "docs.title", getNameFromApiUrl(apiPath))}
        * @apiName ${getNameFromApiUrl(apiPath)}

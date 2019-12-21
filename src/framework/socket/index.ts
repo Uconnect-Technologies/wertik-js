@@ -1,10 +1,19 @@
-import {ISocketInitializeOptions,ISocketConfiguration } from "../types/servers";
+import { ISocketConfiguration } from "../types/servers";
+import { get } from "lodash";
+import isIPAllowed from "../security/isIPAllowed";
+import { IConfiguration } from "../types/configuration";
+import { successMessage } from "../logger/consoleMessages";
 
 export const defaultSocketInstance = (options: ISocketConfiguration) => {
-  const WebSocket = require('ws');
+  const WebSocket = require("ws");
+  const port = get(options, "port", 2000);
+  const disable = get(options, "disable", false);
+  if (disable === true) {
+    return null;
+  }
 
   const wss = new WebSocket.Server({
-    port: 2000,
+    port: port,
     perMessageDeflate: {
       zlibDeflateOptions: {
         // See zlib defaults.
@@ -22,33 +31,35 @@ export const defaultSocketInstance = (options: ISocketConfiguration) => {
       // Below options specified as default values.
       concurrencyLimit: 10, // Limits zlib concurrency for perf.
       threshold: 1024 // Size (in bytes) below which messages
-      // should not be compressed.
     }
   });
-  wss.on('connection', function connection(ws,req) {
-    ws.on('message', function incoming(message) {
-      options.onMessageReceived(message, wss);
-    });
-
-    ws.on('close', function close() {
-      options.onClientDisconnect(wss);
-    });
-
-    options.onClientConnected(req,wss);
-  
-    ws.send('Socket connected, message from server side.');
+  wss.on("connection", function connection(ws, req) {
+    let f = isIPAllowed(req.connection.remoteAddress, options.security.allowedIpAddresses, "ws", { ws });
+    if (f === true) {
+      ws.on("message", function incoming(message) {
+        options.onMessageReceived(message, wss);
+      });
+      ws.on("close", function close() {
+        options.onClientDisconnect(wss);
+      });
+      options.onClientConnected(req, wss);
+      ws.send("Socket connected, message from server side.");
+    }
   });
 
-  console.log("Websocket server is running at ws://localhost:2000 ")
+  successMessage(`WebSocket server started at`,`ws://localhost:${port}`)
 
   return wss;
-}
+};
 
-export default function (options: ISocketConfiguration) {
+export default function(options: IConfiguration) {
   let ws = defaultSocketInstance({
-    onClientConnected: options.onClientConnected,
-    onMessageReceived: options.onMessageReceived,
-    onClientDisconnect: options.onClientDisconnect
+    onClientConnected: options.sockets.onClientConnected,
+    onMessageReceived: options.sockets.onMessageReceived,
+    onClientDisconnect: options.sockets.onClientDisconnect,
+    disable: options.sockets.disable,
+    port: options.sockets.port,
+    security: options.security
   });
   return ws;
 }

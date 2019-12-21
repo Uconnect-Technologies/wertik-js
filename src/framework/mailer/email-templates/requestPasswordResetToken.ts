@@ -17,4 +17,4 @@ export default `
 <p>
   {{siteName}}
 </p>
-`
+`;

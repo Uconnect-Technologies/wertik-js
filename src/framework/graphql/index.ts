@@ -1,15 +1,24 @@
-let { ApolloServer } = require("apollo-server");
+let { ApolloServer, ApolloError } = require("apollo-server");
 let { get } = require("lodash");
 let loadAllModules = require("./loadAllModules").default;
 import getUserWithAccessToken from "./../security/getUserWithAccessToken";
 import getUserAllPermissions from "./../security/getUserAllPermissions";
 import getUserRoles from "./../security/getUserRoles";
 import { IGraphQLInitialize } from "./../types/servers";
+import { get } from "lodash";
+import isIPAllowed from "./../security/isIPAllowed";
+import {successMessage} from "./../logger/consoleMessages";
 
 //expressApp,configuration,dbTables,models,emailTemplates,sendEmail,database,WertikEventEmitter
 
 export default function(options: IGraphQLInitialize) {
-  const { configuration, context, dbTables, models, sendEmail, emailTemplates, database, runEvent } = options;
+  const { configuration, dbTables, models, sendEmail, emailTemplates, database, runEvent } = options;
+  const forceStartGraphqlServer = get(configuration, "forceStartGraphqlServer", true);
+  let { graphql } = configuration;
+  const port = get(graphql, "port", 4000);
+  if (get(graphql, "disable", true) === true) {
+    return null;
+  }
   const modules = loadAllModules(configuration);
   let apollo = new ApolloServer({
     typeDefs: modules.schema,
@@ -18,6 +27,8 @@ export default function(options: IGraphQLInitialize) {
       path: "/subscriptions"
     },
     context: async ({ req, res }) => {
+      const ip = req.connection.remoteAddress;
+      isIPAllowed(ip, configuration.security.allowedIpAddresses, "graphql", {});
       let user = await getUserWithAccessToken(models.User, get(req, "headers.authorization", ""));
       let userPermissions = user ? await getUserAllPermissions(user.id, database) : [];
       let createContext = await get(configuration.context, "createContext", () => {})();
@@ -35,10 +46,10 @@ export default function(options: IGraphQLInitialize) {
       };
     }
   });
-  if (configuration.forceStartGraphqlServer == true) {
-    apollo.listen(configuration.ports.graphql).then(({ url, subscriptionsUrl }) => {
-      console.log("GraphQL server started at " + url);
-      console.log("GraphQL subscriptions started at " + subscriptionsUrl);
+  if (forceStartGraphqlServer == true) {
+    apollo.listen(port).then(({ url, subscriptionsUrl }) => {
+      successMessage("GraphQL subscriptions started at " , subscriptionsUrl);
+      successMessage("GraphQL server started at",url);
     });
   }
   return apollo;

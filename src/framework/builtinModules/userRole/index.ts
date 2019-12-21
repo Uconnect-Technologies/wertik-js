@@ -13,22 +13,22 @@ export default {
       }
     },
     schema: `
-          type UserRole {
-              id: Int
-              name: String
-              user: User
-              role: Role
-              createdBy: User
-              created_at: String
-              updated_at: String
-          }
-          input UserRoleInput {
-              id: Int
-              name: String
-              user: Int
-              role: Int
-          }
-      `,
+      type UserRole {
+        id: Int
+        name: String
+        user: User
+        role: Role
+        createdBy: User
+        created_at: String
+        updated_at: String
+      }
+      input UserRoleInput {
+        id: Int
+        name: String
+        user: Int
+        role: Int
+      }
+    `,
     relations: {
       role: async function(userRole, args, context, info) {
         let requestedFields = getRequestedFieldsFromResolverInfo(info);

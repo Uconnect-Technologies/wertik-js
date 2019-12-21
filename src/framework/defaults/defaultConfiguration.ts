@@ -22,6 +22,14 @@ export default {
       };
     }
   },
+  graphql: {
+    disable: false,
+    port: 4000,
+  },
+  restApi: {
+    disable: false,
+    port: 7000
+  },
   forceStartGraphqlServer: true,
   forceStartRestApiServer: true,
   ports: {
@@ -68,8 +76,8 @@ export default {
         endpoints: [
           {
             docs: {
-              title: "Apple module response",
-              description: "Just a message. Smile.",
+              title: "Apple module response.",
+              description: "Just a message.",
               response: `@apiSuccess {Object} returns an object {message: true}.`
             },
             path: "/apple/response",
@@ -113,6 +121,8 @@ export default {
     ]
   },
   sockets: {
+    disable: false,
+    port: 2000,
     onClientConnected: function(req, wss) {
       console.log("on client connected", `Total connections right now ${wss.clients.size}`);
     },
@@ -126,5 +136,8 @@ export default {
   docs: {
     port: 5200,
     disable: false
+  },
+  security: {
+    allowedIpAddresses: ["::1","::ffff:127.0.0.1"]
   }
 };

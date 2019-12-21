@@ -2,13 +2,10 @@
 
 **💪 GraphQL + Rest API** framework to kick start your project.
 
-
-#### Beta Version. Stable version will be launched after 1.5. Current version: 1.2
-
 <div>
-	<img style="float: left;" src="https://img.shields.io/github/downloads/ilyaskarim/wertik-js/total?style=flat-square">
-	<img style="float: left;" src="https://img.shields.io/npm/dw/wertik-js?style=flat-square">
-	<img style="float: left;" src="https://img.shields.io/github/issues-raw/ilyaskarim/wertik-js?style=flat-square">
+	<img style="float: left;margin: 10px 0;" src="https://img.shields.io/github/downloads/ilyaskarim/wertik-js/total?style=flat-square">
+	<img style="float: left;margin: 10px 0;" src="https://img.shields.io/npm/dw/wertik-js?style=flat-square">
+	<img style="float: left;margin: 10px 0;" src="https://img.shields.io/github/issues-raw/ilyaskarim/wertik-js?style=flat-square">
 </div>
 
 <br />

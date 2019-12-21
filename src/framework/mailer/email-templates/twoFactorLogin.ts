@@ -10,4 +10,4 @@ export default `
   Thanks <br />
   {{ siteName }} Team.
 </p>
-`
+`;

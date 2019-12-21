@@ -1,4 +1,4 @@
-export default function () {
+export default function() {
   return new Promise((resolve, reject) => {
     const { createLogger, format, transports } = require("winston");
 
