@@ -1,9 +1,11 @@
+import { errorMessage } from "../logger/consoleMessages";
+
 export default function(ip: String, ips: Array<String>, type: String, obj: any) {
   const isAllowed = ips.indexOf(ip) > -1;
   if (isAllowed) {
     return true;
   } else {
-    console.log(`${ip} is not whitelisted, closing connection for ${ip}`);
+    errorMessage(`${ip} is not whitelisted, closing connection for ${ip}`)
     if (type == "express") {
       obj.res.connection.destroy();
     } else if (type == "graphql") {

@@ -5,6 +5,7 @@ const port = 5200;
 const app = express();
 import { get } from "lodash";
 import isIPAllowed from "../../security/isIPAllowed";
+import { successMessage } from "../../logger/consoleMessages";
 
 export default function(options: IDocServerConfiguration, cb: Function) {
   const { configuration } = options;
@@ -20,7 +21,7 @@ export default function(options: IDocServerConfiguration, cb: Function) {
     res.sendFile("./index.html", { root: __dirname });
   });
   app.listen(port, function() {
-    console.log(`Rest API docs running at http://localhost:${port}/`);
+    successMessage(`Rest API docs running at`,`http://localhost:${port}/`)
     cb();
   });
 }

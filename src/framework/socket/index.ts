@@ -2,6 +2,7 @@ import { ISocketConfiguration } from "../types/servers";
 import { get } from "lodash";
 import isIPAllowed from "../security/isIPAllowed";
 import { IConfiguration } from "../types/configuration";
+import { successMessage } from "../logger/consoleMessages";
 
 export const defaultSocketInstance = (options: ISocketConfiguration) => {
   const WebSocket = require("ws");
@@ -46,7 +47,7 @@ export const defaultSocketInstance = (options: ISocketConfiguration) => {
     }
   });
 
-  console.log(`WebSocket server started at ws://localhost:${port}`);
+  successMessage(`WebSocket server started at`,`ws://localhost:${port}`)
 
   return wss;
 };

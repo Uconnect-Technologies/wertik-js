@@ -1,11 +1,13 @@
-import validateConfigurationObject from "./framework/helpers/validateConfigurationObject";
-import convertConfigurationIntoEnvVariables from "./framework/helpers/convertConfigurationIntoEnvVariables";
-import initiateLogger from "./framework/logger/index";
-import { IConfiguration } from "./framework/types/configuration";
-import loadDefaults from "./framework/defaults/loadDefaults";
-import { resetDocFile, startDocsServer } from "./framework/apiDocs/index";
 import shell from "shelljs";
 import { get } from "lodash";
+
+import convertConfigurationIntoEnvVariables from "./framework/helpers/convertConfigurationIntoEnvVariables";
+import validateConfigurationObject from "./framework/helpers/validateConfigurationObject";
+import { resetDocFile, startDocsServer } from "./framework/apiDocs/index";
+import { IConfiguration } from "./framework/types/configuration";
+import {errorMessage} from "./framework/logger/consoleMessages";
+import loadDefaults from "./framework/defaults/loadDefaults";
+import initiateLogger from "./framework/logger/index";
 
 resetDocFile();
 
@@ -72,10 +74,8 @@ export default function(apps, configurationOriginal: IConfiguration) {
                 });
               })
               .catch(err2 => {
-                console.log(
-                  "[Wertik-js] Something went wrong while initializing Wertik js, Please check docs, and make sure you that you pass correct configuration."
-                );
-                console.log(err2);
+                errorMessage(`Something went wrong while initializing Wertik js, Please check docs, and make sure you that you pass correct configuration.`);
+                errorMessage(err2);
                 reject(err2);
               });
           })
@@ -84,10 +84,7 @@ export default function(apps, configurationOriginal: IConfiguration) {
           });
       })
       .catch((err: any) => {
-        console.error(
-          "[Wertik-js] Something went wrong while verifying default configuration \n",
-          "Received: " + err.message
-        );
+        errorMessage("Something went wrong while verifying default configuration \n Received: " + err.message)
       });
   });
 }

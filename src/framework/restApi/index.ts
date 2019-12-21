@@ -10,6 +10,7 @@ import getUserAllPermissions from "./../security/getUserAllPermissions";
 import getUserRoles from "./../security/getUserRoles";
 import isIPAllowed from "../security/isIPAllowed";
 const logSymbols = require('log-symbols');
+import {successMessage} from "./../logger/consoleMessages";
 
 //expressApp,configuration,dbTables, models, allEmailTemplates,sendEmail,database,WertikEventEmitter
 export default function(options: IRestApiInitialize) {
@@ -70,7 +71,7 @@ export default function(options: IRestApiInitialize) {
 
   if (configuration.forceStartRestApiServer === true) {
     expressApp.listen(port, () => {
-      console.log(logSymbols.success,`Rest API server started at http://localhost:${port}!`);
+      successMessage(`Rest API server started at`,`http://localhost:${port}!`);
     });
   }
 

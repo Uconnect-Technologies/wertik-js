@@ -7,6 +7,7 @@ import getUserRoles from "./../security/getUserRoles";
 import { IGraphQLInitialize } from "./../types/servers";
 import { get } from "lodash";
 import isIPAllowed from "./../security/isIPAllowed";
+import {successMessage} from "./../logger/consoleMessages";
 
 //expressApp,configuration,dbTables,models,emailTemplates,sendEmail,database,WertikEventEmitter
 
@@ -47,8 +48,8 @@ export default function(options: IGraphQLInitialize) {
   });
   if (forceStartGraphqlServer == true) {
     apollo.listen(port).then(({ url, subscriptionsUrl }) => {
-      console.log("GraphQL server started at " + url);
-      console.log("GraphQL subscriptions started at " + subscriptionsUrl);
+      successMessage("GraphQL subscriptions started at " , subscriptionsUrl);
+      successMessage("GraphQL server started at",url);
     });
   }
   return apollo;
