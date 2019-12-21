@@ -84,8 +84,7 @@ export default function(configuration) {
       let currentQuerySchema = get(graphql, "query.schema", "");
       let currentQueryResolvers = get(graphql, "query.resolvers", {});
       let currentModuleCrudResolvers = generateCrudResolvers(moduleName, pubsub);
-      let currentModuleListSchema =
-        currentGenerateQuery || currentGenerateMutation ? generateListTypeForModule(moduleName) : "";
+      let currentModuleListSchema = currentGenerateQuery || currentGenerateMutation ? generateListTypeForModule(moduleName) : "";
       let currentModuleSubscriptionResolvers = generateSubscriptionsCrudResolvers(moduleName, pubsub);
       // relations
       let relations = get(graphql, "relations", {});
