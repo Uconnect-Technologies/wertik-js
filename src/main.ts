@@ -52,7 +52,7 @@ export default function(apps, configurationOriginal: IConfiguration) {
                     runEvent: runEvent
                   });
                   if (get(configuration, "docs.disable", false) === false) {
-                    require("./framework/apiDocs/docs/index").default(configuration.docs, function() {
+                    require("./framework/apiDocs/docs/index").default({configuration: configuration}, function() {
                       setTimeout(() => {
                         shell.exec("npm run-script generate-docs");
                       }, 1000);
