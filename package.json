@@ -1,6 +1,6 @@
 {
   "name": "wertik-js",
-  "version": "1.5.1",
+  "version": "1.5.4",
   "main": "lib/main.js",
   "repository": "https://github.com/Uconnect-Technologies/wertik-js.git",
   "welcomeResponse": "Welcome to wertik, You have successfully running Wertik.",
@@ -34,7 +34,6 @@
     "dev-without-nodemon": "concurrently \"npm run watch-ts\"  \"node lib/devServer.js\" ",
     "build": "npm run clean && npm run build-ts",
     "production": "node lib/devServer.js",
-    "generate-docs": "apidoc -i lib/ -o lib/framework/apiDocs/docs/",
     "watch-ts": "tsc -w"
   },
   "dependencies": {

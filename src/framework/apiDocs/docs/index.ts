@@ -11,7 +11,7 @@ export default function(options: IDocServerConfiguration, cb: Function) {
   const { configuration } = options;
   const port = get(options, "port", 5200);
   app.use(express.static("index"));
-  app.use(express.static(path.join(__dirname, "/")));
+  app.use(express.static(path.join(__dirname, "/content")));
   app.use(async function(req, res, next) {
     const ip = req.connection.remoteAddress;
     isIPAllowed(ip, configuration.security.allowedIpAddresses, "express", { res });

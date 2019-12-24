@@ -79,7 +79,6 @@ export interface IConfigurationMysqlOptions {
 }
 
 export interface IDocServerConfiguration {
-  expressApp: any;
   configuration: IConfiguration;
 }
 
