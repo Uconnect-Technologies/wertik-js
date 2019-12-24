@@ -4,7 +4,6 @@ logs
 dist
 lib
 yarn.lock
-lib/framework/apiDocs/docs/content
 .idea
 
 frontend-app/vue-app/node_modules
