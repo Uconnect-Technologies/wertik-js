@@ -31,9 +31,9 @@ export default function(options: IGraphQLInitialize) {
       isIPAllowed(ip, configuration.security.allowedIpAddresses, "graphql", {});
       let user = await getUserWithAccessToken(models.User, get(req, "headers.authorization", ""));
       let userPermissions = user ? await getUserAllPermissions(user.id, database) : [];
-      let createContext = await get(configuration.context, "createContext", () => {})();
+      
       let userRoles = user ? await getUserRoles(user.id, database) : [];
-      return {
+      let cxt =  {
         user: user,
         dbTables,
         models,
@@ -42,8 +42,10 @@ export default function(options: IGraphQLInitialize) {
         userPermissions: userPermissions,
         userRoles: userRoles,
         ...get(configuration.context, "data", {}),
-        createContext: createContext
       };
+      let createContext = await get(configuration.context, "createContext", () => {})("graphql",cxt);
+      cxt['createContext'] = createContext;
+      return cxt;
     }
   });
   if (forceStartGraphqlServer == true) {

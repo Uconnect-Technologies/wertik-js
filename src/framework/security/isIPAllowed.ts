@@ -5,7 +5,7 @@ export default function(ip: String, ips: Array<String>, type: String, obj: any) 
   if (isAllowed) {
     return true;
   } else {
-    errorMessage(`${ip} is not whitelisted, closing connection for ${ip}`)
+    errorMessage(`${ip} is not whitelisted, closing connection for ${ip}`);
     if (type == "express") {
       obj.res.connection.destroy();
     } else if (type == "graphql") {

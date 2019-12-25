@@ -39,7 +39,6 @@ export default function(options: IRestApiInitialize) {
     isIPAllowed(ip, configuration.security.allowedIpAddresses, "express", { res });
     let user = await getUserWithAccessToken(models.User, get(req, "headers.authorization", ""));
     let userPermissions = user ? await getUserAllPermissions(user.id, database) : [];
-    let createContext = await get(configuration.context, "createContext", () => {})();
     let userRoles = user ? await getUserRoles(user.id, database) : [];
     req.user = user;
     req.userPermissions = userPermissions;
@@ -49,6 +48,7 @@ export default function(options: IRestApiInitialize) {
     req.context = get(configuration.context, "data", {});
     req.sendEmail = sendEmail;
     req.emailTemplates = emailTemplates;
+    let createContext = await get(configuration.context, "createContext", () => {})("restApi",req);
     req.createContext = createContext;
     next();
   });
