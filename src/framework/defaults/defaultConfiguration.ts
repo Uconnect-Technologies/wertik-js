@@ -1,7 +1,7 @@
 export default {
   dbDialect: "mysql",
   name: "Wertik",
-  builtinModules: "",
+  builtinModules: "user,auth,permission,role,rolePermission,userPermission,userRole,me",
   mysqlOptions: {
     dbUsername: "root",
     dbPassword: "",
@@ -36,8 +36,7 @@ export default {
     graphql: 4000,
     restApi: 7000
   },
-  modules: [],
-  modulesa: [
+  modules: [
     {
       name: "Article",
       graphql: {
