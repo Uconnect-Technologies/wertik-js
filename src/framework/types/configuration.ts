@@ -1,17 +1,17 @@
-import {ISocketConfiguration} from "./servers";
+import { ISocketConfiguration } from "./servers";
 export interface IConfigurationPorts {
   graphql: Number;
   restApi: Number;
 }
 
 export interface IConfigurationCustomModuleGraphqlCrudQuery {
-  generate: Boolean,
-  operations: String
+  generate: Boolean;
+  operations: String;
 }
 
 export interface IConfigurationCustomModuleGraphqlCrudMutation {
-  generate: Boolean,
-  operations: String
+  generate: Boolean;
+  operations: String;
 }
 
 export interface IConfigurationCustomModuleGraphqlCrud {
@@ -19,48 +19,48 @@ export interface IConfigurationCustomModuleGraphqlCrud {
   mutation: IConfigurationCustomModuleGraphqlCrudMutation;
 }
 export interface IConfigurationCustomModuleGraphqlMutation {
-  schema: String
-  resolvers: Object
+  schema: String;
+  resolvers: Object;
 }
 export interface IConfigurationCustomModuleGraphqlQuery {
-  schema: String
-  resolvers: Object
+  schema: String;
+  resolvers: Object;
 }
 
 export interface IConfigurationCustomModuleGraphql {
-  crud: IConfigurationCustomModuleGraphqlCrud
-  schema: String
+  crud: IConfigurationCustomModuleGraphqlCrud;
+  schema: String;
   relations: {
-    [Key: string]: Function
-  }
-  mutation: IConfigurationCustomModuleGraphqlMutation
-  query: IConfigurationCustomModuleGraphqlQuery
+    [Key: string]: Function;
+  };
+  mutation: IConfigurationCustomModuleGraphqlMutation;
+  query: IConfigurationCustomModuleGraphqlQuery;
 }
 
 export interface IConfigurationCustomModuleRestApiDocs {
   description: String;
   params: String;
   response: String;
-  title: String
+  title: String;
 }
 
 export interface IConfigurationCustomModuleRestApiEndpoint {
   path: String;
   methodType: String;
-  docs: IConfigurationCustomModuleRestApiDocs
+  docs: IConfigurationCustomModuleRestApiDocs;
   handler: Function;
 }
 
 export interface IConfigurationCustomModuleRestApi {
-  endpoints: Array<IConfigurationCustomModuleRestApiEndpoint>
+  endpoints: Array<IConfigurationCustomModuleRestApiEndpoint>;
 }
 
 export interface IConfigurationCustomModuleDatabaseSql {
-  fields: Object
+  fields: Object;
 }
 
 export interface IConfigurationCustomModuleDatabase {
-  sql: IConfigurationCustomModuleDatabaseSql
+  sql: IConfigurationCustomModuleDatabaseSql;
 }
 
 export interface IConfigurationCustomModule {
@@ -86,13 +86,13 @@ export interface IConfigurationEvents {
   beforeRestApiStart?: Function;
   beforeGraphqlStart?: Function;
   crud?: {
-    [Key: string]: Function
-  }
+    [Key: string]: Function;
+  };
 }
 
 export interface IConfigurationContext {
   data: Object;
-  createContext: Function
+  createContext: Function;
 }
 
 export interface IConfigurationRestApi {
@@ -113,12 +113,23 @@ export interface IConfiguration {
   dbDialect: String;
   name: String;
   builtinModules: String;
-  mysqlOptions: IConfigurationMysqlOptions
+  extendBuiltinModules: {
+    [Key: string]: {
+      database: {
+        tableFieds: any;
+      };
+      graphql: {
+        mainSchemaExtend: String;
+        inputSchemaExtend: String;
+      };
+    };
+  };
+  mysqlOptions: IConfigurationMysqlOptions;
   frontendAppUrl: String;
   frontendAppActivationUrl: String;
   frontendAppPasswordResetUrl: String;
   context: {
-    [Key: string]: any
+    [Key: string]: any;
   };
   restApi: IConfigurationRestApi;
   graphql: IConfigurationGraphql;

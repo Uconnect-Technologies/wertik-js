@@ -4,20 +4,20 @@ import { subscribe } from "graphql";
 
 export const generateQueriesCrudSchema = (moduleName: String) => {
   return `
-        view${moduleName}(id: Int): ${moduleName}
-        list${moduleName}(pagination: PaginationInput, filters: [FilterInput]): ${moduleName}List
-    `;
+    view${moduleName}(id: Int): ${moduleName}
+    list${moduleName}(pagination: PaginationInput, filters: [FilterInput]): ${moduleName}List
+  `;
 };
 
 export const generateMutationsCrudSubscriptionSchema = (moduleName: String) => {
   return `
-        created${moduleName}: ${moduleName}
-        deleted${moduleName}: ${moduleName}
-        updated${moduleName}: ${moduleName}
-        bulkUpdated${moduleName}:  [${moduleName}]
-        bulkCreated${moduleName}:  [${moduleName}]
-        bulkDeleted${moduleName}:  [${moduleName}]
-    `;
+    created${moduleName}: ${moduleName}
+    deleted${moduleName}: ${moduleName}
+    updated${moduleName}: ${moduleName}
+    bulkUpdated${moduleName}:  [${moduleName}]
+    bulkCreated${moduleName}:  [${moduleName}]
+    bulkDeleted${moduleName}:  [${moduleName}]
+  `;
 };
 
 export const getSubscriptionConstants = (moduleName: String) => {
@@ -64,13 +64,13 @@ export const generateSubscriptionsCrudResolvers = (moduleName: String, pubsub: a
 
 export const generateMutationsCrudSchema = (moduleName: String) => {
   return `
-        create${moduleName}(input: ${moduleName}Input): ${moduleName}
-        delete${moduleName}(input: ${moduleName}Input): SuccessReponse
-        update${moduleName}(input: ${moduleName}Input): ${moduleName}
-        bulkUpdate${moduleName}(input: [${moduleName}Input]): [${moduleName}]
-        bulkCreate${moduleName}(input: [${moduleName}Input]): [${moduleName}]
-        bulkDelete${moduleName}(input: [Int]): SuccessReponse
-    `;
+    create${moduleName}(input: ${moduleName}Input): ${moduleName}
+    delete${moduleName}(input: ${moduleName}Input): SuccessReponse
+    update${moduleName}(input: ${moduleName}Input): ${moduleName}
+    bulkUpdate${moduleName}(input: [${moduleName}Input]): [${moduleName}]
+    bulkCreate${moduleName}(input: [${moduleName}Input]): [${moduleName}]
+    bulkDelete${moduleName}(input: [Int]): SuccessReponse
+  `;
 };
 
 export const generateCrudResolvers = (moduleName: string, pubsub) => {
@@ -140,6 +140,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub) => {
         return view.instance;
       },
       [`list${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
+        console.log(context.createContext);
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         return await context.models[moduleName].paginate(args, requestedFields);
       }
