@@ -4,7 +4,7 @@ import { get } from "lodash";
 import convertConfigurationIntoEnvVariables from "./framework/helpers/convertConfigurationIntoEnvVariables";
 import validateConfigurationObject from "./framework/helpers/validateConfigurationObject";
 import { IConfiguration } from "./framework/types/configuration";
-import {errorMessage} from "./framework/logger/consoleMessages";
+import { errorMessage } from "./framework/logger/consoleMessages";
 import loadDefaults from "./framework/defaults/loadDefaults";
 import initiateLogger from "./framework/logger/index";
 
@@ -64,7 +64,9 @@ export default function(apps, configurationOriginal: IConfiguration) {
                 });
               })
               .catch(err2 => {
-                errorMessage(`Something went wrong while initializing Wertik js, Please check docs, and make sure you that you pass correct configuration.`);
+                errorMessage(
+                  `Something went wrong while initializing Wertik js, Please check docs, and make sure you that you pass correct configuration.`
+                );
                 errorMessage(err2);
                 reject(err2);
               });
@@ -74,7 +76,7 @@ export default function(apps, configurationOriginal: IConfiguration) {
           });
       })
       .catch((err: any) => {
-        errorMessage("Something went wrong while verifying default configuration \n Received: " + err.message)
+        errorMessage("Something went wrong while verifying default configuration \n Received: " + err.message);
       });
   });
 }

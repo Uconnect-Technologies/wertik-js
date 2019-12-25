@@ -11,10 +11,15 @@ export const requiredFields = {
   db_port: "required"
 };
 
-export default function(Configuration) {
+export default function(configuration) {
   return new Promise(async (resolve, reject) => {
-    let responseCheckInstalledPackages = await checkInstalledPackages(Configuration);
-    let responseCheckModules = await checkModules(Configuration);
-    resolve();
+    try {
+      let responseCheckInstalledPackages = await checkInstalledPackages(configuration);
+      let responseCheckModules = await checkModules(configuration);
+      resolve();
+    } catch (errr) {
+      reject(errr);
+      console.log(errr);
+    }
   });
 }

@@ -17,6 +17,7 @@ export default `
     [query__replace]
   }
   type Subscription {
+    response: Response
     [subscription__replace]
   }
   input EmailInput {
