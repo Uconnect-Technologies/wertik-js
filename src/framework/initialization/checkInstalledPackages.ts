@@ -20,12 +20,16 @@ export function check(name: String) {
 
 export default function(configuration: IConfiguration) {
   return new Promise((resolve, reject) => {
-    const { dbDialect } = configuration;
-    check("apollo-server");
-    if (dbDialect == "mysql") {
-      check("sequelize");
-      check("mysql2");
+    try {
+      const { dbDialect } = configuration;
+      check("apollo-server");
+      if (dbDialect == "mysql") {
+        check("sequelize");
+        check("mysql2");
+      }
+      resolve();
+    } catch (e) {
+      reject(e);
     }
-    resolve();
   });
 }

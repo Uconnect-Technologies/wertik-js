@@ -36,7 +36,8 @@ export default {
     graphql: 4000,
     restApi: 7000
   },
-  modules: [
+  modules: [],
+  modulesa: [
     {
       name: "Article",
       graphql: {
