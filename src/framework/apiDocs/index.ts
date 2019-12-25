@@ -1,9 +1,10 @@
 import fs from "fs";
+declare var process: any;
 import { exists, deleteFile, createEmptyFile, appendToFileSync } from "./../helpers/index";
 import { IDocServerConfiguration } from "./../types/configuration";
 
-let dirname = __dirname;
-let docFileSource = `${dirname}/docs.js`;
+const docFileSource = process.env['generateDocumentationPath'];
+// const docFileSource = "asd";
 
 export const addContentsToDoc = async function(doc: string) {
   setTimeout(() => {

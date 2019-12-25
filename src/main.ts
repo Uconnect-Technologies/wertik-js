@@ -3,13 +3,10 @@ import { get } from "lodash";
 
 import convertConfigurationIntoEnvVariables from "./framework/helpers/convertConfigurationIntoEnvVariables";
 import validateConfigurationObject from "./framework/helpers/validateConfigurationObject";
-import { resetDocFile, startDocsServer } from "./framework/apiDocs/index";
 import { IConfiguration } from "./framework/types/configuration";
 import {errorMessage} from "./framework/logger/consoleMessages";
 import loadDefaults from "./framework/defaults/loadDefaults";
 import initiateLogger from "./framework/logger/index";
-
-resetDocFile();
 
 export default function(apps, configurationOriginal: IConfiguration) {
   let expressApp = apps.expressApp ? apps.expressApp : require("express").default();
@@ -51,13 +48,6 @@ export default function(apps, configurationOriginal: IConfiguration) {
                     database: database,
                     runEvent: runEvent
                   });
-                  if (get(configuration, "docs.disable", false) === false) {
-                    require("./framework/apiDocs/docs/index").default({configuration: configuration}, function() {
-                      setTimeout(() => {
-                        shell.exec("apidoc -i lib/ -o lib/framework/apiDocs/docs/content");
-                      }, 1000);
-                    });
-                  }
                   resolve({
                     graphql: graphqlAppInstance,
                     restApi: restApiInstance,
