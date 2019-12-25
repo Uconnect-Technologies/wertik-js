@@ -1,7 +1,7 @@
 export default {
   dbDialect: "mysql",
   name: "Wertik",
-  builtinModules: "user,auth,permission,role,rolePermission,userPermission,userRole,me",
+  builtinModules: "",
   mysqlOptions: {
     dbUsername: "root",
     dbPassword: "",

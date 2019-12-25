@@ -7,7 +7,7 @@ import getUserRoles from "./../security/getUserRoles";
 import { IGraphQLInitialize } from "./../types/servers";
 import { get } from "lodash";
 import isIPAllowed from "./../security/isIPAllowed";
-import {successMessage} from "./../logger/consoleMessages";
+import { successMessage } from "./../logger/consoleMessages";
 
 //expressApp,configuration,dbTables,models,emailTemplates,sendEmail,database,WertikEventEmitter
 
@@ -31,9 +31,9 @@ export default function(options: IGraphQLInitialize) {
       isIPAllowed(ip, configuration.security.allowedIpAddresses, "graphql", {});
       let user = await getUserWithAccessToken(models.User, get(req, "headers.authorization", ""));
       let userPermissions = user ? await getUserAllPermissions(user.id, database) : [];
-      
+
       let userRoles = user ? await getUserRoles(user.id, database) : [];
-      let cxt =  {
+      let cxt = {
         user: user,
         dbTables,
         models,
@@ -41,17 +41,17 @@ export default function(options: IGraphQLInitialize) {
         emailTemplates: emailTemplates,
         userPermissions: userPermissions,
         userRoles: userRoles,
-        ...get(configuration.context, "data", {}),
+        ...get(configuration.context, "data", {})
       };
-      let createContext = await get(configuration.context, "createContext", () => {})("graphql",cxt);
-      cxt['createContext'] = createContext;
+      let createContext = await get(configuration.context, "createContext", () => {})("graphql", cxt);
+      cxt["createContext"] = createContext;
       return cxt;
     }
   });
   if (forceStartGraphqlServer == true) {
     apollo.listen(port).then(({ url, subscriptionsUrl }) => {
-      successMessage("GraphQL subscriptions started at " , subscriptionsUrl);
-      successMessage("GraphQL server started at",url);
+      successMessage("GraphQL subscriptions started at ", subscriptionsUrl);
+      successMessage("GraphQL server started at", url);
     });
   }
   return apollo;
