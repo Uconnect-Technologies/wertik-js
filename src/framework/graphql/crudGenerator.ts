@@ -140,7 +140,6 @@ export const generateCrudResolvers = (moduleName: string, pubsub) => {
         return view.instance;
       },
       [`list${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
-        console.log(context.createContext);
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         return await context.models[moduleName].paginate(args, requestedFields);
       }
