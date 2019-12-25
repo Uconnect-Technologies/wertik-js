@@ -149,10 +149,10 @@ export const generateCrudResolvers = (moduleName: string, pubsub) => {
 
 export const generateListTypeForModule = (moduleName: String) => {
   return `
-        type ${moduleName}List {
-            list: [${moduleName}]
-            pagination: Pagination
-            filters: [Filter]
-        }
-    `;
+    type ${moduleName}List {
+      list: [${moduleName}]
+      pagination: Pagination
+      filters: [Filter]
+    }
+  `;
 };
