@@ -95,11 +95,6 @@ export interface IConfigurationContext {
   createContext: Function
 }
 
-export interface IConfigurationDocs {
-  port: Number;
-  disable: Boolean;
-}
-
 export interface IConfigurationRestApi {
   disable: Boolean;
   port: Number;
@@ -134,6 +129,5 @@ export interface IConfiguration {
   events: IConfigurationEvents;
   seeds: any;
   sockets: ISocketConfiguration;
-  docs: IConfigurationDocs;
   security: IConfigurationSecurity;
 }

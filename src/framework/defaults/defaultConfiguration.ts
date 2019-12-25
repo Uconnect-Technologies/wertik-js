@@ -133,10 +133,6 @@ export default {
       console.log("on client disconnected", `Total connections right now ${wss.clients.size}`);
     }
   },
-  docs: {
-    port: 5200,
-    disable: false
-  },
   security: {
     allowedIpAddresses: ["::1","::ffff:127.0.0.1"]
   }

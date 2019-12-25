@@ -6,18 +6,6 @@ lib
 yarn.lock
 .idea
 
-frontend-app/vue-app/node_modules
-frontend-app/vue-app/dist
-frontend-app/vue-app/build
-frontend-app/vue-app/yarn.lock
-frontend-app/vue-app/package-lock.json
-frontend-app/react-app/node_modules
-frontend-app/react-app/dist
-frontend-app/react-app/build
-frontend-app/react-app/yarn.lock
-frontend-app/react-app/package-lock.json
-
-
 crit.log
 debug.log
 emerg.log
