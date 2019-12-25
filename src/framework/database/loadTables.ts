@@ -5,6 +5,7 @@ import { convertFieldsIntoSequelizeFields } from "./helpers/index";
 import { checkIfModuleIsValid } from "./../helpers/index";
 export default function(connection, configuration) {
   let modules = process.env.builtinModules.split(",");
+  modules = modules.filter(c => c);
   modules = [...modules, ...get(configuration, "modules", [])];
   let tables = {};
   const processModule = module => {

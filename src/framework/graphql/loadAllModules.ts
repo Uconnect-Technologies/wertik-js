@@ -22,6 +22,7 @@ export default function(configuration) {
   let modulesMutationSchema = ``;
   let modulesSubscriptionSchema = ``;
   let modules = process.env.builtinModules.split(",");
+  modules = modules.filter(c => c);
   modules = [...modules, ...get(configuration, "modules", [])];
   let response = () => {
     return {
@@ -29,41 +30,7 @@ export default function(configuration) {
       version: require("../../../package.json").version
     };
   };
-  let schemaMap = `
-        type Response {
-            message: String
-            version: String
-        }
-        type SuccessReponse {
-            message: String
-        }
-        [generalSchema__replace]
-        [modulesSchema__replace]
-        type Mutation {
-            response: Response 
-            [mutation__replace]
-        }
-        type Query {
-            response: Response
-            [query__replace]
-        }
-        type Subscription {
-            [subscription__replace]
-        }
-        input EmailInput {
-            email: String!
-        }
-        input SignupInput {
-            email: String!
-            password: String!
-            confirmPassword: String!
-        }
-        schema {
-            query: Query
-            mutation: Mutation
-            subscription: Subscription
-        }
-    `;
+  let schemaMap = require("./schemaMap").default;
 
   let appMutations = {};
   let appQueries = {};
@@ -71,7 +38,7 @@ export default function(configuration) {
   let appRelations = {};
 
   const processModule = function(module) {
-    if (module && module.hasOwnProperty('graphql')) {
+    if (module && module.hasOwnProperty("graphql")) {
       let graphql = module.graphql;
       let moduleName = module.name;
       let schema = graphql.schema;
@@ -84,7 +51,8 @@ export default function(configuration) {
       let currentQuerySchema = get(graphql, "query.schema", "");
       let currentQueryResolvers = get(graphql, "query.resolvers", {});
       let currentModuleCrudResolvers = generateCrudResolvers(moduleName, pubsub);
-      let currentModuleListSchema = currentGenerateQuery || currentGenerateMutation ? generateListTypeForModule(moduleName) : "";
+      let currentModuleListSchema =
+        currentGenerateQuery || currentGenerateMutation ? generateListTypeForModule(moduleName) : "";
       let currentModuleSubscriptionResolvers = generateSubscriptionsCrudResolvers(moduleName, pubsub);
       // relations
       let relations = get(graphql, "relations", {});
