@@ -1,10 +1,5 @@
 import { get, kebabCase } from "lodash";
 
-const getNameFromApiUrl = function(url: string) {
-  let s = url.split("/");
-  return s[s.length - 1] || "Empty";
-};
-
 export default (expressApp, restApiEndpointsElement, module) => {
   const versionPath = "api/v1";
   const type = get(restApiEndpointsElement, "methodType", "get");
