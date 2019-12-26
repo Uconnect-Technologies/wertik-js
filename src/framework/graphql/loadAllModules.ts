@@ -43,17 +43,17 @@ export default function(configuration) {
       let moduleName = module.name;
       let schema = graphql.schema;
       let currentGenerateQuery = get(graphql, "crud.query.generate", true);
-      let currentGenerateQueryOperations = get(graphql, "crud.queries.operations", "*");
+      let currentGenerateQueryOperations = get(graphql, "crud.query.operations", "*");
       let currentGenerateMutation = get(graphql, "crud.mutation.generate", true);
       let currentGenerateMutationOperations = get(graphql, "crud.mutation.operations", "*");
       let currentMutationSchema = get(graphql, "mutation.schema", "");
       let currentMutationResolvers = get(graphql, "mutation.resolvers", {});
       let currentQuerySchema = get(graphql, "query.schema", "");
       let currentQueryResolvers = get(graphql, "query.resolvers", {});
-      let currentModuleCrudResolvers = generateCrudResolvers(moduleName, pubsub);
+      let currentModuleCrudResolvers = generateCrudResolvers(moduleName, pubsub,currentGenerateMutationOperations,currentGenerateQueryOperations);
       let currentModuleListSchema =
         currentGenerateQuery || currentGenerateMutation ? generateListTypeForModule(moduleName) : "";
-      let currentModuleSubscriptionResolvers = generateSubscriptionsCrudResolvers(moduleName, pubsub);
+      let currentModuleSubscriptionResolvers = generateSubscriptionsCrudResolvers(moduleName, pubsub,currentGenerateMutationOperations);
       // relations
       let relations = get(graphql, "relations", {});
       if (module.name !== "Auth") {
@@ -63,18 +63,18 @@ export default function(configuration) {
       // require information
       // crud
       if (currentGenerateQuery) {
-        modulesQuerySchema = modulesQuerySchema + generateQueriesCrudSchema(moduleName);
+        modulesQuerySchema = modulesQuerySchema + generateQueriesCrudSchema(moduleName,currentGenerateQueryOperations);
         appQueries = { ...appQueries, ...currentModuleCrudResolvers.queries };
       }
       if (currentGenerateMutation) {
-        modulesMutationSchema = modulesMutationSchema + generateMutationsCrudSchema(moduleName);
+        modulesMutationSchema = modulesMutationSchema + generateMutationsCrudSchema(moduleName,currentGenerateMutationOperations);
         appMutations = { ...appMutations, ...currentModuleCrudResolvers.mutations };
       }
       // crud
       // Subscription
 
       let currentModuleCrudSubscription = currentGenerateMutation
-        ? generateMutationsCrudSubscriptionSchema(moduleName)
+        ? generateMutationsCrudSubscriptionSchema(moduleName,currentGenerateMutationOperations,currentGenerateQueryOperations)
         : "";
       // Subscription
       modulesSchema = modulesSchema + schema;
