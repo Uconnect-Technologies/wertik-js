@@ -31,7 +31,6 @@ export default function(options: IGraphQLInitialize) {
       isIPAllowed(ip, configuration.security.allowedIpAddresses, "graphql", {});
       let user = await getUserWithAccessToken(models.User, get(req, "headers.authorization", ""));
       let userPermissions = user ? await getUserAllPermissions(user.id, database) : [];
-
       let userRoles = user ? await getUserRoles(user.id, database) : [];
       let cxt = {
         user: user,
