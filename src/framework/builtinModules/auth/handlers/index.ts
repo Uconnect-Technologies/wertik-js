@@ -7,7 +7,8 @@ import { get } from "lodash";
 
 export const signup = async function(obj) {
   const { userModel, data, emailTemplates, sendEmail } = obj;
-  let { email, password, confirmPassword } = data;
+  let { email, password, confirmPassword, ...restData } = data;
+  if (password !== confirmPassword) throw new ApolloError("Passwords doesn't match.");
   let user = await userModel.findOneByArgs({
     email: email
   });
@@ -38,7 +39,8 @@ export const signup = async function(obj) {
       Math.random()
         .toString(36)
         .substring(2),
-    password: hash
+    password: hash,
+    ...restData
   });
   let userInstance = newUser.instance;
   await sendEmail(

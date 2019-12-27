@@ -192,12 +192,12 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
     queries: {
       [`view${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        let view = await context.models[moduleName].view(args, requestedFields);
+        let view = await context.models[moduleName].view(args, Object.keys(requestedFields));
         return view.instance;
       },
       [`list${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        return await context.models[moduleName].paginate(args, requestedFields);
+        return await context.models[moduleName].paginate(args, Object.keys(requestedFields.list));
       }
     }
   };

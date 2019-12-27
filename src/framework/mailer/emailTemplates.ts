@@ -13,6 +13,6 @@ export default function(configuration, rootPath) {
 
   return {
     ...templatesObject,
-    ...get(configuration, "emailTemplates", {})
+    ...get(configuration, "email.templates", {})
   };
 }

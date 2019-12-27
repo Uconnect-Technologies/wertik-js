@@ -131,6 +131,11 @@ export interface IConfiguration {
   context: {
     [Key: string]: any;
   };
+  email: {
+    templates: {
+      [Key: string]: String;
+    };
+  };
   restApi: IConfigurationRestApi;
   graphql: IConfigurationGraphql;
   forceStartGraphqlServer: Boolean;
