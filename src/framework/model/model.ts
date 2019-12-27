@@ -48,7 +48,8 @@ export default function (props) {
     },
     view: async function (args,requestedFields) {
       this.instance = await this.dbTables[this.tableName].findOne({
-        where: args
+        where: args,
+        attributes: requestedFields
       });
       return this;
     },

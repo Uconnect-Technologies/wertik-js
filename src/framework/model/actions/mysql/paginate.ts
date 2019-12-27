@@ -4,8 +4,8 @@ import convertFiltersIntoSequalizeObject from "./../../../database/mysql/convert
 export default async function(model: any, args: any = {}, requestedFields: any = []) {
   let baseFields: any = "*";
   let attributesObject = {};
-  if (requestedFields.constructor === Object) {
-    baseFields = Object.keys(requestedFields.list);
+  if (requestedFields.constructor === Array) {
+    baseFields = requestedFields;
     attributesObject["attributes"] = baseFields;
   }
   let page = get(args, "pagination.page", 1);

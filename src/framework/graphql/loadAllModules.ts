@@ -50,10 +50,19 @@ export default function(configuration) {
       let currentMutationResolvers = get(graphql, "mutation.resolvers", {});
       let currentQuerySchema = get(graphql, "query.schema", "");
       let currentQueryResolvers = get(graphql, "query.resolvers", {});
-      let currentModuleCrudResolvers = generateCrudResolvers(moduleName, pubsub,currentGenerateMutationOperations,currentGenerateQueryOperations);
+      let currentModuleCrudResolvers = generateCrudResolvers(
+        moduleName,
+        pubsub,
+        currentGenerateMutationOperations,
+        currentGenerateQueryOperations
+      );
       let currentModuleListSchema =
         currentGenerateQuery || currentGenerateMutation ? generateListTypeForModule(moduleName) : "";
-      let currentModuleSubscriptionResolvers = generateSubscriptionsCrudResolvers(moduleName, pubsub,currentGenerateMutationOperations);
+      let currentModuleSubscriptionResolvers = generateSubscriptionsCrudResolvers(
+        moduleName,
+        pubsub,
+        currentGenerateMutationOperations
+      );
       // relations
       let relations = get(graphql, "relations", {});
       if (module.name !== "Auth") {
@@ -63,18 +72,23 @@ export default function(configuration) {
       // require information
       // crud
       if (currentGenerateQuery) {
-        modulesQuerySchema = modulesQuerySchema + generateQueriesCrudSchema(moduleName,currentGenerateQueryOperations);
+        modulesQuerySchema = modulesQuerySchema + generateQueriesCrudSchema(moduleName, currentGenerateQueryOperations);
         appQueries = { ...appQueries, ...currentModuleCrudResolvers.queries };
       }
       if (currentGenerateMutation) {
-        modulesMutationSchema = modulesMutationSchema + generateMutationsCrudSchema(moduleName,currentGenerateMutationOperations);
+        modulesMutationSchema =
+          modulesMutationSchema + generateMutationsCrudSchema(moduleName, currentGenerateMutationOperations);
         appMutations = { ...appMutations, ...currentModuleCrudResolvers.mutations };
       }
       // crud
       // Subscription
 
       let currentModuleCrudSubscription = currentGenerateMutation
-        ? generateMutationsCrudSubscriptionSchema(moduleName,currentGenerateMutationOperations,currentGenerateQueryOperations)
+        ? generateMutationsCrudSubscriptionSchema(
+            moduleName,
+            currentGenerateMutationOperations,
+            currentGenerateQueryOperations
+          )
         : "";
       // Subscription
       modulesSchema = modulesSchema + schema;
