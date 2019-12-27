@@ -61,12 +61,16 @@ export const signup = async function(obj) {
   );
   return userInstance;
 };
-export const login = async function(obj) {
+export const login = async function(obj,NoUserFoundMessage: string = '"No User found with such email"') {
   const { userModel, data } = obj;
   const { email, password } = data;
-  let user = await userModel.findOneByArgs({ email: email });
+  const restArgs = get(data,'restArgs',{});
+  let user = await userModel.findOneByArgs({ 
+    email: email,
+    ...restArgs
+  });
   if (!user.instance) {
-    throw new ApolloError("No User found with such email");
+    throw new ApolloError(NoUserFoundMessage);
   }
   let comparePassword = bcrypt.compareSync(password, user.instance.password);
   if (!comparePassword) {
