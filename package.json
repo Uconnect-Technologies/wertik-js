@@ -1,9 +1,9 @@
 {
   "name": "wertik-js",
-  "version": "1.6.7",
+  "version": "1.6.8",
   "main": "lib/main.js",
   "repository": "https://github.com/Uconnect-Technologies/wertik-js.git",
-  "welcomeResponse": "Welcome to wertik, You have successfully running Wertik.",
+  "welcomeResponse": "Welcome to wertik, You are successfully running Wertik.",
   "keywords": [
     "mysql",
     "graphql",
