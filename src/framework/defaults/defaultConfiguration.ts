@@ -120,15 +120,6 @@ export default {
       { name: "ca2", cant: "true2", can: "true2" }
     ]
   },
-  override: {
-    Role: {
-      graphql: {
-        mutation: {
-          create: async function() {}
-        }
-      }
-    }
-  },
   sockets: {
     disable: false,
     port: 2000,

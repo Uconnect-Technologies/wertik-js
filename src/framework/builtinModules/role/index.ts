@@ -4,11 +4,11 @@ export default {
     crud: {
       query: {
         generate: true,
-        operations: "view"
+        operations: "*"
       },
       mutation: {
         generate: true,
-        operations: "create"
+        operations: "*"
       }
     },
     schema: `
