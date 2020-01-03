@@ -1,4 +1,6 @@
 import getRequestedFieldsFromResolverInfo from "./../helpers/getRequestedFieldsFromResolverInfo";
+import { IConfiguration } from "../types/configuration";
+import { get } from "lodash";
 
 export const generateQueriesCrudSchema = (moduleName: String, operationsRead) => {
   const split = operationsRead.toLowerCase().split(" ");
@@ -127,9 +129,23 @@ export const generateMutationsCrudSchema = (moduleName: String, operations) => {
   }
 };
 
-export const generateCrudResolvers = (moduleName: string, pubsub, operationsModify, operationsRead) => {
+export const generateCrudResolvers = (
+  moduleName: string,
+  pubsub,
+  operationsModify,
+  operationsRead,
+  configuration: IConfiguration
+) => {
   const operationsModifySplit = operationsModify.toLowerCase().split(" ");
   const operationsReadSplit = operationsRead.toLowerCase().split(" ");
+  const overrideMutationCreate = get(configuration, `override.${moduleName}.graphql.mutation.create`, null);
+  const overrideMutationUpdate = get(configuration, `override.${moduleName}.graphql.mutation.update`, null);
+  const overrideMutationDelete = get(configuration, `override.${moduleName}.graphql.mutation.delete`, null);
+  const overrideMutationBulkCreate = get(configuration, `override.${moduleName}.graphql.mutation.bulkCreate`, null);
+  const overrideMutationBulkUpdate = get(configuration, `override.${moduleName}.graphql.mutation.bulkUpdate`, null);
+  const overrideMutationBulkDelete = get(configuration, `override.${moduleName}.graphql.mutation.bulkDelete`, null);
+  const overrideQueryList = get(configuration, `override.${moduleName}.graphql.query.list`, null);
+  const overrideQueryView = get(configuration, `override.${moduleName}.graphql.query.view`, null);
   const {
     createdModule,
     deletedModule,
@@ -141,6 +157,10 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
   let object = {
     mutations: {
       [`create${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
+        if (overrideMutationCreate && overrideMutationCreate.constructor == Function) {
+          let response =  await overrideMutationCreate(_, args, context, info);
+          return response;  
+        }
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let result = await context.models[moduleName].create(args.input, requestedFields);
         pubsub.publish(createdModule, {
@@ -149,6 +169,10 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         return result.instance;
       },
       [`delete${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
+        if (overrideMutationDelete && overrideMutationDelete.constructor == Function) {
+          let response =  await overrideMutationDelete(_, args, context, info);
+          return response;  
+        }
         let result = await context.models[moduleName].delete(args.input);
         pubsub.publish(deletedModule, {
           [deletedModule]: result
@@ -156,6 +180,10 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         return { message: `${moduleName} successfully deleted` };
       },
       [`update${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
+        if (overrideMutationUpdate && overrideMutationUpdate.constructor == Function) {
+          let response =  await overrideMutationUpdate(_, args, context, info);
+          return response;  
+        }
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let model = context.models[moduleName];
         let result = await model.update(args.input, requestedFields);
@@ -165,6 +193,10 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         return result.instance;
       },
       [`bulkDelete${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
+        if (overrideMutationBulkDelete && overrideMutationBulkDelete.constructor == Function) {
+          let response =  await overrideMutationBulkDelete(_, args, context, info);
+          return response;  
+        }
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let result = await context.models[moduleName].bulkDelete(args.input, requestedFields);
         pubsub.publish(bulkCreatedModule, {
@@ -173,6 +205,10 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         return { message: `${moduleName} bulk items deleted successfully.` };
       },
       [`bulkCreate${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
+        if (overrideMutationBulkCreate && overrideMutationBulkCreate.constructor == Function) {
+          let response =  await overrideMutationBulkCreate(_, args, context, info);
+          return response;  
+        }
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let result = await context.models[moduleName].bulkCreate(args.input, requestedFields);
         pubsub.publish(bulkUpdatedModule, {
@@ -181,6 +217,10 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         return result.bulkInstances;
       },
       [`bulkUpdate${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
+        if (overrideMutationBulkUpdate && overrideMutationBulkUpdate.constructor == Function) {
+          let response =  await overrideMutationBulkUpdate(_, args, context, info);
+          return response;  
+        }
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let result = await context.models[moduleName].bulkUpdate(args.input, requestedFields);
         pubsub.publish(bulkDeletedModule, {
@@ -191,11 +231,19 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
     },
     queries: {
       [`view${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
+        if (overrideQueryView && overrideQueryView.constructor == Function) {
+          let response =  await overrideQueryView(_, args, context, info);
+          return response;  
+        }
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let view = await context.models[moduleName].view(args, Object.keys(requestedFields));
         return view.instance;
       },
       [`list${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
+        if (overrideQueryList && overrideQueryList.constructor == Function) {
+          let response =  await overrideQueryList(_, args, context, info);
+          return response;  
+        }
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         return await context.models[moduleName].paginate(args, Object.keys(requestedFields.list));
       }

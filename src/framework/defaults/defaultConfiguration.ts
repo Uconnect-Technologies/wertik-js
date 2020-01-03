@@ -16,7 +16,7 @@ export default {
     data: {
       myName: "My powerful app"
     },
-    createContext: async function(mode,context) {
+    createContext: async function(mode, context) {
       return {
         value: "Value 1"
       };
@@ -24,7 +24,7 @@ export default {
   },
   graphql: {
     disable: false,
-    port: 4000,
+    port: 4000
   },
   restApi: {
     disable: false,
@@ -120,6 +120,15 @@ export default {
       { name: "ca2", cant: "true2", can: "true2" }
     ]
   },
+  override: {
+    Role: {
+      graphql: {
+        mutation: {
+          create: async function() {}
+        }
+      }
+    }
+  },
   sockets: {
     disable: false,
     port: 2000,
@@ -134,6 +143,6 @@ export default {
     }
   },
   security: {
-    allowedIpAddresses: ["::1","::ffff:127.0.0.1"]
+    allowedIpAddresses: ["::1", "::ffff:127.0.0.1"]
   }
 };
