@@ -1,6 +1,6 @@
 {
   "name": "wertik-js",
-  "version": "1.6.8",
+  "version": "1.6.9",
   "main": "lib/main.js",
   "repository": "https://github.com/Uconnect-Technologies/wertik-js.git",
   "welcomeResponse": "Welcome to wertik, You are successfully running Wertik.",
@@ -40,6 +40,7 @@
     "apollo-server": "^2.8.2",
     "apollo-server-express": "^2.9.4",
     "bcrypt-nodejs": "0.0.3",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "chalk": "^3.0.0",
     "cors": "^2.8.5",

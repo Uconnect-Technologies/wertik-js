@@ -54,7 +54,8 @@ export default function(configuration) {
         moduleName,
         pubsub,
         currentGenerateMutationOperations,
-        currentGenerateQueryOperations
+        currentGenerateQueryOperations,
+        configuration
       );
       let currentModuleListSchema =
         currentGenerateQuery || currentGenerateMutation ? generateListTypeForModule(moduleName) : "";

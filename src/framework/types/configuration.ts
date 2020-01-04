@@ -1,4 +1,5 @@
 import { ISocketConfiguration } from "./servers";
+import { IConfigurationOverride } from "./override";
 export interface IConfigurationPorts {
   graphql: Number;
   restApi: Number;
@@ -136,6 +137,7 @@ export interface IConfiguration {
       [Key: string]: String;
     };
   };
+  override: IConfigurationOverride;
   restApi: IConfigurationRestApi;
   graphql: IConfigurationGraphql;
   forceStartGraphqlServer: Boolean;

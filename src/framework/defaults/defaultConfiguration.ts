@@ -1,7 +1,7 @@
 export default {
   dbDialect: "mysql",
   name: "Wertik",
-  builtinModules: "user,auth,permission,role,rolePermission,userPermission,userRole,me",
+  builtinModules: "user,auth,forgetPassword,permission,role,rolePermission,userPermission,userRole,me",
   mysqlOptions: {
     dbUsername: "root",
     dbPassword: "",
@@ -11,12 +11,12 @@ export default {
   },
   frontendAppUrl: "http://localhost:8080/",
   frontendAppActivationUrl: "http://localhost:8080/activate-account",
-  frontendAppPasswordResetUrl: "http://localhost:8080",
+  frontendAppPasswordResetUrl: "http://localhost:8080/reset-password",
   context: {
     data: {
       myName: "My powerful app"
     },
-    createContext: async function(mode,context) {
+    createContext: async function(mode, context) {
       return {
         value: "Value 1"
       };
@@ -24,7 +24,7 @@ export default {
   },
   graphql: {
     disable: false,
-    port: 4000,
+    port: 4000
   },
   restApi: {
     disable: false,
@@ -119,7 +119,7 @@ export default {
       { name: "ca1", cant: "true1", can: "true1" },
       { name: "ca2", cant: "true2", can: "true2" }
     ]
-  },
+  }, 
   sockets: {
     disable: false,
     port: 2000,
@@ -134,6 +134,6 @@ export default {
     }
   },
   security: {
-    allowedIpAddresses: ["::1","::ffff:127.0.0.1"]
+    allowedIpAddresses: ["::1", "::ffff:127.0.0.1"]
   }
 };
