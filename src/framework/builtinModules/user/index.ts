@@ -25,7 +25,6 @@ export default {
         isSuperUser: Boolean
         activationToken: String
         email: String
-        password: String
         gender: String
         referer: String
         created_at: String

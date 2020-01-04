@@ -1,7 +1,7 @@
 export default {
   dbDialect: "mysql",
   name: "Wertik",
-  builtinModules: "user,auth,permission,role,rolePermission,userPermission,userRole,me",
+  builtinModules: "user,auth,forgetPassword,permission,role,rolePermission,userPermission,userRole,me",
   mysqlOptions: {
     dbUsername: "root",
     dbPassword: "",
@@ -11,7 +11,7 @@ export default {
   },
   frontendAppUrl: "http://localhost:8080/",
   frontendAppActivationUrl: "http://localhost:8080/activate-account",
-  frontendAppPasswordResetUrl: "http://localhost:8080",
+  frontendAppPasswordResetUrl: "http://localhost:8080/reset-password",
   context: {
     data: {
       myName: "My powerful app"

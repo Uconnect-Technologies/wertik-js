@@ -3,6 +3,7 @@ import moment from "moment";
 import statusCodes from "./../../../../framework/helpers/statusCodes";
 import createJwtToken from "./../../../../framework/security/createJwtToken";
 import { ApolloError } from "apollo-server";
+import { verifyPassword, generateHashPassword } from "./../../../../framework/helpers/index";
 import { get } from "lodash";
 
 export const signup = async function(obj) {
@@ -13,7 +14,7 @@ export const signup = async function(obj) {
     email: email
   });
   if (user.instance) throw new ApolloError("Email is already used");
-  var hash = bcrypt.hashSync(password);
+  var hash = generateHashPassword(password);
   let newUser = await userModel.create({
     email: email,
     referer: get(data, "referer", ""),
@@ -21,11 +22,17 @@ export const signup = async function(obj) {
     name: get(data, "name", ""),
     accessToken: await createJwtToken({
       email: email,
-      for: "authentication"
+      for: "authentication",
+      expiresIn: moment()
+        .add(5, "days")
+        .unix()
     }),
     refreshToken: await createJwtToken({
       email: email,
-      for: "refreshToken"
+      for: "refreshToken",
+      expiresIn: moment()
+        .add(5, "days")
+        .unix()
     }),
     isActivated: false,
     isSuperUser: get(data, "isSuperUser", false),
@@ -61,24 +68,27 @@ export const signup = async function(obj) {
   );
   return userInstance;
 };
-export const login = async function(obj,NoUserFoundMessage: string = '"No User found with such email"') {
+export const login = async function(obj, NoUserFoundMessage: string = '"No User found with such email"') {
   const { userModel, data } = obj;
   const { email, password } = data;
-  const restArgs = get(data,'restArgs',{});
-  let user = await userModel.findOneByArgs({ 
+  const restArgs = get(data, "restArgs", {});
+  let user = await userModel.findOneByArgs({
     email: email,
     ...restArgs
   });
   if (!user.instance) {
     throw new ApolloError(NoUserFoundMessage);
   }
-  let comparePassword = bcrypt.compareSync(password, user.instance.password);
+  let comparePassword = await verifyPassword(password, user.instance.password);
   if (!comparePassword) {
     throw new ApolloError("Incorrect Password");
   }
   let token = await createJwtToken({
     email: email,
-    for: "authentication"
+    for: "authentication",
+    expiresIn: moment()
+      .add(5, "days")
+      .unix()
   });
   await user.update({
     accessToken: token

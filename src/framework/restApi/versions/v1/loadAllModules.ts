@@ -5,7 +5,7 @@ export const getModuleApiPaths = (name: string) => {
   return {
     create: `/api/v1/${kebabCase(name)}/create`,
     update: `/api/v1/${kebabCase(name)}/update`,
-    view: `/api/v1/${kebabCase(name)}/:id`,
+    view: `/api/v1/${kebabCase(name)}/view/:id`,
     delete: `/api/v1/${kebabCase(name)}/:id/delete`,
     paginate: `/api/v1/${kebabCase(name)}/list`,
     bulkCreate: `/api/v1/${kebabCase(name)}/bulk-create`,

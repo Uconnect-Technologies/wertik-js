@@ -1,6 +1,7 @@
 let { ApolloError } = require("apollo-server");
 import fs from "fs";
 import { IConfiguration } from "../types/configuration";
+var bcrypt = require("bcryptjs");
 
 export const generateError = (e: any, statusCode: Number = 404) => {
   return new ApolloError(e.message);
@@ -10,6 +11,16 @@ export const getDirectoriesInFolder = (path: string) => {
   return fs.readdirSync(path).filter(function(file: any) {
     return fs.statSync(path + "/" + file).isDirectory();
   });
+};
+
+export const randomString = (len, charSet) => {
+  charSet = charSet || "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  var randomString = "";
+  for (var i = 0; i < len; i++) {
+    var randomPoz = Math.floor(Math.random() * charSet.length);
+    randomString += charSet.substring(randomPoz, randomPoz + 1);
+  }
+  return randomString;
 };
 
 export const filesInAFolder = (path: string) => {
@@ -66,4 +77,13 @@ export const deleteFile = async (path: string, cb: Function) => {
   } else {
     return true;
   }
+};
+
+export const generateHashPassword = (password: string) => {
+  var salt = bcrypt.genSaltSync(10);
+  var hash = bcrypt.hashSync(password, salt);
+  return hash;
+};
+export const verifyPassword = async (tryingPassword, storedPassword) => {
+  return await bcrypt.compareSync(tryingPassword, storedPassword);
 };
