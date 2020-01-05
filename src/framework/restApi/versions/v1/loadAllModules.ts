@@ -41,7 +41,7 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
         if (overrideView && overrideView.constructor == Function) {
           overrideView(req, res);
         } else {
-          let result = await req.models[module.name].view({ id: req.params.id }, "*");
+          let result = await req.models[module.name].view({ id: req.params.id }, ['*']);
           res.json({
             message: `${module.name} view`,
             result: result.instance
