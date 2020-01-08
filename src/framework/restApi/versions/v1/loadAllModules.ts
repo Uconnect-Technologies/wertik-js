@@ -10,7 +10,9 @@ export const getModuleApiPaths = (name: string) => {
     paginate: `/api/v1/${kebabCase(name)}/list`,
     bulkCreate: `/api/v1/${kebabCase(name)}/bulk-create`,
     bulkUpdate: `/api/v1/${kebabCase(name)}/bulk-update`,
-    bulkDelete: `/api/v1/${kebabCase(name)}/bulk-delete`
+    bulkDelete: `/api/v1/${kebabCase(name)}/bulk-delete`,
+    softDelete: `/api/v1/${kebabCase(name)}/soft-delete`,
+    bulkSoftDelete: `/api/v1/${kebabCase(name)}/bulk-soft-delete`
   };
 };
 
@@ -25,6 +27,8 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
     const overrideCreate = get(configuration, `override.${module.name}.restApi.create`, null);
     const overrideUpdate = get(configuration, `override.${module.name}.restApi.update`, null);
     const overrideDelete = get(configuration, `override.${module.name}.restApi.delete`, null);
+    const overrideSoftDelete = get(configuration, `override.${module.name}.restApi.softDelete`, null);
+    const overrideBulkSoftDelete = get(configuration, `override.${module.name}.restApi.bulkSoftDelete`, null);
     const overrideBulkCreate = get(configuration, `override.${module.name}.restApi.bulkCreate`, null);
     const overrideBuklUpdate = get(configuration, `override.${module.name}.restApi.bulkUpdate`, null);
     const overrideBuklDelete = get(configuration, `override.${module.name}.restApi.bulkDelete`, null);
@@ -41,7 +45,7 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
         if (overrideView && overrideView.constructor == Function) {
           overrideView(req, res);
         } else {
-          let result = await req.models[module.name].view({ id: req.params.id }, ['*']);
+          let result = await req.models[module.name].view({ id: req.params.id }, ["*"]);
           res.json({
             message: `${module.name} view`,
             result: result.instance
@@ -49,7 +53,6 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
         }
       });
 
-      // console.log(`Registering api: ${modulePaths.create}`);
       expressApp.post(modulePaths.create, async (req, res) => {
         if (overrideCreate && overrideCreate.constructor == Function) {
           overrideCreate(req, res);
@@ -61,6 +64,7 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
           });
         }
       });
+
       expressApp.post(modulePaths.bulkCreate, async (req, res) => {
         if (overrideBulkCreate && overrideBulkCreate.constructor == Function) {
           overrideBulkCreate(req, res);
@@ -72,6 +76,7 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
           });
         }
       });
+
       expressApp.put(modulePaths.update, async (req, res) => {
         if (overrideUpdate && overrideUpdate.constructor == Function) {
           overrideUpdate(req, res);
@@ -83,6 +88,7 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
           });
         }
       });
+
       expressApp.put(modulePaths.bulkUpdate, async (req, res) => {
         if (overrideBuklUpdate && overrideBuklUpdate.constructor == Function) {
           overrideBuklUpdate(req, res);
@@ -94,6 +100,18 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
           });
         }
       });
+      
+      expressApp.delete(modulePaths.bulkSoftDelete, async (req, res) => {
+        if (overrideBulkSoftDelete && overrideBulkSoftDelete.constructor == Function) {
+          overrideBulkSoftDelete(req, res);
+        } else {
+          await req.models[module.name].bulkSoftDelete(req.body.input);
+          res.json({
+            message: `Items deleted`
+          });
+        }
+      });
+
       expressApp.delete(modulePaths.delete, async (req, res) => {
         if (overrideDelete && overrideDelete.constructor == Function) {
           overrideDelete(req, res);
@@ -115,6 +133,21 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
           });
         }
       });
+
+      expressApp.delete(modulePaths.softDelete, async (req, res) => {
+        if (overrideSoftDelete && overrideSoftDelete.constructor == Function) {
+          overrideSoftDelete(req, res);
+        } else {
+          let result = await req.models[module.name].update({
+            id: req.body.input.id,
+            isDeleted: 1
+          });
+          res.json({
+            message: `${module.name} deleted`
+          });
+        }
+      });
+
       expressApp.post(modulePaths.paginate, async (req, res) => {
         if (overrideList && overrideList.constructor == Function) {
           overrideList(req, res);

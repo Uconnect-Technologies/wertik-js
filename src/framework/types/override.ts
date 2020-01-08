@@ -4,8 +4,10 @@ export interface IBuiltinModuleOverride {
       create: Function;
       update: Function;
       delete: Function;
+      softDelete: Function;
       bulkCreate: Function;
       bulkDelete: Function;
+      bulkSoftDelete: Function;
       bulkUpdate: Function;
     };
     query: {

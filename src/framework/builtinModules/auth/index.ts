@@ -42,7 +42,7 @@ export default {
     `,
     mutation: {
       schema: `
-        twoFactorLogin(input: EmailInput): SuccessReponse
+        twoFactorLogin(input: EmailInput): SuccessResponse
         twoFactorLoginValidate(input: TwoFactorCodeInput): User
         loginWithAccessToken(input: AccessTokenInput): User
         activateAccount(input: ActivationTokenInput): User

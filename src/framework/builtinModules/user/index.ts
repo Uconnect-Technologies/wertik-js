@@ -1,6 +1,5 @@
 export default {
   name: "User",
-
   graphql: {
     crud: {
       query: {
@@ -103,6 +102,9 @@ export default {
         },
         referer: {
           type: "String"
+        },
+        isDeleted: {
+          type: "INTEGER"
         }
       }
     }

@@ -25,7 +25,6 @@ export default (expressApp, restApiEndpointsElement, module) => {
     let find = "//";
     let re = new RegExp(find, "g");
     apiPath = apiPath.replace(re, "/");
-    console.log(apiPath)
     expressApp[type](apiPath, handler);
   } else {
     console.warn(`On module ${module.name}, Api endpoint ${path}, has undefined type ${type}`);

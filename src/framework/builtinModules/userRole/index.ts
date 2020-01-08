@@ -1,4 +1,5 @@
 import getRequestedFieldsFromResolverInfo from "./../../helpers/getRequestedFieldsFromResolverInfo";
+
 export default {
   name: "UserRole",
   graphql: {
@@ -61,6 +62,9 @@ export default {
           type: "INTEGER"
         },
         role: {
+          type: "INTEGER"
+        },
+        isDeleted: {
           type: "INTEGER"
         },
         createdBy: {

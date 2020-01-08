@@ -86,11 +86,26 @@ export default function(props) {
     },
     bulkDelete: async function(args) {
       const model = this.dbTables[this.tableName];
-      await this.dbTables[this.tableName].destroy({
+      await model.destroy({
         where: {
           id: args.map(c => c)
         }
       });
+      return {
+        message: "Items deleted",
+        statusCode: 200
+      };
+    },
+    bulkSoftDelete: async function(args) {
+      const model = this.dbTables[this.tableName];
+      await model.update(
+        { isDeleted: 1 },
+        {
+          where: {
+            id: args.map(c => c)
+          }
+        }
+      );
       return {
         message: "Items deleted",
         statusCode: 200
