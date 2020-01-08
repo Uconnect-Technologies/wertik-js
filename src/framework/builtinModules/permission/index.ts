@@ -50,6 +50,9 @@ export default {
         can: {
           type: "STRING"
         },
+        isDeleted: {
+          type: "INTEGER"
+        },
         createdBy: {
           type: "INTEGER"
         }

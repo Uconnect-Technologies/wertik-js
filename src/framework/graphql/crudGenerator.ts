@@ -103,11 +103,12 @@ export const generateSubscriptionsCrudResolvers = (moduleName: String, pubsub: a
 export const generateMutationsCrudSchema = (moduleName: String, operations) => {
   const operationsSplit = operations.toLowerCase().split(" ");
   const createString = `create${moduleName}(input: ${moduleName}Input): ${moduleName}`;
-  const deleteString = `delete${moduleName}(input: ${moduleName}Input): SuccessReponse`;
+  const deleteString = `delete${moduleName}(input: IDDeleteInput): SuccessResponse`;
   const updateString = `update${moduleName}(input: ${moduleName}Input): ${moduleName}`;
   const bulkUpdateString = `bulkUpdate${moduleName}(input: [${moduleName}Input]): [${moduleName}]`;
   const bulkCreateString = `bulkCreate${moduleName}(input: [${moduleName}Input]): [${moduleName}]`;
-  const bulkDeleteString = `bulkDelete${moduleName}(input: [Int]): SuccessReponse`;
+  const bulkDeleteString = `bulkDelete${moduleName}(input: [Int]): SuccessResponse`;
+  const softDeleteString = `softDelete${moduleName}(input: IDDeleteInput): SuccessResponse`;
   if (operations == "*") {
     return `
       ${createString}

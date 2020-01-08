@@ -50,6 +50,9 @@ export default {
         permission: {
           type: "INTEGER"
         },
+        isDeleted: {
+          type: "INTEGER"
+        },
         createdBy: {
           type: "INTEGER"
         }

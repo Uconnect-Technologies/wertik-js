@@ -3,8 +3,11 @@ export default `
     message: String
     version: String
   }
-  type SuccessReponse {
+  type SuccessResponse {
     message: String
+  }
+  input IDDeleteInput {
+    id: Int
   }
   [generalSchema__replace]
   [modulesSchema__replace]

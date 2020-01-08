@@ -34,11 +34,16 @@ export default {
      `,
     mutation: {
       schema: `
-        requestPasswordReset(input: requestPasswordResetInput): SuccessReponse
-        resetPassword(input: resetPasswordInput): SuccessReponse
+        requestPasswordReset(input: requestPasswordResetInput): SuccessResponse
+        resetPassword(input: resetPasswordInput): SuccessResponse
       `,
       resolvers: {
-        requestPasswordReset: async (_: any, args: any, context: any, info: any) => {
+        requestPasswordReset: async (
+          _: any,
+          args: any,
+          context: any,
+          info: any
+        ) => {
           return await requestPasswordResetHandler({
             userModel: context.models.User,
             forgetPasswordModel: context.models.ForgetPassword,
@@ -128,6 +133,12 @@ export default {
         },
         token: {
           type: "String"
+        },
+        isDeleted: {
+          type: "INTEGER"
+        },
+        createdBy: {
+          type: "INTEGER"
         }
       }
     }

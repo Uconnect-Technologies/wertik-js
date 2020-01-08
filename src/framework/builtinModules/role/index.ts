@@ -17,6 +17,7 @@ export default {
         name: String
         defaultPermissions: String
         createdBy: User
+        deleted: Boolean
         created_at: String
         updated_at: String
       }
@@ -44,6 +45,9 @@ export default {
         },
         defaultPermissions: {
           type: "STRING"
+        },
+        isDeleted: {
+          type: "INTEGER"
         },
         createdBy: {
           type: "INTEGER"
