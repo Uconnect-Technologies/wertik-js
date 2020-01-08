@@ -1,6 +1,4 @@
 import actions from "./actions/index";
-import { get } from "lodash";
-import { throws } from "assert";
 import internalServerError from "./../../framework/helpers/internalServerError";
 const { create, update, destroy, findOne, view, paginate } = actions;
 
@@ -11,6 +9,11 @@ export default function(props) {
     instance: null,
     bulkInstances: [],
     id: null,
+    getModel: function() {
+      let m = this;
+      m.instance = null;
+      return m;
+    },
     update: async function(args) {
       let instance = null;
       if (this.instance) {

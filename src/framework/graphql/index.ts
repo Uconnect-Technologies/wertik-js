@@ -23,6 +23,9 @@ export default function(options: IGraphQLInitialize) {
   let apollo = new ApolloServer({
     typeDefs: modules.schema,
     resolvers: modules.resolvers,
+    cacheControl: {
+      defaultMaxAge: 0
+    },
     subscriptions: {
       path: "/subscriptions"
     },

@@ -42,10 +42,11 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
       });
 
       expressApp.get(modulePaths.view, async (req, res) => {
+        let model = req.models[module.name].getModel();
         if (overrideView && overrideView.constructor == Function) {
           overrideView(req, res);
         } else {
-          let result = await req.models[module.name].view({ id: req.params.id }, ["*"]);
+          let result = await model.view({ id: req.params.id }, ["*"]);
           res.json({
             message: `${module.name} view`,
             result: result.instance
@@ -54,10 +55,11 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
       });
 
       expressApp.post(modulePaths.create, async (req, res) => {
+        let model = req.models[module.name].getModel();
         if (overrideCreate && overrideCreate.constructor == Function) {
           overrideCreate(req, res);
         } else {
-          let result = await req.models[module.name].create(req.body.input);
+          let result = await model.create(req.body.input);
           res.json({
             message: `${module.name} created`,
             result: result.instance
@@ -66,10 +68,11 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
       });
 
       expressApp.post(modulePaths.bulkCreate, async (req, res) => {
+        let model = req.models[module.name].getModel();
         if (overrideBulkCreate && overrideBulkCreate.constructor == Function) {
           overrideBulkCreate(req, res);
         } else {
-          let result = await req.models[module.name].bulkCreate(get(req, "body.input", []));
+          let result = await model.bulkCreate(get(req, "body.input", []));
           res.json({
             message: `${module.name} bulk operation successfull.`,
             result: result.bulkInstances
@@ -78,10 +81,11 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
       });
 
       expressApp.put(modulePaths.update, async (req, res) => {
+        let model = req.models[module.name].getModel();
         if (overrideUpdate && overrideUpdate.constructor == Function) {
           overrideUpdate(req, res);
         } else {
-          let result = await req.models[module.name].update(req.body.input);
+          let result = await model.update(req.body.input);
           res.json({
             message: `${module.name} updated`,
             result: result.instance
@@ -90,22 +94,24 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
       });
 
       expressApp.put(modulePaths.bulkUpdate, async (req, res) => {
+        let model = req.models[module.name].getModel();
         if (overrideBuklUpdate && overrideBuklUpdate.constructor == Function) {
           overrideBuklUpdate(req, res);
         } else {
-          let result = await req.models[module.name].bulkUpdate(req.body.input);
+          let result = await model.bulkUpdate(req.body.input);
           res.json({
             message: `${module.name} updated`,
             result: result.bulkInstances
           });
         }
       });
-      
+
       expressApp.delete(modulePaths.bulkSoftDelete, async (req, res) => {
+        let model = req.models[module.name].getModel();
         if (overrideBulkSoftDelete && overrideBulkSoftDelete.constructor == Function) {
           overrideBulkSoftDelete(req, res);
         } else {
-          await req.models[module.name].bulkSoftDelete(req.body.input);
+          await model.bulkSoftDelete(req.body.input);
           res.json({
             message: `Items deleted`
           });
@@ -113,10 +119,11 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
       });
 
       expressApp.delete(modulePaths.delete, async (req, res) => {
+        let model = req.models[module.name].getModel();
         if (overrideDelete && overrideDelete.constructor == Function) {
           overrideDelete(req, res);
         } else {
-          await req.models[module.name].delete({ id: req.params.id });
+          await model.delete({ id: req.params.id });
           res.json({
             message: `${module.name} deleted`,
             result: {}
@@ -124,21 +131,24 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
         }
       });
       expressApp.delete(modulePaths.bulkDelete, async (req, res) => {
+        let model = req.models[module.name].getModel();
         if (overrideBuklDelete && overrideBuklDelete.constructor == Function) {
           overrideBuklDelete(req, res);
         } else {
+          let result = await model.bulkDelete(req.body.input);
           res.json({
             message: `${module.name} deleted`,
-            result: await req.models[module.name].bulkDelete(req.body.input)
+            result: result
           });
         }
       });
 
       expressApp.delete(modulePaths.softDelete, async (req, res) => {
+        let model = req.models[module.name].getModel();
         if (overrideSoftDelete && overrideSoftDelete.constructor == Function) {
           overrideSoftDelete(req, res);
         } else {
-          let result = await req.models[module.name].update({
+          let result = await model.update({
             id: req.body.input.id,
             isDeleted: 1
           });
