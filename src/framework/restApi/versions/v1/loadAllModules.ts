@@ -115,7 +115,7 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
           });
         }
       });
-      expressApp.get(modulePaths.paginate, async (req, res) => {
+      expressApp.post(modulePaths.paginate, async (req, res) => {
         if (overrideList && overrideList.constructor == Function) {
           overrideList(req, res);
         } else {
