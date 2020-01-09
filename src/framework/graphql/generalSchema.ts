@@ -4,9 +4,9 @@ export default `
 		limit: Int
 	}
 	input FilterInput {
-		column: String
-		operator: String
-		value: String
+		column: String!
+		operator: String!
+		value: String!
 	}
 	type Pagination {
 		page: Int
