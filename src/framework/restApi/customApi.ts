@@ -14,8 +14,6 @@ export default (expressApp, restApiEndpointsElement, module) => {
     let find = "//";
     let re = new RegExp(find, "g");
     apiPath = apiPath.replace(re, "/");
-    // expressApp[type](apiPath, handler);
-    console.log(apiPath, 1);
     expressApp[type](apiPath, async function(req, res) {
       try {
         await handler(req, res, restApiSuccessResponse, restApiErrorResponse);
