@@ -1,5 +1,7 @@
 import { get, kebabCase } from "lodash";
 import { IConfiguration } from "src/framework/types/configuration";
+import restApiErrorResponse from "../../restApiErrorResponse";
+import restApiSuccessResponse from "../../restApiSuccessResponse";
 
 export const getModuleApiPaths = (name: string) => {
   return {
@@ -40,137 +42,238 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
       restApiEndpoints.forEach(restApiEndpointsElement => {
         customApi(expressApp, restApiEndpointsElement, module);
       });
-
       expressApp.get(modulePaths.view, async (req, res) => {
-        let model = req.models[module.name].getModel();
-        if (overrideView && overrideView.constructor == Function) {
-          overrideView(req, res);
-        } else {
-          let result = await model.view({ id: req.params.id }, ["*"]);
-          res.json({
-            message: `${module.name} view`,
-            result: result.instance
+        try {
+          let model = req.models[module.name].getModel();
+          if (overrideView && overrideView.constructor == Function) {
+            overrideView(req, res);
+          } else {
+            let result = await model.view({ id: req.params.id }, ["*"]);
+            if (result.instance) {
+              restApiSuccessResponse({
+                res: res,
+                data: result.instance,
+                message: `${module.name} Found`
+              });
+            } else {
+              restApiErrorResponse({
+                code: 404,
+                err: { message: "Not Found" },
+                res: res,
+                data: {}
+              });
+            }
+          }
+        } catch (e) {
+          // handleError(res, e, {});
+          restApiErrorResponse({
+            err: e,
+            res: res,
+            data: {}
           });
         }
       });
 
       expressApp.post(modulePaths.create, async (req, res) => {
-        let model = req.models[module.name].getModel();
-        if (overrideCreate && overrideCreate.constructor == Function) {
-          overrideCreate(req, res);
-        } else {
-          let result = await model.create(req.body.input);
-          res.json({
-            message: `${module.name} created`,
-            result: result.instance
+        try {
+          let model = req.models[module.name].getModel();
+          if (overrideCreate && overrideCreate.constructor == Function) {
+            overrideCreate(req, res);
+          } else {
+            let result = await model.create(req.body.input);
+            restApiSuccessResponse({
+              res: res,
+              data: result.instance,
+              message: `${module.name} created`
+            });
+          }
+        } catch (e) {
+          restApiErrorResponse({
+            err: e,
+            res: res,
+            data: {}
           });
         }
       });
 
       expressApp.post(modulePaths.bulkCreate, async (req, res) => {
-        let model = req.models[module.name].getModel();
-        if (overrideBulkCreate && overrideBulkCreate.constructor == Function) {
-          overrideBulkCreate(req, res);
-        } else {
-          let result = await model.bulkCreate(get(req, "body.input", []));
-          res.json({
-            message: `${module.name} bulk operation successfull.`,
-            result: result.bulkInstances
+        try {
+          let model = req.models[module.name].getModel();
+          if (overrideBulkCreate && overrideBulkCreate.constructor == Function) {
+            overrideBulkCreate(req, res);
+          } else {
+            let result = await model.bulkCreate(get(req, "body.input", []));
+            restApiSuccessResponse({
+              res: res,
+              data: result.instances,
+              message: `${module.name} bulk operation successfull.`
+            });
+          }
+        } catch (e) {
+          restApiErrorResponse({
+            err: e,
+            res: res,
+            data: {}
           });
         }
       });
 
       expressApp.put(modulePaths.update, async (req, res) => {
-        let model = req.models[module.name].getModel();
-        if (overrideUpdate && overrideUpdate.constructor == Function) {
-          overrideUpdate(req, res);
-        } else {
-          let result = await model.update(req.body.input);
-          res.json({
-            message: `${module.name} updated`,
-            result: result.instance
+        try {
+          let model = req.models[module.name].getModel();
+          if (overrideUpdate && overrideUpdate.constructor == Function) {
+            overrideUpdate(req, res);
+          } else {
+            let result = await model.update(req.body.input);
+            restApiSuccessResponse({
+              res: res,
+              message: `${module.name} updated`,
+              data: result.instance
+            });
+          }
+        } catch (e) {
+          restApiErrorResponse({
+            err: e,
+            res: res,
+            data: {}
           });
         }
       });
 
       expressApp.put(modulePaths.bulkUpdate, async (req, res) => {
-        let model = req.models[module.name].getModel();
-        if (overrideBuklUpdate && overrideBuklUpdate.constructor == Function) {
-          overrideBuklUpdate(req, res);
-        } else {
-          let result = await model.bulkUpdate(req.body.input);
-          res.json({
-            message: `${module.name} updated`,
-            result: result.bulkInstances
+        try {
+          let model = req.models[module.name].getModel();
+          if (overrideBuklUpdate && overrideBuklUpdate.constructor == Function) {
+            overrideBuklUpdate(req, res);
+          } else {
+            let result = await model.bulkUpdate(req.body.input);
+            restApiSuccessResponse({
+              res: res,
+              message: `${module.name} updated`,
+              data: result.bulkInstances
+            });
+          }
+        } catch (e) {
+          restApiErrorResponse({
+            err: e,
+            res: res,
+            data: {}
           });
         }
       });
 
       expressApp.delete(modulePaths.bulkSoftDelete, async (req, res) => {
-        let model = req.models[module.name].getModel();
-        if (overrideBulkSoftDelete && overrideBulkSoftDelete.constructor == Function) {
-          overrideBulkSoftDelete(req, res);
-        } else {
-          await model.bulkSoftDelete(req.body.input);
-          res.json({
-            message: `Items deleted`
+        try {
+          let model = req.models[module.name].getModel();
+          if (overrideBulkSoftDelete && overrideBulkSoftDelete.constructor == Function) {
+            overrideBulkSoftDelete(req, res);
+          } else {
+            await model.bulkSoftDelete(req.body.input);
+            restApiSuccessResponse({
+              res: res,
+              message: `Items deleted`,
+              data: {}
+            });
+          }
+        } catch (e) {
+          restApiErrorResponse({
+            err: e,
+            res: res,
+            data: {}
           });
         }
       });
 
       expressApp.delete(modulePaths.delete, async (req, res) => {
-        let model = req.models[module.name].getModel();
-        if (overrideDelete && overrideDelete.constructor == Function) {
-          overrideDelete(req, res);
-        } else {
-          await model.delete({ id: req.params.id });
-          res.json({
-            message: `${module.name} deleted`,
-            result: {}
+        try {
+          let model = req.models[module.name].getModel();
+          if (overrideDelete && overrideDelete.constructor == Function) {
+            overrideDelete(req, res);
+          } else {
+            await model.delete({ id: req.params.id });
+            restApiSuccessResponse({
+              res: res,
+              message: `${module.name} deleted`,
+              data: {}
+            });
+          }
+        } catch (e) {
+          restApiErrorResponse({
+            err: e,
+            res: res,
+            data: {}
           });
         }
       });
       expressApp.delete(modulePaths.bulkDelete, async (req, res) => {
-        let model = req.models[module.name].getModel();
-        if (overrideBuklDelete && overrideBuklDelete.constructor == Function) {
-          overrideBuklDelete(req, res);
-        } else {
-          let result = await model.bulkDelete(req.body.input);
-          res.json({
-            message: `${module.name} deleted`,
-            result: result
+        try {
+          let model = req.models[module.name].getModel();
+          if (overrideBuklDelete && overrideBuklDelete.constructor == Function) {
+            overrideBuklDelete(req, res);
+          } else {
+            let result = await model.bulkDelete(req.body.input);
+            restApiSuccessResponse({
+              res: res,
+              message: `${module.name} deleted`,
+              data: {}
+            });
+          }
+        } catch (e) {
+          restApiErrorResponse({
+            err: e,
+            res: res,
+            data: {}
           });
         }
       });
 
       expressApp.delete(modulePaths.softDelete, async (req, res) => {
-        let model = req.models[module.name].getModel();
-        if (overrideSoftDelete && overrideSoftDelete.constructor == Function) {
-          overrideSoftDelete(req, res);
-        } else {
-          let result = await model.update({
-            id: req.body.input.id,
-            isDeleted: 1
-          });
-          res.json({
-            message: `${module.name} deleted`
+        try {
+          let model = req.models[module.name].getModel();
+          if (overrideSoftDelete && overrideSoftDelete.constructor == Function) {
+            overrideSoftDelete(req, res);
+          } else {
+            await model.update({
+              id: req.body.input.id,
+              isDeleted: 1
+            });
+            restApiSuccessResponse({
+              res: res,
+              message: `${module.name} deleted`,
+              data: {}
+            });
+          }
+        } catch (e) {
+          restApiErrorResponse({
+            err: e,
+            res: res,
+            data: {}
           });
         }
       });
 
       expressApp.post(modulePaths.paginate, async (req, res) => {
-        if (overrideList && overrideList.constructor == Function) {
-          overrideList(req, res);
-        } else {
-          let model = req.models[module.name];
-          let args = {
-            pagination: get(req.body, "pagination", {}),
-            filters: get(req.body, "filters", [])
-          };
-          let response = await model.paginate(args, "*");
-          res.json({
-            message: `${module.name} list`,
-            result: response
+        try {
+          if (overrideList && overrideList.constructor == Function) {
+            overrideList(req, res);
+          } else {
+            let model = req.models[module.name];
+            let args = {
+              pagination: get(req.body, "pagination", {}),
+              filters: get(req.body, "filters", [])
+            };
+            let response = await model.paginate(args, "*");
+            restApiSuccessResponse({
+              res: res,
+              message: `${module.name} list`,
+              data: response
+            });
+          }
+        } catch (e) {
+          restApiErrorResponse({
+            err: e,
+            res: res,
+            data: {}
           });
         }
       });

@@ -9,22 +9,41 @@ import getUserWithAccessToken from "./../security/getUserWithAccessToken";
 import getUserAllPermissions from "./../security/getUserAllPermissions";
 import getUserRoles from "./../security/getUserRoles";
 import isIPAllowed from "../security/isIPAllowed";
-const logSymbols = require('log-symbols');
-import {successMessage} from "./../logger/consoleMessages";
+const logSymbols = require("log-symbols");
+import { successMessage } from "./../logger/consoleMessages";
+
+/*
+
+  Wertik-js rest api.
+
+  Each api request, sends data in this format:
+
+
+  result: {
+    status: StatusCodeNumber,
+    success: true,
+    message: ""
+    data: {
+      
+    }
+  }
+
+  And for the errors:
+
+  result: {
+    status: StatusCodeNumber,
+    success: false,
+    message: "Something went wrong",
+    data: {
+
+    }
+  }
+
+*/
 
 //expressApp,configuration,dbTables, models, allEmailTemplates,sendEmail,database,WertikEventEmitter
 export default function(options: IRestApiInitialize) {
-  const {
-    context,
-    configuration,
-    dbTables,
-    models,
-    sendEmail,
-    emailTemplates,
-    expressApp,
-    database,
-    runEvent
-  } = options;
+  const { configuration, dbTables, models, sendEmail, emailTemplates, expressApp, database, runEvent } = options;
   let { restApi } = configuration;
   const port = get(restApi, "port", 4000);
   if (get(restApi, "disable", true) === true) {
@@ -48,11 +67,11 @@ export default function(options: IRestApiInitialize) {
     req.context = get(configuration.context, "data", {});
     req.sendEmail = sendEmail;
     req.emailTemplates = emailTemplates;
-    let createContext = await get(configuration.context, "createContext", () => {})("restApi",req);
+    let createContext = await get(configuration.context, "createContext", () => {})("restApi", req);
     req.createContext = createContext;
     next();
   });
-
+  
   require("./versions/v1/loadAllModules").default(expressApp, configuration, customApi);
 
   expressApp.get("/", (req, res) => {
@@ -71,7 +90,7 @@ export default function(options: IRestApiInitialize) {
 
   if (configuration.forceStartRestApiServer === true) {
     expressApp.listen(port, () => {
-      successMessage(`Rest API server started at`,`http://localhost:${port}!`);
+      successMessage(`Rest API server started at`, `http://localhost:${port}!`);
     });
   }
 

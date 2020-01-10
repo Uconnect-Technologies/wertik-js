@@ -119,7 +119,7 @@ export default {
       { name: "ca1", cant: "true1", can: "true1" },
       { name: "ca2", cant: "true2", can: "true2" }
     ]
-  }, 
+  },
   sockets: {
     disable: false,
     port: 2000,
