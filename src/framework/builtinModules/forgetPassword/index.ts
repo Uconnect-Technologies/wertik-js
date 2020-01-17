@@ -1,12 +1,13 @@
 import { requestPasswordResetHandler, resetPasswordHandler } from "./handlers";
+import getRequestedFieldsFromResolverInfo from "./../../helpers/getRequestedFieldsFromResolverInfo";
 
 export default {
   name: "ForgetPassword",
   graphql: {
     crud: {
       query: {
-        generate: false,
-        operations: "*"
+        generate: true,
+        operations: "view"
       },
       mutation: {
         generate: false,
@@ -18,7 +19,7 @@ export default {
         id: Int
         name: String
         email: String
-        user: Int
+        user: User
         token: String
         created_at: String
         updated_at: String
@@ -32,18 +33,20 @@ export default {
         confirmPassword: String!
       }
      `,
+    relations: {
+      user: async function(forgetPassword, args, context, info) {
+        let requestedFields = getRequestedFieldsFromResolverInfo(info, true);
+        let view = await context.models["User"].findOneById(forgetPassword.user, requestedFields);
+        return view.instance;
+      }
+    },
     mutation: {
       schema: `
         requestPasswordReset(input: requestPasswordResetInput): SuccessResponse
         resetPassword(input: resetPasswordInput): SuccessResponse
       `,
       resolvers: {
-        requestPasswordReset: async (
-          _: any,
-          args: any,
-          context: any,
-          info: any
-        ) => {
+        requestPasswordReset: async (_: any, args: any, context: any, info: any) => {
           return await requestPasswordResetHandler({
             userModel: context.models.User,
             forgetPasswordModel: context.models.ForgetPassword,

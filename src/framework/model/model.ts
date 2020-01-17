@@ -1,6 +1,4 @@
 import actions from "./actions/index";
-import { get } from "lodash";
-import { throws } from "assert";
 import internalServerError from "./../../framework/helpers/internalServerError";
 const { create, update, destroy, findOne, view, paginate } = actions;
 
@@ -11,6 +9,11 @@ export default function(props) {
     instance: null,
     bulkInstances: [],
     id: null,
+    getModel: function() {
+      let m = this;
+      m.instance = null;
+      return m;
+    },
     update: async function(args) {
       let instance = null;
       if (this.instance) {
@@ -57,15 +60,25 @@ export default function(props) {
       });
       return this;
     },
-    findOneByArgs: async function(args) {
+    findOneByArgs: async function(args, requestedFields: Array<string>) {
+      let attributesObject = {};
+      if (requestedFields && requestedFields.constructor === Array && requestedFields[0] !== "*") {
+        attributesObject["attributes"] = requestedFields;
+      }
       this.instance = await this.dbTables[this.tableName].findOne({
-        where: args
+        where: args,
+        ...attributesObject
       });
       return this;
     },
-    findOneById: async function(id: Number) {
+    findOneById: async function(id: Number, requestedFields: Array<string>) {
+      let attributesObject = {};
+      if (requestedFields && requestedFields.constructor === Array && requestedFields[0] !== "*") {
+        attributesObject["attributes"] = requestedFields;
+      }
       this.instance = await this.dbTables[this.tableName].findOne({
-        where: { id: id }
+        where: { id: id },
+        ...attributesObject
       });
       return this;
     },

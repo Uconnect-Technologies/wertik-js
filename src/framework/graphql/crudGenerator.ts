@@ -165,7 +165,8 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
           return response;
         }
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        let result = await context.models[moduleName].create(args.input, requestedFields);
+        let model = context.models[moduleName].getModel();
+        let result = await model.create(args.input, requestedFields);
         pubsub.publish(createdModule, {
           [createdModule]: result
         });
@@ -176,7 +177,8 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
           let response = await overrideMutationDelete(_, args, context, info);
           return response;
         }
-        let result = await context.models[moduleName].delete(args.input);
+        let model = context.models[moduleName].getModel();
+        let result = await model.delete(args.input);
         pubsub.publish(deletedModule, {
           [deletedModule]: result
         });
@@ -187,7 +189,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
           let response = await overrideMutationSoftDelete(_, args, context, info);
           return response;
         }
-        let model = context.models[moduleName];
+        let model = context.models[moduleName].getModel();
         let result = await model.update({
           ...args.input,
           isDeleted: 1
@@ -203,7 +205,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
           return response;
         }
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        let model = context.models[moduleName];
+        let model = context.models[moduleName].getModel();
         let result = await model.update(args.input, requestedFields);
         pubsub.publish(updatedModule, {
           [updatedModule]: result
@@ -215,7 +217,8 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
           let response = await overrideMutationBulkSoftDelete(_, args, context, info);
           return response;
         }
-        let result = await context.models[moduleName].bulkDelete(args.input);
+        let model = context.models[moduleName].getModel();
+        let result = await model.bulkDelete(args.input);
         pubsub.publish(bulkCreatedModule, {
           [bulkCreatedModule]: result
         });
@@ -226,7 +229,8 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
           let response = await overrideMutationBulkDelete(_, args, context, info);
           return response;
         }
-        let result = await context.models[moduleName].bulkSoftDelete(args.input);
+        let model = context.models[moduleName].getModel();
+        let result = await model.bulkSoftDelete(args.input);
         pubsub.publish(bulkCreatedModule, {
           [bulkCreatedModule]: result
         });
@@ -237,8 +241,9 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
           let response = await overrideMutationBulkCreate(_, args, context, info);
           return response;
         }
+        let model = context.models[moduleName].getModel();
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        let result = await context.models[moduleName].bulkCreate(args.input, requestedFields);
+        let result = await model.bulkCreate(args.input, requestedFields);
         pubsub.publish(bulkUpdatedModule, {
           [bulkUpdatedModule]: result
         });
@@ -249,8 +254,9 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
           let response = await overrideMutationBulkUpdate(_, args, context, info);
           return response;
         }
+        let model = context.models[moduleName].getModel();
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        let result = await context.models[moduleName].bulkUpdate(args.input, requestedFields);
+        let result = await model.bulkUpdate(args.input, requestedFields);
         pubsub.publish(bulkDeletedModule, {
           [bulkDeletedModule]: result
         });
@@ -263,8 +269,9 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
           let response = await overrideQueryView(_, args, context, info);
           return response;
         }
+        let model = context.models[moduleName].getModel();
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        let view = await context.models[moduleName].view(args, Object.keys(requestedFields));
+        let view = await model.view(args, Object.keys(requestedFields));
         return view.instance;
       },
       [`list${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
@@ -272,8 +279,9 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
           let response = await overrideQueryList(_, args, context, info);
           return response;
         }
+        let model = context.models[moduleName].getModel();
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        return await context.models[moduleName].paginate(args, Object.keys(requestedFields.list));
+        return await model.paginate(args, Object.keys(requestedFields.list));
       }
     }
   };
