@@ -60,15 +60,25 @@ export default function(props) {
       });
       return this;
     },
-    findOneByArgs: async function(args) {
+    findOneByArgs: async function(args, requestedFields: Array<string>) {
+      let attributesObject = {};
+      if (requestedFields && requestedFields.constructor === Array && requestedFields[0] !== "*") {
+        attributesObject["attributes"] = requestedFields;
+      }
       this.instance = await this.dbTables[this.tableName].findOne({
-        where: args
+        where: args,
+        ...attributesObject
       });
       return this;
     },
-    findOneById: async function(id: Number) {
+    findOneById: async function(id: Number, requestedFields: Array<string>) {
+      let attributesObject = {};
+      if (requestedFields && requestedFields.constructor === Array && requestedFields[0] !== "*") {
+        attributesObject["attributes"] = requestedFields;
+      }
       this.instance = await this.dbTables[this.tableName].findOne({
-        where: { id: id }
+        where: { id: id },
+        ...attributesObject
       });
       return this;
     },

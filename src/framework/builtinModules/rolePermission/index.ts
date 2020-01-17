@@ -1,3 +1,5 @@
+import getRequestedFieldsFromResolverInfo from "./../../helpers/getRequestedFieldsFromResolverInfo";
+
 export default {
   name: "RolePermission",
   graphql: {
@@ -28,6 +30,18 @@ export default {
         permission: Int
       }
     `,
+    relations: {
+      permission: async function(rolePermission, args, context, info) {
+        let requestedFields = getRequestedFieldsFromResolverInfo(info, true);
+        let view = await context.models["Permission"].findOneById(rolePermission.permission, requestedFields);
+        return view.instance;
+      },
+      role: async function(rolePermission, args, context, info) {
+        let requestedFields = getRequestedFieldsFromResolverInfo(info, true);
+        let view = await context.models["Role"].findOneById(rolePermission.role, requestedFields);
+        return view.instance;
+      }
+    },
     mutation: {
       schema: ``,
       resolvers: {}
