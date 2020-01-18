@@ -5,6 +5,7 @@ import restApiSuccessResponse from "../../restApiSuccessResponse";
 
 export const getModuleApiPaths = (name: string) => {
   return {
+    save: `/api/v1/${kebabCase(name)}/save`,
     create: `/api/v1/${kebabCase(name)}/create`,
     update: `/api/v1/${kebabCase(name)}/update`,
     view: `/api/v1/${kebabCase(name)}/view/:id`,
@@ -27,6 +28,7 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
     const overrideView = get(configuration, `override.${module.name}.restApi.view`, null);
     const overrideList = get(configuration, `override.${module.name}.restApi.list`, null);
     const overrideCreate = get(configuration, `override.${module.name}.restApi.create`, null);
+    const overrideSave = get(configuration, `override.${module.name}.restApi.save`, null);
     const overrideUpdate = get(configuration, `override.${module.name}.restApi.update`, null);
     const overrideDelete = get(configuration, `override.${module.name}.restApi.delete`, null);
     const overrideSoftDelete = get(configuration, `override.${module.name}.restApi.softDelete`, null);
@@ -85,6 +87,28 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
               res: res,
               data: result.instance,
               message: `${module.name} created`
+            });
+          }
+        } catch (e) {
+          restApiErrorResponse({
+            err: e,
+            res: res,
+            data: {}
+          });
+        }
+      });
+
+      expressApp.post(modulePaths.save, async (req, res) => {
+        try {
+          let model = req.models[module.name].getModel();
+          if (overrideSave && overrideSave.constructor == Function) {
+            overrideSave(req, res);
+          } else {
+            let result = await model.save(req.body.input);
+            restApiSuccessResponse({
+              res: res,
+              data: result.instance,
+              message: `${module.name} saved`
             });
           }
         } catch (e) {

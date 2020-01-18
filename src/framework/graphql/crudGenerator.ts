@@ -21,6 +21,7 @@ export const generateQueriesCrudSchema = (moduleName: String, operationsRead) =>
 
 export const generateMutationsCrudSubscriptionSchema = (moduleName: String, operationsModify, operationsRead) => {
   const createdString = `created${moduleName}: ${moduleName}`;
+  const savedString = `saved${moduleName}: ${moduleName}`;
   const deletedString = `deleted${moduleName}: ${moduleName}`;
   const updatedString = `updated${moduleName}: ${moduleName}`;
   const softDeleteString = `softDeleted${moduleName}: ${moduleName}`;
@@ -30,6 +31,7 @@ export const generateMutationsCrudSubscriptionSchema = (moduleName: String, oper
   const bulkSoftDeletedString = `bulkSoftDeleted${moduleName}:  [${moduleName}]`;
   return `
     ${createdString}
+    ${savedString}
     ${deletedString}
     ${updatedString}
     ${softDeleteString}
@@ -43,6 +45,7 @@ export const generateMutationsCrudSubscriptionSchema = (moduleName: String, oper
 export const getSubscriptionConstants = (moduleName: String) => {
   return {
     createdModule: `created${moduleName}`,
+    savedModule: `saved${moduleName}`,
     deletedModule: `deleted${moduleName}`,
     softDeletedModule: `softDeleted${moduleName}`,
     updatedModule: `updated${moduleName}`,
@@ -55,10 +58,23 @@ export const getSubscriptionConstants = (moduleName: String) => {
 
 export const generateSubscriptionsCrudResolvers = (moduleName: String, pubsub: any, operationsModify) => {
   const operationsModifySplit = operationsModify.toLowerCase().split(" ");
-  const { createdModule, deletedModule, updatedModule, bulkCreatedModule, bulkUpdatedModule, bulkDeletedModule, softDeletedModule, bulkSoftDeletedModule } = getSubscriptionConstants(moduleName);
+  const {
+    createdModule,
+    deletedModule,
+    updatedModule,
+    bulkCreatedModule,
+    bulkUpdatedModule,
+    bulkDeletedModule,
+    softDeletedModule,
+    bulkSoftDeletedModule,
+    savedModule
+  } = getSubscriptionConstants(moduleName);
   let object = {
     [createdModule]: {
       subscribe: () => pubsub.asyncIterator([createdModule])
+    },
+    [savedModule]: {
+      subscribe: () => pubsub.asyncIterator([savedModule])
     },
     [deletedModule]: {
       subscribe: () => pubsub.asyncIterator([deletedModule])
@@ -111,6 +127,7 @@ export const generateSubscriptionsCrudResolvers = (moduleName: String, pubsub: a
 export const generateMutationsCrudSchema = (moduleName: String, operations) => {
   const operationsSplit = operations.toLowerCase().split(" ");
   const createString = `create${moduleName}(input: ${moduleName}Input): ${moduleName}`;
+  const saveString = `save${moduleName}(input: ${moduleName}Input): ${moduleName}`;
   const deleteString = `delete${moduleName}(input: IDDeleteInput): SuccessResponse`;
   const updateString = `update${moduleName}(input: ${moduleName}Input): ${moduleName}`;
   const bulkUpdateString = `bulkUpdate${moduleName}(input: [${moduleName}Input]): [${moduleName}]`;
@@ -122,6 +139,7 @@ export const generateMutationsCrudSchema = (moduleName: String, operations) => {
     return `
       ${createString}
       ${deleteString}
+      ${saveString}
       ${updateString}
       ${softDeleteString}
       ${bulkUpdateString}
@@ -132,6 +150,7 @@ export const generateMutationsCrudSchema = (moduleName: String, operations) => {
   } else {
     return `
       ${operationsSplit.includes("create") ? createString : ""}
+      ${operationsSplit.includes("save") ? saveString : ""}
       ${operationsSplit.includes("update") ? updateString : ""}
       ${operationsSplit.includes("softDelete") ? softDeleteString : ""}
       ${operationsSplit.includes("delete") ? deleteString : ""}
@@ -147,6 +166,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
   const operationsModifySplit = operationsModify.toLowerCase().split(" ");
   const operationsReadSplit = operationsRead.toLowerCase().split(" ");
   const overrideMutationCreate = get(configuration, `override.${moduleName}.graphql.mutation.create`, null);
+  const overrideMutationSave = get(configuration, `override.${moduleName}.graphql.mutation.save`, null);
   const overrideMutationUpdate = get(configuration, `override.${moduleName}.graphql.mutation.update`, null);
   const overrideMutationDelete = get(configuration, `override.${moduleName}.graphql.mutation.delete`, null);
   const overrideMutationSoftDelete = get(configuration, `override.${moduleName}.graphql.mutation.softDelete`, null);
@@ -156,7 +176,17 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
   const overrideMutationBulkSoftDelete = get(configuration, `override.${moduleName}.graphql.mutation.bulkSoftDelete`, null);
   const overrideQueryList = get(configuration, `override.${moduleName}.graphql.query.list`, null);
   const overrideQueryView = get(configuration, `override.${moduleName}.graphql.query.view`, null);
-  const { createdModule, deletedModule, updatedModule, bulkCreatedModule, bulkUpdatedModule, bulkDeletedModule, softDeletedModule, bulkSoftDeletedModule } = getSubscriptionConstants(moduleName);
+  const {
+    createdModule,
+    deletedModule,
+    updatedModule,
+    bulkCreatedModule,
+    bulkUpdatedModule,
+    bulkDeletedModule,
+    softDeletedModule,
+    bulkSoftDeletedModule,
+    savedModule
+  } = getSubscriptionConstants(moduleName);
   let object = {
     mutations: {
       [`create${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
@@ -169,6 +199,19 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         let result = await model.create(args.input, requestedFields);
         pubsub.publish(createdModule, {
           [createdModule]: result
+        });
+        return result.instance;
+      },
+      [`save${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
+        if (overrideMutationSave && overrideMutationSave.constructor == Function) {
+          let response = await overrideMutationSave(_, args, context, info);
+          return response;
+        }
+        let requestedFields = getRequestedFieldsFromResolverInfo(info);
+        let model = context.models[moduleName].getModel();
+        let result = await model.save(args.input, requestedFields);
+        pubsub.publish(createdModule, {
+          [savedModule]: result
         });
         return result.instance;
       },

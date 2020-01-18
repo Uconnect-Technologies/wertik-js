@@ -1,6 +1,7 @@
 import actions from "./actions/index";
 import internalServerError from "./../../framework/helpers/internalServerError";
 const { create, update, destroy, findOne, view, paginate } = actions;
+import { has } from "lodash";
 
 export default function(props) {
   return {
@@ -13,6 +14,9 @@ export default function(props) {
       let m = this;
       m.instance = null;
       return m;
+    },
+    save: async function(args) {
+      return has(args, "id") ? await this.update(args) : await this.create(args);
     },
     update: async function(args) {
       let instance = null;
