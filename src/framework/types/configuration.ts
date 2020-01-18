@@ -58,6 +58,7 @@ export interface IConfigurationCustomModuleRestApi {
 
 export interface IConfigurationCustomModuleDatabaseSql {
   fields: Object;
+  tableOptions: Object;
 }
 
 export interface IConfigurationCustomModuleDatabase {

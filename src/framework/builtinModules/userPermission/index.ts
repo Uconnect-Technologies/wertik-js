@@ -70,6 +70,15 @@ export default {
         createdBy: {
           type: "INTEGER"
         }
+      },
+      tableOptions: {
+        indexes: [
+          {
+            unique: true,
+            fields: ["user", "permission"]
+            
+          }
+        ]
       }
     }
   }
