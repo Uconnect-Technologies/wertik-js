@@ -1,5 +1,6 @@
 import { ISocketConfiguration } from "./servers";
 import { IConfigurationOverride } from "./override";
+import { IConfigurationRbac } from "./rbac";
 export interface IConfigurationPorts {
   graphql: Number;
   restApi: Number;
@@ -149,4 +150,5 @@ export interface IConfiguration {
   seeds: any;
   sockets: ISocketConfiguration;
   security: IConfigurationSecurity;
+  rbac: IConfigurationRbac;
 }

@@ -8,7 +8,7 @@ import { errorMessage } from "./framework/logger/consoleMessages";
 import loadDefaults from "./framework/defaults/loadDefaults";
 import initiateLogger from "./framework/logger/index";
 
-export default function(apps, configurationOriginal: IConfiguration) {
+export default function(apps: any, configurationOriginal: IConfiguration) {
   let expressApp = apps.expressApp ? apps.expressApp : require("express").default();
   return new Promise((resolve, reject) => {
     loadDefaults(configurationOriginal)
