@@ -110,7 +110,7 @@ export default {
     },
     beforeRestApiStart: function() {
       console.log("beforeRestApiStart");
-    }
+    },
   },
   seeds: {
     Role: [{ name: "Admin" }, { name: "Kako" }],

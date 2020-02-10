@@ -24,7 +24,7 @@ export default function(apps, configurationOriginal: IConfiguration) {
                   let socket = require("./framework/socket/index").default(configuration);
                   let database = require("./framework/database/connect").default(configuration);
                   let dbTables = require("./framework/database/loadTables").default(database, configuration);
-                  let models = require("./framework/database/models").default(dbTables);
+                  let models = require("./framework/database/models").default(dbTables, configuration);
                   let sendEmail = require("./framework/mailer/index").sendEmail;
                   let seeds = require("./framework/seeds/index").default(configuration, models);
                   let emailTemplates = require("./framework/mailer/emailTemplates").default(configuration, __dirname);

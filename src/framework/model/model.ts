@@ -4,6 +4,7 @@ const { create, update, destroy, findOne, view, paginate } = actions;
 import { has } from "lodash";
 
 export default function(props) {
+  const {configuration} = props;
   return {
     tableName: props.tableName,
     dbTables: props.dbTables,
