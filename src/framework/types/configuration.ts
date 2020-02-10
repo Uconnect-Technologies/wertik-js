@@ -88,8 +88,29 @@ export interface IDocServerConfiguration {
 export interface IConfigurationEvents {
   beforeRestApiStart?: Function;
   beforeGraphqlStart?: Function;
-  crud?: {
-    [Key: string]: Function;
+  database?: {
+    [Key: string]: {
+      beforeCreate: Function;
+      afterCreate: Function;
+      beforeUpdate: Function;
+      afterUpdate: Function;
+      beforeDelete: Function;
+      afterDelete: Function;
+      beforeSoftDelete: Function;
+      afterSoftDelete: Function;
+      beforBulkDelete: Function;
+      afterBulkDelete: Function;
+      beforBulkSoftDelete: Function;
+      afterBulkSoftDelete: Function;
+      beforBulkCreate: Function;
+      afterBulkCreate: Function;
+      beforBulkSoftCreate: Function;
+      afterBulkSoftCreate: Function;
+      beforBulkUpdate: Function;
+      afterBulkUpdate: Function;
+      beforBulkSoftUpdate: Function;
+      afterBulkSoftUpdate: Function;
+    };
   };
 }
 
