@@ -37,6 +37,32 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
     const overrideBuklUpdate = get(configuration, `override.${module.name}.restApi.bulkUpdate`, null);
     const overrideBuklDelete = get(configuration, `override.${module.name}.restApi.bulkDelete`, null);
 
+    const beforeCreate = get(configuration, `events.database.${module.Name}.beforeCreate`, null);
+    const afterCreate = get(configuration, `events.database.${module.Name}.afterCreate`, () => {});
+    const beforeUpdate = get(configuration, `events.database.${module.Name}.beforeUpdate`, () => {});
+    const afterUpdate = get(configuration, `events.database.${module.Name}.afterUpdate`, () => {});
+    const beforeDelete = get(configuration, `events.database.${module.Name}.beforeDelete`, () => {});
+    const afterDelete = get(configuration, `events.database.${module.Name}.afterDelete`, () => {});
+    const beforeSoftDelete = get(configuration, `events.database.${module.Name}.beforeSoftDelete`, () => {});
+    const afterSoftDelete = get(configuration, `events.database.${module.Name}.afterSoftDelete`, () => {});
+    const beforBulkDelete = get(configuration, `events.database.${module.Name}.beforBulkDelete`, () => {});
+    const afterBulkDelete = get(configuration, `events.database.${module.Name}.afterBulkDelete`, () => {});
+    const beforBulkSoftDelete = get(configuration, `events.database.${module.Name}.beforBulkSoftDelete`, () => {});
+    const afterBulkSoftDelete = get(configuration, `events.database.${module.Name}.afterBulkSoftDelete`, () => {});
+    const beforBulkCreate = get(configuration, `events.database.${module.Name}.beforBulkCreate`, () => {});
+    const afterBulkCreate = get(configuration, `events.database.${module.Name}.afterBulkCreate`, () => {});
+    const beforBulkSoftCreate = get(configuration, `events.database.${module.Name}.beforBulkSoftCreate`, () => {});
+    const afterBulkSoftCreate = get(configuration, `events.database.${module.Name}.afterBulkSoftCreate`, () => {});
+    const beforBulkUpdate = get(configuration, `events.database.${module.Name}.beforBulkUpdate`, () => {});
+    const afterBulkUpdate = get(configuration, `events.database.${module.Name}.afterBulkUpdate`, () => {});
+    const beforBulkSoftUpdate = get(configuration, `events.database.${module.Name}.beforBulkSoftUpdate`, () => {});
+    const afterBulkSoftUpdate = get(configuration, `events.database.${module.Name}.afterBulkSoftUpdate`, () => {});
+    // R
+    const beforeList = get(configuration, `events.database.${module.Name}.beforeList`, () => {});
+    const afterList = get(configuration, `events.database.${module.Name}.afterList`, () => {});
+    const beforeView = get(configuration, `events.database.${module.Name}.beforeView`, () => {});
+    const afterView = get(configuration, `events.database.${module.Name}.afterView`, () => {});
+
     if (module && module.hasOwnProperty("restApi")) {
       let modulePaths = getModuleApiPaths(module.name);
       const restApi = get(module, "restApi", {});
@@ -82,7 +108,9 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
           if (overrideCreate && overrideCreate.constructor == Function) {
             overrideCreate(req, res);
           } else {
-            let result = await model.create(req.body.input);
+            let argsOld = req.body.input;
+            let argsNew = await beforeCreate({ mode: "restApi", req, res, body: req.body });
+            let result = await model.create(argsNew ? argsNew : argsOld);
             restApiSuccessResponse({
               res: res,
               data: result.instance,

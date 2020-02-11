@@ -45,3 +45,8 @@ export interface IUserPermission {
   user: any;
   permission: any;
 }
+
+export interface IModelHandlerFunctionProps {
+  mode: string;
+  req: any;
+}

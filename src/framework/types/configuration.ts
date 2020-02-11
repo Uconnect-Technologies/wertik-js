@@ -90,26 +90,34 @@ export interface IConfigurationEvents {
   beforeGraphqlStart?: Function;
   database?: {
     [Key: string]: {
+      // Cud
       beforeCreate: Function;
       afterCreate: Function;
+      beforeSave: Function;
+      afterSave: Function;
       beforeUpdate: Function;
       afterUpdate: Function;
       beforeDelete: Function;
       afterDelete: Function;
       beforeSoftDelete: Function;
       afterSoftDelete: Function;
-      beforBulkDelete: Function;
+      beforeBulkDelete: Function;
       afterBulkDelete: Function;
-      beforBulkSoftDelete: Function;
+      beforeBulkSoftDelete: Function;
       afterBulkSoftDelete: Function;
-      beforBulkCreate: Function;
+      beforeBulkCreate: Function;
       afterBulkCreate: Function;
-      beforBulkSoftCreate: Function;
+      beforeBulkSoftCreate: Function;
       afterBulkSoftCreate: Function;
-      beforBulkUpdate: Function;
+      beforeBulkUpdate: Function;
       afterBulkUpdate: Function;
-      beforBulkSoftUpdate: Function;
+      beforeBulkSoftUpdate: Function;
       afterBulkSoftUpdate: Function;
+      // R
+      beforeList: Function;
+      afterList: Function;
+      beforeView: Function;
+      afterView: Function;
     };
   };
 }

@@ -111,6 +111,13 @@ export default {
     beforeRestApiStart: function() {
       console.log("beforeRestApiStart");
     },
+    database: {
+      Permission: {
+        afterCreate() {
+          console.log("permision created");
+        }
+      }
+    }
   },
   seeds: {
     Role: [{ name: "Admin" }, { name: "Kako" }],
