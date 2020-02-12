@@ -1,4 +1,3 @@
-let bcrypt = require("bcrypt-nodejs");
 import moment from "moment";
 import statusCodes from "./../../../../framework/helpers/statusCodes";
 import createJwtToken from "./../../../../framework/security/createJwtToken";
