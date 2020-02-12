@@ -1,6 +1,6 @@
 import getRequestedFieldsFromResolverInfo from "./../helpers/getRequestedFieldsFromResolverInfo";
 import { IConfiguration } from "../types/configuration";
-import { get } from "lodash";
+import { get, isFunction } from "lodash";
 
 export const generateQueriesCrudSchema = (moduleName: String, operationsRead) => {
   const split = operationsRead.toLowerCase().split(" ");
@@ -21,6 +21,7 @@ export const generateQueriesCrudSchema = (moduleName: String, operationsRead) =>
 
 export const generateMutationsCrudSubscriptionSchema = (moduleName: String, operationsModify, operationsRead) => {
   const createdString = `created${moduleName}: ${moduleName}`;
+  const savedString = `saved${moduleName}: ${moduleName}`;
   const deletedString = `deleted${moduleName}: ${moduleName}`;
   const updatedString = `updated${moduleName}: ${moduleName}`;
   const softDeleteString = `softDeleted${moduleName}: ${moduleName}`;
@@ -30,6 +31,7 @@ export const generateMutationsCrudSubscriptionSchema = (moduleName: String, oper
   const bulkSoftDeletedString = `bulkSoftDeleted${moduleName}:  [${moduleName}]`;
   return `
     ${createdString}
+    ${savedString}
     ${deletedString}
     ${updatedString}
     ${softDeleteString}
@@ -43,6 +45,7 @@ export const generateMutationsCrudSubscriptionSchema = (moduleName: String, oper
 export const getSubscriptionConstants = (moduleName: String) => {
   return {
     createdModule: `created${moduleName}`,
+    savedModule: `saved${moduleName}`,
     deletedModule: `deleted${moduleName}`,
     softDeletedModule: `softDeleted${moduleName}`,
     updatedModule: `updated${moduleName}`,
@@ -55,10 +58,23 @@ export const getSubscriptionConstants = (moduleName: String) => {
 
 export const generateSubscriptionsCrudResolvers = (moduleName: String, pubsub: any, operationsModify) => {
   const operationsModifySplit = operationsModify.toLowerCase().split(" ");
-  const { createdModule, deletedModule, updatedModule, bulkCreatedModule, bulkUpdatedModule, bulkDeletedModule, softDeletedModule, bulkSoftDeletedModule } = getSubscriptionConstants(moduleName);
+  const {
+    createdModule,
+    deletedModule,
+    updatedModule,
+    bulkCreatedModule,
+    bulkUpdatedModule,
+    bulkDeletedModule,
+    softDeletedModule,
+    bulkSoftDeletedModule,
+    savedModule
+  } = getSubscriptionConstants(moduleName);
   let object = {
     [createdModule]: {
       subscribe: () => pubsub.asyncIterator([createdModule])
+    },
+    [savedModule]: {
+      subscribe: () => pubsub.asyncIterator([savedModule])
     },
     [deletedModule]: {
       subscribe: () => pubsub.asyncIterator([deletedModule])
@@ -111,6 +127,7 @@ export const generateSubscriptionsCrudResolvers = (moduleName: String, pubsub: a
 export const generateMutationsCrudSchema = (moduleName: String, operations) => {
   const operationsSplit = operations.toLowerCase().split(" ");
   const createString = `create${moduleName}(input: ${moduleName}Input): ${moduleName}`;
+  const saveString = `save${moduleName}(input: ${moduleName}Input): ${moduleName}`;
   const deleteString = `delete${moduleName}(input: IDDeleteInput): SuccessResponse`;
   const updateString = `update${moduleName}(input: ${moduleName}Input): ${moduleName}`;
   const bulkUpdateString = `bulkUpdate${moduleName}(input: [${moduleName}Input]): [${moduleName}]`;
@@ -122,6 +139,7 @@ export const generateMutationsCrudSchema = (moduleName: String, operations) => {
     return `
       ${createString}
       ${deleteString}
+      ${saveString}
       ${updateString}
       ${softDeleteString}
       ${bulkUpdateString}
@@ -132,6 +150,7 @@ export const generateMutationsCrudSchema = (moduleName: String, operations) => {
   } else {
     return `
       ${operationsSplit.includes("create") ? createString : ""}
+      ${operationsSplit.includes("save") ? saveString : ""}
       ${operationsSplit.includes("update") ? updateString : ""}
       ${operationsSplit.includes("softDelete") ? softDeleteString : ""}
       ${operationsSplit.includes("delete") ? deleteString : ""}
@@ -147,6 +166,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
   const operationsModifySplit = operationsModify.toLowerCase().split(" ");
   const operationsReadSplit = operationsRead.toLowerCase().split(" ");
   const overrideMutationCreate = get(configuration, `override.${moduleName}.graphql.mutation.create`, null);
+  const overrideMutationSave = get(configuration, `override.${moduleName}.graphql.mutation.save`, null);
   const overrideMutationUpdate = get(configuration, `override.${moduleName}.graphql.mutation.update`, null);
   const overrideMutationDelete = get(configuration, `override.${moduleName}.graphql.mutation.delete`, null);
   const overrideMutationSoftDelete = get(configuration, `override.${moduleName}.graphql.mutation.softDelete`, null);
@@ -156,7 +176,44 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
   const overrideMutationBulkSoftDelete = get(configuration, `override.${moduleName}.graphql.mutation.bulkSoftDelete`, null);
   const overrideQueryList = get(configuration, `override.${moduleName}.graphql.query.list`, null);
   const overrideQueryView = get(configuration, `override.${moduleName}.graphql.query.view`, null);
-  const { createdModule, deletedModule, updatedModule, bulkCreatedModule, bulkUpdatedModule, bulkDeletedModule, softDeletedModule, bulkSoftDeletedModule } = getSubscriptionConstants(moduleName);
+
+  const beforeCreate = get(configuration, `events.database.${moduleName}.beforeCreate`, null);
+  const afterCreate = get(configuration, `events.database.${moduleName}.afterCreate`, null);
+  const beforeUpdate = get(configuration, `events.database.${moduleName}.beforeUpdate`, null);
+  const afterUpdate = get(configuration, `events.database.${moduleName}.afterUpdate`, null);
+  const beforeDelete = get(configuration, `events.database.${moduleName}.beforeDelete`, null);
+  const afterDelete = get(configuration, `events.database.${moduleName}.afterDelete`, null);
+  const beforeSoftDelete = get(configuration, `events.database.${moduleName}.beforeSoftDelete`, null);
+  const afterSoftDelete = get(configuration, `events.database.${moduleName}.afterSoftDelete`, null);
+  const beforeBulkDelete = get(configuration, `events.database.${moduleName}.beforeBulkDelete`, null);
+  const afterBulkDelete = get(configuration, `events.database.${moduleName}.afterBulkDelete`, null);
+  const beforeBulkSoftDelete = get(configuration, `events.database.${moduleName}.beforeBulkSoftDelete`, null);
+  const afterBulkSoftDelete = get(configuration, `events.database.${moduleName}.afterBulkSoftDelete`, null);
+  const beforeBulkCreate = get(configuration, `events.database.${moduleName}.beforeBulkCreate`, null);
+  const afterBulkCreate = get(configuration, `events.database.${moduleName}.afterBulkCreate`, null);
+  const beforeBulkSoftCreate = get(configuration, `events.database.${moduleName}.beforeBulkSoftCreate`, null);
+  const afterBulkSoftCreate = get(configuration, `events.database.${moduleName}.afterBulkSoftCreate`, null);
+  const beforeBulkUpdate = get(configuration, `events.database.${moduleName}.beforeBulkUpdate`, null);
+  const afterBulkUpdate = get(configuration, `events.database.${moduleName}.afterBulkUpdate`, null);
+  const beforeBulkSoftUpdate = get(configuration, `events.database.${moduleName}.beforeBulkSoftUpdate`, null);
+  const afterBulkSoftUpdate = get(configuration, `events.database.${moduleName}.afterBulkSoftUpdate`, null);
+  // R
+  const beforeList = get(configuration, `events.database.${moduleName}.beforeList`, null);
+  const afterList = get(configuration, `events.database.${moduleName}.afterList`, null);
+  const beforeView = get(configuration, `events.database.${moduleName}.beforeView`, null);
+  const afterView = get(configuration, `events.database.${moduleName}.afterView`, null);
+
+  const {
+    createdModule,
+    deletedModule,
+    updatedModule,
+    bulkCreatedModule,
+    bulkUpdatedModule,
+    bulkDeletedModule,
+    softDeletedModule,
+    bulkSoftDeletedModule,
+    savedModule
+  } = getSubscriptionConstants(moduleName);
   let object = {
     mutations: {
       [`create${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
@@ -164,11 +221,33 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
           let response = await overrideMutationCreate(_, args, context, info);
           return response;
         }
+        let finalArgs;
+        if (isFunction(beforeCreate)) {
+          finalArgs = await beforeCreate({ mode: "graphql", req: context.req, res: context.res, body: args.input });
+        } else {
+          finalArgs = args.input;
+        }
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let model = context.models[moduleName].getModel();
-        let result = await model.create(args.input, requestedFields);
+        let result = await model.create(finalArgs, requestedFields);
         pubsub.publish(createdModule, {
           [createdModule]: result
+        });
+        if (isFunction(afterCreate)) {
+          await afterCreate({ mode: "graphql", instance: result.instance });
+        }
+        return result.instance;
+      },
+      [`save${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
+        if (overrideMutationSave && overrideMutationSave.constructor == Function) {
+          let response = await overrideMutationSave(_, args, context, info);
+          return response;
+        }
+        let requestedFields = getRequestedFieldsFromResolverInfo(info);
+        let model = context.models[moduleName].getModel();
+        let result = await model.save(args.input, requestedFields);
+        pubsub.publish(createdModule, {
+          [savedModule]: result
         });
         return result.instance;
       },
@@ -177,11 +256,20 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
           let response = await overrideMutationDelete(_, args, context, info);
           return response;
         }
+        let finalArgs;
+        if (isFunction(beforeDelete)) {
+          finalArgs = await beforeDelete({ mode: "graphql", req: context.req, res: context.res, body: args.input });
+        } else {
+          finalArgs = args.input;
+        }
         let model = context.models[moduleName].getModel();
-        let result = await model.delete(args.input);
+        let result = await model.delete(finalArgs);
         pubsub.publish(deletedModule, {
           [deletedModule]: result
         });
+        if (isFunction(afterDelete)) {
+          await afterDelete({ mode: "graphql" });
+        }
         return { message: `${moduleName} successfully deleted` };
       },
       [`softDelete${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
@@ -189,14 +277,23 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
           let response = await overrideMutationSoftDelete(_, args, context, info);
           return response;
         }
+        let finalArgs;
+        if (isFunction(beforeSoftDelete)) {
+          finalArgs = await beforeSoftDelete({ mode: "graphql", req: context.req, res: context.res, body: args.input });
+        } else {
+          finalArgs = args.input;
+        }
         let model = context.models[moduleName].getModel();
         let result = await model.update({
-          ...args.input,
+          ...finalArgs,
           isDeleted: 1
         });
         pubsub.publish(softDeletedModule, {
           [softDeletedModule]: result
         });
+        if (isFunction(afterSoftDelete)) {
+          await afterSoftDelete({ mode: "graphql" });
+        }
         return { message: `${moduleName} successfully deleted` };
       },
       [`update${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
@@ -204,12 +301,21 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
           let response = await overrideMutationUpdate(_, args, context, info);
           return response;
         }
+        let finalArgs;
+        if (isFunction(beforeUpdate)) {
+          finalArgs = await beforeUpdate({ mode: "graphql", req: context.req, res: context.res, body: args.input });
+        } else {
+          finalArgs = args.input;
+        }
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let model = context.models[moduleName].getModel();
-        let result = await model.update(args.input, requestedFields);
+        let result = await model.update(finalArgs, requestedFields);
         pubsub.publish(updatedModule, {
           [updatedModule]: result
         });
+        if (isFunction(afterUpdate)) {
+          await afterUpdate({ mode: "graphql" });
+        }
         return result.instance;
       },
       [`bulkDelete${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
@@ -217,11 +323,20 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
           let response = await overrideMutationBulkSoftDelete(_, args, context, info);
           return response;
         }
+        let finalArgs;
+        if (isFunction(beforeBulkDelete)) {
+          finalArgs = await beforeBulkDelete({ mode: "graphql", req: context.req, res: context.res, body: args.input });
+        } else {
+          finalArgs = args.input;
+        }
         let model = context.models[moduleName].getModel();
-        let result = await model.bulkDelete(args.input);
+        let result = await model.bulkDelete(finalArgs);
         pubsub.publish(bulkCreatedModule, {
           [bulkCreatedModule]: result
         });
+        if (isFunction(afterBulkDelete)) {
+          await afterBulkDelete({ mode: "graphql" });
+        }
         return { message: `${moduleName} bulk items deleted successfully.` };
       },
       [`bulkSoftDelete${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
@@ -229,11 +344,20 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
           let response = await overrideMutationBulkDelete(_, args, context, info);
           return response;
         }
+        let finalArgs;
+        if (isFunction(beforeBulkSoftDelete)) {
+          finalArgs = await beforeBulkSoftDelete({ mode: "graphql", req: context.req, res: context.res, body: args.input });
+        } else {
+          finalArgs = args.input;
+        }
         let model = context.models[moduleName].getModel();
-        let result = await model.bulkSoftDelete(args.input);
+        let result = await model.bulkSoftDelete(finalArgs);
         pubsub.publish(bulkCreatedModule, {
           [bulkCreatedModule]: result
         });
+        if (isFunction(afterBulkSoftDelete)) {
+          await afterBulkSoftDelete({ mode: "graphql" });
+        }
         return { message: `${moduleName} bulk items deleted successfully.` };
       },
       [`bulkCreate${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
@@ -241,12 +365,21 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
           let response = await overrideMutationBulkCreate(_, args, context, info);
           return response;
         }
+        let finalArgs;
+        if (isFunction(beforeBulkCreate)) {
+          finalArgs = await beforeBulkCreate({ mode: "graphql", req: context.req, res: context.res, body: args.input });
+        } else {
+          finalArgs = args.input;
+        }
         let model = context.models[moduleName].getModel();
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        let result = await model.bulkCreate(args.input, requestedFields);
+        let result = await model.bulkCreate(finalArgs, requestedFields);
         pubsub.publish(bulkUpdatedModule, {
           [bulkUpdatedModule]: result
         });
+        if (isFunction(afterBulkCreate)) {
+          afterBulkCreate({ mode: "graphql", instance: result.bulkInstances });
+        }
         return result.bulkInstances;
       },
       [`bulkUpdate${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
@@ -254,12 +387,21 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
           let response = await overrideMutationBulkUpdate(_, args, context, info);
           return response;
         }
+        let finalArgs;
+        if (isFunction(beforeBulkUpdate)) {
+          finalArgs = await beforeBulkUpdate({ mode: "graphql", req: context.req, res: context.res, body: args.input });
+        } else {
+          finalArgs = args.input;
+        }
         let model = context.models[moduleName].getModel();
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        let result = await model.bulkUpdate(args.input, requestedFields);
+        let result = await model.bulkUpdate(args, requestedFields);
         pubsub.publish(bulkDeletedModule, {
           [bulkDeletedModule]: result
         });
+        if (isFunction(afterBulkUpdate)) {
+          afterBulkUpdate({ mode: "graphql", instance: result.bulkInstances });
+        }
         return result.bulkInstances;
       }
     },
@@ -269,9 +411,18 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
           let response = await overrideQueryView(_, args, context, info);
           return response;
         }
+        let finalArgs;
+        if (isFunction(beforeView)) {
+          finalArgs = await beforeView({ mode: "graphql", req: context.req, res: context.res, body: args });
+        } else {
+          finalArgs = args;
+        }
         let model = context.models[moduleName].getModel();
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        let view = await model.view(args, Object.keys(requestedFields));
+        let view = await model.view(finalArgs, Object.keys(requestedFields));
+        if (isFunction(afterView)) {
+          afterView({ mode: "graphql", instance: view.instance });
+        }
         return view.instance;
       },
       [`list${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
@@ -279,9 +430,19 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
           let response = await overrideQueryList(_, args, context, info);
           return response;
         }
+        let finalArgs;
+        if (isFunction(beforeList)) {
+          finalArgs = await beforeList({ mode: "graphql", req: context.req, res: context.res, body: args });
+        } else {
+          finalArgs = args;
+        }
         let model = context.models[moduleName].getModel();
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        return await model.paginate(args, Object.keys(requestedFields.list));
+        let response = await model.paginate(finalArgs, Object.keys(requestedFields.list));
+        if (isFunction(afterList)) {
+          afterList({ mode: "graphql", instance: response });
+        }
+        return response;
       }
     }
   };

@@ -12,6 +12,7 @@ export default function(connection, configuration) {
     let useDatabase = get(module, "useDatabase", true);
     if (useDatabase) {
       let tableFields = convertFieldsIntoSequelizeFields(module.database.sql.fields);
+      let tableOptions = get(module, "database.sql.tableOptions", {});
       tables[tableName] = connection.define(
         snakeCase(tableName),
         {
@@ -33,7 +34,8 @@ export default function(connection, configuration) {
           timestamps: true,
           paranoid: true,
           underscored: true,
-          freezeTableName: true
+          freezeTableName: true,
+          ...tableOptions
         }
       );
     }

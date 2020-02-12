@@ -43,6 +43,8 @@ export default function(options: IGraphQLInitialize) {
         emailTemplates: emailTemplates,
         userPermissions: userPermissions,
         userRoles: userRoles,
+        req,
+        res,
         ...get(configuration.context, "data", {})
       };
       let createContext = await get(configuration.context, "createContext", () => {})("graphql", cxt);

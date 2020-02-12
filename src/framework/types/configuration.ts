@@ -1,5 +1,6 @@
 import { ISocketConfiguration } from "./servers";
 import { IConfigurationOverride } from "./override";
+import { IConfigurationRbac } from "./rbac";
 export interface IConfigurationPorts {
   graphql: Number;
   restApi: Number;
@@ -58,6 +59,7 @@ export interface IConfigurationCustomModuleRestApi {
 
 export interface IConfigurationCustomModuleDatabaseSql {
   fields: Object;
+  tableOptions: Object;
 }
 
 export interface IConfigurationCustomModuleDatabase {
@@ -86,8 +88,37 @@ export interface IDocServerConfiguration {
 export interface IConfigurationEvents {
   beforeRestApiStart?: Function;
   beforeGraphqlStart?: Function;
-  crud?: {
-    [Key: string]: Function;
+  database?: {
+    [Key: string]: {
+      // Cud
+      beforeCreate: Function;
+      afterCreate: Function;
+      beforeSave: Function;
+      afterSave: Function;
+      beforeUpdate: Function;
+      afterUpdate: Function;
+      beforeDelete: Function;
+      afterDelete: Function;
+      beforeSoftDelete: Function;
+      afterSoftDelete: Function;
+      beforeBulkDelete: Function;
+      afterBulkDelete: Function;
+      beforeBulkSoftDelete: Function;
+      afterBulkSoftDelete: Function;
+      beforeBulkCreate: Function;
+      afterBulkCreate: Function;
+      beforeBulkSoftCreate: Function;
+      afterBulkSoftCreate: Function;
+      beforeBulkUpdate: Function;
+      afterBulkUpdate: Function;
+      beforeBulkSoftUpdate: Function;
+      afterBulkSoftUpdate: Function;
+      // R
+      beforeList: Function;
+      afterList: Function;
+      beforeView: Function;
+      afterView: Function;
+    };
   };
 }
 
@@ -148,4 +179,5 @@ export interface IConfiguration {
   seeds: any;
   sockets: ISocketConfiguration;
   security: IConfigurationSecurity;
+  rbac: IConfigurationRbac;
 }

@@ -9,6 +9,7 @@ export interface IBuiltinModuleOverride {
       bulkDelete: Function;
       bulkSoftDelete: Function;
       bulkUpdate: Function;
+      save: Function;
     };
     query: {
       list: Function;
@@ -24,6 +25,7 @@ export interface IBuiltinModuleOverride {
     bulkUpdate: Function;
     list: Function;
     view: Function;
+    save: Function;
   };
 }
 

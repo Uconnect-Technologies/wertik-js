@@ -70,7 +70,7 @@ export default {
         createdBy: {
           type: "INTEGER"
         }
-      }
+      },
     }
   }
 };
