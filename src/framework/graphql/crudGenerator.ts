@@ -223,7 +223,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         }
         let finalArgs;
         if (isFunction(beforeCreate)) {
-          finalArgs = await beforeCreate({ mode: "graphql", req: context.req, res: context.res, body: args.input });
+          finalArgs = await beforeCreate({ mode: "graphql", params: { _, args, context, info } });
         } else {
           finalArgs = args.input;
         }
@@ -234,7 +234,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
           [createdModule]: result
         });
         if (isFunction(afterCreate)) {
-          await afterCreate({ mode: "graphql", instance: result.instance });
+          await afterCreate({ mode: "graphql", params: { instance: result.instance, _, args, context, info } });
         }
         return result.instance;
       },
@@ -258,7 +258,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         }
         let finalArgs;
         if (isFunction(beforeDelete)) {
-          finalArgs = await beforeDelete({ mode: "graphql", req: context.req, res: context.res, body: args.input });
+          finalArgs = await beforeDelete({ mode: "graphql", params: { _, args, context, info } });
         } else {
           finalArgs = args.input;
         }
@@ -268,7 +268,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
           [deletedModule]: result
         });
         if (isFunction(afterDelete)) {
-          await afterDelete({ mode: "graphql" });
+          await afterDelete({ mode: "graphql", params: { _, args, context, info } });
         }
         return { message: `${moduleName} successfully deleted` };
       },
@@ -279,7 +279,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         }
         let finalArgs;
         if (isFunction(beforeSoftDelete)) {
-          finalArgs = await beforeSoftDelete({ mode: "graphql", req: context.req, res: context.res, body: args.input });
+          finalArgs = await beforeSoftDelete({ mode: "graphql", params: { _, args, context, info } });
         } else {
           finalArgs = args.input;
         }
@@ -292,7 +292,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
           [softDeletedModule]: result
         });
         if (isFunction(afterSoftDelete)) {
-          await afterSoftDelete({ mode: "graphql" });
+          await afterSoftDelete({ mode: "graphql", params: { _, args, context, info } });
         }
         return { message: `${moduleName} successfully deleted` };
       },
@@ -303,7 +303,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         }
         let finalArgs;
         if (isFunction(beforeUpdate)) {
-          finalArgs = await beforeUpdate({ mode: "graphql", req: context.req, res: context.res, body: args.input });
+          finalArgs = await beforeUpdate({ mode: "graphql", params: { _, args, context, info } });
         } else {
           finalArgs = args.input;
         }
@@ -314,7 +314,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
           [updatedModule]: result
         });
         if (isFunction(afterUpdate)) {
-          await afterUpdate({ mode: "graphql" });
+          await afterUpdate({ mode: "graphql", params: { _, args, context, info, instance: result.instance } });
         }
         return result.instance;
       },
@@ -325,7 +325,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         }
         let finalArgs;
         if (isFunction(beforeBulkDelete)) {
-          finalArgs = await beforeBulkDelete({ mode: "graphql", req: context.req, res: context.res, body: args.input });
+          finalArgs = await beforeBulkDelete({ mode: "graphql", params: { _, args, context, info } });
         } else {
           finalArgs = args.input;
         }
@@ -335,7 +335,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
           [bulkCreatedModule]: result
         });
         if (isFunction(afterBulkDelete)) {
-          await afterBulkDelete({ mode: "graphql" });
+          await afterBulkDelete({ mode: "graphql", params: { _, args, context, info } });
         }
         return { message: `${moduleName} bulk items deleted successfully.` };
       },
@@ -346,7 +346,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         }
         let finalArgs;
         if (isFunction(beforeBulkSoftDelete)) {
-          finalArgs = await beforeBulkSoftDelete({ mode: "graphql", req: context.req, res: context.res, body: args.input });
+          finalArgs = await beforeBulkSoftDelete({ mode: "graphql", params: { _, args, context, info } });
         } else {
           finalArgs = args.input;
         }
@@ -356,7 +356,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
           [bulkCreatedModule]: result
         });
         if (isFunction(afterBulkSoftDelete)) {
-          await afterBulkSoftDelete({ mode: "graphql" });
+          await afterBulkSoftDelete({ mode: "graphql", params: { _, args, context, info } });
         }
         return { message: `${moduleName} bulk items deleted successfully.` };
       },
@@ -367,18 +367,18 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         }
         let finalArgs;
         if (isFunction(beforeBulkCreate)) {
-          finalArgs = await beforeBulkCreate({ mode: "graphql", req: context.req, res: context.res, body: args.input });
+          finalArgs = await beforeBulkCreate({ mode: "graphql", params: { _, args, context, info } });
         } else {
           finalArgs = args.input;
         }
         let model = context.models[moduleName].getModel();
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let result = await model.bulkCreate(finalArgs, requestedFields);
-        pubsub.publish(bulkUpdatedModule, {
-          [bulkUpdatedModule]: result
+        pubsub.publish(bulkCreatedModule, {
+          [bulkCreatedModule]: result
         });
         if (isFunction(afterBulkCreate)) {
-          afterBulkCreate({ mode: "graphql", instance: result.bulkInstances });
+          afterBulkCreate({ mode: "graphql", params: { _, args, context, info, instance: result.bulkInstances } });
         }
         return result.bulkInstances;
       },
@@ -389,18 +389,18 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         }
         let finalArgs;
         if (isFunction(beforeBulkUpdate)) {
-          finalArgs = await beforeBulkUpdate({ mode: "graphql", req: context.req, res: context.res, body: args.input });
+          finalArgs = await beforeBulkUpdate({ mode: "graphql", params: { _, args, context, info } });
         } else {
           finalArgs = args.input;
         }
         let model = context.models[moduleName].getModel();
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let result = await model.bulkUpdate(args, requestedFields);
-        pubsub.publish(bulkDeletedModule, {
-          [bulkDeletedModule]: result
+        pubsub.publish(bulkUpdatedModule, {
+          [bulkUpdatedModule]: result
         });
         if (isFunction(afterBulkUpdate)) {
-          afterBulkUpdate({ mode: "graphql", instance: result.bulkInstances });
+          afterBulkUpdate({ mode: "graphql", params: { _, args, context, info, instance: result.bulkInstances } });
         }
         return result.bulkInstances;
       }
@@ -413,7 +413,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         }
         let finalArgs;
         if (isFunction(beforeView)) {
-          finalArgs = await beforeView({ mode: "graphql", req: context.req, res: context.res, body: args });
+          finalArgs = await beforeView({ mode: "graphql", params: { _, args, context, info } });
         } else {
           finalArgs = args;
         }
@@ -421,7 +421,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let view = await model.view(finalArgs, Object.keys(requestedFields));
         if (isFunction(afterView)) {
-          afterView({ mode: "graphql", instance: view.instance });
+          afterView({ mode: "graphql", params: { _, args, context, info, instance: view.instance } });
         }
         return view.instance;
       },
@@ -432,7 +432,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         }
         let finalArgs;
         if (isFunction(beforeList)) {
-          finalArgs = await beforeList({ mode: "graphql", req: context.req, res: context.res, body: args });
+          finalArgs = await beforeList({ mode: "graphql", params: { _, args, context, info } });
         } else {
           finalArgs = args;
         }
@@ -440,7 +440,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let response = await model.paginate(finalArgs, Object.keys(requestedFields.list));
         if (isFunction(afterList)) {
-          afterList({ mode: "graphql", instance: response });
+          afterList({ mode: "graphql", params: { _, args, context, info, instance: response } });
         }
         return response;
       }
