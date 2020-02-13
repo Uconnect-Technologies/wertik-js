@@ -51,13 +51,8 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
     const afterBulkSoftDelete = get(configuration, `events.database.${module.name}.afterBulkSoftDelete`, null);
     const beforeBulkCreate = get(configuration, `events.database.${module.name}.beforeBulkCreate`, null);
     const afterBulkCreate = get(configuration, `events.database.${module.name}.afterBulkCreate`, null);
-    const beforeBulkSoftCreate = get(configuration, `events.database.${module.name}.beforeBulkSoftCreate`, null);
-    const afterBulkSoftCreate = get(configuration, `events.database.${module.name}.afterBulkSoftCreate`, null);
     const beforeBulkUpdate = get(configuration, `events.database.${module.name}.beforeBulkUpdate`, null);
     const afterBulkUpdate = get(configuration, `events.database.${module.name}.afterBulkUpdate`, null);
-    const beforeBulkSoftUpdate = get(configuration, `events.database.${module.name}.beforeBulkSoftUpdate`, null);
-    const afterBulkSoftUpdate = get(configuration, `events.database.${module.name}.afterBulkSoftUpdate`, null);
-    // R
     const beforeList = get(configuration, `events.database.${module.name}.beforeList`, null);
     const afterList = get(configuration, `events.database.${module.name}.afterList`, null);
     const beforeView = get(configuration, `events.database.${module.name}.beforeView`, null);
@@ -83,13 +78,13 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
             };
             let finalArgs;
             if (isFunction(beforeList)) {
-              finalArgs = await beforeList({ mode: "restApi", req: req, res: res, body: args });
+              finalArgs = await beforeList({ mode: "restApi", params: { req, res } });
             } else {
               finalArgs = args;
             }
             let response = await model.paginate(finalArgs, "*");
             if (isFunction(afterList)) {
-              afterList({ mode: "graphql", instance: response });
+              afterList({ mode: "graphql", params: { req, res, instance: response } });
             }
             restApiSuccessResponse({
               res: res,
@@ -114,14 +109,14 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
           } else {
             let finalArgs;
             if (isFunction(beforeView)) {
-              finalArgs = await beforeView({ mode: "restApi", req: req, res: res, body: req.params.id });
+              finalArgs = await beforeView({ mode: "restApi", params: { req, res } });
             } else {
               finalArgs = req.params.id;
             }
             let result = await model.view({ id: finalArgs }, ["*"]);
             if (result.instance) {
               if (isFunction(afterView)) {
-                afterView({ mode: "restApi", instance: result.instance });
+                afterView({ mode: "restApi", params: { req, res, instance: result.instance } });
               }
               restApiSuccessResponse({
                 res: res,
@@ -138,7 +133,6 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
             }
           }
         } catch (e) {
-          // handleError(res, e, {});
           restApiErrorResponse({
             err: e,
             res: res,
@@ -155,13 +149,13 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
           } else {
             let finalArgs;
             if (isFunction(beforeCreate)) {
-              finalArgs = await beforeCreate({ mode: "restApi", req: req, res: res, body: req.body.input });
+              finalArgs = await beforeCreate({ mode: "restApi", params: { req, res } });
             } else {
               finalArgs = req.body.input;
             }
             let result = await model.create(finalArgs);
             if (isFunction(afterCreate)) {
-              await afterCreate({ mode: "restApi", instance: result.instance });
+              await afterCreate({ mode: "restApi", params: { req, res, instance: result.instance } });
             }
             restApiSuccessResponse({
               res: res,
@@ -207,14 +201,14 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
             overrideBulkCreate(req, res);
           } else {
             let finalArgs;
-            if (isFunction(beforeBulkDelete)) {
-              finalArgs = await beforeBulkDelete({ mode: "graphql", req: req, res: res, body: req.body.input });
+            if (isFunction(beforeBulkCreate)) {
+              finalArgs = await beforeBulkCreate({ mode: "graphql", params: { req, res } });
             } else {
               finalArgs = get(req, "body.input", []);
             }
             let result = await model.bulkCreate(finalArgs);
-            if (isFunction(afterBulkDelete)) {
-              await afterBulkDelete({ mode: "restApi" });
+            if (isFunction(afterBulkCreate)) {
+              await afterBulkCreate({ mode: "restApi", params: { req, res } });
             }
             restApiSuccessResponse({
               res: res,
@@ -239,13 +233,13 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
           } else {
             let finalArgs;
             if (isFunction(beforeUpdate)) {
-              finalArgs = await beforeUpdate({ mode: "restApi", req: req, res: res, body: req.body.input });
+              finalArgs = await beforeUpdate({ mode: "restApi", params: { req, res } });
             } else {
               finalArgs = req.body.input;
             }
             let result = await model.update(finalArgs);
             if (isFunction(afterUpdate)) {
-              await afterUpdate({ mode: "restApi" });
+              await afterUpdate({ mode: "restApi", params: { req, res } });
             }
             restApiSuccessResponse({
               res: res,
@@ -270,13 +264,13 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
           } else {
             let finalArgs;
             if (isFunction(beforeBulkUpdate)) {
-              finalArgs = await beforeBulkUpdate({ mode: "restApi", req: req, res: res, body: req.body.inpuy });
+              finalArgs = await beforeBulkUpdate({ mode: "restApi", params: { req, res } });
             } else {
               finalArgs = req.body.input;
             }
             let result = await model.bulkUpdate(finalArgs);
             if (isFunction(afterBulkUpdate)) {
-              afterBulkUpdate({ mode: "restApi", instance: result.bulkInstances });
+              afterBulkUpdate({ mode: "restApi", params: { req, res, instance: result.bulkInstances } });
             }
             restApiSuccessResponse({
               res: res,
@@ -300,14 +294,14 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
             overrideBulkSoftDelete(req, res);
           } else {
             let finalArgs;
-            if (isFunction(beforeBulkDelete)) {
-              finalArgs = await beforeBulkDelete({ mode: "restApi", req: req, res: res, body: req.body.input });
+            if (isFunction(beforeBulkSoftDelete)) {
+              finalArgs = await beforeBulkSoftDelete({ mode: "restApi", params: { req, res } });
             } else {
               finalArgs = req.body.input;
             }
             await model.bulkSoftDelete(finalArgs);
-            if (isFunction(afterBulkDelete)) {
-              await afterBulkDelete({ mode: "restApi" });
+            if (isFunction(afterBulkSoftDelete)) {
+              await afterBulkDelete({ mode: "restApi", params: { req, res } });
             }
             restApiSuccessResponse({
               res: res,
@@ -332,11 +326,14 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
           } else {
             let finalArgs;
             if (isFunction(beforeDelete)) {
-              finalArgs = await beforeDelete({ mode: "graphql", req: req, res: res, body: req.params.id });
+              finalArgs = await beforeDelete({ mode: "graphql", params: { req, res } });
             } else {
               finalArgs = req.params.id;
             }
             await model.delete({ id: finalArgs });
+            if (isFunction(afterDelete)) {
+              await afterDelete({ mode: "restApi", params: { req, res } });
+            }
             restApiSuccessResponse({
               res: res,
               message: `${module.name} deleted`,
@@ -359,13 +356,13 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
           } else {
             let finalArgs;
             if (isFunction(beforeBulkDelete)) {
-              finalArgs = await beforeBulkDelete({ mode: "restApi", req: req, res: res, body: req.body.input });
+              finalArgs = await beforeBulkDelete({ mode: "restApi", params: { req, res } });
             } else {
               finalArgs = req.body.input;
             }
             await model.bulkDelete(finalArgs);
             if (isFunction(afterBulkDelete)) {
-              await afterBulkDelete({ mode: "restApi" });
+              await afterBulkDelete({ mode: "restApi", params: { req, res } });
             }
             restApiSuccessResponse({
               res: res,
@@ -390,7 +387,7 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
           } else {
             let finalArgs;
             if (isFunction(beforeSoftDelete)) {
-              finalArgs = await beforeSoftDelete({ mode: "restApi", req: req, res: res, body: req.body.input.id });
+              finalArgs = await beforeSoftDelete({ mode: "restApi", params: { req, res } });
             } else {
               finalArgs = req.body.input.id;
             }
@@ -399,7 +396,7 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
               isDeleted: 1
             });
             if (isFunction(afterSoftDelete)) {
-              await afterSoftDelete({ mode: "restApi" });
+              await afterSoftDelete({ mode: "restApi", params: { req, res } });
             }
             restApiSuccessResponse({
               res: res,
