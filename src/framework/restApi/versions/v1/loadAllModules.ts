@@ -19,7 +19,7 @@ export const getModuleApiPaths = (name: string) => {
   };
 };
 
-export default function(expressApp, configuration: IConfiguration, customApi) {
+export default async function(expressApp, configuration: IConfiguration, customApi) {
   let modules = configuration.builtinModules.split(",");
   modules = modules.filter(c => c);
   modules = [...modules, ...get(configuration, "modules", [])];
@@ -415,12 +415,16 @@ export default function(expressApp, configuration: IConfiguration, customApi) {
     }
   };
 
-  modules.forEach(element => {
+  modules.forEach(async (element: any) => {
     let module;
     if (element.constructor === String) {
       module = require(`./../../../builtinModules/${element}/index`).default;
-    } else if (element.constructor === Object) {
-      module = element;
+    } else if (element.constructor === Object || element.constructor == Function) {
+      if (element.constructor == Function) {
+        module = await element(configuration);
+      } else {
+        module = element;
+      }
     }
     processModule(module);
   });
