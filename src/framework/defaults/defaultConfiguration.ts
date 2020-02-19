@@ -1,7 +1,7 @@
 export default {
   dbDialect: "mysql",
   name: "Wertik",
-  builtinModules: "user,auth,forgetPassword,permission,role,rolePermission,userPermission,userRole,me",
+  builtinModules: "user,auth,forgetPassword,permission,role,rolePermission,userPermission,userRole,me,storage",
   mysqlOptions: {
     dbUsername: "root",
     dbPassword: "",
@@ -142,5 +142,9 @@ export default {
   },
   security: {
     allowedIpAddresses: ["::1", "::ffff:127.0.0.1"]
+  },
+  storage: {
+    storageDirectory: "storage",
+    storages: ["user-images"]
   }
 };

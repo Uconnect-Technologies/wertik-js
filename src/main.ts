@@ -1,5 +1,6 @@
 import shell from "shelljs";
 import { get } from "lodash";
+let multer = require("multer");
 
 import convertConfigurationIntoEnvVariables from "./framework/helpers/convertConfigurationIntoEnvVariables";
 import validateConfigurationObject from "./framework/helpers/validateConfigurationObject";
@@ -12,7 +13,7 @@ export default function(apps: any, configurationOriginal: IConfiguration) {
   let expressApp = apps.expressApp ? apps.expressApp : require("express").default();
   return new Promise((resolve, reject) => {
     loadDefaults(configurationOriginal)
-      .then(configuration => {
+      .then((configuration: IConfiguration) => {
         validateConfigurationObject(configuration)
           .then(() => {
             convertConfigurationIntoEnvVariables(configuration)
@@ -28,6 +29,8 @@ export default function(apps: any, configurationOriginal: IConfiguration) {
                   let sendEmail = require("./framework/mailer/index").sendEmail;
                   let seeds = require("./framework/seeds/index").default(configuration, models);
                   let emailTemplates = require("./framework/mailer/emailTemplates").default(configuration, __dirname);
+                  var multerInstance = multer({ dest: configuration.storage.storageDirectory });
+
                   let graphqlAppInstance = graphql({
                     expressApp: expressApp,
                     configuration: configuration,
@@ -46,7 +49,8 @@ export default function(apps: any, configurationOriginal: IConfiguration) {
                     emailTemplates: emailTemplates,
                     sendEmail: sendEmail,
                     database: database,
-                    runEvent: runEvent
+                    runEvent: runEvent,
+                    multerInstance: multerInstance
                   });
                   resolve({
                     graphql: graphqlAppInstance,
