@@ -56,6 +56,7 @@
     "mongoose": "^5.7.5",
     "mongoose-paginate": "^5.0.3",
     "morgan": "^1.9.1",
+    "multer": "^1.4.2",
     "mysql2": "^1.6.4",
     "nodemailer": "^5.0.0",
     "request-ip": "^2.1.3",
