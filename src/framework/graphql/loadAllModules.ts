@@ -2,7 +2,7 @@
     This is all where GraphQL thing happens. This file loads all graphql schemas from the app.
 */
 
-const { get } = require("lodash");
+const { get, isFunction } = require("lodash");
 import generalSchema from "./generalSchema";
 import {
   generateSubscriptionsCrudResolvers,
@@ -13,7 +13,6 @@ import {
   generateCrudResolvers
 } from "./crudGenerator";
 let { PubSub } = require("apollo-server");
-import { checkIfModuleIsValid } from "./../helpers/index";
 import { IConfiguration } from "../types/configuration";
 const pubsub = new PubSub();
 
@@ -82,6 +81,7 @@ export default async function(configuration: IConfiguration) {
       let currentModuleCrudSubscription = currentGenerateMutation
         ? generateMutationsCrudSubscriptionSchema(moduleName, currentGenerateMutationOperations, currentGenerateQueryOperations)
         : "";
+
       // Subscription
       modulesSchema = modulesSchema + schema;
       modulesSchema = modulesSchema + currentModuleListSchema;
@@ -100,7 +100,7 @@ export default async function(configuration: IConfiguration) {
     let module;
     if (element.constructor === String) {
       module = require(`./../builtinModules/${element}/index`).default;
-    } else if (element.constructor === Object || element.constructor == Function) {
+    } else if (element.constructor === Object || isFunction(element)) {
       if (element.constructor == Function) {
         module = await element(configuration);
       } else {

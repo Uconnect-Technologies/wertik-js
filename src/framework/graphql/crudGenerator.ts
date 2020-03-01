@@ -3,7 +3,6 @@ import { IConfiguration } from "../types/configuration";
 import { get, isFunction } from "lodash";
 
 export const generateQueriesCrudSchema = (moduleName: String, operationsRead) => {
-  const split = operationsRead.toLowerCase().split(" ");
   const viewString = `view${moduleName}(id: Int): ${moduleName}`;
   const listString = `list${moduleName}(pagination: PaginationInput, filters: [FilterInput]): ${moduleName}List`;
   if (operationsRead == "*") {
@@ -20,39 +19,27 @@ export const generateQueriesCrudSchema = (moduleName: String, operationsRead) =>
 };
 
 export const generateMutationsCrudSubscriptionSchema = (moduleName: String, operationsModify, operationsRead) => {
-  const createdString = `created${moduleName}: ${moduleName}`;
-  const savedString = `saved${moduleName}: ${moduleName}`;
-  const deletedString = `deleted${moduleName}: ${moduleName}`;
-  const updatedString = `updated${moduleName}: ${moduleName}`;
-  const softDeleteString = `softDeleted${moduleName}: ${moduleName}`;
-  const bulkUpdatedString = `bulkUpdated${moduleName}:  [${moduleName}]`;
-  const bulkCreatedString = `bulkCreated${moduleName}:  [${moduleName}]`;
-  const bulkDeletedString = `bulkDeleted${moduleName}:  [${moduleName}]`;
-  const bulkSoftDeletedString = `bulkSoftDeleted${moduleName}:  [${moduleName}]`;
+  const createdString = `${moduleName}Created: ${moduleName}`;
+  const savedString = `${moduleName}Saved: ${moduleName}`;
+  const deletedString = `${moduleName}Deleted: SuccessResponse`;
+  const updatedString = `${moduleName}Updated: ${moduleName}`;
+  const softDeleteString = `${moduleName}SoftDeleted: ${moduleName}`;
   return `
     ${createdString}
     ${savedString}
     ${deletedString}
     ${updatedString}
     ${softDeleteString}
-    ${bulkUpdatedString}
-    ${bulkSoftDeletedString}
-    ${bulkCreatedString}
-    ${bulkDeletedString}
   `;
 };
 
 export const getSubscriptionConstants = (moduleName: String) => {
   return {
-    createdModule: `created${moduleName}`,
-    savedModule: `saved${moduleName}`,
-    deletedModule: `deleted${moduleName}`,
-    softDeletedModule: `softDeleted${moduleName}`,
-    updatedModule: `updated${moduleName}`,
-    bulkCreatedModule: `bulkUpdated${moduleName}`,
-    bulkUpdatedModule: `bulkCreated${moduleName}`,
-    bulkDeletedModule: `bulkDeleted${moduleName}`,
-    bulkSoftDeletedModule: `bulkSoftDeleted${moduleName}`
+    createdModule: `${moduleName}Created`,
+    savedModule: `${moduleName}Saved`,
+    deletedModule: `${moduleName}Deleted`,
+    softDeletedModule: `${moduleName}SoftDeleted`,
+    updatedModule: `${moduleName}Updated`
   };
 };
 
@@ -62,11 +49,7 @@ export const generateSubscriptionsCrudResolvers = (moduleName: String, pubsub: a
     createdModule,
     deletedModule,
     updatedModule,
-    bulkCreatedModule,
-    bulkUpdatedModule,
-    bulkDeletedModule,
     softDeletedModule,
-    bulkSoftDeletedModule,
     savedModule
   } = getSubscriptionConstants(moduleName);
   let object = {
@@ -82,20 +65,8 @@ export const generateSubscriptionsCrudResolvers = (moduleName: String, pubsub: a
     [updatedModule]: {
       subscribe: () => pubsub.asyncIterator([updatedModule])
     },
-    [bulkCreatedModule]: {
-      subscribe: () => pubsub.asyncIterator([bulkCreatedModule])
-    },
-    [bulkUpdatedModule]: {
-      subscribe: () => pubsub.asyncIterator([bulkCreatedModule])
-    },
-    [bulkDeletedModule]: {
-      subscribe: () => pubsub.asyncIterator([bulkDeletedModule])
-    },
     [softDeletedModule]: {
       subscribe: () => pubsub.asyncIterator([softDeletedModule])
-    },
-    [bulkSoftDeletedModule]: {
-      subscribe: () => pubsub.asyncIterator([bulkSoftDeletedModule])
     }
   };
   if (operationsModify !== "*") {
@@ -108,18 +79,10 @@ export const generateSubscriptionsCrudResolvers = (moduleName: String, pubsub: a
     if (!operationsModifySplit.includes("delete")) {
       delete object[deletedModule];
     }
-    if (!operationsModifySplit.includes("bulkcreate")) {
-      delete object[bulkCreatedModule];
-    }
-    if (!operationsModifySplit.includes("bulkupdate")) {
-      delete object[bulkUpdatedModule];
-    }
-    if (!operationsModifySplit.includes("bulkdelete")) {
-      delete object[bulkDeletedModule];
-    }
     if (!operationsModifySplit.includes("softDelete")) {
       delete object[softDeletedModule];
     }
+    
   }
   return object;
 };
@@ -130,11 +93,11 @@ export const generateMutationsCrudSchema = (moduleName: String, operations) => {
   const saveString = `save${moduleName}(input: ${moduleName}Input): ${moduleName}`;
   const deleteString = `delete${moduleName}(input: IDDeleteInput): SuccessResponse`;
   const updateString = `update${moduleName}(input: ${moduleName}Input): ${moduleName}`;
+  const softDeleteString = `softDelete${moduleName}(input: IDDeleteInput): SuccessResponse`;
   const bulkUpdateString = `bulkUpdate${moduleName}(input: [${moduleName}Input]): [${moduleName}]`;
   const bulkCreateString = `bulkCreate${moduleName}(input: [${moduleName}Input]): [${moduleName}]`;
   const bulkDeleteString = `bulkDelete${moduleName}(input: [Int]): SuccessResponse`;
   const bulkSoftDeleteString = `bulkSoftDelete${moduleName}(input: [Int]): SuccessResponse`;
-  const softDeleteString = `softDelete${moduleName}(input: IDDeleteInput): SuccessResponse`;
   if (operations == "*") {
     return `
       ${createString}
@@ -207,11 +170,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
     createdModule,
     deletedModule,
     updatedModule,
-    bulkCreatedModule,
-    bulkUpdatedModule,
-    bulkDeletedModule,
     softDeletedModule,
-    bulkSoftDeletedModule,
     savedModule
   } = getSubscriptionConstants(moduleName);
   let object = {
@@ -231,10 +190,32 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         let model = context.models[moduleName].getModel();
         let result = await model.create(finalArgs, requestedFields);
         pubsub.publish(createdModule, {
-          [createdModule]: result
+          [createdModule]: result.instance
         });
         if (isFunction(afterCreate)) {
           await afterCreate({ mode: "graphql", params: { instance: result.instance, _, args, context, info } });
+        }
+        return result.instance;
+      },
+      [`update${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
+        if (overrideMutationUpdate && overrideMutationUpdate.constructor == Function) {
+          let response = await overrideMutationUpdate(_, args, context, info);
+          return response;
+        }
+        let finalArgs;
+        if (isFunction(beforeUpdate)) {
+          finalArgs = await beforeUpdate({ mode: "graphql", params: { _, args, context, info } });
+        } else {
+          finalArgs = args.input;
+        }
+        let requestedFields = getRequestedFieldsFromResolverInfo(info);
+        let model = context.models[moduleName].getModel();
+        let result = await model.update(finalArgs, requestedFields);
+        pubsub.publish(updatedModule, {
+          [updatedModule]: result.instance
+        });
+        if (isFunction(afterUpdate)) {
+          await afterUpdate({ mode: "graphql", params: { _, args, context, info, instance: result.instance } });
         }
         return result.instance;
       },
@@ -263,9 +244,11 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
           finalArgs = args.input;
         }
         let model = context.models[moduleName].getModel();
-        let result = await model.delete(finalArgs);
+        await model.delete(finalArgs);
         pubsub.publish(deletedModule, {
-          [deletedModule]: result
+          [deletedModule]: {
+            message: `${moduleName} successfully deleted`
+          }
         });
         if (isFunction(afterDelete)) {
           await afterDelete({ mode: "graphql", params: { _, args, context, info } });
@@ -296,28 +279,6 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         }
         return { message: `${moduleName} successfully deleted` };
       },
-      [`update${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
-        if (overrideMutationUpdate && overrideMutationUpdate.constructor == Function) {
-          let response = await overrideMutationUpdate(_, args, context, info);
-          return response;
-        }
-        let finalArgs;
-        if (isFunction(beforeUpdate)) {
-          finalArgs = await beforeUpdate({ mode: "graphql", params: { _, args, context, info } });
-        } else {
-          finalArgs = args.input;
-        }
-        let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        let model = context.models[moduleName].getModel();
-        let result = await model.update(finalArgs, requestedFields);
-        pubsub.publish(updatedModule, {
-          [updatedModule]: result
-        });
-        if (isFunction(afterUpdate)) {
-          await afterUpdate({ mode: "graphql", params: { _, args, context, info, instance: result.instance } });
-        }
-        return result.instance;
-      },
       [`bulkDelete${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
         if (overrideMutationBulkSoftDelete && overrideMutationBulkSoftDelete.constructor == Function) {
           let response = await overrideMutationBulkSoftDelete(_, args, context, info);
@@ -331,9 +292,6 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         }
         let model = context.models[moduleName].getModel();
         let result = await model.bulkDelete(finalArgs);
-        pubsub.publish(bulkCreatedModule, {
-          [bulkCreatedModule]: result
-        });
         if (isFunction(afterBulkDelete)) {
           await afterBulkDelete({ mode: "graphql", params: { _, args, context, info } });
         }
@@ -352,9 +310,6 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         }
         let model = context.models[moduleName].getModel();
         let result = await model.bulkSoftDelete(finalArgs);
-        pubsub.publish(bulkCreatedModule, {
-          [bulkCreatedModule]: result
-        });
         if (isFunction(afterBulkSoftDelete)) {
           await afterBulkSoftDelete({ mode: "graphql", params: { _, args, context, info } });
         }
@@ -374,9 +329,6 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         let model = context.models[moduleName].getModel();
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let result = await model.bulkCreate(finalArgs, requestedFields);
-        pubsub.publish(bulkCreatedModule, {
-          [bulkCreatedModule]: result
-        });
         if (isFunction(afterBulkCreate)) {
           afterBulkCreate({ mode: "graphql", params: { _, args, context, info, instance: result.bulkInstances } });
         }
@@ -396,9 +348,6 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         let model = context.models[moduleName].getModel();
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let result = await model.bulkUpdate(args, requestedFields);
-        pubsub.publish(bulkUpdatedModule, {
-          [bulkUpdatedModule]: result
-        });
         if (isFunction(afterBulkUpdate)) {
           afterBulkUpdate({ mode: "graphql", params: { _, args, context, info, instance: result.bulkInstances } });
         }

@@ -419,7 +419,7 @@ export default async function(expressApp, configuration: IConfiguration, customA
     let module;
     if (element.constructor === String) {
       module = require(`./../../../builtinModules/${element}/index`).default;
-    } else if (element.constructor === Object || element.constructor == Function) {
+    } else if (element.constructor === Object || isFunction(element)) {
       if (element.constructor == Function) {
         module = await element(configuration);
       } else {
