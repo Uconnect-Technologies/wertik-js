@@ -47,7 +47,9 @@ export default {
       {
         path: "/upload",
         methodType: "post",
-        handler: async function(req, res) {}
+        handler: async function(req, res, restApiSuccessResponse, restApiErrorResponse) {
+          console.log(req.files);
+        }
       },
       {
         path: "/delete",

@@ -141,6 +141,11 @@ export interface IConfigurationSecurity {
   allowedIpAddresses: Array<String>;
 }
 
+export interface IConfigurationStorage {
+  storageDirectory: string
+  storages: Array<string>;
+}
+
 export interface IConfiguration {
   dbDialect: String;
   name: String;
@@ -180,4 +185,5 @@ export interface IConfiguration {
   sockets: ISocketConfiguration;
   security: IConfigurationSecurity;
   rbac: IConfigurationRbac;
+  storage: IConfigurationStorage;
 }
