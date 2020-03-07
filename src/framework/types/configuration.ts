@@ -74,6 +74,7 @@ export interface IConfigurationCustomModule {
 }
 
 export interface IConfigurationDatabase {
+  dbDialect: String;
   dbConnectionString: String;
   dbUsername: String;
   dbPassword: String;

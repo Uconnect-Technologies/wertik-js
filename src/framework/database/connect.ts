@@ -1,7 +1,7 @@
 let Sequelize = require("sequelize");
 export default function(configurationObject) {
   let DB_PRODUCTION;
-  let dialect = configurationObject.dbDialect;
+  let dialect = configurationObject.database.dbDialect;
   let database = configurationObject.database;
   if (dialect == "postgres") {
     DB_PRODUCTION = new Sequelize(`${database.dbName}`, database.dbUsername, database.dbPassword, {

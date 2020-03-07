@@ -1,10 +1,11 @@
 import express from "express";
 import wertik from "./main";
-import defaultConfiguration from "./framework/defaults/defaultConfigurations/defaultConfiguration";
-import postgresConfiguration from "./framework/defaults/defaultConfigurations/postgresConfiguration";
+import { IConfiguration } from "./framework/types/configuration";
+const defaultConfiguration: IConfiguration = require("./framework/defaults/defaultConfigurations/defaultConfiguration").default;
+const postgresConfiguration: IConfiguration = require("./framework/defaults/defaultConfigurations/postgresConfiguration").default;
 
 let app = express();
 
-wertik({ expressApp: app }, postgresConfiguration).then((p: any) => {
+wertik({ expressApp: app }, defaultConfiguration).then((p: any) => {
   p.database.sync();
 });
