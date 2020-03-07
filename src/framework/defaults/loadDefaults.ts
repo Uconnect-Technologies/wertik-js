@@ -1,4 +1,4 @@
-import defaultConfiguration from "./defaultConfiguration";
+import defaultConfiguration from "./defaultConfigurations/defaultConfiguration";
 import { IConfiguration } from "./../types/configuration";
 
 export default function(configuration: IConfiguration) {

@@ -73,7 +73,8 @@ export interface IConfigurationCustomModule {
   database: IConfigurationCustomModuleDatabase;
 }
 
-export interface IConfigurationMysqlOptions {
+export interface IConfigurationDatabase {
+  dbConnectionString: String;
   dbUsername: String;
   dbPassword: String;
   dbName: String;
@@ -142,8 +143,16 @@ export interface IConfigurationSecurity {
 }
 
 export interface IConfigurationStorage {
-  storageDirectory: string
+  disable: Boolean;
+  storageDirectory: string;
   storages: Array<string>;
+}
+
+export interface IConfigurationEmail {
+  disable: Boolean;
+  templates: {
+    [Key: string]: String;
+  };
 }
 
 export interface IConfiguration {
@@ -161,18 +170,14 @@ export interface IConfiguration {
       };
     };
   };
-  mysqlOptions: IConfigurationMysqlOptions;
+  database: IConfigurationDatabase;
   frontendAppUrl: String;
   frontendAppActivationUrl: String;
   frontendAppPasswordResetUrl: String;
   context: {
     [Key: string]: any;
   };
-  email: {
-    templates: {
-      [Key: string]: String;
-    };
-  };
+  email: IConfigurationEmail;
   override: IConfigurationOverride;
   restApi: IConfigurationRestApi;
   graphql: IConfigurationGraphql;

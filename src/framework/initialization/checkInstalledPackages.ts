@@ -27,6 +27,10 @@ export default function(configuration: IConfiguration) {
         check("sequelize");
         check("mysql2");
       }
+      if (dbDialect == "postgres") {
+        check("pg");
+        check("pg-hstore");
+      }
       resolve();
     } catch (e) {
       reject(e);

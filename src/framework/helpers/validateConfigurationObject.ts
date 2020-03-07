@@ -1,5 +1,5 @@
-import checkInstalledPackages from "./../initialization/checkInstalledPackages";
-import checkModules from "./../initialization/checkModules";
+import checkInstalledPackages from "../initialization/checkInstalledPackages";
+import checkModules from "../initialization/checkModules";
 
 export const requiredFields = {
   name: "required",
