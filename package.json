@@ -75,7 +75,7 @@
     "@types/jsonwebtoken": "^7.2.8",
     "@types/knex": "^0.14.19",
     "@types/morgan": "^1.7.35",
-    "@types/node": "^9.6.50",
+    "@types/node": "^9.6.55",
     "@types/nodemailer": "^4.3.4",
     "@types/query-string": "^6.1.0",
     "@types/redis": "^2.8.6",
