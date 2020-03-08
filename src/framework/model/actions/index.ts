@@ -2,6 +2,10 @@ const dialect = process.env.dbDialect;
 let action = dialect.toLowerCase();
 let path = __dirname;
 
+if (action == "postgres") {
+  action = "mysql";
+}
+
 let create = require(`${path}/${action}/create`).default;
 let paginate = require(`${path}/${action}/paginate`).default;
 let update = require(`${path}/${action}/update`).default;
