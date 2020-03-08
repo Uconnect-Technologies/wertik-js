@@ -21,11 +21,15 @@ export function check(name: String) {
 export default function(configuration: IConfiguration) {
   return new Promise((resolve, reject) => {
     try {
-      const { dbDialect } = configuration;
+      const { dbDialect } = configuration.database;
       check("apollo-server");
       if (dbDialect == "mysql") {
         check("sequelize");
         check("mysql2");
+      }
+      if (dbDialect == "postgres") {
+        check("pg");
+        check("pg-hstore");
       }
       resolve();
     } catch (e) {

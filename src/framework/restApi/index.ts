@@ -1,16 +1,16 @@
-import customApi from "./customApi";
-import { IRestApiInitialize } from "./../types/servers";
-
+const logSymbols = require("log-symbols");
 const { get } = require("lodash");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
+
 import getUserWithAccessToken from "./../security/getUserWithAccessToken";
 import getUserAllPermissions from "./../security/getUserAllPermissions";
+import { successMessage } from "./../logger/consoleMessages";
+import { IRestApiInitialize } from "./../types/servers";
 import getUserRoles from "./../security/getUserRoles";
 import isIPAllowed from "../security/isIPAllowed";
-const logSymbols = require("log-symbols");
-import { successMessage } from "./../logger/consoleMessages";
+import customApi from "./customApi";
 
 /*
 
@@ -43,7 +43,7 @@ import { successMessage } from "./../logger/consoleMessages";
 
 //expressApp,configuration,dbTables, models, allEmailTemplates,sendEmail,database,WertikEventEmitter
 export default function(options: IRestApiInitialize) {
-  const { configuration, dbTables, models, sendEmail, emailTemplates, expressApp, database, runEvent } = options;
+  const { configuration, dbTables, models, sendEmail, emailTemplates, expressApp, database, runEvent, multerInstance } = options;
   let { restApi } = configuration;
   const port = get(restApi, "port", 4000);
   if (get(restApi, "disable", true) === true) {
@@ -67,11 +67,12 @@ export default function(options: IRestApiInitialize) {
     req.context = get(configuration.context, "data", {});
     req.sendEmail = sendEmail;
     req.emailTemplates = emailTemplates;
+    req.multerInstance = multerInstance;
     let createContext = await get(configuration.context, "createContext", () => {})("restApi", req);
     req.createContext = createContext;
     next();
   });
-  
+
   require("./versions/v1/loadAllModules").default(expressApp, configuration, customApi);
 
   expressApp.get("/", (req, res) => {

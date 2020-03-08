@@ -73,7 +73,9 @@ export interface IConfigurationCustomModule {
   database: IConfigurationCustomModuleDatabase;
 }
 
-export interface IConfigurationMysqlOptions {
+export interface IConfigurationDatabase {
+  dbDialect: String;
+  dbConnectionString: String;
   dbUsername: String;
   dbPassword: String;
   dbName: String;
@@ -141,6 +143,19 @@ export interface IConfigurationSecurity {
   allowedIpAddresses: Array<String>;
 }
 
+export interface IConfigurationStorage {
+  disable: Boolean;
+  storageDirectory: string;
+  storages: Array<string>;
+}
+
+export interface IConfigurationEmail {
+  disable: Boolean;
+  templates: {
+    [Key: string]: String;
+  };
+}
+
 export interface IConfiguration {
   dbDialect: String;
   name: String;
@@ -156,18 +171,14 @@ export interface IConfiguration {
       };
     };
   };
-  mysqlOptions: IConfigurationMysqlOptions;
+  database: IConfigurationDatabase;
   frontendAppUrl: String;
   frontendAppActivationUrl: String;
   frontendAppPasswordResetUrl: String;
   context: {
     [Key: string]: any;
   };
-  email: {
-    templates: {
-      [Key: string]: String;
-    };
-  };
+  email: IConfigurationEmail;
   override: IConfigurationOverride;
   restApi: IConfigurationRestApi;
   graphql: IConfigurationGraphql;
@@ -180,4 +191,5 @@ export interface IConfiguration {
   sockets: ISocketConfiguration;
   security: IConfigurationSecurity;
   rbac: IConfigurationRbac;
+  storage: IConfigurationStorage;
 }

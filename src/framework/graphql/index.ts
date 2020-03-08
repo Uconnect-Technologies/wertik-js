@@ -11,7 +11,7 @@ import { successMessage } from "./../logger/consoleMessages";
 
 //expressApp,configuration,dbTables,models,emailTemplates,sendEmail,database,WertikEventEmitter
 
-export default function(options: IGraphQLInitialize) {
+export default async function(options: IGraphQLInitialize) {
   const { configuration, dbTables, models, sendEmail, emailTemplates, database, runEvent } = options;
   const forceStartGraphqlServer = get(configuration, "forceStartGraphqlServer", true);
   let { graphql } = configuration;
@@ -19,7 +19,7 @@ export default function(options: IGraphQLInitialize) {
   if (get(graphql, "disable", true) === true) {
     return null;
   }
-  const modules = loadAllModules(configuration);
+  const modules = await loadAllModules(configuration);
   let apollo = new ApolloServer({
     typeDefs: modules.schema,
     resolvers: modules.resolvers,
@@ -29,9 +29,12 @@ export default function(options: IGraphQLInitialize) {
     subscriptions: {
       path: "/subscriptions"
     },
-    context: async ({ req, res }) => {
-      const ip = req.connection.remoteAddress;
-      isIPAllowed(ip, configuration.security.allowedIpAddresses, "graphql", {});
+    context: async ({ req, res,connection }) => {
+      let ip = get(req,'connection.remoteAddress',null);
+      if (connection === null) {
+        ip = get(connection,'remoteAddress',null);
+        isIPAllowed(ip, configuration.security.allowedIpAddresses, "graphql", {});
+      }
       let user = await getUserWithAccessToken(models.User, get(req, "headers.authorization", ""));
       let userPermissions = user ? await getUserAllPermissions(user.id, database) : [];
       let userRoles = user ? await getUserRoles(user.id, database) : [];
