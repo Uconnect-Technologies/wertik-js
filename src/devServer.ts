@@ -6,9 +6,6 @@ const postgresConfiguration: IConfiguration = require("./framework/defaults/defa
 
 let app = express();
 
-
-
-
 wertik({ expressApp: app }, postgresConfiguration).then((p: any) => {
   p.database.sync();
 });
