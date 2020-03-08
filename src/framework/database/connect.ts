@@ -24,5 +24,13 @@ export default function(configurationObject) {
       operatorsAliases: false
     });
   }
+  DB_PRODUCTION.authenticate()
+    .then(() => {
+      console.log("Datbase Connected");
+    })
+    .catch(e => {
+      console.log(e);
+      process.exit();
+    });
   return DB_PRODUCTION;
 }
