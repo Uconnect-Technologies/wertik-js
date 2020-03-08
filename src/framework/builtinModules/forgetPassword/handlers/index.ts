@@ -15,7 +15,7 @@ export const requestPasswordResetHandler = async function(obj) {
   if (forgetPassword.instance) {
     await forgetPassword.delete();
   }
-  let token = randomString(24, "PICKCHARSFROMTHISSET");
+  let token = randomString(24, "MYNAMEISILYASKARIMANDIVETHESENUMBERS123456789");
   await forgetPasswordModel.create({
     token: token,
     email: user.instance.email,
