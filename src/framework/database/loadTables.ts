@@ -32,7 +32,7 @@ export default function(connection, configuration) {
         },
         {
           timestamps: true,
-          paranoid: true,
+          paranoid: false,
           underscored: true,
           freezeTableName: true,
           ...tableOptions
