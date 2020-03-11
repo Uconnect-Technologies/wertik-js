@@ -22,6 +22,7 @@ export interface IRestApiInitialize {
   models: any;
   database: any;
   WertikEventEmitter: any;
+  multerInstance: any;
 }
 
 // export interface IWSConfiguration {

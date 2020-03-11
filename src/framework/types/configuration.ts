@@ -146,7 +146,6 @@ export interface IConfigurationSecurity {
 export interface IConfigurationStorage {
   disable: Boolean;
   storageDirectory: string;
-  storages: Array<string>;
 }
 
 export interface IConfigurationEmail {

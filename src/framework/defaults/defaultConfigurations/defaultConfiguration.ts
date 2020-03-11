@@ -144,7 +144,6 @@ export default {
     allowedIpAddresses: ["*"]
   },
   storage: {
-    storageDirectory: "storage",
-    storages: ["user-images"]
+    storageDirectory: "./storage/"
   }
 };

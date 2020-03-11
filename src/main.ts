@@ -1,6 +1,6 @@
 import shell from "shelljs";
 import { get } from "lodash";
-let multer = require("multer");
+import multer from "multer";
 
 import convertConfigurationIntoEnvVariables from "./framework/helpers/convertConfigurationIntoEnvVariables";
 import validateConfigurationObject from "./framework/helpers/validateConfigurationObject";
@@ -8,6 +8,7 @@ import { IConfiguration } from "./framework/types/configuration";
 import { errorMessage } from "./framework/logger/consoleMessages";
 import loadDefaults from "./framework/defaults/loadDefaults";
 import initiateLogger from "./framework/logger/index";
+import { randomString } from "./framework/helpers";
 
 export default function(apps: any, configurationOriginal: IConfiguration) {
   let expressApp = apps.expressApp ? apps.expressApp : require("express").default();
@@ -29,7 +30,15 @@ export default function(apps: any, configurationOriginal: IConfiguration) {
                   let sendEmail = require("./framework/mailer/index").sendEmail;
                   let seeds = require("./framework/seeds/index").default(configuration, models);
                   let emailTemplates = require("./framework/mailer/emailTemplates").default(configuration, __dirname);
-                  var multerInstance = multer({ dest: configuration.storage.storageDirectory });
+                  /* Storage */
+                  let storage = multer.diskStorage({
+                    destination: configuration.storage.storageDirectory,
+                    filename: function(req, file, cb) {
+                      cb(null,  randomString(20)  + '_' + file.originalname);
+                    }
+                  });
+                  /* Storage */
+                  let multerInstance = multer({ storage: storage });
 
                   let graphqlAppInstance = graphql({
                     expressApp: expressApp,
