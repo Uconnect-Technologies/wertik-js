@@ -10,12 +10,14 @@ export interface IGraphQLInitialize {
   emailTemplates: Object;
   database: any;
   WertikEventEmitter: any;
+  mailerInstance: any;
 }
 
 export interface IRestApiInitialize {
   sendEmail: Function;
   runEvent: Function;
   configuration: IConfiguration;
+  mailerInstance: any;
   expressApp: any;
   dbTables: Array<any>;
   emailTemplates: any;

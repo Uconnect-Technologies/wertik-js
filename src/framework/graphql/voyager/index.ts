@@ -11,6 +11,7 @@ export default function(configuration: IConfiguration, expressInstance: any) {
     
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/graphql-voyager/dist/voyager.css" />
         <script src="https://cdn.jsdelivr.net/npm/graphql-voyager/dist/voyager.min.js"></script>
+        <title>Wertik-js GraphQL voyager</title>
       </head>
       <body>
         <div id="voyager">Loading...</div>
