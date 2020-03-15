@@ -11,7 +11,9 @@ import initiateLogger from "./framework/logger/index";
 import { randomString } from "./framework/helpers";
 
 export default function(apps: any, configurationOriginal: IConfiguration) {
-  let expressApp = apps.expressApp ? apps.expressApp : require("express").default();
+  let expressApp = apps.expressApp
+    ? apps.expressApp
+    : require("express").default();
   return new Promise((resolve, reject) => {
     loadDefaults(configurationOriginal)
       .then((configuration: IConfiguration) => {
@@ -20,21 +22,39 @@ export default function(apps: any, configurationOriginal: IConfiguration) {
             convertConfigurationIntoEnvVariables(configuration)
               .then(() => {
                 initiateLogger().then(logger => {
-                  let runEvent = require("./framework/events/runEvent").default(configuration.events);
+                  let runEvent = require("./framework/events/runEvent").default(
+                    configuration.events
+                  );
                   let graphql = require("./framework/graphql/index").default;
                   let restApi = require("./framework/restApi/index").default;
-                  let socket = require("./framework/socket/index").default(configuration);
-                  let database = require("./framework/database/connect").default(configuration);
-                  let dbTables = require("./framework/database/loadTables").default(database, configuration);
-                  let models = require("./framework/database/models").default(dbTables, configuration);
+                  let socket = require("./framework/socket/index").default(
+                    configuration
+                  );
+                  let database = require("./framework/database/connect").default(
+                    configuration
+                  );
+                  let dbTables = require("./framework/database/loadTables").default(
+                    database,
+                    configuration
+                  );
+                  let models = require("./framework/database/models").default(
+                    dbTables,
+                    configuration
+                  );
                   let sendEmail = require("./framework/mailer/index").sendEmail;
-                  let seeds = require("./framework/seeds/index").default(configuration, models);
-                  let emailTemplates = require("./framework/mailer/emailTemplates").default(configuration, __dirname);
+                  let seeds = require("./framework/seeds/index").default(
+                    configuration,
+                    models
+                  );
+                  let emailTemplates = require("./framework/mailer/emailTemplates").default(
+                    configuration,
+                    __dirname
+                  );
                   /* Storage */
                   let storage = multer.diskStorage({
                     destination: configuration.storage.storageDirectory,
                     filename: function(req, file, cb) {
-                      cb(null,  randomString(20)  + '_' + file.originalname);
+                      cb(null, randomString(20) + "_" + file.originalname);
                     }
                   });
                   /* Storage */
@@ -72,7 +92,8 @@ export default function(apps: any, configurationOriginal: IConfiguration) {
                     database: database,
                     seeds: seeds,
                     logger: logger,
-                    runEvent: runEvent
+                    runEvent: runEvent,
+                    multerInstance: multerInstance
                   });
                 });
               })
@@ -89,7 +110,10 @@ export default function(apps: any, configurationOriginal: IConfiguration) {
           });
       })
       .catch((err: any) => {
-        errorMessage("Something went wrong while verifying default configuration \n Received: " + err.message);
+        errorMessage(
+          "Something went wrong while verifying default configuration \n Received: " +
+            err.message
+        );
       });
   });
 }
