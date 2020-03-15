@@ -3,12 +3,13 @@ export default {
   name: "Wertik",
   builtinModules: "user,auth,forgetPassword,permission,role,rolePermission,userPermission,userRole,me,storage",
   mysqlOptions: {
-    dbUsername: "root",
-    dbPassword: "",
+    dbUsername: "ilyas",
+    dbPassword: "pass",
     dbName: "graphql",
     dbHost: "localhost",
     dbPort: "3306"
   },
+  
   frontendAppUrl: "http://localhost:8080/",
   frontendAppActivationUrl: "http://localhost:8080/activate-account",
   frontendAppPasswordResetUrl: "http://localhost:8080/reset-password",
