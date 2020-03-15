@@ -1,10 +1,10 @@
 export default {
-  dbDialect: "mysql",
   name: "Wertik",
   builtinModules: "user,auth,forgetPassword,permission,role,rolePermission,userPermission,userRole,me,storage",
-  mysqlOptions: {
-    dbUsername: "ilyas",
-    dbPassword: "pass",
+  database: {
+    dbDialect: "mysql",
+    dbUsername: "root",
+    dbPassword: "",
     dbName: "graphql",
     dbHost: "localhost",
     dbPort: "3306"
@@ -142,7 +142,7 @@ export default {
     }
   },
   security: {
-    allowedIpAddresses: ["::1", "::ffff:127.0.0.1"]
+    allowedIpAddresses: ["*"]
   },
   storage: {
     storageDirectory: "storage",

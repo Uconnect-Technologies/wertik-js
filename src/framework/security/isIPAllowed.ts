@@ -1,6 +1,10 @@
 import { errorMessage } from "../logger/consoleMessages";
+import { get } from "lodash";
 
 export default function(ip: String, ips: Array<String>, type: String, obj: any) {
+  if (get(ips, "[0]", "") == "*") {
+    return true;
+  }
   const isAllowed = ips.indexOf(ip) > -1;
   if (isAllowed) {
     return true;

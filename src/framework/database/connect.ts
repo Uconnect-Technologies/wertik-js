@@ -1,12 +1,36 @@
 let Sequelize = require("sequelize");
 export default function(configurationObject) {
-  let mysqlOptions = configurationObject.mysqlOptions;
-  const DB_PRODUCTION = new Sequelize(`${mysqlOptions.dbName}`, mysqlOptions.dbUsername, mysqlOptions.dbPassword, {
-    dialect: "mysql",
-    host: mysqlOptions.dbHost,
-    port: mysqlOptions.dbPort,
-    logging: false,
-    operatorsAliases: false
-  });
+  let DB_PRODUCTION;
+  let dialect = configurationObject.database.dbDialect;
+  let database = configurationObject.database;
+  if (dialect == "postgres") {
+    DB_PRODUCTION = new Sequelize(`${database.dbName}`, database.dbUsername, database.dbPassword, {
+      dialect: "postgres",
+      host: database.dbHost,
+      port: database.dbPort,
+      logging: false,
+      operatorsAliases: false,
+      dialectOptions: {
+        ssl: true
+      }
+    });
+  } else {
+    // mysql
+    DB_PRODUCTION = new Sequelize(`${database.dbName}`, database.dbUsername, database.dbPassword, {
+      dialect: "mysql",
+      host: database.dbHost,
+      port: database.dbPort,
+      logging: false,
+      operatorsAliases: false
+    });
+  }
+  DB_PRODUCTION.authenticate()
+    .then(() => {
+      console.log("Datbase Connected");
+    })
+    .catch(e => {
+      console.log(e);
+      process.exit();
+    });
   return DB_PRODUCTION;
 }

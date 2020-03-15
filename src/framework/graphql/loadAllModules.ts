@@ -2,7 +2,7 @@
     This is all where GraphQL thing happens. This file loads all graphql schemas from the app.
 */
 
-const { get } = require("lodash");
+const { get, isFunction } = require("lodash");
 import generalSchema from "./generalSchema";
 import {
   generateSubscriptionsCrudResolvers,
@@ -13,10 +13,10 @@ import {
   generateCrudResolvers
 } from "./crudGenerator";
 let { PubSub } = require("apollo-server");
-import { checkIfModuleIsValid } from "./../helpers/index";
+import { IConfiguration } from "../types/configuration";
 const pubsub = new PubSub();
 
-export default function(configuration) {
+export default async function(configuration: IConfiguration) {
   let modulesSchema = ``;
   let modulesQuerySchema = ``;
   let modulesMutationSchema = ``;
@@ -57,13 +57,8 @@ export default function(configuration) {
         currentGenerateQueryOperations,
         configuration
       );
-      let currentModuleListSchema =
-        currentGenerateQuery || currentGenerateMutation ? generateListTypeForModule(moduleName) : "";
-      let currentModuleSubscriptionResolvers = generateSubscriptionsCrudResolvers(
-        moduleName,
-        pubsub,
-        currentGenerateMutationOperations
-      );
+      let currentModuleListSchema = currentGenerateQuery || currentGenerateMutation ? generateListTypeForModule(moduleName) : "";
+      let currentModuleSubscriptionResolvers = generateSubscriptionsCrudResolvers(moduleName, pubsub, currentGenerateMutationOperations);
       // relations
       let relations = get(graphql, "relations", {});
       if (module.name !== "Auth") {
@@ -77,20 +72,16 @@ export default function(configuration) {
         appQueries = { ...appQueries, ...currentModuleCrudResolvers.queries };
       }
       if (currentGenerateMutation) {
-        modulesMutationSchema =
-          modulesMutationSchema + generateMutationsCrudSchema(moduleName, currentGenerateMutationOperations);
+        modulesMutationSchema = modulesMutationSchema + generateMutationsCrudSchema(moduleName, currentGenerateMutationOperations);
         appMutations = { ...appMutations, ...currentModuleCrudResolvers.mutations };
       }
       // crud
       // Subscription
 
       let currentModuleCrudSubscription = currentGenerateMutation
-        ? generateMutationsCrudSubscriptionSchema(
-            moduleName,
-            currentGenerateMutationOperations,
-            currentGenerateQueryOperations
-          )
+        ? generateMutationsCrudSubscriptionSchema(moduleName, currentGenerateMutationOperations, currentGenerateQueryOperations)
         : "";
+
       // Subscription
       modulesSchema = modulesSchema + schema;
       modulesSchema = modulesSchema + currentModuleListSchema;
@@ -105,12 +96,16 @@ export default function(configuration) {
     }
   };
 
-  modules.forEach(element => {
+  modules.forEach(async (element: any) => {
     let module;
     if (element.constructor === String) {
       module = require(`./../builtinModules/${element}/index`).default;
-    } else if (element.constructor === Object) {
-      module = element;
+    } else if (element.constructor === Object || isFunction(element)) {
+      if (element.constructor == Function) {
+        module = await element(configuration);
+      } else {
+        module = element;
+      }
     }
     processModule(module);
   });
