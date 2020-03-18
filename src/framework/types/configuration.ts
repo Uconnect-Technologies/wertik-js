@@ -149,12 +149,10 @@ export interface IConfigurationStorage {
 }
 
 export interface IConfigurationEmail {
-  disable: Boolean;
+  disable: boolean;
   defaultMailerInstance: any; // This can be the mailer instance a user is using, Just like node mailer
   sendEmail: Function; // A function that uses IConfigurationEmail.defaultEmailInstance and sends an email
-  configuration: {
-    [Key: string]: String;
-  };
+  configuration: any; // This can be string or object, A string of connection string for smtp mailer or configuration for node mailer
   templates: {
     [Key: string]: String;
   };

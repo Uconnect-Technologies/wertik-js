@@ -30,7 +30,10 @@ export default function(apps: any, configurationOriginal: IConfiguration) {
                       let database = require("./framework/database/connect").default(configuration);
                       let dbTables = require("./framework/database/loadTables").default(database, configuration);
                       let models = require("./framework/database/models").default(dbTables, configuration);
-                      let sendEmail = require("./framework/mailer/index").sendEmail(configuration, mailerInstance);
+                      let sendEmail =
+                        get(configuration, "email.disable", false) === false
+                          ? require("./framework/mailer/index").sendEmail(configuration, mailerInstance)
+                          : null;
                       let seeds = require("./framework/seeds/index").default(configuration, models);
                       let emailTemplates = require("./framework/mailer/emailTemplates").default(configuration, __dirname);
                       /* Storage */
@@ -89,7 +92,9 @@ export default function(apps: any, configurationOriginal: IConfiguration) {
                 });
               })
               .catch(err2 => {
-                errorMessage(`Something went wrong while initializing Wertik js, Please check docs, and make sure you that you pass correct configuration.`);
+                errorMessage(
+                  `Something went wrong while initializing Wertik js, Please check docs, and make sure you that you pass correct configuration.`
+                );
                 errorMessage(err2);
                 reject(err2);
               });

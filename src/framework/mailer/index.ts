@@ -19,15 +19,6 @@ export const defaultMailerInstance = async function(configuration: IConfiguratio
   return transporter;
 };
 
-export default async function mailerInstance(configuration: IConfiguration) {
-  let userPassedInstance = get(configuration, "email.defaultMailerInstance", null);
-  if (userPassedInstance !== null) {
-    return userPassedInstance;
-  } else {
-    return await defaultMailerInstance(configuration);
-  }
-}
-
 export const sendEmail = function(configuration: IConfiguration, mailerInstance: any) {
   let userPassedSendEmail = get(configuration, "email.sendEmail", null);
   if (userPassedSendEmail !== null) {
@@ -44,8 +35,12 @@ export const sendEmail = function(configuration: IConfiguration, mailerInstance:
           html: resultTemplate,
           subject: credentials.subject
         });
-        console.log("Message sent: %s", send.messageId);
-        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(send));
+        if (send && send.messageId) {
+          console.log("Message sent: %s", send.messageId);
+        }
+        if (nodemailer && nodemailer.getTestMessageUrl) {
+          console.log("Preview URL: %s", nodemailer.getTestMessageUrl(send));
+        }
         return send;
       } catch (e) {
         console.log(`Failed sending email: ${e.message}`);
@@ -53,3 +48,16 @@ export const sendEmail = function(configuration: IConfiguration, mailerInstance:
     };
   }
 };
+
+export default async function mailerInstance(configuration: IConfiguration) {
+  let isDisabled = get(configuration,'email.disable', false);
+  if (isDisabled === true) {
+    return null;
+  }
+  let userPassedInstance = get(configuration, "email.defaultMailerInstance", null);
+  if (userPassedInstance !== null) {
+    return userPassedInstance;
+  } else {
+    return await defaultMailerInstance(configuration);
+  }
+}
