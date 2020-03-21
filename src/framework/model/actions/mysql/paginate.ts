@@ -4,10 +4,17 @@ import convertFiltersIntoSequalizeObject from "./../../../database/mysql/convert
 export default async function(model: any, args: any = {}, requestedFields: any = []) {
   let baseFields: any = "*";
   let attributesObject = {};
+
   if (requestedFields.constructor === Array) {
     baseFields = requestedFields;
     attributesObject["attributes"] = baseFields;
   }
+  let sorting = get(args, "sorting", []);
+  let sortingObject = {
+    order: sorting.map(c => {
+      return [c.column, c.type];
+    })
+  };
   let page = get(args, "pagination.page", 1);
   let limit = get(args, "pagination.limit", 10);
   let filters = get(args, "filters", []);
@@ -18,18 +25,23 @@ export default async function(model: any, args: any = {}, requestedFields: any =
   if (baseFields == "*") {
     delete attributesObject["attributes"];
   }
+  if (sorting.length == 0) {
+    delete sortingObject["sorting"];
+  }
   if (totalFilters > 0) {
     list = await model.findAndCountAll({
       offset: offset,
       limit: limit,
       where: convertedFilters,
-      ...attributesObject
+      ...attributesObject,
+      ...sortingObject
     });
   } else {
     list = await model.findAndCountAll({
       offset: offset,
       limit: limit,
-      ...attributesObject
+      ...attributesObject,
+      ...sortingObject
     });
   }
   return {
