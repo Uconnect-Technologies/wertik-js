@@ -37,5 +37,5 @@ export default function(configuration: IConfiguration, expressInstance: any) {
 
   app.get("/", (req, res) => res.send(html));
 
-  app.listen(port, () => successMessage(`GraphQL voyager is running at server: `, `http://localhost:${port}!`));
+  app.listen(port, () => successMessage(`GraphQL voyager is running at server: `, `http://localhost:${port}`));
 }

@@ -92,7 +92,7 @@ export default function(options: IRestApiInitialize) {
 
   if (configuration.forceStartRestApiServer === true) {
     expressApp.listen(port, () => {
-      successMessage(`Rest API server started at`, `http://localhost:${port}!`);
+      successMessage(`Rest API server started at`, `http://localhost:${port}`);
     });
   }
 
