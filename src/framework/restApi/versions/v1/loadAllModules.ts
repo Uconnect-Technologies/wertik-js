@@ -74,7 +74,8 @@ export default async function(expressApp, configuration: IConfiguration, customA
             let model = req.models[module.name];
             let args = {
               pagination: get(req.body, "pagination", {}),
-              filters: get(req.body, "filters", [])
+              filters: get(req.body, "filters", []),
+              sorting: get(req.body, "sorting", [])
             };
             let finalArgs;
             if (isFunction(beforeList)) {

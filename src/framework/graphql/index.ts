@@ -8,11 +8,12 @@ import { IGraphQLInitialize } from "./../types/servers";
 import { get } from "lodash";
 import isIPAllowed from "./../security/isIPAllowed";
 import { successMessage } from "./../logger/consoleMessages";
+import voyager from "./voyager/index";
 
 //expressApp,configuration,dbTables,models,emailTemplates,sendEmail,database,WertikEventEmitter
 
 export default async function(options: IGraphQLInitialize) {
-  const { configuration, dbTables, models, sendEmail, emailTemplates, database, runEvent } = options;
+  const { mailerInstance, configuration, dbTables, models, sendEmail, emailTemplates, database, runEvent } = options;
   const forceStartGraphqlServer = get(configuration, "forceStartGraphqlServer", true);
   let { graphql } = configuration;
   const port = get(graphql, "port", 4000);
@@ -20,6 +21,7 @@ export default async function(options: IGraphQLInitialize) {
     return null;
   }
   const modules = await loadAllModules(configuration);
+  voyager(configuration, require("express"));
   let apollo = new ApolloServer({
     typeDefs: modules.schema,
     resolvers: modules.resolvers,
@@ -29,10 +31,10 @@ export default async function(options: IGraphQLInitialize) {
     subscriptions: {
       path: "/subscriptions"
     },
-    context: async ({ req, res,connection }) => {
-      let ip = get(req,'connection.remoteAddress',null);
+    context: async ({ req, res, connection }) => {
+      let ip = get(req, "connection.remoteAddress", null);
       if (connection === null) {
-        ip = get(connection,'remoteAddress',null);
+        ip = get(connection, "remoteAddress", null);
         isIPAllowed(ip, configuration.security.allowedIpAddresses, "graphql", {});
       }
       let user = await getUserWithAccessToken(models.User, get(req, "headers.authorization", ""));
@@ -46,6 +48,7 @@ export default async function(options: IGraphQLInitialize) {
         emailTemplates: emailTemplates,
         userPermissions: userPermissions,
         userRoles: userRoles,
+        mailerInstance: mailerInstance,
         req,
         res,
         ...get(configuration.context, "data", {})

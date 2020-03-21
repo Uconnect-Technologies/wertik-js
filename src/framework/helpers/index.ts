@@ -13,8 +13,8 @@ export const getDirectoriesInFolder = (path: string) => {
   });
 };
 
-export const randomString = (len, charSet) => {
-  charSet = charSet || "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+export const randomString = (len, charSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789") => {
+  charSet = charSet;
   var randomString = "";
   for (var i = 0; i < len; i++) {
     var randomPoz = Math.floor(Math.random() * charSet.length);
