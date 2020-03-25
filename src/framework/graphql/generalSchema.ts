@@ -1,4 +1,12 @@
 export default `
+	type Sorting {
+		column: String
+		type: String
+	}
+	input SortingInput {
+		column: String
+		type: String
+	}
 	input PaginationInput {
 		page: Int
 		limit: Int

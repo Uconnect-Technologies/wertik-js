@@ -23,6 +23,9 @@ export default {
       };
     }
   },
+  email: {
+    disable: false
+  },
   graphql: {
     disable: false,
     port: 4000
@@ -145,7 +148,6 @@ export default {
     allowedIpAddresses: ["*"]
   },
   storage: {
-    storageDirectory: "storage",
-    storages: ["user-images"]
+    storageDirectory: "./storage/"
   }
 };

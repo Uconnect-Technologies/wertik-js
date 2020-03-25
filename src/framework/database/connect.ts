@@ -1,3 +1,5 @@
+import { successMessage } from "../logger/consoleMessages";
+
 let Sequelize = require("sequelize");
 export default function(configurationObject) {
   let DB_PRODUCTION;
@@ -26,7 +28,7 @@ export default function(configurationObject) {
   }
   DB_PRODUCTION.authenticate()
     .then(() => {
-      console.log("Datbase Connected");
+      successMessage(`Datbase Connected`);
     })
     .catch(e => {
       console.log(e);

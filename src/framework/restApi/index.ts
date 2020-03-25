@@ -43,7 +43,7 @@ import customApi from "./customApi";
 
 //expressApp,configuration,dbTables, models, allEmailTemplates,sendEmail,database,WertikEventEmitter
 export default function(options: IRestApiInitialize) {
-  const { configuration, dbTables, models, sendEmail, emailTemplates, expressApp, database, runEvent, multerInstance } = options;
+  const { configuration, dbTables, models, sendEmail, emailTemplates, expressApp, database, runEvent, multerInstance, mailerInstance } = options;
   let { restApi } = configuration;
   const port = get(restApi, "port", 4000);
   if (get(restApi, "disable", true) === true) {
@@ -62,6 +62,7 @@ export default function(options: IRestApiInitialize) {
     req.user = user;
     req.userPermissions = userPermissions;
     req.userRoles = userRoles;
+    req.mailerInstance = mailerInstance;
     req.dbTables = dbTables;
     req.models = models;
     req.context = get(configuration.context, "data", {});
@@ -91,7 +92,7 @@ export default function(options: IRestApiInitialize) {
 
   if (configuration.forceStartRestApiServer === true) {
     expressApp.listen(port, () => {
-      successMessage(`Rest API server started at`, `http://localhost:${port}!`);
+      successMessage(`Rest API server started at`, `http://localhost:${port}`);
     });
   }
 
