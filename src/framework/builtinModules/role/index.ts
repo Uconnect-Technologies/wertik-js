@@ -39,17 +39,18 @@ export default {
   restApi: {},
   database: {
     sql: {
+      tableName: "role",
       fields: {
         name: {
           type: "STRING"
         },
-        defaultPermissions: {
+        default_permissions: {
           type: "STRING"
         },
-        isDeleted: {
+        is_deleted: {
           type: "INTEGER"
         },
-        createdBy: {
+        created_by: {
           type: "INTEGER"
         }
       }

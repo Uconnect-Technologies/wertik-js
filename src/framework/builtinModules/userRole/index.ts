@@ -18,7 +18,9 @@ export default {
         id: Int
         name: String
         user: User
+        user_id: Int
         role: Role
+        role_id: Int
         createdBy: User
         created_at: String
         updated_at: String
@@ -26,8 +28,8 @@ export default {
       input UserRoleInput {
         id: Int
         name: String
-        user: Int
-        role: Int
+        user_id: Int
+        role_id: Int
       }
     `,
     relations: {
@@ -54,20 +56,21 @@ export default {
   restApi: {},
   database: {
     sql: {
+      tableName: "userRole",
       fields: {
         name: {
           type: "STRING"
         },
-        user: {
+        user_id: {
           type: "INTEGER"
         },
-        role: {
+        role_id: {
           type: "INTEGER"
         },
-        isDeleted: {
+        is_deleted: {
           type: "INTEGER"
         },
-        createdBy: {
+        created_by: {
           type: "INTEGER"
         }
       }

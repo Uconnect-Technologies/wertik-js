@@ -20,6 +20,7 @@ export default {
         name: String
         email: String
         user: User
+        user_id: Int
         token: String
         created_at: String
         updated_at: String
@@ -121,6 +122,7 @@ export default {
   },
   database: {
     sql: {
+      tableName: "forgetPassword",
       fields: {
         name: {
           type: "String"
@@ -128,19 +130,16 @@ export default {
         email: {
           type: "String"
         },
-        user: {
+        user_id: {
           type: "Integer"
-        },
-        expiresIn: {
-          type: "String"
         },
         token: {
           type: "String"
         },
-        isDeleted: {
+        is_deleted: {
           type: "INTEGER"
         },
-        createdBy: {
+        created_by: {
           type: "INTEGER"
         }
       }

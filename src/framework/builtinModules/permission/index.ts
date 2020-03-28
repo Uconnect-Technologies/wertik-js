@@ -17,7 +17,7 @@ export default {
         name: String
         cant: String
         can: String
-        createdBy: User
+        created_by: User
         created_at: String
         updated_at: String
       }
@@ -40,6 +40,7 @@ export default {
   restApi: {},
   database: {
     sql: {
+      tableName: "permission",
       fields: {
         name: {
           type: "STRING"
@@ -50,10 +51,10 @@ export default {
         can: {
           type: "STRING"
         },
-        isDeleted: {
+        is_deleted: {
           type: "INTEGER"
         },
-        createdBy: {
+        created_by: {
           type: "INTEGER"
         }
       }

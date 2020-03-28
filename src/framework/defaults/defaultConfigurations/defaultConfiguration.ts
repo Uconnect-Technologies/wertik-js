@@ -4,7 +4,7 @@ export default {
   database: {
     dbDialect: "mysql",
     dbUsername: "root",
-    dbPassword: "pass",
+    dbPassword: "",
     dbName: "graphql",
     dbHost: "localhost",
     dbPort: "3306"
@@ -96,6 +96,7 @@ export default {
       },
       database: {
         sql: {
+          tableName: "article",
           fields: {
             title: {
               type: "STRING"

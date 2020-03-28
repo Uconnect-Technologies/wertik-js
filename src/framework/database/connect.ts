@@ -22,8 +22,9 @@ export default function(configurationObject) {
       dialect: "mysql",
       host: database.dbHost,
       port: database.dbPort,
-      logging: false,
-      operatorsAliases: false
+      logging: true,
+      operatorsAliases: false,
+      underscored: false,
     });
   }
   DB_PRODUCTION.authenticate()

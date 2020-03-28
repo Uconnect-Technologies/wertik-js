@@ -18,7 +18,9 @@ export default {
         id: Int
         name: String
         user: User
+        user_id: Int
         permission: Permission
+        permission_id: Int
         createdBy: User
         created_at: String
         updated_at: String
@@ -54,20 +56,21 @@ export default {
   restApi: {},
   database: {
     sql: {
+      tableName: "userPermission",
       fields: {
         name: {
           type: "STRING"
         },
-        user: {
+        user_id: {
           type: "INTEGER"
         },
-        permission: {
+        permission_id: {
           type: "INTEGER"
         },
-        isDeleted: {
+        is_deleted: {
           type: "INTEGER"
         },
-        createdBy: {
+        created_by: {
           type: "INTEGER"
         }
       },

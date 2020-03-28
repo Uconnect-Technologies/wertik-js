@@ -59,6 +59,7 @@ export interface IConfigurationCustomModuleRestApi {
 
 export interface IConfigurationCustomModuleDatabaseSql {
   fields: Object;
+  tableName: String;
   tableOptions: Object;
 }
 
