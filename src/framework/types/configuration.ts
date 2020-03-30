@@ -82,6 +82,9 @@ export interface IConfigurationDatabase {
   dbName: String;
   dbHost: String;
   dbPort: String;
+  dbInitializeOptions: {
+    [Key: string]: any;
+  };
 }
 
 export interface IDocServerConfiguration {

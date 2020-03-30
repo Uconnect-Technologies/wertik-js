@@ -35,12 +35,12 @@ export default {
     relations: {
       permission: async function(userPermission, args, context, info) {
         let requestedFields = getRequestedFieldsFromResolverInfo(info, true);
-        let view = await context.models["Permission"].findOneById(userPermission.permission, requestedFields);
+        let view = await context.models["Permission"].findOneById(userPermission.permission_id, requestedFields);
         return view.instance;
       },
       user: async function(userPermission, args, context, info) {
         let requestedFields = getRequestedFieldsFromResolverInfo(info, true);
-        let view = await context.models["User"].findOneById(userPermission.user, requestedFields);
+        let view = await context.models["User"].findOneById(userPermission.user_id, requestedFields);
         return view.instance;
       }
     },

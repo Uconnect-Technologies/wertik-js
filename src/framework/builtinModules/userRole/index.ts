@@ -35,12 +35,12 @@ export default {
     relations: {
       role: async function(userRole, args, context, info) {
         let requestedFields = getRequestedFieldsFromResolverInfo(info, true);
-        let view = await context.models["Role"].findOneById(userRole.role, requestedFields);
+        let view = await context.models["Role"].findOneById(userRole.role_id, requestedFields);
         return view.instance;
       },
       user: async function(userRole, args, context, info) {
         let requestedFields = getRequestedFieldsFromResolverInfo(info, true);
-        let view = await context.models["User"].findOneById(userRole.user, requestedFields);
+        let view = await context.models["User"].findOneById(userRole.user_id, requestedFields);
         return view.instance;
       }
     },
