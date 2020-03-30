@@ -87,7 +87,6 @@ export default function(apps: any, configurationOriginal: IConfiguration) {
                     })
                     .catch(e => {
                       errorMessage(e);
-                      console.log("fuck happened");
                     });
                 });
               })

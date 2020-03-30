@@ -38,7 +38,7 @@ export default function(configurationObject: IConfiguration) {
   }
   DB_PRODUCTION.authenticate()
     .then(() => {
-      successMessage(`Datbase Connected`);
+      successMessage(`Database Connected`);
     })
     .catch(e => {
       console.log(e);

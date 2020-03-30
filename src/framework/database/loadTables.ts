@@ -2,6 +2,7 @@ import { get, snakeCase } from "lodash";
 import Sequelize from "sequelize";
 import moment from "moment";
 import { convertFieldsIntoSequelizeFields } from "./helpers/index";
+import { errorMessage } from "../logger/consoleMessages";
 export default function(connection, configuration) {
   let modules = process.env.builtinModules.split(",");
   modules = modules.filter(c => c);
@@ -11,10 +12,19 @@ export default function(connection, configuration) {
     let moduleName = get(module, "name", "");
     let tableName = get(module, "database.sql.tableName", "");
     let useDatabase = get(module, "useDatabase", true);
-    console.log(moduleName,tableName)
+
     if (useDatabase) {
+      if (moduleName && !tableName) {
+        errorMessage(`Module ${moduleName} didn't provided table name. Exiting process.`);
+        process.exit();
+      }
       let tableFields = convertFieldsIntoSequelizeFields(module.database.sql.fields);
-      let tableOptions = get(module, "database.sql.tableOptions", {});
+      let tableOptions = get(module, "database.sql.tableOptions", {
+        timestamps: true,
+        paranoid: false,
+        underscored: false,
+        freezeTableName: true
+      });
       tables[moduleName] = connection.define(
         tableName,
         {
@@ -33,11 +43,6 @@ export default function(connection, configuration) {
           }
         },
         {
-          
-          timestamps: true,
-          paranoid: false,
-          underscored: false,
-          freezeTableName: true,
           ...tableOptions
         }
       );

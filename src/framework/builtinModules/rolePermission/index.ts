@@ -64,6 +64,7 @@ export default {
         role_id: {
           type: "INTEGER"
         },
+        
         permission_id: {
           type: "INTEGER"
         },
