@@ -18,8 +18,11 @@ export default {
         id: Int
         name: String
         user: User
+        user_id: Int
         permission: Permission
-        createdBy: User
+        permission_id: Int
+        created_by: User
+        created_by_id: Int
         created_at: String
         updated_at: String
       }
@@ -33,12 +36,12 @@ export default {
     relations: {
       permission: async function(userPermission, args, context, info) {
         let requestedFields = getRequestedFieldsFromResolverInfo(info, true);
-        let view = await context.models["Permission"].findOneById(userPermission.permission, requestedFields);
+        let view = await context.models["Permission"].findOneById(userPermission.permission_id, requestedFields);
         return view.instance;
       },
       user: async function(userPermission, args, context, info) {
         let requestedFields = getRequestedFieldsFromResolverInfo(info, true);
-        let view = await context.models["User"].findOneById(userPermission.user, requestedFields);
+        let view = await context.models["User"].findOneById(userPermission.user_id, requestedFields);
         return view.instance;
       }
     },
@@ -54,20 +57,21 @@ export default {
   restApi: {},
   database: {
     sql: {
+      tableName: "userPermission",
       fields: {
         name: {
           type: "STRING"
         },
-        user: {
+        user_id: {
           type: "INTEGER"
         },
-        permission: {
+        permission_id: {
           type: "INTEGER"
         },
-        isDeleted: {
+        is_deleted: {
           type: "INTEGER"
         },
-        createdBy: {
+        created_by_id: {
           type: "INTEGER"
         }
       },

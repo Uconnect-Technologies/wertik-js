@@ -19,7 +19,8 @@ export default {
         size: String
         type: String
         folder: String
-        createdBy: User
+        created_by: User
+        created_by_id: Int
         deleted: Boolean
         created_at: String
         updated_at: String
@@ -34,6 +35,7 @@ export default {
       resolvers: {}
     }
   },
+  
   restApi: {
     endpoints: [
       {
@@ -77,6 +79,7 @@ export default {
   },
   database: {
     sql: {
+      tableName: "storage",
       fields: {
         name: {
           type: "STRING"
@@ -93,10 +96,10 @@ export default {
         type: {
           type: "STRING"
         },
-        isDeleted: {
+        is_deleted: {
           type: "INTEGER"
         },
-        createdBy: {
+        created_by_id: {
           type: "INTEGER"
         }
       }

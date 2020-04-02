@@ -60,8 +60,8 @@ export default async function(options: IGraphQLInitialize) {
   });
   if (forceStartGraphqlServer == true) {
     apollo.listen(port).then(({ url, subscriptionsUrl }) => {
-      successMessage("GraphQL subscriptions started at ", subscriptionsUrl);
-      successMessage("GraphQL server started at", url);
+      successMessage("GraphQL Subscriptions server started at ", subscriptionsUrl);
+      successMessage("GraphQL Server started at", url);
     });
   }
   return apollo;

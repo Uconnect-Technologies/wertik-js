@@ -18,27 +18,31 @@ export default {
         id: Int
         name: String
         role: Role
+        role_id: Int
         permission: Permission
-        createdBy: User
+        permission_id: Int
+        created_by: User
+        created_by_id: Int
         created_at: String
         updated_at: String
       }
       input RolePermissionInput {
         id: Int
         name: String
-        role: Int
-        permission: Int
+        role_id: Int
+        permission_id: Int
+        created_by_id: Int
       }
     `,
     relations: {
       permission: async function(rolePermission, args, context, info) {
         let requestedFields = getRequestedFieldsFromResolverInfo(info, true);
-        let view = await context.models["Permission"].findOneById(rolePermission.permission, requestedFields);
+        let view = await context.models["Permission"].findOneById(rolePermission.permission_id, requestedFields);
         return view.instance;
       },
       role: async function(rolePermission, args, context, info) {
         let requestedFields = getRequestedFieldsFromResolverInfo(info, true);
-        let view = await context.models["Role"].findOneById(rolePermission.role, requestedFields);
+        let view = await context.models["Role"].findOneById(rolePermission.role_id, requestedFields);
         return view.instance;
       }
     },
@@ -54,20 +58,21 @@ export default {
   restApi: {},
   database: {
     sql: {
+      tableName: "rolePermission",
       fields: {
         name: {
           type: "STRING"
         },
-        role: {
+        role_id: {
           type: "INTEGER"
         },
-        permission: {
+        permission_id: {
           type: "INTEGER"
         },
-        isDeleted: {
+        is_deleted: {
           type: "INTEGER"
         },
-        createdBy: {
+        created_by_id: {
           type: "INTEGER"
         }
       }

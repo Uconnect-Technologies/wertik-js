@@ -18,27 +18,31 @@ export default {
         id: Int
         name: String
         user: User
+        user_id: Int
         role: Role
-        createdBy: User
+        role_id: Int
+        created_by: User
+        created_by_id: Int
         created_at: String
         updated_at: String
       }
       input UserRoleInput {
         id: Int
         name: String
-        user: Int
-        role: Int
+        user_id: Int
+        role_id: Int
+        created_by_id: Int
       }
     `,
     relations: {
       role: async function(userRole, args, context, info) {
         let requestedFields = getRequestedFieldsFromResolverInfo(info, true);
-        let view = await context.models["Role"].findOneById(userRole.role, requestedFields);
+        let view = await context.models["Role"].findOneById(userRole.role_id, requestedFields);
         return view.instance;
       },
       user: async function(userRole, args, context, info) {
         let requestedFields = getRequestedFieldsFromResolverInfo(info, true);
-        let view = await context.models["User"].findOneById(userRole.user, requestedFields);
+        let view = await context.models["User"].findOneById(userRole.user_id, requestedFields);
         return view.instance;
       }
     },
@@ -51,23 +55,25 @@ export default {
       resolvers: {}
     }
   },
+  
   restApi: {},
   database: {
     sql: {
+      tableName: "userRole",
       fields: {
         name: {
           type: "STRING"
         },
-        user: {
+        user_id: {
           type: "INTEGER"
         },
-        role: {
+        role_id: {
           type: "INTEGER"
         },
-        isDeleted: {
+        is_deleted: {
           type: "INTEGER"
         },
-        createdBy: {
+        created_by_id: {
           type: "INTEGER"
         }
       }

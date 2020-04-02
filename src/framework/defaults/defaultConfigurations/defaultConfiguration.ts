@@ -4,11 +4,12 @@ export default {
   database: {
     dbDialect: "mysql",
     dbUsername: "root",
-    dbPassword: "",
+    dbPassword: "pass",
     dbName: "graphql",
     dbHost: "localhost",
     dbPort: "3306"
   },
+  
   frontendAppUrl: "http://localhost:8080/",
   frontendAppActivationUrl: "http://localhost:8080/activate-account",
   frontendAppPasswordResetUrl: "http://localhost:8080/reset-password",
@@ -95,6 +96,7 @@ export default {
       },
       database: {
         sql: {
+          tableName: "article",
           fields: {
             title: {
               type: "STRING"

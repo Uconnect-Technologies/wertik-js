@@ -1,0 +1,17 @@
+node_modules
+package-lock.json
+logs
+dist
+src
+yarn.lock
+.idea
+
+crit.log
+debug.log
+emerg.log
+error.log
+notice.log
+info.log
+warning.log
+.env
+storage

@@ -16,13 +16,13 @@ export default {
         id: Int
         name: String
         username: String
-        refreshToken: String
-        accessToken: String
-        isActivated: Boolean
-        activatedOn: String
-        twoFactorCode: String
-        isSuperUser: Boolean
-        activationToken: String
+        refresh_token: String
+        access_token: String
+        is_activated: Boolean
+        activated_on: String
+        two_factor_code: String
+        is_super_user: Boolean
+        activation_token: String
         email: String
         gender: String
         referer: String
@@ -33,13 +33,13 @@ export default {
         id: Int
         name: String
         username: String
-        refreshToken: String
-        accessToken: String
-        isActivated: Boolean
-        activatedOn: String
-        twoFactorCode: String
-        isSuperUser: Boolean
-        activationToken: String
+        refresh_token: String
+        access_token: String
+        is_activated: Boolean
+        activated_on: String
+        two_factor_code: String
+        is_super_user: Boolean
+        activation_token: String
         email: String
         password: String
         gender: String
@@ -63,6 +63,7 @@ export default {
   restApi: {},
   database: {
     sql: {
+      tableName: "user",
       fields: {
         name: {
           type: "STRING"
@@ -70,25 +71,25 @@ export default {
         username: {
           type: "String"
         },
-        refreshToken: {
+        refresh_token: {
           type: "String"
         },
-        accessToken: {
+        access_token: {
           type: "String"
         },
-        isActivated: {
+        is_activated: {
           type: "BOOLEAN"
         },
-        activatedOn: {
+        activated_on: {
           type: "String"
         },
-        twoFactorCode: {
+        two_factor_code: {
           type: "String"
         },
-        isSuperUser: {
+        is_super_user: {
           type: "BOOLEAN"
         },
-        activationToken: {
+        activation_token: {
           type: "String"
         },
         email: {
@@ -103,7 +104,7 @@ export default {
         referer: {
           type: "String"
         },
-        isDeleted: {
+        is_deleted: {
           type: "INTEGER"
         }
       }

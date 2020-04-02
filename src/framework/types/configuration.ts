@@ -59,6 +59,7 @@ export interface IConfigurationCustomModuleRestApi {
 
 export interface IConfigurationCustomModuleDatabaseSql {
   fields: Object;
+  tableName: String;
   tableOptions: Object;
 }
 
@@ -81,6 +82,9 @@ export interface IConfigurationDatabase {
   dbName: String;
   dbHost: String;
   dbPort: String;
+  dbInitializeOptions: {
+    [Key: string]: any;
+  };
 }
 
 export interface IDocServerConfiguration {

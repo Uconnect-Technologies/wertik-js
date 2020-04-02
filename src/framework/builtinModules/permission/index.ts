@@ -17,7 +17,8 @@ export default {
         name: String
         cant: String
         can: String
-        createdBy: User
+        created_by: User
+        created_by_id: Int
         created_at: String
         updated_at: String
       }
@@ -26,7 +27,9 @@ export default {
         name: String
         cant: String
         can: String
+        created_by_id: Int
       }
+      
       `,
     mutation: {
       schema: ``,
@@ -40,6 +43,7 @@ export default {
   restApi: {},
   database: {
     sql: {
+      tableName: "permission",
       fields: {
         name: {
           type: "STRING"
@@ -50,10 +54,10 @@ export default {
         can: {
           type: "STRING"
         },
-        isDeleted: {
+        is_deleted: {
           type: "INTEGER"
         },
-        createdBy: {
+        created_by_id: {
           type: "INTEGER"
         }
       }

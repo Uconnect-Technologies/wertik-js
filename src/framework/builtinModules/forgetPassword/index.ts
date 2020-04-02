@@ -9,6 +9,7 @@ export default {
         generate: true,
         operations: "view"
       },
+
       mutation: {
         generate: false,
         operations: "*"
@@ -20,6 +21,7 @@ export default {
         name: String
         email: String
         user: User
+        user_id: Int
         token: String
         created_at: String
         updated_at: String
@@ -36,7 +38,7 @@ export default {
     relations: {
       user: async function(forgetPassword, args, context, info) {
         let requestedFields = getRequestedFieldsFromResolverInfo(info, true);
-        let view = await context.models["User"].findOneById(forgetPassword.user, requestedFields);
+        let view = await context.models["User"].findOneById(forgetPassword.user_id, requestedFields);
         return view.instance;
       }
     },
@@ -121,6 +123,7 @@ export default {
   },
   database: {
     sql: {
+      tableName: "forgetPassword",
       fields: {
         name: {
           type: "String"
@@ -128,21 +131,15 @@ export default {
         email: {
           type: "String"
         },
-        user: {
+        user_id: {
           type: "Integer"
-        },
-        expiresIn: {
-          type: "String"
         },
         token: {
           type: "String"
         },
-        isDeleted: {
+        is_deleted: {
           type: "INTEGER"
         },
-        createdBy: {
-          type: "INTEGER"
-        }
       }
     }
   }
