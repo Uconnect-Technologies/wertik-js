@@ -57,6 +57,5 @@ export default function(connection, configuration) {
     }
     processModule(module);
   });
-  connection.sync();
   return tables;
 }
