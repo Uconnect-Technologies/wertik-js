@@ -65,6 +65,7 @@ export interface IConfigurationCustomModuleDatabaseSql {
 export interface IConfigurationCustomModuleDatabaseMongo {
   tableName: String;
   schema: Object;
+  onReady?: Function
 }
 
 export interface IConfigurationCustomModuleDatabase {
