@@ -21,7 +21,8 @@ export default {
         user_id: Int
         permission: Permission
         permission_id: Int
-        createdBy: User
+        created_by: User
+        created_by_id: Int
         created_at: String
         updated_at: String
       }
@@ -70,7 +71,7 @@ export default {
         is_deleted: {
           type: "INTEGER"
         },
-        created_by: {
+        created_by_id: {
           type: "INTEGER"
         }
       },

@@ -21,7 +21,8 @@ export default {
         user_id: Int
         role: Role
         role_id: Int
-        createdBy: User
+        created_by: User
+        created_by_id: Int
         created_at: String
         updated_at: String
       }
@@ -30,6 +31,7 @@ export default {
         name: String
         user_id: Int
         role_id: Int
+        created_by_id: Int
       }
     `,
     relations: {
@@ -53,6 +55,7 @@ export default {
       resolvers: {}
     }
   },
+  
   restApi: {},
   database: {
     sql: {
@@ -70,7 +73,7 @@ export default {
         is_deleted: {
           type: "INTEGER"
         },
-        created_by: {
+        created_by_id: {
           type: "INTEGER"
         }
       }

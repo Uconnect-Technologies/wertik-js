@@ -20,6 +20,7 @@ export default {
         type: String
         folder: String
         created_by: User
+        created_by_id: Int
         deleted: Boolean
         created_at: String
         updated_at: String
@@ -34,6 +35,7 @@ export default {
       resolvers: {}
     }
   },
+  
   restApi: {
     endpoints: [
       {
@@ -97,7 +99,7 @@ export default {
         is_deleted: {
           type: "INTEGER"
         },
-        created_by: {
+        created_by_id: {
           type: "INTEGER"
         }
       }

@@ -9,6 +9,7 @@ export default {
         generate: true,
         operations: "view"
       },
+
       mutation: {
         generate: false,
         operations: "*"
@@ -37,7 +38,7 @@ export default {
     relations: {
       user: async function(forgetPassword, args, context, info) {
         let requestedFields = getRequestedFieldsFromResolverInfo(info, true);
-        let view = await context.models["User"].findOneById(forgetPassword.user, requestedFields);
+        let view = await context.models["User"].findOneById(forgetPassword.user_id, requestedFields);
         return view.instance;
       }
     },
@@ -139,9 +140,6 @@ export default {
         is_deleted: {
           type: "INTEGER"
         },
-        created_by: {
-          type: "INTEGER"
-        }
       }
     }
   }

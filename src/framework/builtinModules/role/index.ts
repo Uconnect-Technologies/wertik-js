@@ -15,15 +15,16 @@ export default {
       type Role {
         id: Int
         name: String
-        defaultPermissions: String
-        createdBy: User
+        default_permissions: String
+        created_by: User
+        created_by_id: Int
         deleted: Boolean
         created_at: String
         updated_at: String
       }
       input RoleInput {
         id: Int
-        defaultPermissions: String
+        default_permissions: String
         name: String
       }
     `,
@@ -50,7 +51,8 @@ export default {
         is_deleted: {
           type: "INTEGER"
         },
-        created_by: {
+        
+        created_by_id: {
           type: "INTEGER"
         }
       }
