@@ -62,9 +62,14 @@ export interface IConfigurationCustomModuleDatabaseSql {
   tableName: String;
   tableOptions: Object;
 }
+export interface IConfigurationCustomModuleDatabaseMongo {
+  tableName: String;
+  schema: Object;
+}
 
 export interface IConfigurationCustomModuleDatabase {
   sql: IConfigurationCustomModuleDatabaseSql;
+  mongo: IConfigurationCustomModuleDatabaseMongo;
 }
 
 export interface IConfigurationCustomModule {
@@ -85,6 +90,9 @@ export interface IConfigurationDatabase {
   dbInitializeOptions: {
     [Key: string]: any;
   };
+
+  // MongoDB
+  mongoDBURI: String;
 }
 
 export interface IDocServerConfiguration {
