@@ -46,3 +46,4 @@ export  default {
 	// ... Rest of the configuration
 };
 ````
+
