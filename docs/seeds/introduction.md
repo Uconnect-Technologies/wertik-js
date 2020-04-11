@@ -4,14 +4,11 @@ Seeds allow you to insert some random data to your app, So lets say you want to 
 
 ```javascript
 let configuration = {
-    // rest of the configuration
-    seeds: {
-        Role: [
-            {name: "My Role"},
-            {name: "My Role #2"}
-        ]
-    }
-}
+  // rest of the configuration
+  seeds: {
+    Role: [{ name: "My Role" }, { name: "My Role #2" }],
+  },
+};
 ```
 
 So, you have added, After initializetion of wertik-js you can run seeds by:
