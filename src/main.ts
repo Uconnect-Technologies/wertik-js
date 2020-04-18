@@ -12,7 +12,7 @@ import initiateMailer from "./framework/mailer/index";
 import { randomString } from "./framework/helpers";
 
 export default function(apps: any, configurationOriginal: IConfiguration) {
-  let expressApp = apps.expressApp ? apps.expressApp : require("express").default();
+  let expressApp = !!apps.expressApp ? apps.expressApp : require("express")();
   return new Promise((resolve, reject) => {
     loadDefaults(configurationOriginal)
       .then((configuration: IConfiguration) => {
