@@ -26,7 +26,7 @@ export default function(apps: any, configurationOriginal: IConfiguration) {
                       let runEvent = require("./framework/events/runEvent").default(configuration.events);
                       let graphql = require("./framework/graphql/index").default;
                       let restApi = require("./framework/restApi/index").default;
-                      let socket = require("./framework/socket/index").default(configuration);
+                      let websockets = require("./framework/socket/index").default(configuration);
                       let database = require("./framework/database/connect").default(configuration);
                       let dbTables = require("./framework/database/loadTables").default(database, configuration);
                       let models = require("./framework/database/models").default(dbTables, configuration);
@@ -45,6 +45,7 @@ export default function(apps: any, configurationOriginal: IConfiguration) {
                       });
                       /* Storage */
                       let multerInstance = multer({ storage: storage });
+                      
 
                       let graphqlAppInstance = graphql({
                         expressApp: expressApp,
@@ -55,7 +56,8 @@ export default function(apps: any, configurationOriginal: IConfiguration) {
                         emailTemplates: emailTemplates,
                         database: database,
                         runEvent: runEvent,
-                        mailerInstance: mailerInstance
+                        mailerInstance: mailerInstance,
+                        websockets: websockets
                       });
                       let restApiInstance = restApi({
                         expressApp: expressApp,
@@ -67,12 +69,13 @@ export default function(apps: any, configurationOriginal: IConfiguration) {
                         database: database,
                         runEvent: runEvent,
                         multerInstance: multerInstance,
-                        mailerInstance: mailerInstance
+                        mailerInstance: mailerInstance,
+                        websockets: websockets
                       });
                       resolve({
                         graphql: graphqlAppInstance,
                         restApi: restApiInstance,
-                        socket: socket,
+                        websockets: websockets,
                         dbTables: dbTables,
                         models: models,
                         emailTemplates: emailTemplates,
