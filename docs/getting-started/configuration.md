@@ -1,3 +1,8 @@
+# Wertik Configuration
+
+This is the default configuration for Wertik used in source code.
+
+```javascript
 export default {
   name: "Wertik",
   builtinModules: "user,auth,forgetPassword,permission,role,rolePermission,userPermission,userRole,me,storage",
@@ -9,7 +14,6 @@ export default {
     dbHost: "localhost",
     dbPort: "3306",
   },
-
   frontendAppUrl: "http://localhost:8080/",
   frontendAppActivationUrl: "http://localhost:8080/activate-account",
   frontendAppPasswordResetUrl: "http://localhost:8080/reset-password",
@@ -22,9 +26,6 @@ export default {
         value: "Value 1",
       };
     },
-  },
-  email: {
-    disable: false,
   },
   graphql: {
     disable: false,
@@ -40,75 +41,7 @@ export default {
     graphql: 4000,
     restApi: 7000,
   },
-  modules: [
-    {
-      name: "Article",
-      graphql: {
-        crud: {
-          query: {
-            generate: true,
-            operations: "*",
-          },
-          mutation: {
-            generate: true,
-            operations: "*",
-          },
-        },
-        schema: `
-          type Article {
-            id: Int
-            title: String
-            description: String
-            created_at: String
-            updated_at: String
-          }
-          input ArticleInput {
-            title: String
-            description: String
-          }
-        `,
-        mutation: {
-          schema: ``,
-          resolvers: {},
-        },
-        query: {
-          schema: ``,
-          resolvers: {},
-        },
-      },
-      restApi: {
-        endpoints: [
-          {
-            docs: {
-              title: "Apple module response.",
-              description: "Just a message.",
-              response: `@apiSuccess {Object} returns an object {message: true}.`,
-            },
-            path: "/apple/response",
-            methodType: "get",
-            handler: function (req, res) {
-              res.json({
-                message: true,
-              });
-            },
-          },
-        ],
-      },
-      database: {
-        sql: {
-          tableName: "article",
-          fields: {
-            title: {
-              type: "STRING",
-            },
-            description: {
-              type: "STRING",
-            },
-          },
-        },
-      },
-    },
-  ],
+  modules: [], // For modules please see http://wapgee.com/wertik-js/getting-started/custom-modules,
   events: {
     beforeGraphqlStart: function () {
       console.log("beforeGraphqlStart");
@@ -135,11 +68,10 @@ export default {
   sockets: {
     disable: false,
     port: 2000,
-    onClientConnected: function (ws, req, wss) {
-      ws.id = Math.floor(Math.random() * 1000000)
+    onClientConnected: function (req, wss) {
       console.log("on client connected", `Total connections right now ${wss.clients.size}`);
     },
-    onMessageReceived: function (ws, message) {
+    onMessageReceived: function (message) {
       console.log("on message received: " + message);
     },
     onClientDisconnect: function (wss) {
@@ -153,3 +85,15 @@ export default {
     storageDirectory: "./storage/",
   },
 };
+```
+
+Now run your app and you see logs something like this if everything went fine
+
+    ✔ [Wertik-js]: WebSocket server started at ws://localhost:2000
+    ✔ [Wertik-js]: Rest API server started at http://localhost:7000
+    ✔ [Wertik-js]: GraphQL voyager is running at server: http://localhost:9090
+    ✔ [Wertik-js]: GraphQL subscriptions started at ws://localhost:4000/subscriptions
+    ✔ [Wertik-js]: GraphQL server started at http://localhost:4000/
+    ✔ [Wertik-js]: Datbase Connected
+
+For Dependencies you can check wertik-js package.json file.
