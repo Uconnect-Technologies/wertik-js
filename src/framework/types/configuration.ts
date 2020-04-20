@@ -162,6 +162,18 @@ export interface IConfigurationEmail {
   };
 }
 
+export interface IConfigurationCron {
+  disable: Boolean;
+  cronList: Array<{
+    expression: string;
+    function: Function;
+    options: Object;
+    events: {
+      initialized: Function
+    }
+  }>;
+}
+
 export interface IConfiguration {
   dbDialect: String;
   name: String;
@@ -198,4 +210,5 @@ export interface IConfiguration {
   security: IConfigurationSecurity;
   rbac: IConfigurationRbac;
   storage: IConfigurationStorage;
+  cron: IConfigurationCron;
 }
