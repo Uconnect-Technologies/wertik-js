@@ -13,7 +13,7 @@ import voyager from "./voyager/index";
 //expressApp,configuration,dbTables,models,emailTemplates,sendEmail,database,WertikEventEmitter
 
 export default async function (options: IGraphQLInitialize) {
-  const { mailerInstance, configuration, dbTables, models, sendEmail, emailTemplates, database, runEvent, websockets } = options;
+  const { mailerInstance, configuration, dbTables, models, sendEmail, emailTemplates, database, runEvent, websockets, logger } = options;
   const forceStartGraphqlServer = get(configuration, "forceStartGraphqlServer", true);
   let { graphql } = configuration;
   const port = get(graphql, "port", 4000);
@@ -52,6 +52,7 @@ export default async function (options: IGraphQLInitialize) {
         req,
         res,
         websockets,
+        logger,
         ...get(configuration.context, "data", {}),
       };
       let createContext = await get(configuration.context, "createContext", () => {})("graphql", cxt);

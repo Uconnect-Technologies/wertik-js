@@ -12,6 +12,7 @@ export interface IGraphQLInitialize {
   WertikEventEmitter: any;
   mailerInstance: any;
   websockets: any;
+  logger: any;
 }
 
 export interface IRestApiInitialize {
@@ -27,6 +28,7 @@ export interface IRestApiInitialize {
   WertikEventEmitter: any;
   multerInstance: any;
   websockets: any;
+  logger: any;
 }
 
 // export interface IWSConfiguration {

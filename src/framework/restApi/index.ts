@@ -43,7 +43,7 @@ import customApi from "./customApi";
 
 //expressApp,configuration,dbTables, models, allEmailTemplates,sendEmail,database,WertikEventEmitter
 export default function (options: IRestApiInitialize) {
-  const { configuration, dbTables, models, sendEmail, emailTemplates, expressApp, database, runEvent, multerInstance, mailerInstance, websockets } = options;
+  const { configuration, dbTables, models, sendEmail, emailTemplates, expressApp, database, runEvent, multerInstance, mailerInstance, websockets, logger } = options;
   let { restApi } = configuration;
   const port = get(restApi, "port", 4000);
   if (get(restApi, "disable", true) === true) {
@@ -70,6 +70,7 @@ export default function (options: IRestApiInitialize) {
     req.sendEmail = sendEmail;
     req.emailTemplates = emailTemplates;
     req.multerInstance = multerInstance;
+    req.logger = logger;
     let createContext = await get(configuration.context, "createContext", () => {})("restApi", req);
     req.createContext = createContext;
     next();
@@ -78,7 +79,7 @@ export default function (options: IRestApiInitialize) {
   require("./versions/v1/loadAllModules").default(expressApp, configuration, customApi);
 
   expressApp.get("/", (req, res) => {
-    res.json({
+    res.status(200).json({
       message: require("./../../../package.json").welcomeResponse,
       version: require("./../../../package.json").version,
     });

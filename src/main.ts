@@ -11,8 +11,8 @@ import initiateLogger from "./framework/logger/index";
 import initiateMailer from "./framework/mailer/index";
 import { randomString } from "./framework/helpers";
 
-export default function(apps: any, configurationOriginal: IConfiguration) {
-  let expressApp = apps.expressApp ? apps.expressApp : require("express").default();
+export default function (apps: any, configurationOriginal: IConfiguration) {
+  let expressApp = !!apps.expressApp ? apps.expressApp : require("express")();
   return new Promise((resolve, reject) => {
     loadDefaults(configurationOriginal)
       .then((configuration: IConfiguration) => {
@@ -20,9 +20,9 @@ export default function(apps: any, configurationOriginal: IConfiguration) {
           .then(() => {
             convertConfigurationIntoEnvVariables(configuration)
               .then(() => {
-                initiateLogger().then(logger => {
+                initiateLogger().then((logger) => {
                   initiateMailer(configuration)
-                    .then(mailerInstance => {
+                    .then((mailerInstance) => {
                       let runEvent = require("./framework/events/runEvent").default(configuration.events);
                       let graphql = require("./framework/graphql/index").default;
                       let restApi = require("./framework/restApi/index").default;
@@ -30,22 +30,18 @@ export default function(apps: any, configurationOriginal: IConfiguration) {
                       let database = require("./framework/database/connect").default(configuration);
                       let dbTables = require("./framework/database/loadTables").default(database, configuration);
                       let models = require("./framework/database/models").default(dbTables, configuration);
-                      let sendEmail =
-                        get(configuration, "email.disable", false) === false
-                          ? require("./framework/mailer/index").sendEmail(configuration, mailerInstance)
-                          : null;
+                      let sendEmail = get(configuration, "email.disable", false) === false ? require("./framework/mailer/index").sendEmail(configuration, mailerInstance) : null;
                       let seeds = require("./framework/seeds/index").default(configuration, models);
                       let emailTemplates = require("./framework/mailer/emailTemplates").default(configuration, __dirname);
                       /* Storage */
                       let storage = multer.diskStorage({
                         destination: configuration.storage.storageDirectory,
-                        filename: function(req, file, cb) {
+                        filename: function (req, file, cb) {
                           cb(null, randomString(20) + "_" + file.originalname);
-                        }
+                        },
                       });
                       /* Storage */
                       let multerInstance = multer({ storage: storage });
-                      
 
                       let graphqlAppInstance = graphql({
                         expressApp: expressApp,
@@ -57,7 +53,8 @@ export default function(apps: any, configurationOriginal: IConfiguration) {
                         database: database,
                         runEvent: runEvent,
                         mailerInstance: mailerInstance,
-                        websockets: websockets
+                        websockets: websockets,
+                        logger: logger,
                       });
                       let restApiInstance = restApi({
                         expressApp: expressApp,
@@ -70,7 +67,8 @@ export default function(apps: any, configurationOriginal: IConfiguration) {
                         runEvent: runEvent,
                         multerInstance: multerInstance,
                         mailerInstance: mailerInstance,
-                        websockets: websockets
+                        websockets: websockets,
+                        logger: logger,
                       });
                       resolve({
                         graphql: graphqlAppInstance,
@@ -85,23 +83,21 @@ export default function(apps: any, configurationOriginal: IConfiguration) {
                         logger: logger,
                         runEvent: runEvent,
                         multerInstance: multerInstance,
-                        mailerInstance: mailerInstance
+                        mailerInstance: mailerInstance,
                       });
                     })
-                    .catch(e => {
+                    .catch((e) => {
                       errorMessage(e);
                     });
                 });
               })
-              .catch(err2 => {
-                errorMessage(
-                  `Something went wrong while initializing Wertik js, Please check docs, and make sure you that you pass correct configuration.`
-                );
+              .catch((err2) => {
+                errorMessage(`Something went wrong while initializing Wertik js, Please check docs, and make sure you that you pass correct configuration.`);
                 errorMessage(err2);
                 reject(err2);
               });
           })
-          .catch(err => {
+          .catch((err) => {
             reject(err);
           });
       })

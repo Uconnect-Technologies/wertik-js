@@ -1,7 +1,7 @@
 import { IConfiguration } from "src/framework/types/configuration";
 import { successMessage } from "./../../logger/consoleMessages";
 
-export default function(configuration: IConfiguration, expressInstance: any) {
+export default function (configuration: IConfiguration, expressInstance: any) {
   let html = `
     <!DOCTYPE html>
     <html>
