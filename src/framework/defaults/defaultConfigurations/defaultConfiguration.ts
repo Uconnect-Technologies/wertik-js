@@ -136,7 +136,7 @@ export default {
     disable: false,
     port: 2000,
     onClientConnected: function (ws, req, wss) {
-      ws.id = Math.floor(Math.random() * 1000000)
+      ws.id = Math.floor(Math.random() * 1000000);
       console.log("on client connected", `Total connections right now ${wss.clients.size}`);
     },
     onMessageReceived: function (ws, message) {
@@ -151,5 +151,19 @@ export default {
   },
   storage: {
     storageDirectory: "./storage/",
+  },
+  cron: {
+    cronList: [
+      {
+        expression: "* * * * *",
+        function: (context) => {
+          // app context is available in context variable.
+        },
+        options: {},
+        events: {
+          initialized(i) {},
+        },
+      },
+    ],
   },
 };

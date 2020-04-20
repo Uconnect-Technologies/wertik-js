@@ -26,6 +26,7 @@ export default function (apps: any, configurationOriginal: IConfiguration) {
                       let runEvent = require("./framework/events/runEvent").default(configuration.events);
                       let graphql = require("./framework/graphql/index").default;
                       let restApi = require("./framework/restApi/index").default;
+                      let cron = require("./framework/cron/index").default;
                       let websockets = require("./framework/socket/index").default(configuration);
                       let database = require("./framework/database/connect").default(configuration);
                       let dbTables = require("./framework/database/loadTables").default(database, configuration);
@@ -69,6 +70,21 @@ export default function (apps: any, configurationOriginal: IConfiguration) {
                         mailerInstance: mailerInstance,
                         websockets: websockets,
                         logger: logger,
+                      });
+                      cron(configuration, {
+                        graphql: graphqlAppInstance,
+                        restApi: restApiInstance,
+                        websockets: websockets,
+                        dbTables: dbTables,
+                        models: models,
+                        emailTemplates: emailTemplates,
+                        sendEmail: sendEmail,
+                        database: database,
+                        seeds: seeds,
+                        logger: logger,
+                        runEvent: runEvent,
+                        multerInstance: multerInstance,
+                        mailerInstance: mailerInstance,
                       });
                       resolve({
                         graphql: graphqlAppInstance,
