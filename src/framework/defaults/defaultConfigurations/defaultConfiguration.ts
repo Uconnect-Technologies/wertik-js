@@ -7,38 +7,38 @@ export default {
     dbPassword: "pass",
     dbName: "graphql",
     dbHost: "localhost",
-    dbPort: "3306"
+    dbPort: "3306",
   },
-  
+
   frontendAppUrl: "http://localhost:8080/",
   frontendAppActivationUrl: "http://localhost:8080/activate-account",
   frontendAppPasswordResetUrl: "http://localhost:8080/reset-password",
   context: {
     data: {
-      myName: "My powerful app"
+      myName: "My powerful app",
     },
-    createContext: async function(mode, context) {
+    createContext: async function (mode, context) {
       return {
-        value: "Value 1"
+        value: "Value 1",
       };
-    }
+    },
   },
   email: {
-    disable: false
+    disable: false,
   },
   graphql: {
     disable: false,
-    port: 4000
+    port: 4000,
   },
   restApi: {
     disable: false,
-    port: 7000
+    port: 7000,
   },
   forceStartGraphqlServer: true,
   forceStartRestApiServer: true,
   ports: {
     graphql: 4000,
-    restApi: 7000
+    restApi: 7000,
   },
   modules: [
     {
@@ -47,12 +47,12 @@ export default {
         crud: {
           query: {
             generate: true,
-            operations: "*"
+            operations: "*",
           },
           mutation: {
             generate: true,
-            operations: "*"
-          }
+            operations: "*",
+          },
         },
         schema: `
           type Article {
@@ -69,12 +69,12 @@ export default {
         `,
         mutation: {
           schema: ``,
-          resolvers: {}
+          resolvers: {},
         },
         query: {
           schema: ``,
-          resolvers: {}
-        }
+          resolvers: {},
+        },
       },
       restApi: {
         endpoints: [
@@ -82,73 +82,88 @@ export default {
             docs: {
               title: "Apple module response.",
               description: "Just a message.",
-              response: `@apiSuccess {Object} returns an object {message: true}.`
+              response: `@apiSuccess {Object} returns an object {message: true}.`,
             },
             path: "/apple/response",
             methodType: "get",
-            handler: function(req, res) {
+            handler: function (req, res) {
               res.json({
-                message: true
+                message: true,
               });
-            }
-          }
-        ]
+            },
+          },
+        ],
       },
       database: {
         sql: {
           tableName: "article",
           fields: {
             title: {
-              type: "STRING"
+              type: "STRING",
             },
             description: {
-              type: "STRING"
-            }
-          }
-        }
-      }
-    }
+              type: "STRING",
+            },
+          },
+        },
+      },
+    },
   ],
   events: {
-    beforeGraphqlStart: function() {
+    beforeGraphqlStart: function () {
       console.log("beforeGraphqlStart");
     },
-    beforeRestApiStart: function() {
+    beforeRestApiStart: function () {
       console.log("beforeRestApiStart");
     },
     database: {
       Permission: {
         afterCreate() {
           console.log("permision created");
-        }
-      }
-    }
+        },
+      },
+    },
   },
   seeds: {
     Role: [{ name: "Admin" }, { name: "Kako" }],
     Permission: [
       { name: "ca", cant: "true", can: "true" },
       { name: "ca1", cant: "true1", can: "true1" },
-      { name: "ca2", cant: "true2", can: "true2" }
-    ]
+      { name: "ca2", cant: "true2", can: "true2" },
+    ],
   },
   sockets: {
     disable: false,
     port: 2000,
-    onClientConnected: function(req, wss) {
+    onClientConnected: function (ws, req, wss) {
+      ws.id = Math.floor(Math.random() * 1000000);
       console.log("on client connected", `Total connections right now ${wss.clients.size}`);
     },
-    onMessageReceived: function(message) {
+    onMessageReceived: function (ws, message) {
       console.log("on message received: " + message);
     },
-    onClientDisconnect: function(wss) {
+    onClientDisconnect: function (wss) {
       console.log("on client disconnected", `Total connections right now ${wss.clients.size}`);
-    }
+    },
   },
   security: {
-    allowedIpAddresses: ["*"]
+    allowedIpAddresses: ["*"],
   },
   storage: {
-    storageDirectory: "./storage/"
-  }
+    storageDirectory: "./storage/",
+  },
+  cron: {
+    cronList: [
+      {
+        expression: "* * * * *",
+        function: (context) => {
+          // app context is available in context variable.
+        },
+        options: {},
+        events: {
+          initialized(i) {},
+        },
+      },
+    ],
+  },
 };

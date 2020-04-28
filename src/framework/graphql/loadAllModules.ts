@@ -4,30 +4,23 @@
 
 const { get, isFunction } = require("lodash");
 import generalSchema from "./generalSchema";
-import {
-  generateSubscriptionsCrudResolvers,
-  generateQueriesCrudSchema,
-  generateListTypeForModule,
-  generateMutationsCrudSubscriptionSchema,
-  generateMutationsCrudSchema,
-  generateCrudResolvers
-} from "./crudGenerator";
+import { generateSubscriptionsCrudResolvers, generateQueriesCrudSchema, generateListTypeForModule, generateMutationsCrudSubscriptionSchema, generateMutationsCrudSchema, generateCrudResolvers } from "./crudGenerator";
 let { PubSub } = require("apollo-server");
 import { IConfiguration } from "../types/configuration";
 const pubsub = new PubSub();
 
-export default async function(configuration: IConfiguration) {
+export default async function (configuration: IConfiguration) {
   let modulesSchema = ``;
   let modulesQuerySchema = ``;
   let modulesMutationSchema = ``;
   let modulesSubscriptionSchema = ``;
   let modules = process.env.builtinModules.split(",");
-  modules = modules.filter(c => c);
+  modules = modules.filter((c) => c);
   modules = [...modules, ...get(configuration, "modules", [])];
   let response = () => {
     return {
       message: require("../../../package.json").welcomeResponse,
-      version: require("../../../package.json").version
+      version: require("../../../package.json").version,
     };
   };
   let schemaMap = require("./schemaMap").default;
@@ -37,7 +30,7 @@ export default async function(configuration: IConfiguration) {
   let appSubscriptions = {};
   let appRelations = {};
 
-  const processModule = function(module) {
+  const processModule = function (module) {
     if (module && module.hasOwnProperty("graphql")) {
       let graphql = module.graphql;
       let moduleName = module.name;
@@ -50,13 +43,7 @@ export default async function(configuration: IConfiguration) {
       let currentMutationResolvers = get(graphql, "mutation.resolvers", {});
       let currentQuerySchema = get(graphql, "query.schema", "");
       let currentQueryResolvers = get(graphql, "query.resolvers", {});
-      let currentModuleCrudResolvers = generateCrudResolvers(
-        moduleName,
-        pubsub,
-        currentGenerateMutationOperations,
-        currentGenerateQueryOperations,
-        configuration
-      );
+      let currentModuleCrudResolvers = generateCrudResolvers(moduleName, pubsub, currentGenerateMutationOperations, currentGenerateQueryOperations, configuration);
       let currentModuleListSchema = currentGenerateQuery || currentGenerateMutation ? generateListTypeForModule(moduleName) : "";
       let currentModuleSubscriptionResolvers = generateSubscriptionsCrudResolvers(moduleName, pubsub, currentGenerateMutationOperations);
       // relations
@@ -78,9 +65,7 @@ export default async function(configuration: IConfiguration) {
       // crud
       // Subscription
 
-      let currentModuleCrudSubscription = currentGenerateMutation
-        ? generateMutationsCrudSubscriptionSchema(moduleName, currentGenerateMutationOperations, currentGenerateQueryOperations)
-        : "";
+      let currentModuleCrudSubscription = currentGenerateMutation ? generateMutationsCrudSubscriptionSchema(moduleName, currentGenerateMutationOperations, currentGenerateQueryOperations) : "";
 
       // Subscription
       modulesSchema = modulesSchema + schema;
@@ -121,16 +106,16 @@ export default async function(configuration: IConfiguration) {
     resolvers: {
       Mutation: {
         ...appMutations,
-        response: response
+        response: response,
       },
       Query: {
         ...appQueries,
-        response: response
+        response: response,
       },
       Subscription: {
-        ...appSubscriptions
+        ...appSubscriptions,
       },
-      ...appRelations
-    }
+      ...appRelations,
+    },
   };
 }

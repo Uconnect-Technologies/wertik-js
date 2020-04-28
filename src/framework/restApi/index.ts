@@ -42,8 +42,8 @@ import customApi from "./customApi";
 */
 
 //expressApp,configuration,dbTables, models, allEmailTemplates,sendEmail,database,WertikEventEmitter
-export default function(options: IRestApiInitialize) {
-  const { configuration, dbTables, models, sendEmail, emailTemplates, expressApp, database, runEvent, multerInstance, mailerInstance } = options;
+export default function (options: IRestApiInitialize) {
+  const { configuration, dbTables, models, sendEmail, emailTemplates, expressApp, database, runEvent, multerInstance, mailerInstance, websockets } = options;
   let { restApi } = configuration;
   const port = get(restApi, "port", 4000);
   if (get(restApi, "disable", true) === true) {
@@ -53,7 +53,7 @@ export default function(options: IRestApiInitialize) {
   expressApp.use(bodyParser.urlencoded({ extended: false }));
   expressApp.use(bodyParser.json());
   expressApp.use(morgan("combined"));
-  expressApp.use(async function(req, res, next) {
+  expressApp.use(async function (req, res, next) {
     const ip = req.connection.remoteAddress;
     isIPAllowed(ip, configuration.security.allowedIpAddresses, "express", { res });
     let user = await getUserWithAccessToken(models.User, get(req, "headers.authorization", ""));
@@ -65,6 +65,7 @@ export default function(options: IRestApiInitialize) {
     req.mailerInstance = mailerInstance;
     req.dbTables = dbTables;
     req.models = models;
+    req.websockets = websockets;
     req.context = get(configuration.context, "data", {});
     req.sendEmail = sendEmail;
     req.emailTemplates = emailTemplates;
@@ -79,14 +80,14 @@ export default function(options: IRestApiInitialize) {
   expressApp.get("/", (req, res) => {
     res.json({
       message: require("./../../../package.json").welcomeResponse,
-      version: require("./../../../package.json").version
+      version: require("./../../../package.json").version,
     });
   });
 
-  expressApp.get("*", function(req, res) {
+  expressApp.get("*", function (req, res) {
     res.status(404).json({
       message: "Not found",
-      detail: "Request page didn't found"
+      detail: "Request page didn't found",
     });
   });
 

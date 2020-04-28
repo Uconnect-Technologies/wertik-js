@@ -12,8 +12,8 @@ import voyager from "./voyager/index";
 
 //expressApp,configuration,dbTables,models,emailTemplates,sendEmail,database,WertikEventEmitter
 
-export default async function(options: IGraphQLInitialize) {
-  const { mailerInstance, configuration, dbTables, models, sendEmail, emailTemplates, database, runEvent } = options;
+export default async function (options: IGraphQLInitialize) {
+  const { mailerInstance, configuration, dbTables, models, sendEmail, emailTemplates, database, runEvent, websockets } = options;
   const forceStartGraphqlServer = get(configuration, "forceStartGraphqlServer", true);
   let { graphql } = configuration;
   const port = get(graphql, "port", 4000);
@@ -26,10 +26,10 @@ export default async function(options: IGraphQLInitialize) {
     typeDefs: modules.schema,
     resolvers: modules.resolvers,
     cacheControl: {
-      defaultMaxAge: 0
+      defaultMaxAge: 0,
     },
     subscriptions: {
-      path: "/subscriptions"
+      path: "/subscriptions",
     },
     context: async ({ req, res, connection }) => {
       let ip = get(req, "connection.remoteAddress", null);
@@ -51,12 +51,13 @@ export default async function(options: IGraphQLInitialize) {
         mailerInstance: mailerInstance,
         req,
         res,
-        ...get(configuration.context, "data", {})
+        websockets,
+        ...get(configuration.context, "data", {}),
       };
       let createContext = await get(configuration.context, "createContext", () => {})("graphql", cxt);
       cxt["createContext"] = createContext;
       return cxt;
-    }
+    },
   });
   if (forceStartGraphqlServer == true) {
     apollo.listen(port).then(({ url, subscriptionsUrl }) => {
