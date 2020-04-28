@@ -10,6 +10,7 @@ import loadDefaults from "./framework/defaults/loadDefaults";
 import initiateLogger from "./framework/logger/index";
 import initiateMailer from "./framework/mailer/index";
 import { randomString } from "./framework/helpers";
+import configuration from "./framework/defaults/defaultConfigurations/postgresConfiguration";
 
 export default function (apps: any, configurationOriginal: IConfiguration) {
   let expressApp = !!apps.expressApp ? apps.expressApp : require("express")();

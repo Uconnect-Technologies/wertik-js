@@ -31,6 +31,9 @@ export default function(configuration: IConfiguration) {
         check("pg");
         check("pg-hstore");
       }
+      if (dbDialect == "mongodb") {
+        check("mongoose")
+      }
       resolve();
     } catch (e) {
       reject(e);
