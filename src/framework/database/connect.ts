@@ -7,7 +7,7 @@ let Sequelize;
 export default async function (configurationObject: IConfiguration) {
   return new Promise(async (resolve, reject) => {
     try {
-      let DB_PRODUCTION;
+      let DATABASE_INSTANCE;
       let dialect = configurationObject.database.dbDialect;
       if (dialect == "mysql" || dialect == "postgres") {
         Sequelize = require("sequelize");
@@ -22,7 +22,7 @@ export default async function (configurationObject: IConfiguration) {
             ssl: true,
           },
         });
-        DB_PRODUCTION = new Sequelize(`${database.dbName}`, database.dbUsername, database.dbPassword, {
+        DATABASE_INSTANCE = new Sequelize(`${database.dbName}`, database.dbUsername, database.dbPassword, {
           dialect: "postgres",
           host: database.dbHost,
           port: database.dbPort,
@@ -35,9 +35,15 @@ export default async function (configurationObject: IConfiguration) {
         // 2. Import modules and setup mongodb models from them [To do] [loadTables]
         // 3. Create wertik model.ts function [To do] [src/framework/model/model.ts]
 
-        const mongoose = require("mongoose");
-        await mongoose.connect(database.mongoDBURI, { useNewUrlParser: true, useUnifiedTopology: true });
-        
+        DATABASE_INSTANCE = require("mongoose");
+        await DATABASE_INSTANCE.connect(database.mongoDBURI, { useNewUrlParser: true, useUnifiedTopology: true });
+
+        DATABASE_INSTANCE.connection.on('error', console.error.bind(console, 'connection error:'));
+
+
+        DATABASE_INSTANCE.connection.once("open", function () {
+          successMessage(`MongoDB: Database Connected`);
+        });
       } else {
         options = get(configurationObject, "database.dbInitializeOptions", {
           logging: false,
@@ -45,7 +51,7 @@ export default async function (configurationObject: IConfiguration) {
           underscored: false,
           freetableName: true,
         });
-        DB_PRODUCTION = new Sequelize(`${database.dbName}`, database.dbUsername, database.dbPassword, {
+        DATABASE_INSTANCE = new Sequelize(`${database.dbName}`, database.dbUsername, database.dbPassword, {
           dialect: "mysql",
           host: database.dbHost,
           port: database.dbPort,
@@ -53,9 +59,9 @@ export default async function (configurationObject: IConfiguration) {
         });
       }
       if (dialect === "mysql" || dialect == "postgres") {
-        DB_PRODUCTION.authenticate()
+        DATABASE_INSTANCE.authenticate()
           .then(() => {
-            successMessage(`Database Connected`);
+            successMessage(`SQL: Database Connected`);
           })
           .catch((e) => {
             console.log(e);
@@ -63,7 +69,7 @@ export default async function (configurationObject: IConfiguration) {
           });
       }
 
-      resolve(DB_PRODUCTION);
+      resolve(DATABASE_INSTANCE);
     } catch (e) {
       reject(e);
     }

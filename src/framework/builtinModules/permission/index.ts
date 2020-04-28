@@ -1,15 +1,17 @@
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 export default {
   name: "Permission",
   graphql: {
     crud: {
       query: {
         generate: true,
-        operations: "*"
+        operations: "*",
       },
       mutation: {
         generate: true,
-        operations: "*"
-      }
+        operations: "*",
+      },
     },
     schema: `
       type Permission {
@@ -33,12 +35,12 @@ export default {
       `,
     mutation: {
       schema: ``,
-      resolvers: {}
+      resolvers: {},
     },
     query: {
       schema: ``,
-      resolvers: {}
-    }
+      resolvers: {},
+    },
   },
   restApi: {},
   database: {
@@ -46,21 +48,33 @@ export default {
       tableName: "permission",
       fields: {
         name: {
-          type: "STRING"
+          type: "STRING",
         },
         cant: {
-          type: "STRING"
+          type: "STRING",
         },
         can: {
-          type: "STRING"
+          type: "STRING",
         },
         is_deleted: {
-          type: "INTEGER"
+          type: "INTEGER",
         },
         created_by_id: {
-          type: "INTEGER"
-        }
-      }
-    }
-  }
+          type: "INTEGER",
+        },
+      },
+    },
+    mongodb: {
+      tableName: "permission",
+      schema: {
+        name: String,
+        cant: String,
+        can: String,
+        created_by: { type: Schema.Types.ObjectId, ref: "user" },
+        created_by_id: Number,
+        created_at: String,
+        updated_at: String,
+      },
+    },
+  },
 };
