@@ -38,8 +38,7 @@ export default async function (configurationObject: IConfiguration) {
         DATABASE_INSTANCE = require("mongoose");
         await DATABASE_INSTANCE.connect(database.mongoDBURI, { useNewUrlParser: true, useUnifiedTopology: true });
 
-        DATABASE_INSTANCE.connection.on('error', console.error.bind(console, 'connection error:'));
-
+        DATABASE_INSTANCE.connection.on("error", console.error.bind(console, "connection error:"));
 
         DATABASE_INSTANCE.connection.once("open", function () {
           successMessage(`MongoDB: Database Connected`);

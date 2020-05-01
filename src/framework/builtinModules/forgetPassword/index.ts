@@ -19,6 +19,7 @@ export default {
     },
     schema: `
       type ForgetPassword {
+        _id: String
         id: Int
         name: String
         email: String

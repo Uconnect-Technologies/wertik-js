@@ -16,6 +16,7 @@ export default {
     },
     schema: `
       type Storage {
+        _id: String
         id: Int
         name: String
         filename: String

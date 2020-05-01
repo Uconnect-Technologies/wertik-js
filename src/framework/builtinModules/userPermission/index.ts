@@ -17,6 +17,7 @@ export default {
     },
     schema: `
       type UserPermission {
+        _id: String
         id: Int
         name: String
         user: User
@@ -29,6 +30,7 @@ export default {
         updated_at: String
       }
       input UserPermissionInput {
+        _id: String
         id: Int
         name: String
         user: Int

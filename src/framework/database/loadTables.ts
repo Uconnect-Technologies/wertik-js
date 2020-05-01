@@ -59,7 +59,15 @@ export default function (connection, configuration) {
         let tableSchema = get(module, "database.mongodb.schema", null);
         checkDatabaseOptions(moduleName, tableName);
         if (tableSchema && tableName) {
-          tables[moduleName] = connection.model(tableName, new mongoose.Schema(tableSchema));
+          tables[moduleName] = connection.model(
+            tableName,
+            new mongoose.Schema(tableSchema, {
+              timestamps: {
+                createdAt: "created_at",
+                updatedAt: "updated_at",
+              },
+            })
+          );
         }
       }
     }

@@ -3,7 +3,7 @@ import { IConfiguration } from "../types/configuration";
 import { get, isFunction } from "lodash";
 
 export const generateQueriesCrudSchema = (moduleName: String, operationsRead) => {
-  const viewString = `view${moduleName}(id: Int): ${moduleName}`;
+  const viewString = `view${moduleName}(id: Int, _id: String): ${moduleName}`;
   const listString = `list${moduleName}(pagination: PaginationInput, filters: [FilterInput], sorting: [SortingInput]): ${moduleName}List`;
   if (operationsRead == "*") {
     return `

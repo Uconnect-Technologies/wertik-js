@@ -15,6 +15,7 @@ export default {
     },
     schema: `
       type Permission {
+        _id: String
         id: Int
         name: String
         cant: String
@@ -25,6 +26,7 @@ export default {
         updated_at: String
       }
       input PermissionInput {
+        _id: String
         id: Int
         name: String
         cant: String

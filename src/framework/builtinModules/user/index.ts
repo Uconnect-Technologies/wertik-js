@@ -13,6 +13,7 @@ export default {
     },
     schema: `
       type User {
+        _id: String
         id: Int
         name: String
         username: String
@@ -30,6 +31,7 @@ export default {
         updated_at: String
       }
       input UserInput {
+        _id: String
         id: Int
         name: String
         username: String
