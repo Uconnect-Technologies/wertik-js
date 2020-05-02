@@ -67,74 +67,92 @@ export default function (props) {
     paginate: async function (args: any, requestedFields: any) {
       return new Promise(async (resolve, reject) => {
         try {
-          const model = this.dbTables[this.tableName];
-          // return paginate(model, args, requestedFields);
-          let baseFields: any = "*";
-          let attributesObject = {};
-
-          if (requestedFields.constructor === Array) {
-            baseFields = requestedFields;
-            attributesObject["attributes"] = baseFields;
-          }
-          let sorting = get(args, "sorting", []);
-          let sortingObject = {
-            order: sorting.map((c) => {
-              return [c.column, c.type];
-            }),
-          };
           let page = get(args, "pagination.page", 1);
           let limit = get(args, "pagination.limit", 10);
           let filters = get(args, "filters", []);
-          let convertedFilters = await convertFiltersIntoSequalizeObject(filters);
-          let offset = limit * (page - 1);
-          let totalFilters = filters.length;
-          let list: any = {};
-          if (baseFields == "*") {
-            delete attributesObject["attributes"];
-          }
-          if (sorting.length == 0) {
-            delete sortingObject["sorting"];
-          }
-          if (totalFilters > 0) {
-            list = await model.findAndCountAll({
-              offset: offset,
-              limit: limit,
-              where: convertedFilters,
-              ...attributesObject,
-              ...sortingObject,
+          const model = this.dbTables[this.tableName];
+          let sorting = get(args, "sorting", []);
+          if (isSQL) {
+            // return paginate(model, args, requestedFields);
+            let baseFields: any = "*";
+            let attributesObject = {};
+
+            if (requestedFields.constructor === Array) {
+              baseFields = requestedFields;
+              attributesObject["attributes"] = baseFields;
+            }
+
+            let sortingObject = {
+              order: sorting.map((c) => {
+                return [c.column, c.type];
+              }),
+            };
+
+            let convertedFilters = await convertFiltersIntoSequalizeObject(filters);
+            let offset = limit * (page - 1);
+            let totalFilters = filters.length;
+            let list: any = {};
+            if (baseFields == "*") {
+              delete attributesObject["attributes"];
+            }
+            if (sorting.length == 0) {
+              delete sortingObject["sorting"];
+            }
+            if (totalFilters > 0) {
+              list = await model.findAndCountAll({
+                offset: offset,
+                limit: limit,
+                where: convertedFilters,
+                ...attributesObject,
+                ...sortingObject,
+              });
+            } else {
+              list = await model.findAndCountAll({
+                offset: offset,
+                limit: limit,
+                ...attributesObject,
+                ...sortingObject,
+              });
+            }
+            resolve({
+              filters,
+              pagination: { page, limit },
+              list: list.rows,
+              paginationProperties: {
+                total: list.count,
+                nextPage: page + 1,
+                page: page,
+                previousPage: page == 1 ? 1 : page - 1,
+                pages: Math.ceil(list.count / limit),
+              },
             });
-          } else {
-            list = await model.findAndCountAll({
-              offset: offset,
-              limit: limit,
-              ...attributesObject,
-              ...sortingObject,
-            });
+          } else if (isMongodb) {
+            let sortString = sorting.map((c) => {
+              return `${c.type == "desc" ? "-" : ""}${c.column}`;
+            }).join(" ");
+            model.paginate(
+              {},
+              {
+                page: page,
+                limit: limit,
+                sort: sortString,
+              },
+              function (err, result) {
+                resolve({
+                  list: result.docs,
+                  filters,
+                  pagination: { page, limit },
+                  paginationProperties: {
+                    total: result.totalDocs,
+                    nextPage: page + 1,
+                    page: page,
+                    previousPage: page == 1 ? 1 : page - 1,
+                    pages: Math.ceil(result.totalDocs / limit),
+                  },
+                });
+              }
+            );
           }
-          // return {
-          //   filters,
-          //   pagination: { page, limit },
-          //   list: list.rows,
-          //   paginationProperties: {
-          //     total: list.count,
-          //     nextPage: page + 1,
-          //     page: page,
-          //     previousPage: page == 1 ? 1 : page - 1,
-          //     pages: Math.ceil(list.count / limit),
-          //   },
-          // };
-          resolve({
-            filters,
-            pagination: { page, limit },
-            list: list.rows,
-            paginationProperties: {
-              total: list.count,
-              nextPage: page + 1,
-              page: page,
-              previousPage: page == 1 ? 1 : page - 1,
-              pages: Math.ceil(list.count / limit),
-            },
-          });
         } catch (e) {
           reject(e);
         }

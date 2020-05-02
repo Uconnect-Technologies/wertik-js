@@ -1,4 +1,5 @@
 import { IConfiguration } from "./../types/configuration";
+import { errorMessage } from "../logger/consoleMessages";
 export function checkIfPackageIsInstalled(packageName: String) {
   try {
     let version = require(`${packageName}/package.json`).version;
@@ -13,12 +14,12 @@ export function check(name: String) {
   if (isInstalled) {
     return true;
   } else {
-    console.error(name + " is not installed, Exiting wertik-js process.");
+    errorMessage(name + " is not installed, Exiting wertik-js process.");
     process.exit();
   }
 }
 
-export default function(configuration: IConfiguration) {
+export default function (configuration: IConfiguration) {
   return new Promise((resolve, reject) => {
     try {
       const { dbDialect } = configuration.database;
@@ -32,7 +33,8 @@ export default function(configuration: IConfiguration) {
         check("pg-hstore");
       }
       if (dbDialect == "mongodb") {
-        check("mongoose")
+        check("mongoose");
+        check("mongoose-paginate-v2");
       }
       resolve();
     } catch (e) {

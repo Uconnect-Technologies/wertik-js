@@ -36,7 +36,9 @@ export default async function (configurationObject: IConfiguration) {
         // 3. Create wertik model.ts function [To do] [src/framework/model/model.ts]
 
         DATABASE_INSTANCE = require("mongoose");
+        const mongoosePaginate = require("mongoose-paginate-v2");
         await DATABASE_INSTANCE.connect(database.mongoDBURI, { useNewUrlParser: true, useUnifiedTopology: true });
+        DATABASE_INSTANCE.plugin(mongoosePaginate);
 
         DATABASE_INSTANCE.connection.on("error", console.error.bind(console, "connection error:"));
 
