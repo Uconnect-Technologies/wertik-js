@@ -1,5 +1,6 @@
 import { has, get } from "lodash";
-import convertFiltersIntoSequalizeObject from "../database/mysql/convertFiltersIntoSequalizeObject";
+import convertFiltersIntoSequalizeObject from "../database/helpers/convertFiltersIntoSequalizeObject";
+import convertedFiltersIntoMongooseQuery from "../database/helpers/convertedFiltersIntoMongooseQuery";
 import internalServerError from "../../framework/helpers/internalServerError";
 
 export default function (props) {
@@ -127,11 +128,14 @@ export default function (props) {
               },
             });
           } else if (isMongodb) {
-            let sortString = sorting.map((c) => {
-              return `${c.type == "desc" ? "-" : ""}${c.column}`;
-            }).join(" ");
+            let filtersQuery = convertedFiltersIntoMongooseQuery(filters);
+            let sortString = sorting
+              .map((c) => {
+                return `${c.type == "desc" ? "-" : ""}${c.column}`;
+              })
+              .join(" ");
             model.paginate(
-              {},
+              filtersQuery,
               {
                 page: page,
                 limit: limit,

@@ -1,20 +1,20 @@
 let Sequelize = require("sequelize");
 
-import parseMultipleValuesIntoArray from "./filters/parseMultipleValuesIntoArray";
-import validateFiltersArray from "./../../security/validateFiltersArray";
+import parseMultipleValuesIntoArray from "../mysql/filters/parseMultipleValuesIntoArray";
+import validateFiltersArray from "../../security/validateFiltersArray";
 
 const Op = Sequelize.Op;
 
 /* http://docs.sequelizejs.com/manual/querying.html#operators */
 
-export default async function(filters: any) {
+export default async function (filters: any) {
   let f: any = {};
   if (validateFiltersArray(filters)) {
     filters.forEach((item: any) => {
       if (!f[item.column]) {
         f[item.column] = {};
         let parsedValue;
-        let operator = item.operator.toLowerCase();
+        let operator = item.operator;
 
         if (operator == "and") {
           parsedValue = parseMultipleValuesIntoArray(item.value, " and ");
