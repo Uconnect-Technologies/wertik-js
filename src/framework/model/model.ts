@@ -26,20 +26,39 @@ export default function (props) {
     update: async function (args) {
       return new Promise(async (resolve, reject) => {
         try {
+          const model = this.dbTables[this.tableName];
           let instance = null;
-          if (this.instance) {
-            instance = await this.instance.update(args);
-          } else {
-            this.instance = await this.dbTables[this.tableName].findOne({
-              where: { id: args.id },
-            });
+          let _this = this;
+          if (isSQL) {
             if (this.instance) {
-              this.instance = await this.instance.update(args);
+              instance = await this.instance.update(args);
             } else {
-              throw internalServerError({ message: "Instance not found to update." });
+              this.instance = await model.findOne({
+                where: { id: args.id },
+              });
+              if (this.instance) {
+                this.instance = await this.instance.update(args);
+              } else {
+                throw internalServerError({ message: "Instance not found to update." });
+              }
             }
+            resolve(this);
+          } else {
+            await model.findOneAndUpdate(
+              {
+                _id: this.instance ? this.instance._id : args._id,
+              },
+              {
+                $set: this.instance ? instance : args,
+              },
+              { new: true },
+              function (err, doc) {
+                if (err) throw internalServerError({ message: err.message });
+                _this.instance = doc;
+                resolve(_this);
+              }
+            );
           }
-          resolve(this);
         } catch (e) {
           reject(e);
         }
@@ -49,14 +68,23 @@ export default function (props) {
     },
     delete: async function (args) {
       return new Promise(async (resolve, reject) => {
+        let model = this.dbTables[this.tableName];
         try {
           if (this.instance) {
-            await this.instance.destroy();
+            if (isSQL) {
+              await this.instance.destroy();
+            } else {
+              await model.deleteOne(args);
+            }
             resolve(true);
           } else {
-            await this.dbTables[this.tableName].destroy({
-              where: args,
-            });
+            if (isSQL) {
+              await this.dbTables[this.tableName].destroy({
+                where: args,
+              });
+            } else {
+              await model.deleteOne(args);
+            }
             resolve(true);
           }
         } catch (e) {
@@ -248,7 +276,7 @@ export default function (props) {
         try {
           const model = this.dbTables[this.tableName];
           const updated = [];
-          let instance = await Promise.all(
+          await Promise.all(
             args.map(async (c) => {
               let updateC = await model.update(c, {
                 where: { id: c.id },
@@ -268,16 +296,18 @@ export default function (props) {
     bulkDelete: async function (args) {
       return new Promise(async (resolve, reject) => {
         try {
-          const model = this.dbTables[this.tableName];
-          await model.destroy({
-            where: {
-              id: args.map((c) => c),
-            },
-          });
-          resolve({
-            message: "Items deleted",
-            statusCode: 200,
-          });
+          if (isSQL) {
+            const model = this.dbTables[this.tableName];
+            await model.destroy({
+              where: {
+                id: args.map((c) => c),
+              },
+            });
+            resolve({
+              message: "Items deleted",
+              statusCode: 200,
+            });
+          }
         } catch (e) {
           reject(e);
         }
@@ -286,19 +316,21 @@ export default function (props) {
     bulkSoftDelete: async function (args) {
       return new Promise(async (resolve, reject) => {
         try {
-          const model = this.dbTables[this.tableName];
-          await model.update(
-            { isDeleted: 1 },
-            {
-              where: {
-                id: args.map((c) => c),
-              },
-            }
-          );
-          resolve({
-            message: "Items deleted",
-            statusCode: 200,
-          });
+          if (isSQL) {
+            const model = this.dbTables[this.tableName];
+            await model.update(
+              { isDeleted: 1 },
+              {
+                where: {
+                  id: args.map((c) => c),
+                },
+              }
+            );
+            resolve({
+              message: "Items deleted",
+              statusCode: 200,
+            });
+          }
         } catch (e) {
           reject(e);
         }
@@ -307,8 +339,10 @@ export default function (props) {
     bulkCreate: async function (args) {
       return new Promise(async (resolve, reject) => {
         try {
-          this.bulkInstances = await this.dbTables[this.tableName].bulkCreate(args);
-          resolve(this);
+          if (isSQL) {
+            this.bulkInstances = await this.dbTables[this.tableName].bulkCreate(args);
+            resolve(this);
+          }
         } catch (e) {
           reject(e);
         }

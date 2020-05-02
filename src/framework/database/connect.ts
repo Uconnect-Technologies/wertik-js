@@ -37,7 +37,7 @@ export default async function (configurationObject: IConfiguration) {
 
         DATABASE_INSTANCE = require("mongoose");
         const mongoosePaginate = require("mongoose-paginate-v2");
-        await DATABASE_INSTANCE.connect(database.mongoDBURI, { useNewUrlParser: true, useUnifiedTopology: true });
+        await DATABASE_INSTANCE.connect(database.mongoDBURI, { useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true });
         DATABASE_INSTANCE.plugin(mongoosePaginate);
 
         DATABASE_INSTANCE.connection.on("error", console.error.bind(console, "connection error:"));
