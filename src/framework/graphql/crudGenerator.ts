@@ -89,8 +89,8 @@ export const generateMutationsCrudSchema = (moduleName: String, operations) => {
   const softDeleteString = `softDelete${moduleName}(input: IDDeleteInput): SuccessResponse`;
   const bulkUpdateString = `bulkUpdate${moduleName}(input: [${moduleName}Input]): [${moduleName}]`;
   const bulkCreateString = `bulkCreate${moduleName}(input: [${moduleName}Input]): [${moduleName}]`;
-  const bulkDeleteString = `bulkDelete${moduleName}(input: [Int]): SuccessResponse`;
-  const bulkSoftDeleteString = `bulkSoftDelete${moduleName}(input: [Int]): SuccessResponse`;
+  const bulkDeleteString = `bulkDelete${moduleName}(input: [IDDeleteInput]): SuccessResponse`;
+  const bulkSoftDeleteString = `bulkSoftDelete${moduleName}(input: [IDDeleteInput]): SuccessResponse`;
   if (operations == "*") {
     return `
       ${createString}
@@ -277,7 +277,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         let model = context.models[moduleName].getModel();
         let result = await model.update({
           ...finalArgs,
-          isDeleted: 1
+          is_deleted: 1
         });
         pubsub.publish(softDeletedModule, {
           [softDeletedModule]: result
@@ -379,7 +379,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         }
         let model = context.models[moduleName].getModel();
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        let result = await model.bulkUpdate(args, requestedFields);
+        let result = await model.bulkUpdate(finalArgs, requestedFields);
         if (isFunction(afterBulkUpdate)) {
           afterBulkUpdate({
             mode: "graphql",

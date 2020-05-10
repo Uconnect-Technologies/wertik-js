@@ -274,20 +274,25 @@ export default function (props) {
     bulkUpdate: async function (args) {
       return new Promise(async (resolve, reject) => {
         try {
-          const model = this.dbTables[this.tableName];
+          let _this = this;
+          const model = _this.dbTables[_this.tableName];
           const updated = [];
           await Promise.all(
             args.map(async (c) => {
-              let updateC = await model.update(c, {
-                where: { id: c.id },
-              });
-
-              updated.push(await model.findOne({ where: { id: c.id } }));
+              if (isSQL) {
+                await model.update(c, {
+                  where: { id: c.id },
+                });
+                updated.push(await model.findOne({ where: { id: c.id } }));
+              } else if (isMongodb) {
+                let update = await _this.update(c);
+                updated.push(update.instance);
+              }
             })
           );
-          this.bulkInstances = updated;
+          _this.bulkInstances = updated;
           // return this;
-          resolve(this);
+          resolve(_this);
         } catch (e) {
           reject(e);
         }
@@ -295,18 +300,34 @@ export default function (props) {
     },
     bulkDelete: async function (args) {
       return new Promise(async (resolve, reject) => {
+        const model = this.dbTables[this.tableName];
         try {
           if (isSQL) {
-            const model = this.dbTables[this.tableName];
             await model.destroy({
               where: {
-                id: args.map((c) => c),
+                id: args.map((c) => c.id),
               },
             });
             resolve({
               message: "Items deleted",
               statusCode: 200,
             });
+          } else if (isMongodb) {
+            model.deleteMany(
+              {
+                _id: {
+                  $in: args.map((c) => c._id),
+                },
+              },
+              function (err) {
+                if (!err) {
+                  resolve({
+                    message: "Items deleted",
+                    statusCode: 200,
+                  });
+                }
+              }
+            );
           }
         } catch (e) {
           reject(e);
@@ -316,15 +337,30 @@ export default function (props) {
     bulkSoftDelete: async function (args) {
       return new Promise(async (resolve, reject) => {
         try {
+          const model = this.dbTables[this.tableName];
           if (isSQL) {
-            const model = this.dbTables[this.tableName];
             await model.update(
-              { isDeleted: 1 },
+              { is_deleted: 1 },
               {
                 where: {
                   id: args.map((c) => c),
                 },
               }
+            );
+            resolve({
+              message: "Items deleted",
+              statusCode: 200,
+            });
+          } else if (isMongodb) {
+            console.log(args)
+            
+            await model.updateMany(
+              {
+                _id: {
+                  $in: args.map((c) => c._id),
+                },
+              },
+              { is_deleted: 1 }
             );
             resolve({
               message: "Items deleted",
@@ -338,10 +374,21 @@ export default function (props) {
     },
     bulkCreate: async function (args) {
       return new Promise(async (resolve, reject) => {
+        let _this = this;
+        const model = this.dbTables[this.tableName];
         try {
           if (isSQL) {
-            this.bulkInstances = await this.dbTables[this.tableName].bulkCreate(args);
-            resolve(this);
+            _this.bulkInstances = await model.bulkCreate(args);
+            resolve(_this);
+          } else if (isMongodb) {
+            model.insertMany(args, function (err, docs) {
+              if (!err) {
+                _this.bulkInstances = docs;
+                resolve(_this);
+              } else {
+                throw internalServerError(err);
+              }
+            });
           }
         } catch (e) {
           reject(e);

@@ -153,6 +153,7 @@ export default {
         user: { type: Schema.Types.ObjectId, ref: "user" },
         user_id: Number,
         token: String,
+        is_deleted: Number,
         created_at: String,
         updated_at: String,
       },

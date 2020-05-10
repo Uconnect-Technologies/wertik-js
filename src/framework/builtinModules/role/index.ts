@@ -22,7 +22,7 @@ export default {
         default_permissions: String
         created_by: User
         created_by_id: Int
-        deleted: Boolean
+        is_deleted: Boolean
         created_at: String
         updated_at: String
       }
@@ -56,7 +56,6 @@ export default {
         is_deleted: {
           type: "INTEGER",
         },
-
         created_by_id: {
           type: "INTEGER",
         },
@@ -69,7 +68,7 @@ export default {
         default_permissions: String,
         created_by: { type: Schema.Types.ObjectId, ref: "user" },
         created_by_id: Number,
-        deleted: Boolean,
+        is_deleted: Number,
         created_at: String,
         updated_at: String,
       },
