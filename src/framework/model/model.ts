@@ -253,18 +253,20 @@ export default function (props) {
         }
       });
     },
-    findOneById: async function (id: Number, requestedFields: Array<string>) {
+    findOneById: async function (id: any, requestedFields: Array<string>) {
       return new Promise(async (resolve, reject) => {
         try {
-          let attributesObject = {};
-          if (requestedFields && requestedFields.constructor === Array && requestedFields[0] !== "*") {
-            attributesObject["attributes"] = requestedFields;
+          if (isSQL) {
+            let resp = await this.findOneByArgs({
+              id: id,
+            });
+            resolve(resp);
+          } else if (isMongodb) {
+            let resp = await this.findOneByArgs({
+              _id: id,
+            });
+            resolve(resp);
           }
-          this.instance = await this.dbTables[this.tableName].findOne({
-            where: { id: id },
-            ...attributesObject,
-          });
-          resolve(this);
         } catch (e) {
           reject(e);
         }
@@ -352,8 +354,6 @@ export default function (props) {
               statusCode: 200,
             });
           } else if (isMongodb) {
-            console.log(args)
-            
             await model.updateMany(
               {
                 _id: {
