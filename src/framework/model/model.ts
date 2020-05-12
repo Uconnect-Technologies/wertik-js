@@ -9,11 +9,15 @@ export default function (props) {
   const isSQL = dbDialect.includes("sql");
   const isMongodb = dbDialect === "mongodb";
   return {
+    // properties
+    identityColumn: isSQL ? "id" : "_id",
     tableName: props.tableName,
     dbTables: props.dbTables,
     instance: null,
     bulkInstances: [],
     id: null,
+
+    // methods
 
     getModel: function () {
       let m = this;
@@ -212,24 +216,8 @@ export default function (props) {
     view: async function (args, requestedFields) {
       return new Promise(async (resolve, reject) => {
         try {
-          if (isSQL) {
-            let attributesObject = {};
-            if (requestedFields && requestedFields.constructor === Array && requestedFields[0] !== "*") {
-              attributesObject["attributes"] = requestedFields;
-            }
-            this.instance = await this.dbTables[this.tableName].findOne({
-              where: args,
-              ...attributesObject,
-            });
-            resolve(this);
-          } else if (isMongodb) {
-            let _this = this;
-            let model = this.dbTables[this.tableName];
-            model.find(args).then((resp) => {
-              _this.instance = resp[0];
-              resolve(this);
-            });
-          }
+          let res = await this.findOneByArgs(args, requestedFields);
+          resolve(res);
         } catch (e) {
           reject(e);
         }
@@ -239,15 +227,29 @@ export default function (props) {
     findOneByArgs: async function (args, requestedFields: Array<string>) {
       return new Promise(async (resolve, reject) => {
         try {
+          const model = this.dbTables[this.tableName];
           let attributesObject = {};
           if (requestedFields && requestedFields.constructor === Array && requestedFields[0] !== "*") {
-            attributesObject["attributes"] = requestedFields;
+            if (isSQL) {
+              attributesObject["attributes"] = requestedFields;
+            } else if (isMongodb) {
+              attributesObject["attributes"] = requestedFields.join(" ");
+            }
           }
-          this.instance = await this.dbTables[this.tableName].findOne({
-            where: args,
-            ...attributesObject,
-          });
-          resolve(this);
+          if (isSQL) {
+            this.instance = await model.findOne({
+              where: args,
+              ...attributesObject,
+            });
+            resolve(this);
+          } else if (isMongodb) {
+            if (attributesObject["attributes"]) {
+              this.instance = await model.findOne(args, attributesObject["attributes"]);
+            } else {
+              this.instance = await model.findOne(args);
+            }
+            resolve(this);
+          }
         } catch (e) {
           reject(e);
         }
@@ -256,17 +258,10 @@ export default function (props) {
     findOneById: async function (id: any, requestedFields: Array<string>) {
       return new Promise(async (resolve, reject) => {
         try {
-          if (isSQL) {
-            let resp = await this.findOneByArgs({
-              id: id,
-            });
-            resolve(resp);
-          } else if (isMongodb) {
-            let resp = await this.findOneByArgs({
-              _id: id,
-            });
-            resolve(resp);
-          }
+          let resp = await this.findOneByArgs({
+            [this.identityColumn]: id,
+          });
+          resolve(resp);
         } catch (e) {
           reject(e);
         }
