@@ -14,6 +14,7 @@ export interface IBuiltinModuleOverride {
     query: {
       list: Function;
       view: Function;
+      byId: Function;
     };
   };
   restApi: {

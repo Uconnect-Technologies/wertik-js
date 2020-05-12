@@ -133,6 +133,8 @@ export interface IConfigurationEvents {
       afterList: Function;
       beforeView: Function;
       afterView: Function;
+      beforeById: Function;
+      afterById: Function;
     };
   };
 }

@@ -8,7 +8,7 @@ export const generateError = (e: any, statusCode: Number = 404) => {
 };
 
 export const getDirectoriesInFolder = (path: string) => {
-  return fs.readdirSync(path).filter(function(file: any) {
+  return fs.readdirSync(path).filter(function (file: any) {
     return fs.statSync(path + "/" + file).isDirectory();
   });
 };
@@ -36,7 +36,7 @@ export const exists = (path: any) => {
   return true;
 };
 
-export const appendToFileSync = function(path: string, content: string) {
+export const appendToFileSync = function (path: string, content: string) {
   // try {
   fs.appendFileSync(path, content);
   //   return true;
@@ -45,14 +45,14 @@ export const appendToFileSync = function(path: string, content: string) {
   // }
 };
 
-export const createEmptyFile = function(path: string, cb: Function) {
-  fs.writeFile(path, "", function(err) {
+export const createEmptyFile = function (path: string, cb: Function) {
+  fs.writeFile(path, "", function (err) {
     if (err) throw err;
     cb();
   });
 };
 
-export const checkIfModuleIsValid = function(object: IConfiguration) {
+export const checkIfModuleIsValid = function (object: IConfiguration) {
   if (!module) {
     console.log("Module must be object");
     return false;
@@ -67,7 +67,7 @@ export const checkIfModuleIsValid = function(object: IConfiguration) {
 export const deleteFile = async (path: string, cb: Function) => {
   if (exists(path)) {
     try {
-      fs.unlink(path, function(err) {
+      fs.unlink(path, function (err) {
         cb();
       });
       return true;
@@ -86,4 +86,9 @@ export const generateHashPassword = (password: string) => {
 };
 export const verifyPassword = async (tryingPassword, storedPassword) => {
   return await bcrypt.compareSync(tryingPassword, storedPassword);
+};
+
+export const firstLetterLowerCase = (s) => {
+  if (typeof s !== "string") return "";
+  return s.charAt(0).toLowerCase() + s.slice(1);
 };
