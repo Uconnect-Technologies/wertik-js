@@ -4,15 +4,16 @@ export default {
     crud: {
       query: {
         generate: true,
-        operations: "*"
+        operations: "*",
       },
       mutation: {
         generate: true,
-        operations: "*"
-      }
+        operations: "*",
+      },
     },
     schema: `
       type User {
+        _id: String
         id: Int
         name: String
         username: String
@@ -30,6 +31,7 @@ export default {
         updated_at: String
       }
       input UserInput {
+        _id: String
         id: Int
         name: String
         username: String
@@ -53,12 +55,12 @@ export default {
         `,
     mutation: {
       schema: ``,
-      resolvers: {}
+      resolvers: {},
     },
     query: {
       schema: ``,
-      resolvers: {}
-    }
+      resolvers: {},
+    },
   },
   restApi: {},
   database: {
@@ -66,48 +68,66 @@ export default {
       tableName: "user",
       fields: {
         name: {
-          type: "STRING"
+          type: "STRING",
         },
         username: {
-          type: "String"
+          type: "String",
         },
         refresh_token: {
-          type: "String"
+          type: "String",
         },
         access_token: {
-          type: "String"
+          type: "String",
         },
         is_activated: {
-          type: "BOOLEAN"
+          type: "BOOLEAN",
         },
         activated_on: {
-          type: "String"
+          type: "String",
         },
         two_factor_code: {
-          type: "String"
+          type: "String",
         },
         is_super_user: {
-          type: "BOOLEAN"
+          type: "BOOLEAN",
         },
         activation_token: {
-          type: "String"
+          type: "String",
         },
         email: {
-          type: "String"
+          type: "String",
         },
         password: {
-          type: "String"
+          type: "String",
         },
         gender: {
-          type: "String"
+          type: "String",
         },
         referer: {
-          type: "String"
+          type: "String",
         },
         is_deleted: {
-          type: "INTEGER"
-        }
-      }
-    }
-  }
+          type: "INTEGER",
+        },
+      },
+    },
+    mongodb: {
+      tableName: "user",
+      schema: {
+        name: String,
+        username: String,
+        refresh_token: String,
+        access_token: String,
+        is_activated: Boolean,
+        activated_on: String,
+        two_factor_code: String,
+        is_super_user: Boolean,
+        activation_token: String,
+        email: String,
+        password: String,
+        gender: String,
+        referer: String,
+      },
+    },
+  },
 };

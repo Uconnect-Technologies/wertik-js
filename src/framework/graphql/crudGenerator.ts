@@ -1,21 +1,26 @@
 import getRequestedFieldsFromResolverInfo from "./../helpers/getRequestedFieldsFromResolverInfo";
 import { IConfiguration } from "../types/configuration";
 import { get, isFunction } from "lodash";
+import { firstLetterLowerCase } from "../helpers/index";
 
 export const generateQueriesCrudSchema = (moduleName: String, operationsRead) => {
-  const viewString = `view${moduleName}(id: Int): ${moduleName}`;
+  let string = "";
+  const byId = `${firstLetterLowerCase(moduleName)}ById(id: Int, _id: String): ${moduleName}`;
+  const viewString = `view${moduleName}(id: Int, _id: String): ${moduleName}`;
   const listString = `list${moduleName}(pagination: PaginationInput, filters: [FilterInput], sorting: [SortingInput]): ${moduleName}List`;
   if (operationsRead == "*") {
-    return `
+    string = `
       ${viewString}
       ${listString}
     `;
   } else {
-    return `
+    string = `
       ${operationsRead.toLowerCase().includes("view") ? viewString : ""}
       ${operationsRead.toLowerCase().includes("list") ? listString : ""}
     `;
   }
+  string = string + " " + byId;
+  return string;
 };
 
 export const generateMutationsCrudSubscriptionSchema = (moduleName: String, operationsModify, operationsRead) => {
@@ -39,7 +44,7 @@ export const getSubscriptionConstants = (moduleName: String) => {
     savedModule: `${moduleName}Saved`,
     deletedModule: `${moduleName}Deleted`,
     softDeletedModule: `${moduleName}SoftDeleted`,
-    updatedModule: `${moduleName}Updated`
+    updatedModule: `${moduleName}Updated`,
   };
 };
 
@@ -48,20 +53,20 @@ export const generateSubscriptionsCrudResolvers = (moduleName: String, pubsub: a
   const { createdModule, deletedModule, updatedModule, softDeletedModule, savedModule } = getSubscriptionConstants(moduleName);
   let object = {
     [createdModule]: {
-      subscribe: () => pubsub.asyncIterator([createdModule])
+      subscribe: () => pubsub.asyncIterator([createdModule]),
     },
     [savedModule]: {
-      subscribe: () => pubsub.asyncIterator([savedModule])
+      subscribe: () => pubsub.asyncIterator([savedModule]),
     },
     [deletedModule]: {
-      subscribe: () => pubsub.asyncIterator([deletedModule])
+      subscribe: () => pubsub.asyncIterator([deletedModule]),
     },
     [updatedModule]: {
-      subscribe: () => pubsub.asyncIterator([updatedModule])
+      subscribe: () => pubsub.asyncIterator([updatedModule]),
     },
     [softDeletedModule]: {
-      subscribe: () => pubsub.asyncIterator([softDeletedModule])
-    }
+      subscribe: () => pubsub.asyncIterator([softDeletedModule]),
+    },
   };
   if (operationsModify !== "*") {
     if (!operationsModifySplit.includes("create")) {
@@ -89,8 +94,8 @@ export const generateMutationsCrudSchema = (moduleName: String, operations) => {
   const softDeleteString = `softDelete${moduleName}(input: IDDeleteInput): SuccessResponse`;
   const bulkUpdateString = `bulkUpdate${moduleName}(input: [${moduleName}Input]): [${moduleName}]`;
   const bulkCreateString = `bulkCreate${moduleName}(input: [${moduleName}Input]): [${moduleName}]`;
-  const bulkDeleteString = `bulkDelete${moduleName}(input: [Int]): SuccessResponse`;
-  const bulkSoftDeleteString = `bulkSoftDelete${moduleName}(input: [Int]): SuccessResponse`;
+  const bulkDeleteString = `bulkDelete${moduleName}(input: [IDDeleteInput]): SuccessResponse`;
+  const bulkSoftDeleteString = `bulkSoftDelete${moduleName}(input: [IDDeleteInput]): SuccessResponse`;
   if (operations == "*") {
     return `
       ${createString}
@@ -132,6 +137,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
   const overrideMutationBulkSoftDelete = get(configuration, `override.${moduleName}.graphql.mutation.bulkSoftDelete`, null);
   const overrideQueryList = get(configuration, `override.${moduleName}.graphql.query.list`, null);
   const overrideQueryView = get(configuration, `override.${moduleName}.graphql.query.view`, null);
+  const overrideQueryById = get(configuration, `override.${moduleName}.graphql.query.byId`, null);
 
   const beforeCreate = get(configuration, `events.database.${moduleName}.beforeCreate`, null);
   const afterCreate = get(configuration, `events.database.${moduleName}.afterCreate`, null);
@@ -156,8 +162,12 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
   // R
   const beforeList = get(configuration, `events.database.${moduleName}.beforeList`, null);
   const afterList = get(configuration, `events.database.${moduleName}.afterList`, null);
+
   const beforeView = get(configuration, `events.database.${moduleName}.beforeView`, null);
   const afterView = get(configuration, `events.database.${moduleName}.afterView`, null);
+
+  const beforeById = get(configuration, `events.database.${moduleName}.beforeById`, null);
+  const afterById = get(configuration, `events.database.${moduleName}.afterById`, null);
 
   const { createdModule, deletedModule, updatedModule, softDeletedModule, savedModule } = getSubscriptionConstants(moduleName);
   let object = {
@@ -171,7 +181,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         if (isFunction(beforeCreate)) {
           finalArgs = await beforeCreate({
             mode: "graphql",
-            params: { _, args, context, info }
+            params: { _, args, context, info },
           });
         } else {
           finalArgs = args.input;
@@ -180,12 +190,12 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         let model = context.models[moduleName].getModel();
         let result = await model.create(finalArgs, requestedFields);
         pubsub.publish(createdModule, {
-          [createdModule]: result.instance
+          [createdModule]: result.instance,
         });
         if (isFunction(afterCreate)) {
           await afterCreate({
             mode: "graphql",
-            params: { instance: result.instance, _, args, context, info }
+            params: { instance: result.instance, _, args, context, info },
           });
         }
         return result.instance;
@@ -199,7 +209,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         if (isFunction(beforeUpdate)) {
           finalArgs = await beforeUpdate({
             mode: "graphql",
-            params: { _, args, context, info }
+            params: { _, args, context, info },
           });
         } else {
           finalArgs = args.input;
@@ -208,12 +218,12 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         let model = context.models[moduleName].getModel();
         let result = await model.update(finalArgs, requestedFields);
         pubsub.publish(updatedModule, {
-          [updatedModule]: result.instance
+          [updatedModule]: result.instance,
         });
         if (isFunction(afterUpdate)) {
           await afterUpdate({
             mode: "graphql",
-            params: { _, args, context, info, instance: result.instance }
+            params: { _, args, context, info, instance: result.instance },
           });
         }
         return result.instance;
@@ -227,7 +237,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         let model = context.models[moduleName].getModel();
         let result = await model.save(args.input, requestedFields);
         pubsub.publish(createdModule, {
-          [savedModule]: result
+          [savedModule]: result,
         });
         return result.instance;
       },
@@ -240,7 +250,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         if (isFunction(beforeDelete)) {
           finalArgs = await beforeDelete({
             mode: "graphql",
-            params: { _, args, context, info }
+            params: { _, args, context, info },
           });
         } else {
           finalArgs = args.input;
@@ -249,13 +259,13 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         await model.delete(finalArgs);
         pubsub.publish(deletedModule, {
           [deletedModule]: {
-            message: `${moduleName} successfully deleted`
-          }
+            message: `${moduleName} successfully deleted`,
+          },
         });
         if (isFunction(afterDelete)) {
           await afterDelete({
             mode: "graphql",
-            params: { _, args, context, info }
+            params: { _, args, context, info },
           });
         }
         return { message: `${moduleName} successfully deleted` };
@@ -269,7 +279,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         if (isFunction(beforeSoftDelete)) {
           finalArgs = await beforeSoftDelete({
             mode: "graphql",
-            params: { _, args, context, info }
+            params: { _, args, context, info },
           });
         } else {
           finalArgs = args.input;
@@ -277,15 +287,15 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         let model = context.models[moduleName].getModel();
         let result = await model.update({
           ...finalArgs,
-          isDeleted: 1
+          is_deleted: 1,
         });
         pubsub.publish(softDeletedModule, {
-          [softDeletedModule]: result
+          [softDeletedModule]: result,
         });
         if (isFunction(afterSoftDelete)) {
           await afterSoftDelete({
             mode: "graphql",
-            params: { _, args, context, info }
+            params: { _, args, context, info },
           });
         }
         return { message: `${moduleName} successfully deleted` };
@@ -299,7 +309,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         if (isFunction(beforeBulkDelete)) {
           finalArgs = await beforeBulkDelete({
             mode: "graphql",
-            params: { _, args, context, info }
+            params: { _, args, context, info },
           });
         } else {
           finalArgs = args.input;
@@ -309,7 +319,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         if (isFunction(afterBulkDelete)) {
           await afterBulkDelete({
             mode: "graphql",
-            params: { _, args, context, info }
+            params: { _, args, context, info },
           });
         }
         return { message: `${moduleName} bulk items deleted successfully.` };
@@ -323,7 +333,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         if (isFunction(beforeBulkSoftDelete)) {
           finalArgs = await beforeBulkSoftDelete({
             mode: "graphql",
-            params: { _, args, context, info }
+            params: { _, args, context, info },
           });
         } else {
           finalArgs = args.input;
@@ -333,7 +343,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         if (isFunction(afterBulkSoftDelete)) {
           await afterBulkSoftDelete({
             mode: "graphql",
-            params: { _, args, context, info }
+            params: { _, args, context, info },
           });
         }
         return { message: `${moduleName} bulk items deleted successfully.` };
@@ -347,7 +357,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         if (isFunction(beforeBulkCreate)) {
           finalArgs = await beforeBulkCreate({
             mode: "graphql",
-            params: { _, args, context, info }
+            params: { _, args, context, info },
           });
         } else {
           finalArgs = args.input;
@@ -358,7 +368,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         if (isFunction(afterBulkCreate)) {
           afterBulkCreate({
             mode: "graphql",
-            params: { _, args, context, info, instance: result.bulkInstances }
+            params: { _, args, context, info, instance: result.bulkInstances },
           });
         }
         return result.bulkInstances;
@@ -372,24 +382,49 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         if (isFunction(beforeBulkUpdate)) {
           finalArgs = await beforeBulkUpdate({
             mode: "graphql",
-            params: { _, args, context, info }
+            params: { _, args, context, info },
           });
         } else {
           finalArgs = args.input;
         }
         let model = context.models[moduleName].getModel();
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        let result = await model.bulkUpdate(args, requestedFields);
+        let result = await model.bulkUpdate(finalArgs, requestedFields);
         if (isFunction(afterBulkUpdate)) {
           afterBulkUpdate({
             mode: "graphql",
-            params: { _, args, context, info, instance: result.bulkInstances }
+            params: { _, args, context, info, instance: result.bulkInstances },
           });
         }
         return result.bulkInstances;
-      }
+      },
     },
     queries: {
+      [`${firstLetterLowerCase(moduleName)}ById`]: async (_: any, args: any, context: any, info: any) => {
+        if (overrideQueryById && overrideQueryById.constructor == Function) {
+          let response = await overrideQueryById(_, args, context, info);
+          return response;
+        }
+        let finalArgs;
+        if (isFunction(beforeById)) {
+          finalArgs = await beforeById({
+            mode: "graphql",
+            params: { _, args, context, info },
+          });
+        } else {
+          finalArgs = args;
+        }
+        let model = context.models[moduleName].getModel();
+        let requestedFields = getRequestedFieldsFromResolverInfo(info);
+        let findById = await model.findOneById(finalArgs, Object.keys(requestedFields));
+        if (isFunction(afterById)) {
+          afterById({
+            mode: "graphql",
+            params: { _, args, context, info, instance: findById.instance },
+          });
+        }
+        return findById.instance;
+      },
       [`view${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
         if (overrideQueryView && overrideQueryView.constructor == Function) {
           let response = await overrideQueryView(_, args, context, info);
@@ -399,7 +434,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         if (isFunction(beforeView)) {
           finalArgs = await beforeView({
             mode: "graphql",
-            params: { _, args, context, info }
+            params: { _, args, context, info },
           });
         } else {
           finalArgs = args;
@@ -410,7 +445,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         if (isFunction(afterView)) {
           afterView({
             mode: "graphql",
-            params: { _, args, context, info, instance: view.instance }
+            params: { _, args, context, info, instance: view.instance },
           });
         }
         return view.instance;
@@ -424,7 +459,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         if (isFunction(beforeList)) {
           finalArgs = await beforeList({
             mode: "graphql",
-            params: { _, args, context, info }
+            params: { _, args, context, info },
           });
         } else {
           finalArgs = args;
@@ -435,12 +470,12 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         if (isFunction(afterList)) {
           afterList({
             mode: "graphql",
-            params: { _, args, context, info, instance: response }
+            params: { _, args, context, info, instance: response },
           });
         }
         return response;
-      }
-    }
+      },
+    },
   };
   if (operationsModify !== "*") {
     if (!operationsModifySplit.includes("create")) {

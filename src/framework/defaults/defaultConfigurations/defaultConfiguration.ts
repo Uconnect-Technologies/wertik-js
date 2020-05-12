@@ -106,6 +106,15 @@ export default {
             },
           },
         },
+        mongodb: {
+          tableName: "article",
+          fields: {
+            title: String,
+            description: String,
+            created_at: String,
+            updated_at: String,
+          }
+        }
       },
     },
   ],

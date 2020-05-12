@@ -1,3 +1,5 @@
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 import { requestPasswordResetHandler, resetPasswordHandler } from "./handlers";
 import getRequestedFieldsFromResolverInfo from "./../../helpers/getRequestedFieldsFromResolverInfo";
 
@@ -7,16 +9,17 @@ export default {
     crud: {
       query: {
         generate: true,
-        operations: "view"
+        operations: "view",
       },
 
       mutation: {
         generate: false,
-        operations: "*"
-      }
+        operations: "*",
+      },
     },
     schema: `
       type ForgetPassword {
+        _id: String
         id: Int
         name: String
         email: String
@@ -36,11 +39,11 @@ export default {
       }
      `,
     relations: {
-      user: async function(forgetPassword, args, context, info) {
+      user: async function (forgetPassword, args, context, info) {
         let requestedFields = getRequestedFieldsFromResolverInfo(info, true);
         let view = await context.models["User"].findOneById(forgetPassword.user_id, requestedFields);
         return view.instance;
-      }
+      },
     },
     mutation: {
       schema: `
@@ -54,93 +57,106 @@ export default {
             forgetPasswordModel: context.models.ForgetPassword,
             data: args.input,
             emailTemplates: context.emailTemplates,
-            sendEmail: context.sendEmail
+            sendEmail: context.sendEmail,
           });
         },
         resetPassword: async (_: any, args: any, context: any, info: any) => {
           return await resetPasswordHandler({
             userModel: context.models.User,
             forgetPasswordModel: context.models.ForgetPassword,
-            data: args.input
+            data: args.input,
           });
-        }
-      }
+        },
+      },
     },
     query: {
       schema: ``,
-      resolvers: {}
-    }
+      resolvers: {},
+    },
   },
   restApi: {
     endpoints: [
       {
         path: "/request-password-reset",
         methodType: "post",
-        handler: async function(req, res) {
+        handler: async function (req, res) {
           try {
             let response = await requestPasswordResetHandler({
               userModel: req.models.User,
               forgetPasswordModel: req.models.ForgetPassword,
               data: req.body.input,
               emailTemplates: req.emailTemplates,
-              sendEmail: req.sendEmail
+              sendEmail: req.sendEmail,
             });
             res.json({
-              message: response
+              message: response,
             });
           } catch (e) {
             res.json({
               success: false,
               message: e.message,
-              result: {}
+              result: {},
             });
           }
-        }
+        },
       },
       {
         path: "/reset-password",
         methodType: "post",
-        handler: async function(req, res) {
+        handler: async function (req, res) {
           try {
             let response = await resetPasswordHandler({
               userModel: req.models.User,
               forgetPasswordModel: req.models.ForgetPassword,
-              data: req.body.input
+              data: req.body.input,
             });
             res.json({
-              message: response
+              message: response,
             });
           } catch (e) {
             res.json({
               success: false,
               message: e.message,
-              result: {}
+              result: {},
             });
           }
-        }
-      }
-    ]
+        },
+      },
+    ],
   },
   database: {
     sql: {
       tableName: "forgetPassword",
       fields: {
         name: {
-          type: "String"
+          type: "String",
         },
         email: {
-          type: "String"
+          type: "String",
         },
         user_id: {
-          type: "Integer"
+          type: "Integer",
         },
         token: {
-          type: "String"
+          type: "String",
         },
         is_deleted: {
-          type: "INTEGER"
+          type: "INTEGER",
         },
-      }
-    }
-  }
+      },
+    },
+    mongodb: {
+      tableName: "forgetPassword",
+      schema: {
+        name: String,
+        email: String,
+        user: { type: Schema.Types.ObjectId, ref: "user" },
+        user_id: Number,
+        token: String,
+        is_deleted: Number,
+        created_at: String,
+        updated_at: String,
+      },
+    },
+  },
 };

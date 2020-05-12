@@ -12,7 +12,7 @@ export const successMessage = function(message, secondMessage?: string) {
 };
 
 export const errorMessage = function(message) {
-  log(logSymbols.error, ` [Wertik-js]: Something went wrong, received:`, chalk.red(message));
+  log(logSymbols.error, ` [Wertik-js]:`, chalk.red(message));
 };
 
 export const warningMessage = function() {};

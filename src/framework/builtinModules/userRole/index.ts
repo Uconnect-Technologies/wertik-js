@@ -1,4 +1,6 @@
 import getRequestedFieldsFromResolverInfo from "./../../helpers/getRequestedFieldsFromResolverInfo";
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
 export default {
   name: "UserRole",
@@ -6,15 +8,16 @@ export default {
     crud: {
       query: {
         generate: true,
-        operations: "*"
+        operations: "*",
       },
       mutation: {
         generate: true,
-        operations: "*"
-      }
+        operations: "*",
+      },
     },
     schema: `
       type UserRole {
+        _id: String
         id: Int
         name: String
         user: User
@@ -27,6 +30,7 @@ export default {
         updated_at: String
       }
       input UserRoleInput {
+        _id: String
         id: Int
         name: String
         user_id: Int
@@ -35,48 +39,62 @@ export default {
       }
     `,
     relations: {
-      role: async function(userRole, args, context, info) {
+      role: async function (userRole, args, context, info) {
         let requestedFields = getRequestedFieldsFromResolverInfo(info, true);
         let view = await context.models["Role"].findOneById(userRole.role_id, requestedFields);
         return view.instance;
       },
-      user: async function(userRole, args, context, info) {
+      user: async function (userRole, args, context, info) {
         let requestedFields = getRequestedFieldsFromResolverInfo(info, true);
         let view = await context.models["User"].findOneById(userRole.user_id, requestedFields);
         return view.instance;
-      }
+      },
     },
     mutation: {
       schema: ``,
-      resolvers: {}
+      resolvers: {},
     },
     query: {
       schema: ``,
-      resolvers: {}
-    }
+      resolvers: {},
+    },
   },
-  
+
   restApi: {},
   database: {
     sql: {
       tableName: "userRole",
       fields: {
         name: {
-          type: "STRING"
+          type: "STRING",
         },
         user_id: {
-          type: "INTEGER"
+          type: "INTEGER",
         },
         role_id: {
-          type: "INTEGER"
+          type: "INTEGER",
         },
         is_deleted: {
-          type: "INTEGER"
+          type: "INTEGER",
         },
         created_by_id: {
-          type: "INTEGER"
-        }
-      }
-    }
-  }
+          type: "INTEGER",
+        },
+      },
+    },
+    mongodb: {
+      tableName: "userRole",
+      schema: {
+        name: String,
+        user: { type: Schema.Types.ObjectId, ref: "user" },
+        user_id: Number,
+        role: { type: Schema.Types.ObjectId, ref: "role" },
+        role_id: Number,
+        created_by: { type: Schema.Types.ObjectId, ref: "user" },
+        created_by_id: Number,
+        created_at: String,
+        updated_at: String,
+      },
+    },
+  },
 };

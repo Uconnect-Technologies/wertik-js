@@ -24,6 +24,11 @@ export default async function(expressApp, configuration: IConfiguration, customA
   modules = modules.filter(c => c);
   modules = [...modules, ...get(configuration, "modules", [])];
 
+  const { dbDialect } = process.env;
+  const isSQL = dbDialect.includes("sql");
+  const isMongodb = dbDialect === "mongodb";
+  const identityColumn = isSQL ? "id" : "_id"
+
   const processModule = module => {
     const overrideView = get(configuration, `override.${module.name}.restApi.view`, null);
     const overrideList = get(configuration, `override.${module.name}.restApi.list`, null);
@@ -112,7 +117,7 @@ export default async function(expressApp, configuration: IConfiguration, customA
             if (isFunction(beforeView)) {
               finalArgs = await beforeView({ mode: "restApi", params: { req, res } });
             } else {
-              finalArgs = req.params.id;
+              finalArgs = req.params[identityColumn];
             }
             let result = await model.view({ id: finalArgs }, ["*"]);
             if (result.instance) {
@@ -329,7 +334,7 @@ export default async function(expressApp, configuration: IConfiguration, customA
             if (isFunction(beforeDelete)) {
               finalArgs = await beforeDelete({ mode: "graphql", params: { req, res } });
             } else {
-              finalArgs = req.params.id;
+              finalArgs = req.params[identityColumn];
             }
             await model.delete({ id: finalArgs });
             if (isFunction(afterDelete)) {
@@ -390,7 +395,7 @@ export default async function(expressApp, configuration: IConfiguration, customA
             if (isFunction(beforeSoftDelete)) {
               finalArgs = await beforeSoftDelete({ mode: "restApi", params: { req, res } });
             } else {
-              finalArgs = req.body.input.id;
+              finalArgs = req.body.input[identityColumn];
             }
             await model.update({
               id: finalArgs,
