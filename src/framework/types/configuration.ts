@@ -62,9 +62,15 @@ export interface IConfigurationCustomModuleDatabaseSql {
   tableName: String;
   tableOptions: Object;
 }
+export interface IConfigurationCustomModuleDatabaseMongo {
+  tableName: String;
+  schema: Object;
+  onReady?: Function;
+}
 
 export interface IConfigurationCustomModuleDatabase {
   sql: IConfigurationCustomModuleDatabaseSql;
+  mongo: IConfigurationCustomModuleDatabaseMongo;
 }
 
 export interface IConfigurationCustomModule {
@@ -76,15 +82,18 @@ export interface IConfigurationCustomModule {
 
 export interface IConfigurationDatabase {
   dbDialect: String;
-  dbConnectionString: String;
-  dbUsername: String;
-  dbPassword: String;
-  dbName: String;
-  dbHost: String;
-  dbPort: String;
+  dbConnectionString?: String;
+  dbUsername?: String;
+  dbPassword?: String;
+  dbName?: String;
+  dbHost?: String;
+  dbPort?: String;
+  mongoDBURI?: String;
   dbInitializeOptions: {
     [Key: string]: any;
   };
+
+  // MongoDB
 }
 
 export interface IDocServerConfiguration {
@@ -169,8 +178,8 @@ export interface IConfigurationCron {
     function: Function;
     options: Object;
     events: {
-      initialized: Function
-    }
+      initialized: Function;
+    };
   }>;
 }
 
