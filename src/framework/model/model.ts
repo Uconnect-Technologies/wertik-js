@@ -83,7 +83,7 @@ export default function (props) {
             resolve(true);
           } else {
             if (isSQL) {
-              await this.dbTables[this.tableName].destroy({
+              await model.destroy({
                 where: args,
               });
             } else {
@@ -198,12 +198,13 @@ export default function (props) {
     create: async function (args) {
       return new Promise(async (resolve, reject) => {
         try {
+          let model = this.dbTables[this.tableName];
           if (isSQL) {
-            this.instance = await this.dbTables[this.tableName].create(args);
+            this.instance = await model.create(args);
           } else if (isMongodb) {
-            let model = new this.dbTables[this.tableName](args);
-            await model.save();
-            this.instance = model;
+            let mongoModel = new model(args);
+            await mongoModel.save();
+            this.instance = mongoModel;
           }
           resolve(this);
         } catch (e) {
@@ -258,9 +259,12 @@ export default function (props) {
     findOneById: async function (id: any, requestedFields: Array<string>) {
       return new Promise(async (resolve, reject) => {
         try {
-          let resp = await this.findOneByArgs({
-            [this.identityColumn]: id,
-          });
+          let resp = await this.findOneByArgs(
+            {
+              [this.identityColumn]: id,
+            },
+            requestedFields
+          );
           resolve(resp);
         } catch (e) {
           reject(e);
