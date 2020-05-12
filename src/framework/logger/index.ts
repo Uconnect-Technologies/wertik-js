@@ -1,24 +1,35 @@
-export default function() {
+export default function () {
   return new Promise((resolve, reject) => {
     const { createLogger, format, transports } = require("winston");
+    const { printf, combine, timestamp, label } = format;
+
+    const myFormat = printf(({ level, message, label, timestamp }) => {
+      // return `${timestamp} [${label}] ${level}: ${message}`;
+      return JSON.stringify({
+        timestamp: timestamp,
+        label: label,
+        level: level,
+        message: message && message.constructor == String ? message : message,
+      });
+    });
 
     const logger = createLogger({
-      format: format.combine(format.splat(), format.simple()),
+      format: combine(label({ label: "right meow!" }), timestamp(), myFormat),
       transports: [
         new transports.Console(),
         new transports.File({
           filename: "info.log",
-          level: "info"
+          level: "info",
         }),
         new transports.File({
           filename: "error.log",
-          level: "error"
+          level: "error",
         }),
         new transports.File({
           filename: "warning.log",
-          level: "warning"
-        })
-      ]
+          level: "warning",
+        }),
+      ],
     });
 
     resolve(logger);
