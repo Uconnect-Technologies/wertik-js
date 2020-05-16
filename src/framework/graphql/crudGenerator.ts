@@ -3,10 +3,15 @@ import { IConfiguration } from "../types/configuration";
 import { get, isFunction } from "lodash";
 import { firstLetterLowerCase } from "../helpers/index";
 
+const { dbDialect } = process.env;
+const isSQL = dbDialect.includes("sql");
+const identityColumn = isSQL ? "id" : "_id";
+const identityColumnGraphQLType = isSQL ? "Int" : "String";
+
 export const generateQueriesCrudSchema = (moduleName: String, operationsRead) => {
   let string = "";
-  const byId = `${firstLetterLowerCase(moduleName)}ById(id: Int, _id: String): ${moduleName}`;
-  const viewString = `view${moduleName}(id: Int, _id: String): ${moduleName}`;
+  const byId = `${firstLetterLowerCase(moduleName)}ById(${identityColumn}: ${identityColumnGraphQLType}): ${moduleName}`;
+  const viewString = `view${moduleName}(${identityColumn}: ${identityColumnGraphQLType}): ${moduleName}`;
   const listString = `list${moduleName}(pagination: PaginationInput, filters: [FilterInput], sorting: [SortingInput]): ${moduleName}List`;
   if (operationsRead == "*") {
     string = `
@@ -416,7 +421,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         }
         let model = context.models[moduleName].getModel();
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        let findById = await model.findOneById(finalArgs, Object.keys(requestedFields));
+        let findById = await model.findOneById(finalArgs[identityColumn], Object.keys(requestedFields));
         if (isFunction(afterById)) {
           afterById({
             mode: "graphql",
