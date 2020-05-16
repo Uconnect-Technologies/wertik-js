@@ -1,3 +1,11 @@
+---
+name: Request Help
+about: Any issues while using wertik-js you can use this template for use case of wertik-js
+title: ''
+labels: 'help support'
+assignees: 'ilyaskarim'
+---
+
 #### Issue having onboarding Wertik? We are here to help.
 
 **What isue you are having?**
