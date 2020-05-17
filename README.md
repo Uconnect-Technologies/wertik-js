@@ -1,4 +1,4 @@
-# Wertick JS
+# Wertik JS
 
 **💪 GraphQL + Rest API** framework to kick start your project.
 
