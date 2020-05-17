@@ -8,4 +8,7 @@ Method Type: Post
 
 Paramter: file
 
-Depending on status the API will send a response. The Storage feature is in beta, If you can any idea to implement you can write it in a feature request here: https://github.com/Uconnect-Technologies/wertik-js/issues/new?assignees=&labels=&template=feature_request.md&title=Storage%20feature.
+Depending on status the API will send a response. The Storage feature is in beta, If you can any idea to implement you can write it in a feature request [here][1].
+
+
+[1]: https://github.com/Uconnect-Technologies/wertik-js/issues/new?assignees=&labels=&template=feature_request.md&title=Storage%20feature
