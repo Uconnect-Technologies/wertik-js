@@ -6,6 +6,7 @@ After running server you send files to upload on this address: http://localhost:
 
 Method Type: Post
 
+
 Paramter: file
 
 Depending on status the API will send a response. The Storage feature is in beta, If you can any idea to implement you can write it in a feature request [here][1].
