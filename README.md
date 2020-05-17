@@ -1,6 +1,8 @@
 ## Wertik JS
 
+
 **💪 GraphQL + Rest API** framework to kick start your project.
+
 
 <div>
 	<img style="float: left;margin: 10px 0;" src="https://img.shields.io/github/downloads/ilyaskarim/wertik-js/total?style=flat-square">
