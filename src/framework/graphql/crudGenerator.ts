@@ -11,6 +11,7 @@ const identityColumnGraphQLType = isSQL ? "Int" : "String";
 export const generateQueriesCrudSchema = (moduleName: String, operationsRead) => {
   let string = "";
   const byId = `${firstLetterLowerCase(moduleName)}ById(${identityColumn}: ${identityColumnGraphQLType}): ${moduleName}`;
+  const byFilter = `${firstLetterLowerCase(moduleName)}(filters: [FilterInput]): ${moduleName}`;
   const viewString = `view${moduleName}(${identityColumn}: ${identityColumnGraphQLType}): ${moduleName}`;
   const listString = `list${moduleName}(pagination: PaginationInput, filters: [FilterInput], sorting: [SortingInput]): ${moduleName}List`;
   if (operationsRead == "*") {
@@ -24,7 +25,7 @@ export const generateQueriesCrudSchema = (moduleName: String, operationsRead) =>
       ${operationsRead.toLowerCase().includes("list") ? listString : ""}
     `;
   }
-  string = string + " " + byId;
+  string = string + " " + byId + " " + byFilter;
   return string;
 };
 
@@ -140,6 +141,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
   const overrideMutationBulkUpdate = get(configuration, `override.${moduleName}.graphql.mutation.bulkUpdate`, null);
   const overrideMutationBulkDelete = get(configuration, `override.${moduleName}.graphql.mutation.bulkDelete`, null);
   const overrideMutationBulkSoftDelete = get(configuration, `override.${moduleName}.graphql.mutation.bulkSoftDelete`, null);
+  const overrideModuleQuery = get(configuration, `override.${moduleName}.graphql.query.${firstLetterLowerCase(moduleName)}`, null);
   const overrideQueryList = get(configuration, `override.${moduleName}.graphql.query.list`, null);
   const overrideQueryView = get(configuration, `override.${moduleName}.graphql.query.view`, null);
   const overrideQueryById = get(configuration, `override.${moduleName}.graphql.query.byId`, null);
@@ -173,6 +175,9 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
 
   const beforeById = get(configuration, `events.database.${moduleName}.beforeById`, null);
   const afterById = get(configuration, `events.database.${moduleName}.afterById`, null);
+
+  const beforeByModule = get(configuration, `events.database.${moduleName}.beforeByModule`, null);
+  const afterByModule = get(configuration, `events.database.${moduleName}.afterByModule`, null);
 
   const { createdModule, deletedModule, updatedModule, softDeletedModule, savedModule } = getSubscriptionConstants(moduleName);
   let object = {
@@ -406,6 +411,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
     },
     queries: {
       [`${firstLetterLowerCase(moduleName)}ById`]: async (_: any, args: any, context: any, info: any) => {
+        let model = context.models[moduleName].getModel();
         if (overrideQueryById && overrideQueryById.constructor == Function) {
           let response = await overrideQueryById(_, args, context, info);
           return response;
@@ -419,7 +425,6 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         } else {
           finalArgs = args;
         }
-        let model = context.models[moduleName].getModel();
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let findById = await model.findOneById(finalArgs[identityColumn], Object.keys(requestedFields));
         if (isFunction(afterById)) {
@@ -429,6 +434,32 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
           });
         }
         return findById.instance;
+      },
+      [`${firstLetterLowerCase(moduleName)}`]: async (_: any, args: any, context: any, info: any) => {
+        let model = context.models[moduleName].getModel();
+        if (overrideModuleQuery && overrideModuleQuery.constructor == Function) {
+          let response = await overrideModuleQuery(_, args, context, info);
+          return response;
+        }
+        let finalArgs;
+        if (isFunction(beforeByModule)) {
+          finalArgs = await beforeByModule({
+            mode: "graphql",
+            params: { _, args, context, info },
+          });
+        } else {
+          finalArgs = args;
+        }
+        let requestedFields = getRequestedFieldsFromResolverInfo(info);
+        const filters = get(finalArgs, "filters", []);
+        let response = await model.findOneByArgs(filters, requestedFields);
+        if (isFunction(afterById)) {
+          afterByModule({
+            mode: "graphql",
+            params: { _, args, context, info, instance: response.instance },
+          });
+        }
+        return response.instance;
       },
       [`view${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
         if (overrideQueryView && overrideQueryView.constructor == Function) {

@@ -135,6 +135,8 @@ export interface IConfigurationEvents {
       afterView: Function;
       beforeById: Function;
       afterById: Function;
+      beforeByModule: Function;
+      afterByModule: Function;
     };
   };
 }
