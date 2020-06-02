@@ -3,6 +3,7 @@ import Sequelize from "sequelize";
 import moment from "moment";
 import { convertFieldsIntoSequelizeFields } from "./helpers/index";
 import { errorMessage } from "../logger/consoleMessages";
+import { databaseDefaultOptions } from "../defaults/options/index";
 
 const checkDatabaseOptions = (moduleName, tableName) => {
   if (moduleName && !tableName) {
@@ -26,26 +27,12 @@ export default function (connection, configuration) {
         let tableName = get(module, "database.sql.tableName", "");
         checkDatabaseOptions(moduleName, tableName);
         let tableFields = convertFieldsIntoSequelizeFields(module.database.sql.fields);
-        let tableOptions = get(module, "database.sql.tableOptions", {
-          timestamps: false,
-          paranoid: false,
-          underscored: false,
-          freezeTableName: true,
-        });
+        let tableOptions = get(module, "database.sql.tableOptions", databaseDefaultOptions.sql.defaultTableOptions);
         tables[moduleName] = connection.define(
           tableName,
           {
             ...tableFields,
-            created_at: {
-              type: "TIMESTAMP",
-              defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-              allowNull: false,
-            },
-            updated_at: {
-              type: "TIMESTAMP",
-              defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-              allowNull: false,
-            },
+            ...databaseDefaultOptions.sql.timestamps
           },
           {
             ...tableOptions,
@@ -62,18 +49,11 @@ export default function (connection, configuration) {
       } else if (dialect == "mongodb") {
         let mongoose = require("mongoose");
         let tableName = get(module, "database.mongodb.tableName", "");
+        let tableOptions = get(module, "database.mongodb.tableOptions", databaseDefaultOptions.mongoDB.defaultTableOptions);
         let tableSchema = get(module, "database.mongodb.schema", null);
         checkDatabaseOptions(moduleName, tableName);
         if (tableSchema && tableName) {
-          tables[moduleName] = connection.model(
-            tableName,
-            new mongoose.Schema(tableSchema, {
-              timestamps: {
-                createdAt: "created_at",
-                updatedAt: "updated_at",
-              },
-            })
-          );
+          tables[moduleName] = connection.model(tableName, new mongoose.Schema(tableSchema, tableOptions));
         }
       }
     }
