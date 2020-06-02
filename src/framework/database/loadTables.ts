@@ -27,7 +27,7 @@ export default function (connection, configuration) {
         checkDatabaseOptions(moduleName, tableName);
         let tableFields = convertFieldsIntoSequelizeFields(module.database.sql.fields);
         let tableOptions = get(module, "database.sql.tableOptions", {
-          timestamps: true,
+          timestamps: false,
           paranoid: false,
           underscored: false,
           freezeTableName: true,
@@ -37,20 +37,26 @@ export default function (connection, configuration) {
           {
             ...tableFields,
             created_at: {
-              type: Sequelize.DATE,
-              get() {
-                return moment(this.getDataValue("created_at")).format();
-              },
+              type: "TIMESTAMP",
+              defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+              allowNull: false,
             },
             updated_at: {
-              type: Sequelize.DATE,
-              get() {
-                return moment(this.getDataValue("updated_at")).format();
-              },
+              type: "TIMESTAMP",
+              defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+              allowNull: false,
             },
           },
           {
             ...tableOptions,
+            getterMethods: {
+              created_at: function () {
+                return moment(this.getDataValue("created_at")).format();
+              },
+              updated_at: function () {
+                return moment(this.getDataValue("updated_at")).format();
+              },
+            },
           }
         );
       } else if (dialect == "mongodb") {
