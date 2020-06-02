@@ -2,34 +2,38 @@ import { get, kebabCase, isFunction } from "lodash";
 import { IConfiguration } from "src/framework/types/configuration";
 import restApiErrorResponse from "../../restApiErrorResponse";
 import restApiSuccessResponse from "../../restApiSuccessResponse";
+import { firstLetterLowerCase } from "../../../helpers/index";
 
 export const getModuleApiPaths = (name: string) => {
-  return {
+  let a = {
     save: `/api/v1/${kebabCase(name)}/save`,
     create: `/api/v1/${kebabCase(name)}/create`,
     update: `/api/v1/${kebabCase(name)}/update`,
     view: `/api/v1/${kebabCase(name)}/view/:id`,
+    module: `/api/v1/${kebabCase(name)}/`,
     delete: `/api/v1/${kebabCase(name)}/:id/delete`,
     paginate: `/api/v1/${kebabCase(name)}/list`,
     bulkCreate: `/api/v1/${kebabCase(name)}/bulk-create`,
     bulkUpdate: `/api/v1/${kebabCase(name)}/bulk-update`,
     bulkDelete: `/api/v1/${kebabCase(name)}/bulk-delete`,
     softDelete: `/api/v1/${kebabCase(name)}/soft-delete`,
-    bulkSoftDelete: `/api/v1/${kebabCase(name)}/bulk-soft-delete`
+    bulkSoftDelete: `/api/v1/${kebabCase(name)}/bulk-soft-delete`,
   };
+  return a;
 };
 
-export default async function(expressApp, configuration: IConfiguration, customApi) {
+export default async function (expressApp, configuration: IConfiguration, customApi) {
   let modules = configuration.builtinModules.split(",");
-  modules = modules.filter(c => c);
+  modules = modules.filter((c) => c);
   modules = [...modules, ...get(configuration, "modules", [])];
 
   const { dbDialect } = process.env;
   const isSQL = dbDialect.includes("sql");
   const isMongodb = dbDialect === "mongodb";
-  const identityColumn = isSQL ? "id" : "_id"
+  const identityColumn = isSQL ? "id" : "_id";
 
-  const processModule = module => {
+  const processModule = (module) => {
+    const overrideModuleQuery = get(configuration, `override.${module.name}.restApi.${firstLetterLowerCase(firstLetterLowerCase)}`, null);
     const overrideView = get(configuration, `override.${module.name}.restApi.view`, null);
     const overrideList = get(configuration, `override.${module.name}.restApi.list`, null);
     const overrideCreate = get(configuration, `override.${module.name}.restApi.create`, null);
@@ -60,14 +64,18 @@ export default async function(expressApp, configuration: IConfiguration, customA
     const afterBulkUpdate = get(configuration, `events.database.${module.name}.afterBulkUpdate`, null);
     const beforeList = get(configuration, `events.database.${module.name}.beforeList`, null);
     const afterList = get(configuration, `events.database.${module.name}.afterList`, null);
+
     const beforeView = get(configuration, `events.database.${module.name}.beforeView`, null);
     const afterView = get(configuration, `events.database.${module.name}.afterView`, null);
+
+    const beforeByModule = get(configuration, `events.database.${module.name}.beforeByModule`, null);
+    const afterByModule = get(configuration, `events.database.${module.name}.afterByModule`, null);
 
     if (module && module.hasOwnProperty("restApi")) {
       let modulePaths = getModuleApiPaths(module.name);
       const restApi = get(module, "restApi", {});
       const restApiEndpoints = get(restApi, "endpoints", []);
-      restApiEndpoints.forEach(restApiEndpointsElement => {
+      restApiEndpoints.forEach((restApiEndpointsElement) => {
         customApi(expressApp, restApiEndpointsElement, module);
       });
 
@@ -80,7 +88,7 @@ export default async function(expressApp, configuration: IConfiguration, customA
             let args = {
               pagination: get(req.body, "pagination", {}),
               filters: get(req.body, "filters", []),
-              sorting: get(req.body, "sorting", [])
+              sorting: get(req.body, "sorting", []),
             };
             let finalArgs;
             if (isFunction(beforeList)) {
@@ -95,14 +103,46 @@ export default async function(expressApp, configuration: IConfiguration, customA
             restApiSuccessResponse({
               res: res,
               message: `${module.name} list`,
-              data: response
+              data: response,
             });
           }
         } catch (e) {
           restApiErrorResponse({
             err: e,
             res: res,
-            data: {}
+            data: {},
+          });
+        }
+      });
+
+      expressApp.post(modulePaths.module, async (req, res) => {
+        try {
+          let model = req.models[module.name].getModel();
+          if (overrideModuleQuery && overrideModuleQuery.constructor == Function) {
+            overrideModuleQuery(req, res);
+          } else {
+            let finalArgs;
+            if (isFunction(beforeByModule)) {
+              finalArgs = await beforeByModule({ mode: "restApi", params: { req, res } });
+            } else {
+              finalArgs = req.body.filters;
+            }
+            const filters = get(req.body, "filters", []);
+            let response = await model.findOneByArgs(filters);
+            restApiSuccessResponse({
+              res: res,
+              data: response.instance,
+              message: `${module.name} Found`,
+            });
+            if (isFunction(afterByModule)) {
+              afterByModule({ mode: "restApi", params: { req, res, instance: response.instance } });
+            }
+          }
+        } catch (e) {
+          restApiErrorResponse({
+            err: e,
+            res: res,
+            data: {},
           });
         }
       });
@@ -127,14 +167,14 @@ export default async function(expressApp, configuration: IConfiguration, customA
               restApiSuccessResponse({
                 res: res,
                 data: result.instance,
-                message: `${module.name} Found`
+                message: `${module.name} Found`,
               });
             } else {
               restApiErrorResponse({
                 code: 404,
                 err: { message: "Not Found" },
                 res: res,
-                data: {}
+                data: {},
               });
             }
           }
@@ -142,7 +182,7 @@ export default async function(expressApp, configuration: IConfiguration, customA
           restApiErrorResponse({
             err: e,
             res: res,
-            data: {}
+            data: {},
           });
         }
       });
@@ -166,14 +206,14 @@ export default async function(expressApp, configuration: IConfiguration, customA
             restApiSuccessResponse({
               res: res,
               data: result.instance,
-              message: `${module.name} created`
+              message: `${module.name} created`,
             });
           }
         } catch (e) {
           restApiErrorResponse({
             err: e,
             res: res,
-            data: {}
+            data: {},
           });
         }
       });
@@ -188,14 +228,14 @@ export default async function(expressApp, configuration: IConfiguration, customA
             restApiSuccessResponse({
               res: res,
               data: result.instance,
-              message: `${module.name} saved`
+              message: `${module.name} saved`,
             });
           }
         } catch (e) {
           restApiErrorResponse({
             err: e,
             res: res,
-            data: {}
+            data: {},
           });
         }
       });
@@ -219,14 +259,14 @@ export default async function(expressApp, configuration: IConfiguration, customA
             restApiSuccessResponse({
               res: res,
               data: result.instances,
-              message: `${module.name} bulk operation successfull.`
+              message: `${module.name} bulk operation successfull.`,
             });
           }
         } catch (e) {
           restApiErrorResponse({
             err: e,
             res: res,
-            data: {}
+            data: {},
           });
         }
       });
@@ -250,14 +290,14 @@ export default async function(expressApp, configuration: IConfiguration, customA
             restApiSuccessResponse({
               res: res,
               message: `${module.name} updated`,
-              data: result.instance
+              data: result.instance,
             });
           }
         } catch (e) {
           restApiErrorResponse({
             err: e,
             res: res,
-            data: {}
+            data: {},
           });
         }
       });
@@ -281,14 +321,14 @@ export default async function(expressApp, configuration: IConfiguration, customA
             restApiSuccessResponse({
               res: res,
               message: `${module.name} updated`,
-              data: result.bulkInstances
+              data: result.bulkInstances,
             });
           }
         } catch (e) {
           restApiErrorResponse({
             err: e,
             res: res,
-            data: {}
+            data: {},
           });
         }
       });
@@ -312,14 +352,14 @@ export default async function(expressApp, configuration: IConfiguration, customA
             restApiSuccessResponse({
               res: res,
               message: `Items deleted`,
-              data: {}
+              data: {},
             });
           }
         } catch (e) {
           restApiErrorResponse({
             err: e,
             res: res,
-            data: {}
+            data: {},
           });
         }
       });
@@ -343,14 +383,14 @@ export default async function(expressApp, configuration: IConfiguration, customA
             restApiSuccessResponse({
               res: res,
               message: `${module.name} deleted`,
-              data: {}
+              data: {},
             });
           }
         } catch (e) {
           restApiErrorResponse({
             err: e,
             res: res,
-            data: {}
+            data: {},
           });
         }
       });
@@ -373,14 +413,14 @@ export default async function(expressApp, configuration: IConfiguration, customA
             restApiSuccessResponse({
               res: res,
               message: `${module.name} deleted`,
-              data: {}
+              data: {},
             });
           }
         } catch (e) {
           restApiErrorResponse({
             err: e,
             res: res,
-            data: {}
+            data: {},
           });
         }
       });
@@ -399,7 +439,7 @@ export default async function(expressApp, configuration: IConfiguration, customA
             }
             await model.update({
               id: finalArgs,
-              isDeleted: 1
+              isDeleted: 1,
             });
             if (isFunction(afterSoftDelete)) {
               await afterSoftDelete({ mode: "restApi", params: { req, res } });
@@ -407,14 +447,14 @@ export default async function(expressApp, configuration: IConfiguration, customA
             restApiSuccessResponse({
               res: res,
               message: `${module.name} deleted`,
-              data: {}
+              data: {},
             });
           }
         } catch (e) {
           restApiErrorResponse({
             err: e,
             res: res,
-            data: {}
+            data: {},
           });
         }
       });

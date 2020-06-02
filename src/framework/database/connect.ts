@@ -1,5 +1,6 @@
 import { successMessage } from "../logger/consoleMessages";
 import { IConfiguration } from "../types/configuration";
+import { databaseDefaultOptions } from "../defaults/options/index";
 import { get } from "lodash";
 
 let Sequelize;
@@ -15,13 +16,7 @@ export default async function (configurationObject: IConfiguration) {
       let database = configurationObject.database;
       let options;
       if (dialect == "postgres") {
-        options = get(configurationObject, "database.dbInitializeOptions", {
-          logging: false,
-          operatorsAliases: false,
-          dialectOptions: {
-            ssl: true,
-          },
-        });
+        options = get(configurationObject, "database.dbInitializeOptions", databaseDefaultOptions.postgres.dbInitializeOptions);
         DATABASE_INSTANCE = new Sequelize(`${database.dbName}`, database.dbUsername, database.dbPassword, {
           dialect: "postgres",
           host: database.dbHost,
@@ -46,12 +41,7 @@ export default async function (configurationObject: IConfiguration) {
           successMessage(`MongoDB: Database Connected`);
         });
       } else {
-        options = get(configurationObject, "database.dbInitializeOptions", {
-          logging: false,
-          operatorsAliases: false,
-          underscored: false,
-          freetableName: true,
-        });
+        options = get(configurationObject, "database.dbInitializeOptions", databaseDefaultOptions.sql.dbInitializeOptions);
         DATABASE_INSTANCE = new Sequelize(`${database.dbName}`, database.dbUsername, database.dbPassword, {
           dialect: "mysql",
           host: database.dbHost,

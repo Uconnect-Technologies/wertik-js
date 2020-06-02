@@ -1,4 +1,4 @@
-let { ApolloServer, ApolloError } = require("apollo-server");
+let { ApolloServer } = require("apollo-server");
 let { get } = require("lodash");
 let loadAllModules = require("./loadAllModules").default;
 import getUserWithAccessToken from "./../security/getUserWithAccessToken";
@@ -9,11 +9,13 @@ import { get } from "lodash";
 import isIPAllowed from "./../security/isIPAllowed";
 import { successMessage } from "./../logger/consoleMessages";
 import voyager from "./voyager/index";
+import { defaultApolloGraphqlOptions } from "../defaults/options/index";
 
 //expressApp,configuration,dbTables,models,emailTemplates,sendEmail,database,WertikEventEmitter
 
 export default async function (options: IGraphQLInitialize) {
-  const { mailerInstance, configuration, dbTables, models, sendEmail, emailTemplates, database, runEvent, websockets, logger } = options;
+  const { mailerInstance, configuration, dbTables, models, sendEmail, emailTemplates, database, websockets, logger } = options;
+  const apolloGraphqlOptions = get(options, "apolloGraphqlOptions", defaultApolloGraphqlOptions);
   const forceStartGraphqlServer = get(configuration, "forceStartGraphqlServer", true);
   let { graphql } = configuration;
   const port = get(graphql, "port", 4000);
@@ -25,12 +27,6 @@ export default async function (options: IGraphQLInitialize) {
   let apollo = new ApolloServer({
     typeDefs: modules.schema,
     resolvers: modules.resolvers,
-    cacheControl: {
-      defaultMaxAge: 0,
-    },
-    subscriptions: {
-      path: "/subscriptions",
-    },
     context: async ({ req, res, connection }) => {
       let ip = get(req, "connection.remoteAddress", null);
       if (connection === null) {
@@ -59,6 +55,7 @@ export default async function (options: IGraphQLInitialize) {
       cxt["createContext"] = createContext;
       return cxt;
     },
+    ...apolloGraphqlOptions,
   });
   if (forceStartGraphqlServer == true) {
     apollo.listen(port).then(({ url, subscriptionsUrl }) => {
