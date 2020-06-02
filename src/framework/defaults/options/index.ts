@@ -3,7 +3,7 @@ export const databaseDefaultOptions = {
   postgres: {
     dbInitializeOptions: {
       logging: false,
-      operatorsAliases: false,
+      operatorsAliases: "0",
       dialectOptions: {
         ssl: true,
       },
@@ -12,7 +12,7 @@ export const databaseDefaultOptions = {
   sql: {
     dbInitializeOptions: {
       logging: false,
-      operatorsAliases: false,
+      operatorsAliases: "0",
       underscored: false,
       freetableName: true,
     },
