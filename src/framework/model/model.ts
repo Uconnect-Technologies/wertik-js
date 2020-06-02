@@ -227,7 +227,17 @@ export default function (props) {
     },
     findOneByArgs: async function (args, requestedFields: Array<string>) {
       return new Promise(async (resolve, reject) => {
+        let whr;
         try {
+          if (args && args.constructor === Array) {
+            if (isSQL) {
+              whr = await convertFiltersIntoSequalizeObject(args)
+            }else if (isMongodb) {
+              whr = await convertedFiltersIntoMongooseQuery(args)
+            }
+          }else {
+            whr = args;
+          }          
           const model = this.dbTables[this.tableName];
           let attributesObject = {};
           if (requestedFields && requestedFields.constructor === Array && requestedFields[0] !== "*") {
@@ -239,15 +249,15 @@ export default function (props) {
           }
           if (isSQL) {
             this.instance = await model.findOne({
-              where: args,
+              where: whr,
               ...attributesObject,
             });
             resolve(this);
           } else if (isMongodb) {
             if (attributesObject["attributes"]) {
-              this.instance = await model.findOne(args, attributesObject["attributes"]);
+              this.instance = await model.findOne(whr, attributesObject["attributes"]);
             } else {
-              this.instance = await model.findOne(args);
+              this.instance = await model.findOne(whr);
             }
             resolve(this);
           }

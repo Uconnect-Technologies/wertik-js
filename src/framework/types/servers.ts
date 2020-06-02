@@ -1,6 +1,7 @@
 import { IConfiguration, IConfigurationSecurity } from "./configuration";
 
 export interface IGraphQLInitialize {
+  apolloGraphqlOptions: any;
   sendEmail: Function;
   runEvent: Function;
   expressApp: any;
