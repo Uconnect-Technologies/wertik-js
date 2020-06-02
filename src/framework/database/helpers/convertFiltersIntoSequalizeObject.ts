@@ -57,6 +57,6 @@ export default async function (filters: any) {
     });
     return f;
   } else {
-    throw new Error("Please pass validate filters.");
+    throw new Error("Please pass valid filters.");
   }
 }
