@@ -4,7 +4,7 @@ import convertFiltersIntoSequalizeObject from "../database/helpers/convertFilter
 import convertedFiltersIntoMongooseQuery from "../database/helpers/convertedFiltersIntoMongooseQuery";
 import internalServerError from "../../framework/helpers/internalServerError";
 import { convertFieldsIntoSequelizeFields } from "../database/helpers";
-import { getQueryForLast7Days, getQueryForLastYear, getQueryForThisYear } from "../reporting";
+import { getQueryForLast7Days, getQueryForLastYear, getQueryForThisYear, getQueryForThisMonth, getQueryForLastMonth } from "../reporting";
 
 export default function (props) {
   const { dbDialect } = process.env;
@@ -56,10 +56,14 @@ export default function (props) {
             let countLast7Days = await database.query(getQueryForLast7Days(model.getTableName()), selectOptions);
             let countLastYear = await database.query(getQueryForLastYear(model.getTableName()), selectOptions);
             let countThisYear = await database.query(getQueryForThisYear(model.getTableName()), selectOptions);
+            let countThisMonth = await database.query(getQueryForThisMonth(model.getTableName()), selectOptions);
+            let countLastMonth = await database.query(getQueryForLastMonth(model.getTableName()), selectOptions);
             statsInfo.total_count = get(count, "[0].total_count", 0);
             statsInfo.total_added_last_7_days = get(countLast7Days, "[0].total_added_last_7_days", 0);
             statsInfo.total_added_last_year = get(countLastYear, "[0].total_added_last_year", 0);
             statsInfo.total_added_this_year = get(countThisYear, "[0].total_added_this_year", 0);
+            statsInfo.total_added_this_month = get(countThisMonth, "[0].total_added_this_month", 0);
+            statsInfo.total_added_last_month = get(countLastMonth, "[0].total_added_last_month", 0);
           } else if (isMongodb) {
           }
           resolve(statsInfo);
