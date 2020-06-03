@@ -37,6 +37,7 @@ export default async function (options: IGraphQLInitialize) {
       let userPermissions = user ? await getUserAllPermissions(user.id, database) : [];
       let userRoles = user ? await getUserRoles(user.id, database) : [];
       let cxt = {
+        database: database,
         user: user,
         dbTables,
         models,

@@ -14,6 +14,7 @@ export const generateQueriesCrudSchema = (moduleName: String, operationsRead) =>
   const byFilter = `${firstLetterLowerCase(moduleName)}(filters: [FilterInput]): ${moduleName}`;
   const viewString = `view${moduleName}(${identityColumn}: ${identityColumnGraphQLType}): ${moduleName}`;
   const listString = `list${moduleName}(pagination: PaginationInput, filters: [FilterInput], sorting: [SortingInput]): ${moduleName}List`;
+  const statsString = `${firstLetterLowerCase(moduleName)}Stats: ModuleStats`;
   if (operationsRead == "*") {
     string = `
       ${viewString}
@@ -25,7 +26,7 @@ export const generateQueriesCrudSchema = (moduleName: String, operationsRead) =>
       ${operationsRead.toLowerCase().includes("list") ? listString : ""}
     `;
   }
-  string = string + " " + byId + " " + byFilter;
+  string = string + " " + byId + " " + byFilter + " " + statsString;
   return string;
 };
 
@@ -410,6 +411,11 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
       },
     },
     queries: {
+      [`${firstLetterLowerCase(moduleName)}Stats`]: async (_: any, args: any, context: any, info: any) => {
+        let database = context.database;
+        let model = context.models[moduleName].getModel();
+        return model.stats(database);
+      },
       [`${firstLetterLowerCase(moduleName)}ById`]: async (_: any, args: any, context: any, info: any) => {
         let model = context.models[moduleName].getModel();
         if (overrideQueryById && overrideQueryById.constructor == Function) {

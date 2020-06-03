@@ -1,11 +1,13 @@
 import { has, get } from "lodash";
+import moment from "moment";
 import convertFiltersIntoSequalizeObject from "../database/helpers/convertFiltersIntoSequalizeObject";
 import convertedFiltersIntoMongooseQuery from "../database/helpers/convertedFiltersIntoMongooseQuery";
 import internalServerError from "../../framework/helpers/internalServerError";
+import { convertFieldsIntoSequelizeFields } from "../database/helpers";
+import { getQueryForLast7Days, getQueryForLastYear, getQueryForThisYear } from "../reporting";
 
 export default function (props) {
   const { dbDialect } = process.env;
-  const { configuration } = props;
   const isSQL = dbDialect.includes("sql");
   const isMongodb = dbDialect === "mongodb";
   return {
@@ -23,6 +25,48 @@ export default function (props) {
       let m = this;
       m.instance = null;
       return m;
+    },
+    getSequelizeModel: function () {
+      return this.dbTables[this.tableName];
+    },
+    getMongooseModel: function () {
+      return this.dbTables[this.tableName];
+    },
+    stats: async function (database) {
+      return new Promise(async (resolve, reject) => {
+        let statsInfo = {
+          total_count: 0,
+          total_added_today: 0,
+          total_added_this_week: 0,
+          total_added_last_7_days: 0,
+          total_added_this_month: 0,
+          total_added_last_month: 0,
+          total_added_last_3_months: 0,
+          total_added_last_90_days: 0,
+          total_added_last_year: 0,
+          total_added_this_year: 0,
+        };
+        try {
+          const model = this.dbTables[this.tableName];
+          if (isSQL) {
+            let selectOptions = {
+              type: database.QueryTypes.SELECT,
+            };
+            let count = await database.query(`select count(*) as total_count from ${model.getTableName()}`, selectOptions);
+            let countLast7Days = await database.query(getQueryForLast7Days(model.getTableName()), selectOptions);
+            let countLastYear = await database.query(getQueryForLastYear(model.getTableName()), selectOptions);
+            let countThisYear = await database.query(getQueryForThisYear(model.getTableName()), selectOptions);
+            statsInfo.total_count = get(count, "[0].total_count", 0);
+            statsInfo.total_added_last_7_days = get(countLast7Days, "[0].total_added_last_7_days", 0);
+            statsInfo.total_added_last_year = get(countLastYear, "[0].total_added_last_year", 0);
+            statsInfo.total_added_this_year = get(countThisYear, "[0].total_added_this_year", 0);
+          } else if (isMongodb) {
+          }
+          resolve(statsInfo);
+        } catch (e) {
+          reject(e);
+        }
+      });
     },
     save: async function (args) {
       return has(args, "id") ? await this.update(args) : await this.create(args);
@@ -231,13 +275,13 @@ export default function (props) {
         try {
           if (args && args.constructor === Array) {
             if (isSQL) {
-              whr = await convertFiltersIntoSequalizeObject(args)
-            }else if (isMongodb) {
-              whr = await convertedFiltersIntoMongooseQuery(args)
+              whr = await convertFiltersIntoSequalizeObject(args);
+            } else if (isMongodb) {
+              whr = await convertedFiltersIntoMongooseQuery(args);
             }
-          }else {
+          } else {
             whr = args;
-          }          
+          }
           const model = this.dbTables[this.tableName];
           let attributesObject = {};
           if (requestedFields && requestedFields.constructor === Array && requestedFields[0] !== "*") {
