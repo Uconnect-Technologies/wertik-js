@@ -256,7 +256,6 @@ export const mongoose = {
   },
   getLastYearCount: function (model) {
     return new Promise((resolve, reject) => {
-      console.log(moment().subtract(1, "year").startOf("year"), moment().subtract(1, "year").endOf("year"));
       try {
         model.countDocuments(
           {

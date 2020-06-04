@@ -4,17 +4,7 @@ import convertFiltersIntoSequalizeObject from "../database/helpers/convertFilter
 import convertedFiltersIntoMongooseQuery from "../database/helpers/convertedFiltersIntoMongooseQuery";
 import internalServerError from "../../framework/helpers/internalServerError";
 import { convertFieldsIntoSequelizeFields } from "../database/helpers";
-import {
-  getQueryForLast7Days,
-  getQueryForLastYear,
-  getQueryForThisYear,
-  getQueryForThisMonth,
-  getQueryForLastMonth,
-  getQueryForThisWeek,
-  getQueryForToday,
-  getQueryForLast90Days,
-  mongoose,
-} from "../reporting";
+import { getQueryForLast7Days, getQueryForLastYear, getQueryForThisYear, getQueryForThisMonth, getQueryForLastMonth, getQueryForThisWeek, getQueryForToday, getQueryForLast90Days, mongoose } from "../reporting";
 
 export default function (props) {
   const { dbDialect } = process.env;
@@ -58,15 +48,7 @@ export default function (props) {
         };
         try {
           const model = this.dbTables[this.tableName];
-          let count,
-            countLast7Days,
-            countToday,
-            countLastYear,
-            countThisYear,
-            countThisMonth,
-            countThisweek,
-            countLastMonth,
-            countLast90Days;
+          let count, countLast7Days, countToday, countLastYear, countThisYear, countThisMonth, countThisweek, countLastMonth, countLast90Days;
           if (isSQL) {
             let selectOptions = {
               type: database.QueryTypes.SELECT,
@@ -109,15 +91,33 @@ export default function (props) {
             statsInfo.total_added_last_year = get(countLastYear, "[0].total_added_last_year", 0);
             statsInfo.total_added_this_year = get(countThisYear, "[0].total_added_this_year", 0);
           } else if (isMongodb) {
-            statsInfo.total_count = await mongoose.getTotalCount(model);
-            statsInfo.total_added_this_week = await mongoose.getThisWeekCount(model);
-            statsInfo.total_added_last_7_days = await mongoose.getLast7DaysCount(model);
-            statsInfo.total_added_today = await mongoose.getTodayCount(model);
-            statsInfo.total_added_last_month = await mongoose.getLastMonthCount(model);
-            statsInfo.total_added_last_90_days = await mongoose.getLast90DaysCount(model);
-            statsInfo.total_added_this_month = await mongoose.getThisMonthCount(model);
-            statsInfo.total_added_this_year = await mongoose.getThisYearCount(model);
-            statsInfo.total_added_last_year = await mongoose.getLastYearCount(model);
+            if (requestedReports.includes("total_count")) {
+              statsInfo.total_count = await mongoose.getTotalCount(model);
+            }
+            if (requestedReports.includes("total_added_this_week")) {
+              statsInfo.total_added_this_week = await mongoose.getThisWeekCount(model);
+            }
+            if (requestedReports.includes("total_added_last_7_days")) {
+              statsInfo.total_added_last_7_days = await mongoose.getLast7DaysCount(model);
+            }
+            if (requestedReports.includes("total_added_today")) {
+              statsInfo.total_added_today = await mongoose.getTodayCount(model);
+            }
+            if (requestedReports.includes("total_added_last_month")) {
+              statsInfo.total_added_last_month = await mongoose.getLastMonthCount(model);
+            }
+            if (requestedReports.includes("total_added_last_90_days")) {
+              statsInfo.total_added_last_90_days = await mongoose.getLast90DaysCount(model);
+            }
+            if (requestedReports.includes("total_added_this_month")) {
+              statsInfo.total_added_this_month = await mongoose.getThisMonthCount(model);
+            }
+            if (requestedReports.includes("total_added_this_year")) {
+              statsInfo.total_added_this_year = await mongoose.getThisYearCount(model);
+            }
+            if (requestedReports.includes("total_added_last_year")) {
+              statsInfo.total_added_last_year = await mongoose.getLastYearCount(model);
+            }
           }
           resolve(statsInfo);
         } catch (e) {
