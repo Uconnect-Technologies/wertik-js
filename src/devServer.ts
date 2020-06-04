@@ -7,7 +7,7 @@ const mongoDbConfiguration: IConfiguration = require("./framework/defaults/defau
 
 let app = express();
 
-let configuration = mongoDbConfiguration;
+let configuration = defaultConfiguration;
 
 wertik({ expressApp: app }, configuration).then((wertikApp: any) => {
   if (configuration.database.dbDialect.includes("sql")) {
