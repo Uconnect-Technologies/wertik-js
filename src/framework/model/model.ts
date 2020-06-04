@@ -4,7 +4,16 @@ import convertFiltersIntoSequalizeObject from "../database/helpers/convertFilter
 import convertedFiltersIntoMongooseQuery from "../database/helpers/convertedFiltersIntoMongooseQuery";
 import internalServerError from "../../framework/helpers/internalServerError";
 import { convertFieldsIntoSequelizeFields } from "../database/helpers";
-import { getQueryForLast7Days, getQueryForLastYear, getQueryForThisYear, getQueryForThisMonth, getQueryForLastMonth } from "../reporting";
+import {
+  getQueryForLast7Days,
+  getQueryForLastYear,
+  getQueryForThisYear,
+  getQueryForThisMonth,
+  getQueryForLastMonth,
+  getQueryForThisWeek,
+  getQueryForToday,
+  getQueryForLast90Days,
+} from "../reporting";
 
 export default function (props) {
   const { dbDialect } = process.env;
@@ -32,7 +41,8 @@ export default function (props) {
     getMongooseModel: function () {
       return this.dbTables[this.tableName];
     },
-    stats: async function (database) {
+    stats: async function (database, requestedReports) {
+      requestedReports = Object.keys(requestedReports);
       return new Promise(async (resolve, reject) => {
         let statsInfo = {
           total_count: 0,
@@ -41,29 +51,62 @@ export default function (props) {
           total_added_last_7_days: 0,
           total_added_this_month: 0,
           total_added_last_month: 0,
-          total_added_last_3_months: 0,
           total_added_last_90_days: 0,
           total_added_last_year: 0,
           total_added_this_year: 0,
         };
         try {
           const model = this.dbTables[this.tableName];
+          let count,
+            countLast7Days,
+            countToday,
+            countLastYear,
+            countThisYear,
+            countThisMonth,
+            countThisweek,
+            countLastMonth,
+            countLast90Days;
           if (isSQL) {
             let selectOptions = {
               type: database.QueryTypes.SELECT,
             };
-            let count = await database.query(`select count(*) as total_count from ${model.getTableName()}`, selectOptions);
-            let countLast7Days = await database.query(getQueryForLast7Days(model.getTableName()), selectOptions);
-            let countLastYear = await database.query(getQueryForLastYear(model.getTableName()), selectOptions);
-            let countThisYear = await database.query(getQueryForThisYear(model.getTableName()), selectOptions);
-            let countThisMonth = await database.query(getQueryForThisMonth(model.getTableName()), selectOptions);
-            let countLastMonth = await database.query(getQueryForLastMonth(model.getTableName()), selectOptions);
+            if (requestedReports.includes("total_count")) {
+              count = await database.query(`select count(*) as total_count from ${model.getTableName()}`, selectOptions);
+            }
+            if (requestedReports.includes("total_added_last_7_days")) {
+              countLast7Days = await database.query(getQueryForLast7Days(model.getTableName()), selectOptions);
+            }
+            if (requestedReports.includes("total_added_today")) {
+              countToday = await database.query(getQueryForToday(model.getTableName()), selectOptions);
+            }
+            if (requestedReports.includes("total_added_last_year")) {
+              countLastYear = await database.query(getQueryForLastYear(model.getTableName()), selectOptions);
+            }
+            if (requestedReports.includes("total_added_this_year")) {
+              countThisYear = await database.query(getQueryForThisYear(model.getTableName()), selectOptions);
+            }
+            if (requestedReports.includes("total_added_this_month")) {
+              countThisMonth = await database.query(getQueryForThisMonth(model.getTableName()), selectOptions);
+            }
+            if (requestedReports.includes("total_added_this_week")) {
+              countThisweek = await database.query(getQueryForThisWeek(model.getTableName()), selectOptions);
+            }
+            if (requestedReports.includes("total_added_last_month")) {
+              countLastMonth = await database.query(getQueryForLastMonth(model.getTableName()), selectOptions);
+            }
+            if (requestedReports.includes("total_added_last_90_days")) {
+              countLast90Days = await database.query(getQueryForLast90Days(model.getTableName()), selectOptions);
+            }
+
             statsInfo.total_count = get(count, "[0].total_count", 0);
+            statsInfo.total_added_this_month = get(countThisMonth, "[0].total_added_this_month", 0);
+            statsInfo.total_added_this_week = get(countThisweek, "[0].total_added_this_week", 0);
             statsInfo.total_added_last_7_days = get(countLast7Days, "[0].total_added_last_7_days", 0);
+            statsInfo.total_added_today = get(countToday, "[0].total_added_today", 0);
+            statsInfo.total_added_last_month = get(countLastMonth, "[0].total_added_last_month", 0);
+            statsInfo.total_added_last_90_days = get(countLast90Days, "[0].total_added_last_90_days", 0);
             statsInfo.total_added_last_year = get(countLastYear, "[0].total_added_last_year", 0);
             statsInfo.total_added_this_year = get(countThisYear, "[0].total_added_this_year", 0);
-            statsInfo.total_added_this_month = get(countThisMonth, "[0].total_added_this_month", 0);
-            statsInfo.total_added_last_month = get(countLastMonth, "[0].total_added_last_month", 0);
           } else if (isMongodb) {
           }
           resolve(statsInfo);

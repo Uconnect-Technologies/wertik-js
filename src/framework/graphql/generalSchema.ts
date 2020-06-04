@@ -6,7 +6,6 @@ export default `
 		total_added_last_7_days: Int
 		total_added_today: Int
 		total_added_last_month: Int
-		total_added_last_3_months: Int
 		total_added_last_90_days: Int
 		total_added_last_year: Int
 		total_added_this_year: Int

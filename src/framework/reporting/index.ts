@@ -4,9 +4,13 @@ export const getYear = () => {
   return moment().year();
 };
 
-export const getMonth = () => {};
+export const getMonth = () => {
+  return moment().month() + 1;
+};
 
-export const getDate = () => {};
+export const getDate = () => {
+  return moment().date();
+};
 
 export const substractDays = (num) => {
   return moment().subtract(num, "d");
@@ -20,6 +24,17 @@ export const getQueryForLast7Days = function (tableName: String) {
         '${getYear()}-${substractDays(7).month() + 1}-${substractDays(7).date()}'
       AND
         '${getYear()}-${moment().month() + 1}-${moment().date()}'
+  `;
+};
+
+export const getQueryForToday = function (tableName: String) {
+  return `
+    SELECT count(*) as total_added_today FROM ${tableName}
+    WHERE DATE(created_at)
+      BETWEEN
+        '${getYear()}-${getMonth()}-${getDate()} 00:00:00'
+        AND
+        '${getYear()}-${getMonth()}-${getDate()} 23:59:59'
   `;
 };
 
@@ -45,6 +60,17 @@ export const getQueryForThisMonth = function (tableName: String) {
   `;
 };
 
+export const getQueryForThisWeek = function (tableName: String) {
+  return `
+    SELECT count(*) as total_added_this_week FROM ${tableName}
+    WHERE DATE(created_at)
+    BETWEEN
+      '${getYear()}-${moment().month() + 1}-${moment().startOf("month").date()}'
+    AND
+      '${getYear()}-${moment().month() + 1}-${moment().endOf("month").date()}'
+  `;
+};
+
 export const getQueryForLastMonth = function (tableName: String) {
   return `
     SELECT count(*) as total_added_last_month FROM ${tableName}
@@ -59,6 +85,20 @@ export const getQueryForLastMonth = function (tableName: String) {
     .subtract(1, "months")
     .endOf("month")
     .date()}'
+  `;
+};
+
+export const getQueryForLast90Days = function (tableName: String) {
+  return `
+    SELECT count(*) as total_added_last_90_days FROM ${tableName}
+    WHERE DATE(created_at)
+    BETWEEN
+      '${moment().subtract(90, "days").year()}-${moment().subtract(90, "days").month() + 1}-${moment()
+    .subtract(90, "days")
+    .startOf("month")
+    .date()}'
+    AND
+      '${moment().year()}-${moment().month() + 1}-${moment().endOf("month").date()}'
   `;
 };
 

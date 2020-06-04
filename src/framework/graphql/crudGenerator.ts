@@ -413,8 +413,9 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
     queries: {
       [`${firstLetterLowerCase(moduleName)}Stats`]: async (_: any, args: any, context: any, info: any) => {
         let database = context.database;
+        let requestedReports = getRequestedFieldsFromResolverInfo(info);
         let model = context.models[moduleName].getModel();
-        return model.stats(database);
+        return model.stats(database,requestedReports);
       },
       [`${firstLetterLowerCase(moduleName)}ById`]: async (_: any, args: any, context: any, info: any) => {
         let model = context.models[moduleName].getModel();
