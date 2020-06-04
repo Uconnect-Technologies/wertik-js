@@ -32,7 +32,7 @@ export default function (connection, configuration) {
           tableName,
           {
             ...tableFields,
-            ...databaseDefaultOptions.sql.timestamps
+            ...databaseDefaultOptions.sql.timestamps,
           },
           {
             ...tableOptions,

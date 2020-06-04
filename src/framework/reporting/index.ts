@@ -79,15 +79,9 @@ export const getQueryForLastMonth = function (tableName: String) {
     SELECT count(*) as total_added_last_month FROM ${tableName}
     WHERE DATE(created_at)
     BETWEEN
-      '${moment().subtract(1, "months").year()}-${moment().subtract(1, "months").month() + 1}-${moment()
-    .subtract(1, "months")
-    .startOf("month")
-    .date()}'
+      '${moment().subtract(1, "months").year()}-${moment().subtract(1, "months").month() + 1}-${moment().subtract(1, "months").startOf("month").date()}'
     AND
-      '${moment().subtract(1, "months").year()}-${moment().subtract(1, "months").month() + 1}-${moment()
-    .subtract(1, "months")
-    .endOf("month")
-    .date()}'
+      '${moment().subtract(1, "months").year()}-${moment().subtract(1, "months").month() + 1}-${moment().subtract(1, "months").endOf("month").date()}'
   `;
 };
 
@@ -96,10 +90,7 @@ export const getQueryForLast90Days = function (tableName: String) {
     SELECT count(*) as total_added_last_90_days FROM ${tableName}
     WHERE DATE(created_at)
     BETWEEN
-      '${moment().subtract(90, "days").year()}-${moment().subtract(90, "days").month() + 1}-${moment()
-    .subtract(90, "days")
-    .startOf("month")
-    .date()}'
+      '${moment().subtract(90, "days").year()}-${moment().subtract(90, "days").month() + 1}-${moment().subtract(90, "days").startOf("month").date()}'
     AND
       '${moment().year()}-${moment().month() + 1}-${moment().endOf("month").date()}'
   `;
@@ -122,9 +113,162 @@ export const mongoose = {
   getTotalCount: function (model) {
     return new Promise((resolve, reject) => {
       try {
-        model.count({}, function (err, count) {
+        model.countDocuments({}, function (err, count) {
           resolve(count);
         });
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
+  getThisMonthCount: function (model) {
+    return new Promise((resolve, reject) => {
+      try {
+        model.countDocuments(
+          {
+            created_at: {
+              $gt: moment().startOf("month"),
+              $lt: moment().endOf("month"),
+            },
+          },
+          function (err, count) {
+            resolve(count);
+          }
+        );
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
+  getLastMonthCount: function (model) {
+    return new Promise((resolve, reject) => {
+      try {
+        model.countDocuments(
+          {
+            created_at: {
+              $gt: moment().subtract(1, "month").startOf("month"),
+              $lt: moment().subtract(1, "month").endOf("month"),
+            },
+          },
+          function (err, count) {
+            resolve(count);
+          }
+        );
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
+  getThisWeekCount: function (model) {
+    return new Promise((resolve, reject) => {
+      try {
+        model.countDocuments(
+          {
+            created_at: {
+              $gt: moment().startOf("isoWeek"),
+              $lt: moment().endOf("isoWeek"),
+            },
+          },
+          function (err, count) {
+            resolve(count);
+          }
+        );
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
+  getLast7DaysCount: function (model) {
+    return new Promise((resolve, reject) => {
+      try {
+        model.countDocuments(
+          {
+            created_at: {
+              $gt: moment().subtract(7, "days").startOf("day"),
+              $lt: moment().endOf("day"),
+            },
+          },
+          function (err, count) {
+            resolve(count);
+          }
+        );
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
+  getTodayCount: function (model) {
+    return new Promise((resolve, reject) => {
+      try {
+        model.countDocuments(
+          {
+            created_at: {
+              $gt: moment().startOf("day"),
+              $lt: moment().endOf("day"),
+            },
+          },
+          function (err, count) {
+            resolve(count);
+          }
+        );
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
+  getThisYearCount: function (model) {
+    return new Promise((resolve, reject) => {
+      try {
+        model.countDocuments(
+          {
+            created_at: {
+              $gt: moment().startOf("year"),
+              $lt: moment().endOf("year"),
+            },
+          },
+          function (err, count) {
+            resolve(count);
+          }
+        );
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
+  getLast90DaysCount: function (model) {
+    return new Promise((resolve, reject) => {
+      try {
+        model.countDocuments(
+          {
+            created_at: {
+              $gt: moment().subtract(90, "days").startOf("day"),
+              $lt: moment().endOf("day"),
+            },
+          },
+          function (err, count) {
+            resolve(count);
+          }
+        );
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
+  getLastYearCount: function (model) {
+    return new Promise((resolve, reject) => {
+      console.log(moment().subtract(1, "year").startOf("year"), moment().subtract(1, "year").endOf("year"));
+      try {
+        model.countDocuments(
+          {
+            created_at: {
+              $gt: moment().subtract(1, "year").startOf("year"),
+              $lt: moment().subtract(1, "year").endOf("year"),
+            },
+          },
+          function (err, count) {
+            resolve(count);
+          }
+        );
       } catch (e) {
         reject(e);
       }

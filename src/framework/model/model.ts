@@ -109,7 +109,15 @@ export default function (props) {
             statsInfo.total_added_last_year = get(countLastYear, "[0].total_added_last_year", 0);
             statsInfo.total_added_this_year = get(countThisYear, "[0].total_added_this_year", 0);
           } else if (isMongodb) {
-            statsInfo.total_count = mongoose.getTotalCount(model);
+            statsInfo.total_count = await mongoose.getTotalCount(model);
+            statsInfo.total_added_this_week = await mongoose.getThisWeekCount(model);
+            statsInfo.total_added_last_7_days = await mongoose.getLast7DaysCount(model);
+            statsInfo.total_added_today = await mongoose.getTodayCount(model);
+            statsInfo.total_added_last_month = await mongoose.getLastMonthCount(model);
+            statsInfo.total_added_last_90_days = await mongoose.getLast90DaysCount(model);
+            statsInfo.total_added_this_month = await mongoose.getThisMonthCount(model);
+            statsInfo.total_added_this_year = await mongoose.getThisYearCount(model);
+            statsInfo.total_added_last_year = await mongoose.getLastYearCount(model);
           }
           resolve(statsInfo);
         } catch (e) {
