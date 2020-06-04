@@ -1,4 +1,5 @@
 import moment from "moment";
+import { resolve } from "url";
 
 export const getYear = () => {
   return moment().year();
@@ -15,6 +16,8 @@ export const getDate = () => {
 export const substractDays = (num) => {
   return moment().subtract(num, "d");
 };
+
+/// mysql
 
 export const getQueryForLast7Days = function (tableName: String) {
   return `
@@ -111,4 +114,20 @@ export const getQueryForLastYear = function (tableName: String) {
     AND
       '${getYear() - 1}-12-31'
   `;
+};
+
+/// mongoose
+
+export const mongoose = {
+  getTotalCount: function (model) {
+    return new Promise((resolve, reject) => {
+      try {
+        model.count({}, function (err, count) {
+          resolve(count);
+        });
+      } catch (e) {
+        reject(e);
+      }
+    });
+  },
 };

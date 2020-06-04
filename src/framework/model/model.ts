@@ -13,6 +13,7 @@ import {
   getQueryForThisWeek,
   getQueryForToday,
   getQueryForLast90Days,
+  mongoose,
 } from "../reporting";
 
 export default function (props) {
@@ -45,15 +46,15 @@ export default function (props) {
       requestedReports = Object.keys(requestedReports);
       return new Promise(async (resolve, reject) => {
         let statsInfo = {
-          total_count: 0,
-          total_added_today: 0,
-          total_added_this_week: 0,
-          total_added_last_7_days: 0,
-          total_added_this_month: 0,
-          total_added_last_month: 0,
-          total_added_last_90_days: 0,
-          total_added_last_year: 0,
-          total_added_this_year: 0,
+          total_count: null,
+          total_added_today: null,
+          total_added_this_week: null,
+          total_added_last_7_days: null,
+          total_added_this_month: null,
+          total_added_last_month: null,
+          total_added_last_90_days: null,
+          total_added_last_year: null,
+          total_added_this_year: null,
         };
         try {
           const model = this.dbTables[this.tableName];
@@ -108,6 +109,7 @@ export default function (props) {
             statsInfo.total_added_last_year = get(countLastYear, "[0].total_added_last_year", 0);
             statsInfo.total_added_this_year = get(countThisYear, "[0].total_added_this_year", 0);
           } else if (isMongodb) {
+            statsInfo.total_count = mongoose.getTotalCount(model);
           }
           resolve(statsInfo);
         } catch (e) {
