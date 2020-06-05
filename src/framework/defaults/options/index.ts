@@ -38,6 +38,9 @@ export const databaseDefaultOptions = {
   mongoDB: {
     defaultTableOptions: {
       timestamps: {
+        currentTime: function () {
+          return new Date().toISOString()
+        },
         createdAt: "created_at",
         updatedAt: "updated_at",
       },
