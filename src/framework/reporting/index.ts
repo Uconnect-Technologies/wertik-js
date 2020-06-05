@@ -1,16 +1,16 @@
 import moment from "moment";
 import { resolve } from "url";
 
-export const getYear = () => {
-  return moment().year();
+export const getYear = (mm = null) => {
+  return mm ? mm.year() : moment().year();
 };
 
-export const getMonth = () => {
-  return moment().month() + 1;
+export const getMonth = (mm = null) => {
+  return mm ? mm.month() + 1 : moment().month() + 1;
 };
 
-export const getDate = () => {
-  return moment().date();
+export const getDate = (mm = null) => {
+  return mm ? mm.date() : moment().date();
 };
 
 export const substractDays = (num) => {
@@ -24,9 +24,9 @@ export const getQueryForLast7Days = function (tableName: String) {
     SELECT count(*) as total_added_last_7_days FROM ${tableName}
     WHERE DATE(created_at)
       BETWEEN
-        '${getYear()}-${substractDays(7).month() + 1}-${substractDays(7).date()}'
+        '${getYear(substractDays(7))}-${substractDays(7).month() + 1}-${substractDays(7).date()}'
       AND
-        '${getYear()}-${moment().month() + 1}-${moment().date()}'
+        '${getYear(substractDays(7))}-${moment().month() + 1}-${moment().date()}'
   `;
 };
 
@@ -68,9 +68,9 @@ export const getQueryForThisWeek = function (tableName: String) {
     SELECT count(*) as total_added_this_week FROM ${tableName}
     WHERE DATE(created_at)
     BETWEEN
-      '${getYear()}-${moment().month() + 1}-${moment().startOf("month").date()}'
+      '${getYear(moment().startOf("isoWeek"))}-${moment().startOf("isoWeek").month() + 1}-${moment().startOf("isoWeek").date()}'
     AND
-      '${getYear()}-${moment().month() + 1}-${moment().endOf("month").date()}'
+      '${getYear(moment().endOf("isoWeek"))}-${moment().endOf("isoWeek").month() + 1}-${moment().endOf("isoWeek").date()}'
   `;
 };
 
