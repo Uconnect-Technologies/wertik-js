@@ -68,9 +68,33 @@ export interface IConfigurationCustomModuleDatabaseMongo {
   onReady?: Function;
 }
 
+export interface IConfigurationCustomModuleDatabaseRelationshipType {
+  moduleName: string;
+  thatModuleAttribute: string;
+  thisModuleAttribute: string;
+}
+
+/*
+
+  Defines relationship for modoules. This relationship feature will map through:
+
+  1. Custom Module
+  2. Rest API 
+  3. GraphQL && GraphQL Relation
+
+*/
+
+export interface IConfigurationCustomModuleDatabaseRelationship {
+  hasOne: Array<IConfigurationCustomModuleDatabaseRelationshipType>;
+  hasMany: Array<IConfigurationCustomModuleDatabaseRelationshipType>;
+  belongsTo: Array<IConfigurationCustomModuleDatabaseRelationshipType>;
+  belongsToMany: Array<IConfigurationCustomModuleDatabaseRelationshipType>;
+}
+
 export interface IConfigurationCustomModuleDatabase {
   sql: IConfigurationCustomModuleDatabaseSql;
   mongo: IConfigurationCustomModuleDatabaseMongo;
+  relationship: IConfigurationCustomModuleDatabaseRelationship;
 }
 
 export interface IConfigurationCustomModule {
