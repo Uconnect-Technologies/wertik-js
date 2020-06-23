@@ -4,6 +4,8 @@ import moment from "moment";
 import { convertFieldsIntoSequelizeFields } from "./helpers/index";
 import { errorMessage } from "../logger/consoleMessages";
 import { databaseDefaultOptions } from "../defaults/options/index";
+import { IConfigurationCustomModule } from "../types/configuration";
+import { applyRelationship } from "../moduleRelationships/database";
 
 const checkDatabaseOptions = (moduleName, tableName) => {
   if (moduleName && !tableName) {
@@ -67,5 +69,18 @@ export default function (connection, configuration) {
     }
     processModule(module);
   });
+
+  // Apply relationships
+
+  modules.forEach((element) => {
+    let module;
+    if (element.constructor === String) {
+      module = require(`./../builtinModules/${element}/index`).default;
+    } else if (element.constructor === Object) {
+      module = element;
+    }
+    applyRelationship(module, tables);
+  });
+
   return tables;
 }

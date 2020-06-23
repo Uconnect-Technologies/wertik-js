@@ -64,6 +64,18 @@ export default {
   },
   restApi: {},
   database: {
+    relationships: {
+      UserRole: {
+        type: "hasMany",
+        graphqlName: "user_roles",
+        foreignKey: "user_id",
+      },
+      UserPermission: {
+        type: "hasMany",
+        foreignKey: "user_id",
+        graphqlName: "user_permissions",
+      },
+    },
     sql: {
       tableName: "user",
       fields: {

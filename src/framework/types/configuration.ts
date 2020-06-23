@@ -8,12 +8,12 @@ export interface IConfigurationPorts {
 
 export interface IConfigurationCustomModuleGraphqlCrudQuery {
   generate: Boolean;
-  operations: String;
+  operations: string;
 }
 
 export interface IConfigurationCustomModuleGraphqlCrudMutation {
   generate: Boolean;
-  operations: String;
+  operations: string;
 }
 
 export interface IConfigurationCustomModuleGraphqlCrud {
@@ -21,17 +21,17 @@ export interface IConfigurationCustomModuleGraphqlCrud {
   mutation: IConfigurationCustomModuleGraphqlCrudMutation;
 }
 export interface IConfigurationCustomModuleGraphqlMutation {
-  schema: String;
+  schema: string;
   resolvers: Object;
 }
 export interface IConfigurationCustomModuleGraphqlQuery {
-  schema: String;
+  schema: string;
   resolvers: Object;
 }
 
 export interface IConfigurationCustomModuleGraphql {
   crud: IConfigurationCustomModuleGraphqlCrud;
-  schema: String;
+  schema: string;
   relations: {
     [Key: string]: Function;
   };
@@ -40,15 +40,15 @@ export interface IConfigurationCustomModuleGraphql {
 }
 
 export interface IConfigurationCustomModuleRestApiDocs {
-  description: String;
-  params: String;
-  response: String;
-  title: String;
+  description: string;
+  params: string;
+  response: string;
+  title: string;
 }
 
 export interface IConfigurationCustomModuleRestApiEndpoint {
-  path: String;
-  methodType: String;
+  path: string;
+  methodType: string;
   docs: IConfigurationCustomModuleRestApiDocs;
   handler: Function;
 }
@@ -59,11 +59,11 @@ export interface IConfigurationCustomModuleRestApi {
 
 export interface IConfigurationCustomModuleDatabaseSql {
   fields: Object;
-  tableName: String;
+  tableName: string;
   tableOptions: Object;
 }
 export interface IConfigurationCustomModuleDatabaseMongo {
-  tableName: String;
+  tableName: string;
   schema: Object;
   onReady?: Function;
 }
@@ -78,8 +78,9 @@ export interface IConfigurationCustomModuleDatabaseMongo {
   */
 
 export interface IConfigurationCustomModuleDatabaseRelationshipType {
-  moduleName: string;
+  type: string;
   foreignKey: string;
+  graphqlName: string,
   options: {
     [Key: string]: any;
   };
@@ -96,33 +97,31 @@ export interface IConfigurationCustomModuleDatabaseRelationshipType {
 */
 
 export interface IConfigurationCustomModuleDatabaseRelationship {
-  hasOne: Array<IConfigurationCustomModuleDatabaseRelationshipType>;
-  hasMany: Array<IConfigurationCustomModuleDatabaseRelationshipType>;
-  belongsTo: Array<IConfigurationCustomModuleDatabaseRelationshipType>;
+  [key: string]: IConfigurationCustomModuleDatabaseRelationshipType;
 }
 
 export interface IConfigurationCustomModuleDatabase {
   sql: IConfigurationCustomModuleDatabaseSql;
   mongo: IConfigurationCustomModuleDatabaseMongo;
-  relationship: IConfigurationCustomModuleDatabaseRelationship;
+  relationships: IConfigurationCustomModuleDatabaseRelationship;
 }
 
 export interface IConfigurationCustomModule {
-  name: String;
+  name: string;
   graphql: IConfigurationCustomModuleGraphql;
   restApi: IConfigurationCustomModuleRestApi;
   database: IConfigurationCustomModuleDatabase;
 }
 
 export interface IConfigurationDatabase {
-  dbDialect: String;
-  dbConnectionString?: String;
-  dbUsername?: String;
-  dbPassword?: String;
-  dbName?: String;
-  dbHost?: String;
-  dbPort?: String;
-  mongoDBURI?: String;
+  dbDialect: string;
+  dbConnectionstring?: string;
+  dbUsername?: string;
+  dbPassword?: string;
+  dbName?: string;
+  dbHost?: string;
+  dbPort?: string;
+  mongoDBURI?: string;
   dbInitializeOptions: {
     [Key: string]: any;
   };
@@ -191,7 +190,7 @@ export interface IConfigurationGraphql {
 }
 
 export interface IConfigurationSecurity {
-  allowedIpAddresses: Array<String>;
+  allowedIpAddresses: Array<string>;
 }
 
 export interface IConfigurationStorage {
@@ -205,7 +204,7 @@ export interface IConfigurationEmail {
   sendEmail: Function; // A function that uses IConfigurationEmail.defaultEmailInstance and sends an email
   configuration: any; // This can be string or object, A string of connection string for smtp mailer or configuration for node mailer
   templates: {
-    [Key: string]: String;
+    [Key: string]: string;
   };
 }
 
@@ -222,24 +221,24 @@ export interface IConfigurationCron {
 }
 
 export interface IConfiguration {
-  dbDialect: String;
-  name: String;
-  builtinModules: String;
+  dbDialect: string;
+  name: string;
+  builtinModules: string;
   extendBuiltinModules: {
     [Key: string]: {
       database: {
         tableFieds: any;
       };
       graphql: {
-        mainSchemaExtend: String;
-        inputSchemaExtend: String;
+        mainSchemaExtend: string;
+        inputSchemaExtend: string;
       };
     };
   };
   database: IConfigurationDatabase;
-  frontendAppUrl: String;
-  frontendAppActivationUrl: String;
-  frontendAppPasswordResetUrl: String;
+  frontendAppUrl: string;
+  frontendAppActivationUrl: string;
+  frontendAppPasswordResetUrl: string;
   context: {
     [Key: string]: any;
   };
