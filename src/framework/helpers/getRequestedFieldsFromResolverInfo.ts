@@ -1,7 +1,14 @@
 import graphqlFields from "graphql-fields";
-export default function(info: any, asArray = false) {
+export default function (info: any, selectIgnoreFields: Array<String> = []) {
   let fields = graphqlFields(info, null, 2);
   delete fields["pagination"];
   delete fields["filters"];
-  return asArray ? Object.keys(fields) : fields;
+  selectIgnoreFields.map((str) => {
+    if (!!fields['list']) {
+      delete fields.list[str];
+    } else {
+      delete fields[str];
+    }
+  });
+  return fields;
 }

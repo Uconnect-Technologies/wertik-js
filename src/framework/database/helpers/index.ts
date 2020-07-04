@@ -2,15 +2,7 @@ const sequelize = require("sequelize");
 
 // mysql helpers
 
-export const convertFieldsIntoSequelizeFields = (fields, relationships) => {
-  if (relationships) {
-    let relataionshipKeys = Object.keys(relationships).filter((c) => c);
-    relataionshipKeys.forEach((relataionshipKeyName) => {
-      let relationshipItem = relationships[relataionshipKeyName];
-      fields[relationshipItem.graphqlName] = { type: "string" };
-    });
-    
-  }
+export const convertFieldsIntoSequelizeFields = (fields) => {
   let k = Object.keys(fields);
   k.forEach((element) => {
     const t = fields[element].type;

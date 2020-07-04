@@ -1,5 +1,5 @@
 import getRequestedFieldsFromResolverInfo from "./../helpers/getRequestedFieldsFromResolverInfo";
-import { IConfiguration } from "../types/configuration";
+import { IConfiguration, IConfigurationCustomModule } from "../types/configuration";
 import { get, isFunction } from "lodash";
 import { firstLetterLowerCase } from "../helpers/index";
 
@@ -130,60 +130,61 @@ export const generateMutationsCrudSchema = (moduleName: String, operations) => {
   }
 };
 
-export const generateCrudResolvers = (moduleName: string, pubsub, operationsModify, operationsRead, configuration: IConfiguration) => {
+export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub, operationsModify, operationsRead, configuration: IConfiguration) => {
   const operationsModifySplit = operationsModify.toLowerCase().split(" ");
   const operationsReadSplit = operationsRead.toLowerCase().split(" ");
-  const overrideMutationCreate = get(configuration, `override.${moduleName}.graphql.mutation.create`, null);
-  const overrideMutationSave = get(configuration, `override.${moduleName}.graphql.mutation.save`, null);
-  const overrideMutationUpdate = get(configuration, `override.${moduleName}.graphql.mutation.update`, null);
-  const overrideMutationDelete = get(configuration, `override.${moduleName}.graphql.mutation.delete`, null);
-  const overrideMutationSoftDelete = get(configuration, `override.${moduleName}.graphql.mutation.softDelete`, null);
-  const overrideMutationBulkCreate = get(configuration, `override.${moduleName}.graphql.mutation.bulkCreate`, null);
-  const overrideMutationBulkUpdate = get(configuration, `override.${moduleName}.graphql.mutation.bulkUpdate`, null);
-  const overrideMutationBulkDelete = get(configuration, `override.${moduleName}.graphql.mutation.bulkDelete`, null);
-  const overrideMutationBulkSoftDelete = get(configuration, `override.${moduleName}.graphql.mutation.bulkSoftDelete`, null);
-  const overrideModuleQuery = get(configuration, `override.${moduleName}.graphql.query.${firstLetterLowerCase(moduleName)}`, null);
-  const overrideQueryList = get(configuration, `override.${moduleName}.graphql.query.list`, null);
-  const overrideQueryView = get(configuration, `override.${moduleName}.graphql.query.view`, null);
-  const overrideQueryById = get(configuration, `override.${moduleName}.graphql.query.byId`, null);
+  const overrideMutationCreate = get(configuration, `override.${module.name}.graphql.mutation.create`, null);
+  const overrideMutationSave = get(configuration, `override.${module.name}.graphql.mutation.save`, null);
+  const overrideMutationUpdate = get(configuration, `override.${module.name}.graphql.mutation.update`, null);
+  const overrideMutationDelete = get(configuration, `override.${module.name}.graphql.mutation.delete`, null);
+  const overrideMutationSoftDelete = get(configuration, `override.${module.name}.graphql.mutation.softDelete`, null);
+  const overrideMutationBulkCreate = get(configuration, `override.${module.name}.graphql.mutation.bulkCreate`, null);
+  const overrideMutationBulkUpdate = get(configuration, `override.${module.name}.graphql.mutation.bulkUpdate`, null);
+  const overrideMutationBulkDelete = get(configuration, `override.${module.name}.graphql.mutation.bulkDelete`, null);
+  const overrideMutationBulkSoftDelete = get(configuration, `override.${module.name}.graphql.mutation.bulkSoftDelete`, null);
+  const overrideModuleQuery = get(configuration, `override.${module.name}.graphql.query.${firstLetterLowerCase(module.name)}`, null);
+  const overrideQueryList = get(configuration, `override.${module.name}.graphql.query.list`, null);
+  const overrideQueryView = get(configuration, `override.${module.name}.graphql.query.view`, null);
+  const overrideQueryById = get(configuration, `override.${module.name}.graphql.query.byId`, null);
 
-  const beforeCreate = get(configuration, `events.database.${moduleName}.beforeCreate`, null);
-  const afterCreate = get(configuration, `events.database.${moduleName}.afterCreate`, null);
-  const beforeUpdate = get(configuration, `events.database.${moduleName}.beforeUpdate`, null);
-  const afterUpdate = get(configuration, `events.database.${moduleName}.afterUpdate`, null);
-  const beforeDelete = get(configuration, `events.database.${moduleName}.beforeDelete`, null);
-  const afterDelete = get(configuration, `events.database.${moduleName}.afterDelete`, null);
-  const beforeSoftDelete = get(configuration, `events.database.${moduleName}.beforeSoftDelete`, null);
-  const afterSoftDelete = get(configuration, `events.database.${moduleName}.afterSoftDelete`, null);
-  const beforeBulkDelete = get(configuration, `events.database.${moduleName}.beforeBulkDelete`, null);
-  const afterBulkDelete = get(configuration, `events.database.${moduleName}.afterBulkDelete`, null);
-  const beforeBulkSoftDelete = get(configuration, `events.database.${moduleName}.beforeBulkSoftDelete`, null);
-  const afterBulkSoftDelete = get(configuration, `events.database.${moduleName}.afterBulkSoftDelete`, null);
-  const beforeBulkCreate = get(configuration, `events.database.${moduleName}.beforeBulkCreate`, null);
-  const afterBulkCreate = get(configuration, `events.database.${moduleName}.afterBulkCreate`, null);
-  const beforeBulkSoftCreate = get(configuration, `events.database.${moduleName}.beforeBulkSoftCreate`, null);
-  const afterBulkSoftCreate = get(configuration, `events.database.${moduleName}.afterBulkSoftCreate`, null);
-  const beforeBulkUpdate = get(configuration, `events.database.${moduleName}.beforeBulkUpdate`, null);
-  const afterBulkUpdate = get(configuration, `events.database.${moduleName}.afterBulkUpdate`, null);
-  const beforeBulkSoftUpdate = get(configuration, `events.database.${moduleName}.beforeBulkSoftUpdate`, null);
-  const afterBulkSoftUpdate = get(configuration, `events.database.${moduleName}.afterBulkSoftUpdate`, null);
+  const beforeCreate = get(configuration, `events.database.${module.name}.beforeCreate`, null);
+  const afterCreate = get(configuration, `events.database.${module.name}.afterCreate`, null);
+  const beforeUpdate = get(configuration, `events.database.${module.name}.beforeUpdate`, null);
+  const afterUpdate = get(configuration, `events.database.${module.name}.afterUpdate`, null);
+  const beforeDelete = get(configuration, `events.database.${module.name}.beforeDelete`, null);
+  const afterDelete = get(configuration, `events.database.${module.name}.afterDelete`, null);
+  const beforeSoftDelete = get(configuration, `events.database.${module.name}.beforeSoftDelete`, null);
+  const afterSoftDelete = get(configuration, `events.database.${module.name}.afterSoftDelete`, null);
+  const beforeBulkDelete = get(configuration, `events.database.${module.name}.beforeBulkDelete`, null);
+  const afterBulkDelete = get(configuration, `events.database.${module.name}.afterBulkDelete`, null);
+  const beforeBulkSoftDelete = get(configuration, `events.database.${module.name}.beforeBulkSoftDelete`, null);
+  const afterBulkSoftDelete = get(configuration, `events.database.${module.name}.afterBulkSoftDelete`, null);
+  const beforeBulkCreate = get(configuration, `events.database.${module.name}.beforeBulkCreate`, null);
+  const afterBulkCreate = get(configuration, `events.database.${module.name}.afterBulkCreate`, null);
+  const beforeBulkSoftCreate = get(configuration, `events.database.${module.name}.beforeBulkSoftCreate`, null);
+  const afterBulkSoftCreate = get(configuration, `events.database.${module.name}.afterBulkSoftCreate`, null);
+  const beforeBulkUpdate = get(configuration, `events.database.${module.name}.beforeBulkUpdate`, null);
+  const afterBulkUpdate = get(configuration, `events.database.${module.name}.afterBulkUpdate`, null);
+  const beforeBulkSoftUpdate = get(configuration, `events.database.${module.name}.beforeBulkSoftUpdate`, null);
+  const afterBulkSoftUpdate = get(configuration, `events.database.${module.name}.afterBulkSoftUpdate`, null);
   // R
-  const beforeList = get(configuration, `events.database.${moduleName}.beforeList`, null);
-  const afterList = get(configuration, `events.database.${moduleName}.afterList`, null);
+  const beforeList = get(configuration, `events.database.${module.name}.beforeList`, null);
+  const afterList = get(configuration, `events.database.${module.name}.afterList`, null);
 
-  const beforeView = get(configuration, `events.database.${moduleName}.beforeView`, null);
-  const afterView = get(configuration, `events.database.${moduleName}.afterView`, null);
+  const beforeView = get(configuration, `events.database.${module.name}.beforeView`, null);
+  const afterView = get(configuration, `events.database.${module.name}.afterView`, null);
 
-  const beforeById = get(configuration, `events.database.${moduleName}.beforeById`, null);
-  const afterById = get(configuration, `events.database.${moduleName}.afterById`, null);
+  const beforeById = get(configuration, `events.database.${module.name}.beforeById`, null);
+  const afterById = get(configuration, `events.database.${module.name}.afterById`, null);
 
-  const beforeByModule = get(configuration, `events.database.${moduleName}.beforeByModule`, null);
-  const afterByModule = get(configuration, `events.database.${moduleName}.afterByModule`, null);
+  const beforeByModule = get(configuration, `events.database.${module.name}.beforeByModule`, null);
+  const afterByModule = get(configuration, `events.database.${module.name}.afterByModule`, null);
 
-  const { createdModule, deletedModule, updatedModule, softDeletedModule, savedModule } = getSubscriptionConstants(moduleName);
+  const { createdModule, deletedModule, updatedModule, softDeletedModule, savedModule } = getSubscriptionConstants(module.name);
+
   let object = {
     mutations: {
-      [`create${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
+      [`create${module.name}`]: async (_: any, args: any, context: any, info: any) => {
         if (overrideMutationCreate && overrideMutationCreate.constructor == Function) {
           let response = await overrideMutationCreate(_, args, context, info);
           return response;
@@ -198,7 +199,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
           finalArgs = args.input;
         }
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        let model = context.models[moduleName].getModel();
+        let model = context.models[module.name].getModel();
         let result = await model.create(finalArgs, requestedFields);
         pubsub.publish(createdModule, {
           [createdModule]: result.instance,
@@ -211,7 +212,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         }
         return result.instance;
       },
-      [`update${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
+      [`update${module.name}`]: async (_: any, args: any, context: any, info: any) => {
         if (overrideMutationUpdate && overrideMutationUpdate.constructor == Function) {
           let response = await overrideMutationUpdate(_, args, context, info);
           return response;
@@ -226,7 +227,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
           finalArgs = args.input;
         }
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        let model = context.models[moduleName].getModel();
+        let model = context.models[module.name].getModel();
         let result = await model.update(finalArgs, requestedFields);
         pubsub.publish(updatedModule, {
           [updatedModule]: result.instance,
@@ -239,20 +240,20 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         }
         return result.instance;
       },
-      [`save${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
+      [`save${module.name}`]: async (_: any, args: any, context: any, info: any) => {
         if (overrideMutationSave && overrideMutationSave.constructor == Function) {
           let response = await overrideMutationSave(_, args, context, info);
           return response;
         }
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        let model = context.models[moduleName].getModel();
+        let model = context.models[module.name].getModel();
         let result = await model.save(args.input, requestedFields);
         pubsub.publish(createdModule, {
           [savedModule]: result,
         });
         return result.instance;
       },
-      [`delete${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
+      [`delete${module.name}`]: async (_: any, args: any, context: any, info: any) => {
         if (overrideMutationDelete && overrideMutationDelete.constructor == Function) {
           let response = await overrideMutationDelete(_, args, context, info);
           return response;
@@ -266,11 +267,11 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         } else {
           finalArgs = args.input;
         }
-        let model = context.models[moduleName].getModel();
+        let model = context.models[module.name].getModel();
         await model.delete(finalArgs);
         pubsub.publish(deletedModule, {
           [deletedModule]: {
-            message: `${moduleName} successfully deleted`,
+            message: `${module.name} successfully deleted`,
           },
         });
         if (isFunction(afterDelete)) {
@@ -279,9 +280,9 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
             params: { _, args, context, info },
           });
         }
-        return { message: `${moduleName} successfully deleted` };
+        return { message: `${module.name} successfully deleted` };
       },
-      [`softDelete${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
+      [`softDelete${module.name}`]: async (_: any, args: any, context: any, info: any) => {
         if (overrideMutationSoftDelete && overrideMutationSoftDelete.constructor == Function) {
           let response = await overrideMutationSoftDelete(_, args, context, info);
           return response;
@@ -295,7 +296,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         } else {
           finalArgs = args.input;
         }
-        let model = context.models[moduleName].getModel();
+        let model = context.models[module.name].getModel();
         let result = await model.update({
           ...finalArgs,
           is_deleted: 1,
@@ -309,9 +310,9 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
             params: { _, args, context, info },
           });
         }
-        return { message: `${moduleName} successfully deleted` };
+        return { message: `${module.name} successfully deleted` };
       },
-      [`bulkDelete${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
+      [`bulkDelete${module.name}`]: async (_: any, args: any, context: any, info: any) => {
         if (overrideMutationBulkSoftDelete && overrideMutationBulkSoftDelete.constructor == Function) {
           let response = await overrideMutationBulkSoftDelete(_, args, context, info);
           return response;
@@ -325,7 +326,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         } else {
           finalArgs = args.input;
         }
-        let model = context.models[moduleName].getModel();
+        let model = context.models[module.name].getModel();
         let result = await model.bulkDelete(finalArgs);
         if (isFunction(afterBulkDelete)) {
           await afterBulkDelete({
@@ -333,9 +334,9 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
             params: { _, args, context, info },
           });
         }
-        return { message: `${moduleName} bulk items deleted successfully.` };
+        return { message: `${module.name} bulk items deleted successfully.` };
       },
-      [`bulkSoftDelete${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
+      [`bulkSoftDelete${module.name}`]: async (_: any, args: any, context: any, info: any) => {
         if (overrideMutationBulkDelete && overrideMutationBulkDelete.constructor == Function) {
           let response = await overrideMutationBulkDelete(_, args, context, info);
           return response;
@@ -349,7 +350,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         } else {
           finalArgs = args.input;
         }
-        let model = context.models[moduleName].getModel();
+        let model = context.models[module.name].getModel();
         let result = await model.bulkSoftDelete(finalArgs);
         if (isFunction(afterBulkSoftDelete)) {
           await afterBulkSoftDelete({
@@ -357,9 +358,9 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
             params: { _, args, context, info },
           });
         }
-        return { message: `${moduleName} bulk items deleted successfully.` };
+        return { message: `${module.name} bulk items deleted successfully.` };
       },
-      [`bulkCreate${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
+      [`bulkCreate${module.name}`]: async (_: any, args: any, context: any, info: any) => {
         if (overrideMutationBulkCreate && overrideMutationBulkCreate.constructor == Function) {
           let response = await overrideMutationBulkCreate(_, args, context, info);
           return response;
@@ -373,7 +374,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         } else {
           finalArgs = args.input;
         }
-        let model = context.models[moduleName].getModel();
+        let model = context.models[module.name].getModel();
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let result = await model.bulkCreate(finalArgs, requestedFields);
         if (isFunction(afterBulkCreate)) {
@@ -384,7 +385,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         }
         return result.bulkInstances;
       },
-      [`bulkUpdate${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
+      [`bulkUpdate${module.name}`]: async (_: any, args: any, context: any, info: any) => {
         if (overrideMutationBulkUpdate && overrideMutationBulkUpdate.constructor == Function) {
           let response = await overrideMutationBulkUpdate(_, args, context, info);
           return response;
@@ -398,7 +399,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         } else {
           finalArgs = args.input;
         }
-        let model = context.models[moduleName].getModel();
+        let model = context.models[module.name].getModel();
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let result = await model.bulkUpdate(finalArgs, requestedFields);
         if (isFunction(afterBulkUpdate)) {
@@ -411,14 +412,14 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
       },
     },
     queries: {
-      [`${firstLetterLowerCase(moduleName)}Stats`]: async (_: any, args: any, context: any, info: any) => {
+      [`${firstLetterLowerCase(module.name)}Stats`]: async (_: any, args: any, context: any, info: any) => {
         let database = context.database;
         let requestedReports = getRequestedFieldsFromResolverInfo(info);
-        let model = context.models[moduleName].getModel();
-        return model.stats(database,requestedReports);
+        let model = context.models[module.name].getModel();
+        return model.stats(database, requestedReports);
       },
-      [`${firstLetterLowerCase(moduleName)}ById`]: async (_: any, args: any, context: any, info: any) => {
-        let model = context.models[moduleName].getModel();
+      [`${firstLetterLowerCase(module.name)}ById`]: async (_: any, args: any, context: any, info: any) => {
+        let model = context.models[module.name].getModel();
         if (overrideQueryById && overrideQueryById.constructor == Function) {
           let response = await overrideQueryById(_, args, context, info);
           return response;
@@ -442,8 +443,8 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         }
         return findById.instance;
       },
-      [`${firstLetterLowerCase(moduleName)}`]: async (_: any, args: any, context: any, info: any) => {
-        let model = context.models[moduleName].getModel();
+      [`${firstLetterLowerCase(module.name)}`]: async (_: any, args: any, context: any, info: any) => {
+        let model = context.models[module.name].getModel();
         if (overrideModuleQuery && overrideModuleQuery.constructor == Function) {
           let response = await overrideModuleQuery(_, args, context, info);
           return response;
@@ -468,7 +469,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         }
         return response.instance;
       },
-      [`view${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
+      [`view${module.name}`]: async (_: any, args: any, context: any, info: any) => {
         if (overrideQueryView && overrideQueryView.constructor == Function) {
           let response = await overrideQueryView(_, args, context, info);
           return response;
@@ -482,8 +483,8 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         } else {
           finalArgs = args;
         }
-        let model = context.models[moduleName].getModel();
-        let requestedFields = getRequestedFieldsFromResolverInfo(info);
+        let model = context.models[module.name].getModel();
+        let requestedFields = getRequestedFieldsFromResolverInfo(info, get(module, "database.selectIgnoreFields", []));
         let view = await model.view(finalArgs, Object.keys(requestedFields));
         if (isFunction(afterView)) {
           afterView({
@@ -493,7 +494,7 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         }
         return view.instance;
       },
-      [`list${moduleName}`]: async (_: any, args: any, context: any, info: any) => {
+      [`list${module.name}`]: async (_: any, args: any, context: any, info: any) => {
         if (overrideQueryList && overrideQueryList.constructor == Function) {
           let response = await overrideQueryList(_, args, context, info);
           return response;
@@ -507,8 +508,8 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
         } else {
           finalArgs = args;
         }
-        let model = context.models[moduleName].getModel();
-        let requestedFields = getRequestedFieldsFromResolverInfo(info);
+        let model = context.models[module.name].getModel();
+        let requestedFields = getRequestedFieldsFromResolverInfo(info, get(module, "database.selectIgnoreFields", []));
         let response = await model.paginate(finalArgs, Object.keys(requestedFields.list));
         if (isFunction(afterList)) {
           afterList({
@@ -522,32 +523,32 @@ export const generateCrudResolvers = (moduleName: string, pubsub, operationsModi
   };
   if (operationsModify !== "*") {
     if (!operationsModifySplit.includes("create")) {
-      delete object.mutations[`create${moduleName}`];
+      delete object.mutations[`create${module.name}`];
     }
     if (!operationsModifySplit.includes("update")) {
-      delete object.mutations[`update${moduleName}`];
+      delete object.mutations[`update${module.name}`];
     }
     if (!operationsModifySplit.includes("delete")) {
-      delete object.mutations[`delete${moduleName}`];
+      delete object.mutations[`delete${module.name}`];
     }
     if (!operationsModifySplit.includes("bulkcreate")) {
-      delete object.mutations[`bulkCreate${moduleName}`];
+      delete object.mutations[`bulkCreate${module.name}`];
     }
     if (!operationsModifySplit.includes("bulkupdate")) {
-      delete object.mutations[`bulkUpdate${moduleName}`];
+      delete object.mutations[`bulkUpdate${module.name}`];
     }
     if (!operationsModifySplit.includes("bulkdelete")) {
-      delete object.mutations[`bulkDelete${moduleName}`];
+      delete object.mutations[`bulkDelete${module.name}`];
     }
   }
 
   if (operationsRead !== "*") {
     if (!operationsReadSplit.includes("view")) {
-      delete object.queries[`view${moduleName}`];
+      delete object.queries[`view${module.name}`];
     }
 
     if (!operationsReadSplit.includes("list")) {
-      delete object.queries[`list${moduleName}`];
+      delete object.queries[`list${module.name}`];
     }
   }
 

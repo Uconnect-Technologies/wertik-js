@@ -49,6 +49,15 @@ export default {
   },
   restApi: {},
   database: {
+    relationships: {
+      OneToOne: {
+        User: {
+          relationColumn: "user_id",
+          graphqlName: "user",
+          foreignKey: "id",
+        },
+      },
+    },
     sql: {
       tableName: "userPermission",
       fields: {
@@ -85,7 +94,7 @@ export default {
     },
     // relationships: {
     //   User: {
-        
+
     //   },
     // },
   },

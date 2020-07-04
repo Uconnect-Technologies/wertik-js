@@ -66,16 +66,17 @@ export default {
   },
   restApi: {},
   database: {
+    selectIgnoreFields: ["user_permissions", "user_roles"],
     relationships: {
-      UserRole: {
-        type: "hasMany",
-        graphqlName: "user_roles",
-        foreignKey: "user_id",
-      },
-      UserPermission: {
-        type: "hasMany",
-        foreignKey: "user_id",
-        graphqlName: "user_permissions",
+      oneToMany: {
+        UserRole: {
+          graphqlName: "user_roles",
+          foreignKey: "user_id",
+        },
+        UserPermission: {
+          graphqlName: "user_permissions",
+          foreignKey: "user_id",
+        },
       },
     },
     sql: {
