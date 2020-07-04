@@ -38,18 +38,7 @@ export default {
         created_by_id: Int
       }
     `,
-    relations: {
-      permission: async function (rolePermission, args, context, info) {
-        let requestedFields = getRequestedFieldsFromResolverInfo(info, true);
-        let view = await context.models["Permission"].findOneById(rolePermission.permission_id, requestedFields);
-        return view.instance;
-      },
-      role: async function (rolePermission, args, context, info) {
-        let requestedFields = getRequestedFieldsFromResolverInfo(info, true);
-        let view = await context.models["Role"].findOneById(rolePermission.role_id, requestedFields);
-        return view.instance;
-      },
-    },
+    customResolvers: {},
     mutation: {
       schema: ``,
       resolvers: {},

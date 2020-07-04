@@ -211,7 +211,7 @@ export default function (props) {
             let baseFields: any = "*";
             let attributesObject = {};
 
-            if (requestedFields.constructor === Array) {
+            if (requestedFields && requestedFields.constructor === Array) {
               baseFields = requestedFields;
               attributesObject["attributes"] = baseFields;
             }

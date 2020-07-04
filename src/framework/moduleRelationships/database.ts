@@ -21,6 +21,12 @@ export const applyRelationship = (
             foreignKey: relationshipInfo.foreignKey,
           });
         }
+      }else if (relationshipInfo.type == "hasOne") {
+        if (dbDialect === "postgres" || dbDialect === "mysql") {
+          currentModel.hasOne(otherModel, {
+            foreignKey: relationshipInfo.foreignKey,
+          });
+        }
       }
     });
   }

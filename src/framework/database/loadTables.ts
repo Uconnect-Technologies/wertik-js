@@ -4,7 +4,7 @@ import moment from "moment";
 import { convertFieldsIntoSequelizeFields } from "./helpers/index";
 import { errorMessage } from "../logger/consoleMessages";
 import { databaseDefaultOptions } from "../defaults/options/index";
-import { IConfigurationCustomModule } from "../types/configuration";
+import { IConfigurationCustomModule, IConfiguration } from "../types/configuration";
 import { applyRelationship } from "../moduleRelationships/database";
 
 const checkDatabaseOptions = (moduleName, tableName) => {
@@ -14,13 +14,13 @@ const checkDatabaseOptions = (moduleName, tableName) => {
   }
 };
 
-export default function (connection, configuration) {
+export default function (connection, configuration: IConfiguration) {
   let dialect = process.env.dbDialect;
   let modules = process.env.builtinModules.split(",");
   modules = modules.filter((c) => c);
   modules = [...modules, ...get(configuration, "modules", [])];
   let tables = {};
-  const processModule = (module) => {
+  const processModule = (module: IConfigurationCustomModule) => {
     let moduleName = get(module, "name", "");
     let useDatabase = get(module, "useDatabase", true);
 
@@ -28,7 +28,7 @@ export default function (connection, configuration) {
       if (dialect == "mysql" || dialect == "postgres") {
         let tableName = get(module, "database.sql.tableName", "");
         checkDatabaseOptions(moduleName, tableName);
-        let tableFields = convertFieldsIntoSequelizeFields(module.database.sql.fields);
+        let tableFields = convertFieldsIntoSequelizeFields(module.database.sql.fields, module.database.relationships);
         let tableOptions = get(module, "database.sql.tableOptions", databaseDefaultOptions.sql.defaultTableOptions);
         tables[moduleName] = connection.define(
           tableName,
@@ -79,7 +79,7 @@ export default function (connection, configuration) {
     } else if (element.constructor === Object) {
       module = element;
     }
-    applyRelationship(module, tables);
+    // applyRelationship(module, tables);
   });
 
   return tables;

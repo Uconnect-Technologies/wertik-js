@@ -32,7 +32,7 @@ export interface IConfigurationCustomModuleGraphqlQuery {
 export interface IConfigurationCustomModuleGraphql {
   crud: IConfigurationCustomModuleGraphqlCrud;
   schema: string;
-  relations: {
+  customResolvers: {
     [Key: string]: Function;
   };
   mutation: IConfigurationCustomModuleGraphqlMutation;
@@ -97,7 +97,15 @@ export interface IConfigurationCustomModuleDatabaseRelationshipType {
 */
 
 export interface IConfigurationCustomModuleDatabaseRelationship {
-  [key: string]: IConfigurationCustomModuleDatabaseRelationshipType;
+  hasOne: {
+    [key: string]: IConfigurationCustomModuleDatabaseRelationshipType;
+  },
+  hasMany: {
+    [key: string]: IConfigurationCustomModuleDatabaseRelationshipType;
+  },
+  belongsTo: {
+    [key: string]: IConfigurationCustomModuleDatabaseRelationshipType;  
+  }
 }
 
 export interface IConfigurationCustomModuleDatabase {

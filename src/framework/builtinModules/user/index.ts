@@ -29,6 +29,8 @@ export default {
         referer: String
         created_at: String
         updated_at: String
+        user_roles: RoleList
+        user_permissions: RolePermissionList
       }
       input UserInput {
         _id: String

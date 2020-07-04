@@ -92,3 +92,9 @@ export const firstLetterLowerCase = (s) => {
   if (typeof s !== "string") return "";
   return s.charAt(0).toLowerCase() + s.slice(1);
 };
+
+export const identityColumn = () => {
+  const { dbDialect } = process.env;
+  const isSQL = dbDialect.includes("sql");
+  return isSQL ? "id" : "_id";
+};
