@@ -5,6 +5,8 @@ import convertedFiltersIntoMongooseQuery from "../database/helpers/convertedFilt
 import internalServerError from "../../framework/helpers/internalServerError";
 import { convertFieldsIntoSequelizeFields } from "../database/helpers";
 import { getQueryForLast7Days, getQueryForLastYear, getQueryForThisYear, getQueryForThisMonth, getQueryForLastMonth, getQueryForThisWeek, getQueryForToday, getQueryForLast90Days, mongoose } from "../reporting";
+import { IConfiguration, IConfigurationCustomModule } from "../types/configuration";
+import { removeColumnsFromAccordingToSelectIgnoreFields } from "../helpers/index";
 
 export default function (props) {
   const { dbDialect } = process.env;
@@ -18,6 +20,7 @@ export default function (props) {
     instance: null,
     bulkInstances: [],
     id: null,
+    wertikModule: props.module,
 
     // methods
 
@@ -199,6 +202,7 @@ export default function (props) {
       });
     },
     paginate: async function (args: any, requestedFields: any) {
+      let wertikModule: IConfigurationCustomModule = this.wertikModule;
       return new Promise(async (resolve, reject) => {
         try {
           let page = get(args, "pagination.page", 1);
@@ -215,6 +219,8 @@ export default function (props) {
               baseFields = requestedFields;
               attributesObject["attributes"] = baseFields;
             }
+
+            attributesObject = removeColumnsFromAccordingToSelectIgnoreFields(attributesObject, wertikModule.database.selectIgnoreFields);
 
             let sortingObject = {
               order: sorting.map((c) => {
@@ -327,14 +333,19 @@ export default function (props) {
       });
     },
     findOneByArgs: async function (args, requestedFields: Array<string>) {
+      let wertikModule: IConfigurationCustomModule = this.wertikModule;
       return new Promise(async (resolve, reject) => {
         let whr;
         try {
           if (args && args.constructor === Array) {
-            if (isSQL) {
-              whr = await convertFiltersIntoSequalizeObject(args);
-            } else if (isMongodb) {
-              whr = await convertedFiltersIntoMongooseQuery(args);
+            if (args.length > 0) {
+              if (isSQL) {
+                whr = await convertFiltersIntoSequalizeObject(args);
+              } else if (isMongodb) {
+                whr = await convertedFiltersIntoMongooseQuery(args);
+              }
+            } else {
+              whr = {};
             }
           } else {
             whr = args;
@@ -348,6 +359,8 @@ export default function (props) {
               attributesObject["attributes"] = requestedFields.join(" ");
             }
           }
+          attributesObject = removeColumnsFromAccordingToSelectIgnoreFields(attributesObject, wertikModule.database.selectIgnoreFields);
+
           if (isSQL) {
             this.instance = await model.findOne({
               where: whr,

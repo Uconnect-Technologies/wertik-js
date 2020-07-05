@@ -460,7 +460,7 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
         }
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         const filters = get(finalArgs, "filters", []);
-        let response = await model.findOneByArgs(filters, requestedFields);
+        let response = await model.findOneByArgs(filters, Object.keys(requestedFields));
         if (isFunction(afterById)) {
           afterByModule({
             mode: "graphql",
@@ -484,7 +484,7 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
           finalArgs = args;
         }
         let model = context.models[module.name].getModel();
-        let requestedFields = getRequestedFieldsFromResolverInfo(info, get(module, "database.selectIgnoreFields", []));
+        let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let view = await model.view(finalArgs, Object.keys(requestedFields));
         if (isFunction(afterView)) {
           afterView({
@@ -509,7 +509,7 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
           finalArgs = args;
         }
         let model = context.models[module.name].getModel();
-        let requestedFields = getRequestedFieldsFromResolverInfo(info, get(module, "database.selectIgnoreFields", []));
+        let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let response = await model.paginate(finalArgs, Object.keys(requestedFields.list));
         if (isFunction(afterList)) {
           afterList({

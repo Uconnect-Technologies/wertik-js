@@ -49,11 +49,17 @@ export default {
   },
   restApi: {},
   database: {
+    selectIgnoreFields: ["user", "permission"],
     relationships: {
-      OneToOne: {
+      oneToOne: {
         User: {
           relationColumn: "user_id",
           graphqlName: "user",
+          foreignKey: "id",
+        },
+        Permission: {
+          relationColumn: "permission_id",
+          graphqlName: "permission",
           foreignKey: "id",
         },
       },
@@ -92,10 +98,5 @@ export default {
         updated_at: String,
       },
     },
-    // relationships: {
-    //   User: {
-
-    //   },
-    // },
   },
 };

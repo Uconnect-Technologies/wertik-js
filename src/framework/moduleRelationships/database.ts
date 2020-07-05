@@ -19,6 +19,11 @@ export const applyRelationship = (
       currentModel.hasMany(foreignModel, {
         foreignKey: relationshipInfo.foreignKey,
       });
+    }else {
+      currentModel.hasOne(foreignModel, {
+        as: relationshipInfo.relationColumn,
+        foreignKey: relationshipInfo.foreignKey,
+      });
     }
   };
 
@@ -26,7 +31,6 @@ export const applyRelationship = (
   if (relationships) {
     const oneToOne = get(relationships, "oneToOne", {});
     const oneToMany = get(relationships, "oneToMany", {});
-
     Object.keys(oneToMany).forEach((key) => {
       processRelationship({
         key: key,
