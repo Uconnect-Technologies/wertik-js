@@ -10,7 +10,6 @@ export const GraphQLModuleRelationMapper = (module: IConfigurationCustomModule) 
 
   if (relationships) {
     const oneToOne = get(relationships, "oneToOne", {});
-    console.log(module.name, oneToOne);
     const oneToMany = get(relationships, "oneToMany", {});
     Object.keys(oneToMany).forEach((key) => {
       const relationshipInfo = oneToMany[key];
@@ -44,24 +43,3 @@ export const GraphQLModuleRelationMapper = (module: IConfigurationCustomModule) 
   }
   return returnObject;
 };
-
-//   Object.keys(relationships).forEach((key) => {
-//     let relationshipInfo = relationships[key];
-//     returnObject[relationshipInfo.graphqlName] = async (parentRow: any, args: any, context: any, info: any) => {
-//       let model = context.models[key].getModel();
-//       if (relationshipInfo.type == "hasOne") {
-//         return await model.findOneById(parentRow[identityColumn()]);
-//       } else if (relationshipInfo.type == "hasMany") {
-//         return await model.paginate({
-//           filters: [
-//             {
-//               column: relationshipInfo.foreignKey,
-//               operator: "=",
-//               value: parentRow[identityColumn()].toString(),
-//             },
-//           ],
-//         });
-//       }
-//     };
-//   });
-//   return returnObject;

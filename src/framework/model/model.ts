@@ -201,6 +201,25 @@ export default function (props) {
         // return this;
       });
     },
+    create: async function (args) {
+      return new Promise(async (resolve, reject) => {
+        try {
+          let model = this.dbTables[this.tableName];
+          if (isSQL) {
+            this.instance = await model.create(args);
+          } else if (isMongodb) {
+            let mongoModel = new model(args);
+            await mongoModel.save();
+            this.instance = mongoModel;
+          }
+          resolve(this);
+        } catch (e) {
+          reject(e);
+        }
+        // return this;
+      });
+      // return this;
+    },
     paginate: async function (args: any, requestedFields: any) {
       let wertikModule: IConfigurationCustomModule = this.wertikModule;
       return new Promise(async (resolve, reject) => {
@@ -302,100 +321,7 @@ export default function (props) {
         // return this;
       });
     },
-    create: async function (args) {
-      return new Promise(async (resolve, reject) => {
-        try {
-          let model = this.dbTables[this.tableName];
-          if (isSQL) {
-            this.instance = await model.create(args);
-          } else if (isMongodb) {
-            let mongoModel = new model(args);
-            await mongoModel.save();
-            this.instance = mongoModel;
-          }
-          resolve(this);
-        } catch (e) {
-          reject(e);
-        }
-        // return this;
-      });
-      // return this;
-    },
-    view: async function (args, requestedFields) {
-      return new Promise(async (resolve, reject) => {
-        try {
-          let res = await this.findOneByArgs(args, requestedFields);
-          resolve(res);
-        } catch (e) {
-          reject(e);
-        }
-        // return this;
-      });
-    },
-    findOneByArgs: async function (args, requestedFields: Array<string>) {
-      let wertikModule: IConfigurationCustomModule = this.wertikModule;
-      return new Promise(async (resolve, reject) => {
-        let whr;
-        try {
-          if (args && args.constructor === Array) {
-            if (args.length > 0) {
-              if (isSQL) {
-                whr = await convertFiltersIntoSequalizeObject(args);
-              } else if (isMongodb) {
-                whr = await convertedFiltersIntoMongooseQuery(args);
-              }
-            } else {
-              whr = {};
-            }
-          } else {
-            whr = args;
-          }
-          const model = this.dbTables[this.tableName];
-          let attributesObject = {};
-          if (requestedFields && requestedFields.constructor === Array && requestedFields[0] !== "*") {
-            if (isSQL) {
-              attributesObject["attributes"] = requestedFields;
-            } else if (isMongodb) {
-              attributesObject["attributes"] = requestedFields.join(" ");
-            }
-          }
-          attributesObject = removeColumnsFromAccordingToSelectIgnoreFields(attributesObject, wertikModule.database.selectIgnoreFields);
 
-          if (isSQL) {
-            this.instance = await model.findOne({
-              where: whr,
-              ...attributesObject,
-            });
-            resolve(this);
-          } else if (isMongodb) {
-            if (attributesObject["attributes"]) {
-              this.instance = await model.findOne(whr, attributesObject["attributes"]);
-            } else {
-              this.instance = await model.findOne(whr);
-            }
-            resolve(this);
-          }
-        } catch (e) {
-          reject(e);
-        }
-      });
-    },
-    findOneById: async function (id: any, requestedFields: Array<string>) {
-      return new Promise(async (resolve, reject) => {
-        try {
-          let resp = await this.findOneByArgs(
-            {
-              [this.identityColumn]: id,
-            },
-            requestedFields
-          );
-          resolve(resp);
-        } catch (e) {
-          reject(e);
-        }
-      });
-      // return this;
-    },
     bulkUpdate: async function (args) {
       return new Promise(async (resolve, reject) => {
         try {
@@ -517,6 +443,82 @@ export default function (props) {
           reject(e);
         }
       });
+    },
+
+    view: async function (args, requestedFields) {
+      return new Promise(async (resolve, reject) => {
+        try {
+          let res = await this.findOneByArgs(args, requestedFields);
+          resolve(res);
+        } catch (e) {
+          reject(e);
+        }
+        // return this;
+      });
+    },
+    findOneByArgs: async function (args, requestedFields: Array<string>) {
+      let wertikModule: IConfigurationCustomModule = this.wertikModule;
+      return new Promise(async (resolve, reject) => {
+        let whr;
+        try {
+          if (args && args.constructor === Array) {
+            if (args.length > 0) {
+              if (isSQL) {
+                whr = await convertFiltersIntoSequalizeObject(args);
+              } else if (isMongodb) {
+                whr = await convertedFiltersIntoMongooseQuery(args);
+              }
+            } else {
+              whr = {};
+            }
+          } else {
+            whr = args;
+          }
+          const model = this.dbTables[this.tableName];
+          let attributesObject = {};
+          if (requestedFields && requestedFields.constructor === Array && requestedFields[0] !== "*") {
+            if (isSQL) {
+              attributesObject["attributes"] = requestedFields;
+            } else if (isMongodb) {
+              attributesObject["attributes"] = requestedFields.join(" ");
+            }
+          }
+          attributesObject = removeColumnsFromAccordingToSelectIgnoreFields(attributesObject, wertikModule.database.selectIgnoreFields);
+
+          if (isSQL) {
+            this.instance = await model.findOne({
+              where: whr,
+              ...attributesObject,
+            });
+            resolve(this);
+          } else if (isMongodb) {
+            if (attributesObject["attributes"]) {
+              this.instance = await model.findOne(whr, attributesObject["attributes"]);
+            } else {
+              this.instance = await model.findOne(whr);
+            }
+            resolve(this);
+          }
+        } catch (e) {
+          reject(e);
+        }
+      });
+    },
+    findOneById: async function (id: any, requestedFields: Array<string>) {
+      return new Promise(async (resolve, reject) => {
+        try {
+          let resp = await this.findOneByArgs(
+            {
+              [this.identityColumn]: id,
+            },
+            requestedFields
+          );
+          resolve(resp);
+        } catch (e) {
+          reject(e);
+        }
+      });
+      // return this;
     },
   };
 }
