@@ -52,6 +52,21 @@ export default {
 
   restApi: {},
   database: {
+    selectIgnoreFields: ["user", "role"],
+    relationships: {
+      oneToOne: {
+        User: {
+          relationColumn: "user_id",
+          graphqlName: "user",
+          foreignKey: "id",
+        },
+        Role: {
+          relationColumn: "role_id",
+          graphqlName: "role",
+          foreignKey: "id",
+        },
+      },
+    },
     sql: {
       tableName: "userRole",
       fields: {

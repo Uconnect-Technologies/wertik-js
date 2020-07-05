@@ -24,6 +24,8 @@ export default {
         created_by_id: Int
         created_at: String
         updated_at: String
+        user_permissions: UserPermissionList 
+        role_permissions: RolePermissionList 
       }
       input PermissionInput {
         _id: String
@@ -46,6 +48,19 @@ export default {
   },
   restApi: {},
   database: {
+    selectIgnoreFields: ["user_permissions", "role_permissions"],
+    relationships: {
+      oneToMany: {
+        UserPermission: {
+          graphqlName: "user_permissions",
+          foreignKey: "permission_id",
+        },
+        RolePermission: {
+          graphqlName: "role_permissions",
+          foreignKey: "permission_id",
+        },
+      },
+    },
     sql: {
       tableName: "permission",
       fields: {
