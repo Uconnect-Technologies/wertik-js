@@ -4,7 +4,17 @@ import convertFiltersIntoSequalizeObject from "../database/helpers/convertFilter
 import convertedFiltersIntoMongooseQuery from "../database/helpers/convertedFiltersIntoMongooseQuery";
 import internalServerError from "../../framework/helpers/internalServerError";
 import { convertFieldsIntoSequelizeFields } from "../database/helpers";
-import { getQueryForLast7Days, getQueryForLastYear, getQueryForThisYear, getQueryForThisMonth, getQueryForLastMonth, getQueryForThisWeek, getQueryForToday, getQueryForLast90Days, mongoose } from "../reporting";
+import {
+  getQueryForLast7Days,
+  getQueryForLastYear,
+  getQueryForThisYear,
+  getQueryForThisMonth,
+  getQueryForLastMonth,
+  getQueryForThisWeek,
+  getQueryForToday,
+  getQueryForLast90Days,
+  mongoose,
+} from "../reporting";
 import { IConfiguration, IConfigurationCustomModule } from "../types/configuration";
 import { removeColumnsFromAccordingToSelectIgnoreFields } from "../helpers/index";
 
@@ -51,7 +61,15 @@ export default function (props) {
         };
         try {
           const model = this.dbTables[this.tableName];
-          let count, countLast7Days, countToday, countLastYear, countThisYear, countThisMonth, countThisweek, countLastMonth, countLast90Days;
+          let count,
+            countLast7Days,
+            countToday,
+            countLastYear,
+            countThisYear,
+            countThisMonth,
+            countThisweek,
+            countLastMonth,
+            countLast90Days;
           if (isSQL) {
             let selectOptions = {
               type: database.QueryTypes.SELECT,
@@ -475,7 +493,7 @@ export default function (props) {
             whr = args;
           }
           const model = this.dbTables[this.tableName];
-          let attributesObject = {};
+          let attributesObject: any = {};
           if (requestedFields && requestedFields.constructor === Array && requestedFields[0] !== "*") {
             if (isSQL) {
               attributesObject["attributes"] = requestedFields;
@@ -484,6 +502,10 @@ export default function (props) {
             }
           }
           attributesObject = removeColumnsFromAccordingToSelectIgnoreFields(attributesObject, wertikModule.database.selectIgnoreFields);
+
+          if (attributesObject.attributes.length === 0) {
+            attributesObject.attributes = ["*"];
+          }
 
           if (isSQL) {
             this.instance = await model.findOne({
