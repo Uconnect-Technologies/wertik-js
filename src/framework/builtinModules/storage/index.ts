@@ -82,6 +82,16 @@ export default {
     ],
   },
   database: {
+    selectIgnoreFields: ["created_by"],
+    relationships: {
+      oneToOne: {
+        User: {
+          relationColumn: "created_by_id",
+          graphqlName: "created_by",
+          foreignKey: "id",
+        },
+      },
+    },
     sql: {
       tableName: "storage",
       fields: {

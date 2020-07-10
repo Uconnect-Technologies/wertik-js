@@ -38,8 +38,7 @@ export default {
         created_by_id: Int
       }
     `,
-    customResolvers: {
-    },
+    customResolvers: {},
     mutation: {
       schema: ``,
       resolvers: {},
@@ -52,14 +51,21 @@ export default {
 
   restApi: {},
   database: {
-    selectIgnoreFields: ["user", "role"],
+    selectIgnoreFields: ["user", "role", "created_by"],
     relationships: {
       oneToOne: {
-        User: {
-          relationColumn: "user_id",
-          graphqlName: "user",
-          foreignKey: "id",
-        },
+        User: [
+          {
+            relationColumn: "user_id",
+            graphqlName: "user",
+            foreignKey: "id",
+          },
+          {
+            relationColumn: "created_by_id",
+            graphqlName: "created_by",
+            foreignKey: "id",
+          },
+        ],
         Role: {
           relationColumn: "role_id",
           graphqlName: "role",

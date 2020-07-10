@@ -32,6 +32,7 @@ export default {
         _id: String
         id: Int
         default_permissions: String
+        created_by_id: Int
         name: String
       }
     `,
@@ -46,7 +47,7 @@ export default {
   },
   restApi: {},
   database: {
-    selectIgnoreFields: ["user_roles", "role_permissions"],
+    selectIgnoreFields: ["user_roles", "role_permissions", "created_by"],
     relationships: {
       oneToMany: {
         UserRole: {
@@ -56,6 +57,13 @@ export default {
         RolePermission: {
           graphqlName: "role_permissions",
           foreignKey: "role_id",
+        },
+      },
+      oneToOne: {
+        User: {
+          graphqlName: "created_by",
+          foreignKey: "id",
+          relationColumn: "created_by_id",
         },
       },
     },

@@ -4,7 +4,7 @@ export default {
   database: {
     dbDialect: "mysql",
     dbUsername: "root",
-    dbPassword: "",
+    dbPassword: "pass",
     dbName: "graphql",
     dbHost: "localhost",
     dbPort: "3306",
@@ -24,7 +24,7 @@ export default {
     },
   },
   email: {
-    disable: false,
+    disable: true,
   },
   graphql: {
     disable: false,
