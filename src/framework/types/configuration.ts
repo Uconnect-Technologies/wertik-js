@@ -246,6 +246,7 @@ export interface IConfiguration {
   dbDialect: string;
   name: string;
   builtinModules: string;
+  expressApp: any;
   extendBuiltinModules: {
     [Key: string]: {
       database: {

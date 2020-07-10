@@ -10,6 +10,7 @@ export default function(configuration: IConfiguration) {
       // Important ones
       keys.forEach((key, index) => {
         let value = configuration[key];
+        
         process.env[key] = value;
         if (index + 1 == keys.length) {
           resolve("Added to env.");
