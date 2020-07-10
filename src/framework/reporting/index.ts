@@ -21,7 +21,7 @@ export const substractDays = (num) => {
 
 export const getQueryForLast7Days = function (tableName: String) {
   return `
-    SELECT count(*) as total_added_last_7_days FROM ${tableName}
+    SELECT count(*) as total_created_last_7_days FROM ${tableName}
     WHERE DATE(created_at)
       BETWEEN
         '${getYear(substractDays(7))}-${substractDays(7).month() + 1}-${substractDays(7).date()}'
@@ -32,7 +32,7 @@ export const getQueryForLast7Days = function (tableName: String) {
 
 export const getQueryForToday = function (tableName: String) {
   return `
-    SELECT count(*) as total_added_today FROM ${tableName}
+    SELECT count(*) as total_created_today FROM ${tableName}
     WHERE DATE(created_at)
       BETWEEN
         '${getYear()}-${getMonth()}-${getDate()} 00:00:00'
@@ -43,7 +43,7 @@ export const getQueryForToday = function (tableName: String) {
 
 export const getQueryForThisYear = function (tableName: String) {
   return `
-  SELECT count(*) as total_added_this_year FROM ${tableName}
+  SELECT count(*) as total_created_this_year FROM ${tableName}
   WHERE DATE(created_at)
     BETWEEN
       '${getYear()}-1-1'
@@ -54,7 +54,7 @@ export const getQueryForThisYear = function (tableName: String) {
 
 export const getQueryForThisMonth = function (tableName: String) {
   return `
-    SELECT count(*) as total_added_this_month FROM ${tableName}
+    SELECT count(*) as total_created_this_month FROM ${tableName}
     WHERE DATE(created_at)
     BETWEEN
       '${getYear()}-${moment().month() + 1}-${moment().startOf("month").date()}'
@@ -65,7 +65,7 @@ export const getQueryForThisMonth = function (tableName: String) {
 
 export const getQueryForThisWeek = function (tableName: String) {
   return `
-    SELECT count(*) as total_added_this_week FROM ${tableName}
+    SELECT count(*) as total_created_this_week FROM ${tableName}
     WHERE DATE(created_at)
     BETWEEN
       '${getYear(moment().startOf("isoWeek"))}-${moment().startOf("isoWeek").month() + 1}-${moment().startOf("isoWeek").date()}'
@@ -76,7 +76,7 @@ export const getQueryForThisWeek = function (tableName: String) {
 
 export const getQueryForLastMonth = function (tableName: String) {
   return `
-    SELECT count(*) as total_added_last_month FROM ${tableName}
+    SELECT count(*) as total_created_last_month FROM ${tableName}
     WHERE DATE(created_at)
     BETWEEN
       '${moment().subtract(1, "months").year()}-${moment().subtract(1, "months").month() + 1}-${moment()
@@ -93,7 +93,7 @@ export const getQueryForLastMonth = function (tableName: String) {
 
 export const getQueryForLast90Days = function (tableName: String) {
   return `
-    SELECT count(*) as total_added_last_90_days FROM ${tableName}
+    SELECT count(*) as total_created_last_90_days FROM ${tableName}
     WHERE DATE(created_at)
     BETWEEN
       '${moment().subtract(90, "days").year()}-${moment().subtract(90, "days").month() + 1}-${moment()
@@ -107,7 +107,7 @@ export const getQueryForLast90Days = function (tableName: String) {
 
 export const getQueryForLastYear = function (tableName: String) {
   return `
-  SELECT count(*) as total_added_last_year FROM ${tableName}
+  SELECT count(*) as total_created_last_year FROM ${tableName}
   WHERE DATE(created_at)
     BETWEEN
       '${getYear() - 1}-1-1'

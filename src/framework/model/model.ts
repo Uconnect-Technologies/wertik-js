@@ -50,14 +50,14 @@ export default function (props) {
       return new Promise(async (resolve, reject) => {
         let statsInfo = {
           total_count: null,
-          total_added_today: null,
-          total_added_this_week: null,
-          total_added_last_7_days: null,
-          total_added_this_month: null,
-          total_added_last_month: null,
-          total_added_last_90_days: null,
-          total_added_last_year: null,
-          total_added_this_year: null,
+          total_created_today: null,
+          total_created_this_week: null,
+          total_created_last_7_days: null,
+          total_created_this_month: null,
+          total_created_last_month: null,
+          total_created_last_90_days: null,
+          total_created_last_year: null,
+          total_created_this_year: null,
         };
         try {
           const model = this.dbTables[this.tableName];
@@ -77,67 +77,67 @@ export default function (props) {
             if (requestedReports.includes("total_count")) {
               count = await database.query(`select count(*) as total_count from ${model.getTableName()}`, selectOptions);
             }
-            if (requestedReports.includes("total_added_last_7_days")) {
+            if (requestedReports.includes("total_created_last_7_days")) {
               countLast7Days = await database.query(getQueryForLast7Days(model.getTableName()), selectOptions);
             }
-            if (requestedReports.includes("total_added_today")) {
+            if (requestedReports.includes("total_created_today")) {
               countToday = await database.query(getQueryForToday(model.getTableName()), selectOptions);
             }
-            if (requestedReports.includes("total_added_last_year")) {
+            if (requestedReports.includes("total_created_last_year")) {
               countLastYear = await database.query(getQueryForLastYear(model.getTableName()), selectOptions);
             }
-            if (requestedReports.includes("total_added_this_year")) {
+            if (requestedReports.includes("total_created_this_year")) {
               countThisYear = await database.query(getQueryForThisYear(model.getTableName()), selectOptions);
             }
-            if (requestedReports.includes("total_added_this_month")) {
+            if (requestedReports.includes("total_created_this_month")) {
               countThisMonth = await database.query(getQueryForThisMonth(model.getTableName()), selectOptions);
             }
-            if (requestedReports.includes("total_added_this_week")) {
+            if (requestedReports.includes("total_created_this_week")) {
               countThisweek = await database.query(getQueryForThisWeek(model.getTableName()), selectOptions);
             }
-            if (requestedReports.includes("total_added_last_month")) {
+            if (requestedReports.includes("total_created_last_month")) {
               countLastMonth = await database.query(getQueryForLastMonth(model.getTableName()), selectOptions);
             }
-            if (requestedReports.includes("total_added_last_90_days")) {
+            if (requestedReports.includes("total_created_last_90_days")) {
               countLast90Days = await database.query(getQueryForLast90Days(model.getTableName()), selectOptions);
             }
 
             statsInfo.total_count = get(count, "[0].total_count", 0);
-            statsInfo.total_added_this_month = get(countThisMonth, "[0].total_added_this_month", 0);
-            statsInfo.total_added_this_week = get(countThisweek, "[0].total_added_this_week", 0);
-            statsInfo.total_added_last_7_days = get(countLast7Days, "[0].total_added_last_7_days", 0);
-            statsInfo.total_added_today = get(countToday, "[0].total_added_today", 0);
-            statsInfo.total_added_last_month = get(countLastMonth, "[0].total_added_last_month", 0);
-            statsInfo.total_added_last_90_days = get(countLast90Days, "[0].total_added_last_90_days", 0);
-            statsInfo.total_added_last_year = get(countLastYear, "[0].total_added_last_year", 0);
-            statsInfo.total_added_this_year = get(countThisYear, "[0].total_added_this_year", 0);
+            statsInfo.total_created_this_month = get(countThisMonth, "[0].total_created_this_month", 0);
+            statsInfo.total_created_this_week = get(countThisweek, "[0].total_created_this_week", 0);
+            statsInfo.total_created_last_7_days = get(countLast7Days, "[0].total_created_last_7_days", 0);
+            statsInfo.total_created_today = get(countToday, "[0].total_created_today", 0);
+            statsInfo.total_created_last_month = get(countLastMonth, "[0].total_created_last_month", 0);
+            statsInfo.total_created_last_90_days = get(countLast90Days, "[0].total_created_last_90_days", 0);
+            statsInfo.total_created_last_year = get(countLastYear, "[0].total_created_last_year", 0);
+            statsInfo.total_created_this_year = get(countThisYear, "[0].total_created_this_year", 0);
           } else if (isMongodb) {
             if (requestedReports.includes("total_count")) {
               statsInfo.total_count = await mongoose.getTotalCount(model);
             }
-            if (requestedReports.includes("total_added_this_week")) {
-              statsInfo.total_added_this_week = await mongoose.getThisWeekCount(model);
+            if (requestedReports.includes("total_created_this_week")) {
+              statsInfo.total_created_this_week = await mongoose.getThisWeekCount(model);
             }
-            if (requestedReports.includes("total_added_last_7_days")) {
-              statsInfo.total_added_last_7_days = await mongoose.getLast7DaysCount(model);
+            if (requestedReports.includes("total_created_last_7_days")) {
+              statsInfo.total_created_last_7_days = await mongoose.getLast7DaysCount(model);
             }
-            if (requestedReports.includes("total_added_today")) {
-              statsInfo.total_added_today = await mongoose.getTodayCount(model);
+            if (requestedReports.includes("total_created_today")) {
+              statsInfo.total_created_today = await mongoose.getTodayCount(model);
             }
-            if (requestedReports.includes("total_added_last_month")) {
-              statsInfo.total_added_last_month = await mongoose.getLastMonthCount(model);
+            if (requestedReports.includes("total_created_last_month")) {
+              statsInfo.total_created_last_month = await mongoose.getLastMonthCount(model);
             }
-            if (requestedReports.includes("total_added_last_90_days")) {
-              statsInfo.total_added_last_90_days = await mongoose.getLast90DaysCount(model);
+            if (requestedReports.includes("total_created_last_90_days")) {
+              statsInfo.total_created_last_90_days = await mongoose.getLast90DaysCount(model);
             }
-            if (requestedReports.includes("total_added_this_month")) {
-              statsInfo.total_added_this_month = await mongoose.getThisMonthCount(model);
+            if (requestedReports.includes("total_created_this_month")) {
+              statsInfo.total_created_this_month = await mongoose.getThisMonthCount(model);
             }
-            if (requestedReports.includes("total_added_this_year")) {
-              statsInfo.total_added_this_year = await mongoose.getThisYearCount(model);
+            if (requestedReports.includes("total_created_this_year")) {
+              statsInfo.total_created_this_year = await mongoose.getThisYearCount(model);
             }
-            if (requestedReports.includes("total_added_last_year")) {
-              statsInfo.total_added_last_year = await mongoose.getLastYearCount(model);
+            if (requestedReports.includes("total_created_last_year")) {
+              statsInfo.total_created_last_year = await mongoose.getLastYearCount(model);
             }
           }
           resolve(statsInfo);
