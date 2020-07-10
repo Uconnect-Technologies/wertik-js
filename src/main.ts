@@ -12,8 +12,11 @@ import initiateMailer from "./framework/mailer/index";
 import { randomString } from "./framework/helpers";
 let connectDatabase = require("./framework/database/connect").default;
 
-export default function (apps: any, configurationOriginal: IConfiguration) {
-  let expressApp = !!apps.expressApp ? apps.expressApp : require("express")();
+export default function (configurationOriginal: IConfiguration) {
+  let expressApp = get(configurationOriginal, "expressApp", null);
+  if (!expressApp) {
+    expressApp = require("express")();
+  }
   return new Promise((resolve, reject) => {
     loadDefaults(configurationOriginal)
       .then((configuration: IConfiguration) => {
