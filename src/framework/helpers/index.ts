@@ -1,6 +1,7 @@
 let { ApolloError } = require("apollo-server");
 import fs from "fs";
 import { IConfiguration } from "../types/configuration";
+import { get, isFunction } from "lodash";
 var bcrypt = require("bcryptjs");
 
 export const generateError = (e: any, statusCode: Number = 404) => {
@@ -97,4 +98,40 @@ export const identityColumn = () => {
   const { dbDialect } = process.env;
   const isSQL = dbDialect.includes("sql");
   return isSQL ? "id" : "_id";
+};
+
+export const loadModulesFromConfiguration = (configuration: IConfiguration) => {
+  let list = [];
+  let modules = [...configuration.builtinModules.split(","), ...get(configuration, "modules", [])];
+  modules.forEach(async (element) => {
+    let module;
+    if (element.constructor === String) {
+      module = require(`./../builtinModules/${element}/index`).default;
+    } else if (element.constructor === Object || isFunction(element)) {
+      if (element.constructor == Function) {
+        module = await element(configuration);
+      } else {
+        module = element;
+      }
+    }
+    list.push(module);
+  });
+  return list;
+};
+
+export const removeColumnsFromAccordingToSelectIgnoreFields = (attributesObject, ignoreFields) => {
+  const { dbDialect } = process.env;
+  const isSQL = dbDialect.includes("sql");
+  const isMongodb = dbDialect === "mongodb";
+
+  if (isMongodb) {
+  } else if (isSQL) {
+    attributesObject.attributes = get(attributesObject, "attributes", []).filter((c) => {
+      if (ignoreFields) {
+        return ignoreFields.includes(c) === false;
+      }
+      return true;
+    });
+    return attributesObject;
+  }
 };

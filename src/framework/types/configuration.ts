@@ -77,10 +77,17 @@ export interface IConfigurationCustomModuleDatabaseMongo {
 
   */
 
-export interface IConfigurationCustomModuleDatabaseRelationshipType {
-  type: string;
+export interface IConfigurationCustomModuleDatabaseRelationshipOneToOne {
+  relationColumn: string;
   foreignKey: string;
-  graphqlName: string,
+  graphqlName: string;
+  options: {
+    [Key: string]: any;
+  };
+}
+export interface IConfigurationCustomModuleDatabaseRelationshipOneToMany {
+  foreignKey: string;
+  graphqlName: string;
   options: {
     [Key: string]: any;
   };
@@ -97,21 +104,28 @@ export interface IConfigurationCustomModuleDatabaseRelationshipType {
 */
 
 export interface IConfigurationCustomModuleDatabaseRelationship {
-  hasOne: {
-    [key: string]: IConfigurationCustomModuleDatabaseRelationshipType;
-  },
-  hasMany: {
-    [key: string]: IConfigurationCustomModuleDatabaseRelationshipType;
-  },
-  belongsTo: {
-    [key: string]: IConfigurationCustomModuleDatabaseRelationshipType;  
-  }
+  oneToOne: {
+    [key: string]: IConfigurationCustomModuleDatabaseRelationshipOneToOne;
+  };
+  oneToMany: {
+    [key: string]: IConfigurationCustomModuleDatabaseRelationshipOneToMany;
+  };
+  // hasOne: {
+  //   [key: string]: IConfigurationCustomModuleDatabaseRelationshipType;
+  // },
+  // hasMany: {
+  //   [key: string]: IConfigurationCustomModuleDatabaseRelationshipType;
+  // },
+  // belongsTo: {
+  //   [key: string]: IConfigurationCustomModuleDatabaseRelationshipType;
+  // }
 }
 
 export interface IConfigurationCustomModuleDatabase {
   sql: IConfigurationCustomModuleDatabaseSql;
   mongo: IConfigurationCustomModuleDatabaseMongo;
   relationships: IConfigurationCustomModuleDatabaseRelationship;
+  selectIgnoreFields: Array<string>;
 }
 
 export interface IConfigurationCustomModule {

@@ -119,6 +119,16 @@ export default {
     ],
   },
   database: {
+    selectIgnoreFields: ["user"],
+    relationships: {
+      oneToOne: {
+        User: {
+          relationColumn: "email",
+          graphqlName: "user",
+          foreignKey: "email",
+        },
+      },
+    },
     sql: {
       tableName: "forgetPassword",
       fields: {

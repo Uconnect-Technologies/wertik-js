@@ -8,7 +8,6 @@ const Op = Sequelize.Op;
 /* http://docs.sequelizejs.com/manual/querying.html#operators */
 
 export default async function (filters: any) {
-  console.log(filters)
   let f: any = {};
   if (validateFiltersArray(filters)) {
     filters.forEach((item: any) => {

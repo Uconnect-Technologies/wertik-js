@@ -52,7 +52,7 @@ export default async function (configuration: IConfiguration) {
       let currentQuerySchema = get(graphql, "query.schema", "");
       let currentQueryResolvers = get(graphql, "query.resolvers", {});
       let currentModuleCrudResolvers = generateCrudResolvers(
-        moduleName,
+        module,
         pubsub,
         currentGenerateMutationOperations,
         currentGenerateQueryOperations,

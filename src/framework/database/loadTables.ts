@@ -28,7 +28,7 @@ export default function (connection, configuration: IConfiguration) {
       if (dialect == "mysql" || dialect == "postgres") {
         let tableName = get(module, "database.sql.tableName", "");
         checkDatabaseOptions(moduleName, tableName);
-        let tableFields = convertFieldsIntoSequelizeFields(module.database.sql.fields, module.database.relationships);
+        let tableFields = convertFieldsIntoSequelizeFields(module.database.sql.fields);
         let tableOptions = get(module, "database.sql.tableOptions", databaseDefaultOptions.sql.defaultTableOptions);
         tables[moduleName] = connection.define(
           tableName,
@@ -79,7 +79,7 @@ export default function (connection, configuration: IConfiguration) {
     } else if (element.constructor === Object) {
       module = element;
     }
-    // applyRelationship(module, tables);
+    applyRelationship(module, tables);
   });
 
   return tables;

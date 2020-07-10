@@ -33,7 +33,11 @@ export default async function (options: IGraphQLInitialize) {
         ip = get(connection, "remoteAddress", null);
         isIPAllowed(ip, configuration.security.allowedIpAddresses, "graphql", {});
       }
-      let user = await getUserWithAccessToken(models.User, get(req, "headers.authorization", ""));
+      const authToken = get(req, "headers.authorization", "");
+      let user;
+      if (authToken) {
+        user = await getUserWithAccessToken(models.User, authToken);
+      }
       let userPermissions = user ? await getUserAllPermissions(user.id, database) : [];
       let userRoles = user ? await getUserRoles(user.id, database) : [];
       let cxt = {
