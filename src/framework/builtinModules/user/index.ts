@@ -29,6 +29,8 @@ export default {
         referer: String
         created_at: String
         updated_at: String
+        user_roles: UserRoleList
+        user_permissions: UserPermissionList
       }
       input UserInput {
         _id: String
@@ -64,6 +66,19 @@ export default {
   },
   restApi: {},
   database: {
+    selectIgnoreFields: ["user_permissions", "user_roles"],
+    relationships: {
+      oneToMany: {
+        UserRole: {
+          graphqlName: "user_roles",
+          foreignKey: "user_id",
+        },
+        UserPermission: {
+          graphqlName: "user_permissions",
+          foreignKey: "user_id",
+        },
+      },
+    },
     sql: {
       tableName: "user",
       fields: {

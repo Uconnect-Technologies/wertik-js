@@ -43,20 +43,7 @@ import customApi from "./customApi";
 
 //expressApp,configuration,dbTables, models, allEmailTemplates,sendEmail,database,WertikEventEmitter
 export default function (options: IRestApiInitialize) {
-  const {
-    configuration,
-    dbTables,
-    models,
-    sendEmail,
-    emailTemplates,
-    expressApp,
-    database,
-    runEvent,
-    multerInstance,
-    mailerInstance,
-    websockets,
-    logger,
-  } = options;
+  const { configuration, dbTables, models, sendEmail, emailTemplates, expressApp, database, runEvent, multerInstance, mailerInstance, websockets, logger } = options;
   let { restApi } = configuration;
   const port = get(restApi, "port", 4000);
   if (get(restApi, "disable", true) === true) {
@@ -69,7 +56,11 @@ export default function (options: IRestApiInitialize) {
   expressApp.use(async function (req, res, next) {
     const ip = req.connection.remoteAddress;
     isIPAllowed(ip, configuration.security.allowedIpAddresses, "express", { res });
-    let user = await getUserWithAccessToken(models.User, get(req, "headers.authorization", ""));
+    const authToken = get(req, "headers.authorization", "");
+    let user;
+    if (authToken) {
+      user = await getUserWithAccessToken(models.User, authToken);
+    }
     let userPermissions = user ? await getUserAllPermissions(user.id, database) : [];
     let userRoles = user ? await getUserRoles(user.id, database) : [];
     req.database = database;

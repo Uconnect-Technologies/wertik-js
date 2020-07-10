@@ -4,6 +4,8 @@ import moment from "moment";
 import { convertFieldsIntoSequelizeFields } from "./helpers/index";
 import { errorMessage } from "../logger/consoleMessages";
 import { databaseDefaultOptions } from "../defaults/options/index";
+import { IConfigurationCustomModule, IConfiguration } from "../types/configuration";
+import { applyRelationship } from "../moduleRelationships/database";
 
 const checkDatabaseOptions = (moduleName, tableName) => {
   if (moduleName && !tableName) {
@@ -12,13 +14,13 @@ const checkDatabaseOptions = (moduleName, tableName) => {
   }
 };
 
-export default function (connection, configuration) {
+export default function (connection, configuration: IConfiguration) {
   let dialect = process.env.dbDialect;
   let modules = process.env.builtinModules.split(",");
   modules = modules.filter((c) => c);
   modules = [...modules, ...get(configuration, "modules", [])];
   let tables = {};
-  const processModule = (module) => {
+  const processModule = (module: IConfigurationCustomModule) => {
     let moduleName = get(module, "name", "");
     let useDatabase = get(module, "useDatabase", true);
 
@@ -67,5 +69,18 @@ export default function (connection, configuration) {
     }
     processModule(module);
   });
+
+  // Apply relationships
+
+  modules.forEach((element) => {
+    let module;
+    if (element.constructor === String) {
+      module = require(`./../builtinModules/${element}/index`).default;
+    } else if (element.constructor === Object) {
+      module = element;
+    }
+    applyRelationship(module, tables);
+  });
+
   return tables;
 }

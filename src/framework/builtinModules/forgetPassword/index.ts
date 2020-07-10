@@ -38,13 +38,7 @@ export default {
         confirmPassword: String!
       }
      `,
-    relations: {
-      user: async function (forgetPassword, args, context, info) {
-        let requestedFields = getRequestedFieldsFromResolverInfo(info, true);
-        let view = await context.models["User"].findOneById(forgetPassword.user_id, requestedFields);
-        return view.instance;
-      },
-    },
+    customResolvers: {},
     mutation: {
       schema: `
         requestPasswordReset(input: requestPasswordResetInput): SuccessResponse
@@ -125,6 +119,16 @@ export default {
     ],
   },
   database: {
+    selectIgnoreFields: ["user"],
+    relationships: {
+      oneToOne: {
+        User: {
+          relationColumn: "email",
+          graphqlName: "user",
+          foreignKey: "email",
+        },
+      },
+    },
     sql: {
       tableName: "forgetPassword",
       fields: {

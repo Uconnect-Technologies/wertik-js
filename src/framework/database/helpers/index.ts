@@ -2,9 +2,9 @@ const sequelize = require("sequelize");
 
 // mysql helpers
 
-export const convertFieldsIntoSequelizeFields = fields => {
+export const convertFieldsIntoSequelizeFields = (fields) => {
   let k = Object.keys(fields);
-  k.forEach(element => {
+  k.forEach((element) => {
     const t = fields[element].type;
     fields[element].type = sequelize[t.toUpperCase()];
   });

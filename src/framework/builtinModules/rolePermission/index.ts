@@ -38,18 +38,7 @@ export default {
         created_by_id: Int
       }
     `,
-    relations: {
-      permission: async function (rolePermission, args, context, info) {
-        let requestedFields = getRequestedFieldsFromResolverInfo(info, true);
-        let view = await context.models["Permission"].findOneById(rolePermission.permission_id, requestedFields);
-        return view.instance;
-      },
-      role: async function (rolePermission, args, context, info) {
-        let requestedFields = getRequestedFieldsFromResolverInfo(info, true);
-        let view = await context.models["Role"].findOneById(rolePermission.role_id, requestedFields);
-        return view.instance;
-      },
-    },
+    customResolvers: {},
     mutation: {
       schema: ``,
       resolvers: {},
@@ -61,6 +50,26 @@ export default {
   },
   restApi: {},
   database: {
+    selectIgnoreFields: ["permission", "role","created_by"],
+    relationships: {
+      oneToOne: {
+        Permission: {
+          relationColumn: "permission_id",
+          graphqlName: "permission",
+          foreignKey: "id",
+        },
+        Role: {
+          relationColumn: "role_id",
+          graphqlName: "role",
+          foreignKey: "id",
+        },
+        User: {
+          graphqlName: "created_by",
+          foreignKey: "id",
+          relationColumn: "created_by_id",
+        },
+      },
+    },
     sql: {
       tableName: "rolePermission",
       fields: {

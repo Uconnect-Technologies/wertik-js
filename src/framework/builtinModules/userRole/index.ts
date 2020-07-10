@@ -38,18 +38,7 @@ export default {
         created_by_id: Int
       }
     `,
-    relations: {
-      role: async function (userRole, args, context, info) {
-        let requestedFields = getRequestedFieldsFromResolverInfo(info, true);
-        let view = await context.models["Role"].findOneById(userRole.role_id, requestedFields);
-        return view.instance;
-      },
-      user: async function (userRole, args, context, info) {
-        let requestedFields = getRequestedFieldsFromResolverInfo(info, true);
-        let view = await context.models["User"].findOneById(userRole.user_id, requestedFields);
-        return view.instance;
-      },
-    },
+    customResolvers: {},
     mutation: {
       schema: ``,
       resolvers: {},
@@ -62,6 +51,28 @@ export default {
 
   restApi: {},
   database: {
+    selectIgnoreFields: ["user", "role", "created_by"],
+    relationships: {
+      oneToOne: {
+        User: [
+          {
+            relationColumn: "user_id",
+            graphqlName: "user",
+            foreignKey: "id",
+          },
+          {
+            relationColumn: "created_by_id",
+            graphqlName: "created_by",
+            foreignKey: "id",
+          },
+        ],
+        Role: {
+          relationColumn: "role_id",
+          graphqlName: "role",
+          foreignKey: "id",
+        },
+      },
+    },
     sql: {
       tableName: "userRole",
       fields: {

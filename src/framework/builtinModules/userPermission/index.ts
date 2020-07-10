@@ -33,22 +33,11 @@ export default {
         _id: String
         id: Int
         name: String
-        user: Int
-        permission: Int
+        user_id: Int
+        permission_id: Int
       }
       `,
-    relations: {
-      permission: async function (userPermission, args, context, info) {
-        let requestedFields = getRequestedFieldsFromResolverInfo(info, true);
-        let view = await context.models["Permission"].findOneById(userPermission.permission_id, requestedFields);
-        return view.instance;
-      },
-      user: async function (userPermission, args, context, info) {
-        let requestedFields = getRequestedFieldsFromResolverInfo(info, true);
-        let view = await context.models["User"].findOneById(userPermission.user_id, requestedFields);
-        return view.instance;
-      },
-    },
+    customResolvers: {},
     mutation: {
       schema: ``,
       resolvers: {},
@@ -60,6 +49,28 @@ export default {
   },
   restApi: {},
   database: {
+    selectIgnoreFields: ["user", "permission", "created_by"],
+    relationships: {
+      oneToOne: {
+        User: [
+          {
+            relationColumn: "created_by_id",
+            graphqlName: "created_by",
+            foreignKey: "id",
+          },
+          {
+            relationColumn: "user_id",
+            graphqlName: "user",
+            foreignKey: "id",
+          },
+        ],
+        Permission: {
+          relationColumn: "permission_id",
+          graphqlName: "permission",
+          foreignKey: "id",
+        },
+      },
+    },
     sql: {
       tableName: "userPermission",
       fields: {

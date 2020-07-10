@@ -25,11 +25,14 @@ export default {
         is_deleted: Boolean
         created_at: String
         updated_at: String
+        user_roles: UserRoleList
+        role_permissions: RolePermissionList
       }
       input RoleInput {
         _id: String
         id: Int
         default_permissions: String
+        created_by_id: Int
         name: String
       }
     `,
@@ -44,6 +47,26 @@ export default {
   },
   restApi: {},
   database: {
+    selectIgnoreFields: ["user_roles", "role_permissions", "created_by"],
+    relationships: {
+      oneToMany: {
+        UserRole: {
+          graphqlName: "user_roles",
+          foreignKey: "role_id",
+        },
+        RolePermission: {
+          graphqlName: "role_permissions",
+          foreignKey: "role_id",
+        },
+      },
+      oneToOne: {
+        User: {
+          graphqlName: "created_by",
+          foreignKey: "id",
+          relationColumn: "created_by_id",
+        },
+      },
+    },
     sql: {
       tableName: "role",
       fields: {
