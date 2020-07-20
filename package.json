@@ -1,6 +1,10 @@
 {
   "name": "wertik-js",
+<<<<<<< HEAD
   "version": "1.9.5",
+=======
+  "version": "1.9.4",
+>>>>>>> 7606053fceb819f24b93dd175a85ea62504f1156
   "main": "lib/main.js",
   "repository": "https://github.com/Uconnect-Technologies/wertik-js.git",
   "welcomeResponse": "Welcome to wertik, You are successfully running Wertik.",

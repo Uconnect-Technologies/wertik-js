@@ -498,11 +498,15 @@ export default function (props) {
             } else if (isMongodb()) {
               attributesObject["attributes"] = requestedFields.join(" ");
             }
+            attributesObject = removeColumnsFromAccordingToSelectIgnoreFields(attributesObject, wertikModule.database.selectIgnoreFields);
           }
-          attributesObject = removeColumnsFromAccordingToSelectIgnoreFields(attributesObject, wertikModule.database.selectIgnoreFields);
 
-          if (attributesObject.attributes.length === 0) {
-            attributesObject.attributes = ["*"];
+          if (!attributesObject) {
+            attributesObject = {};
+          }
+
+          if (attributesObject && attributesObject.attributes && attributesObject.attributes.length === 0) {
+            delete attributesObject["attributes"];
           }
 
           if (isSQL()) {
