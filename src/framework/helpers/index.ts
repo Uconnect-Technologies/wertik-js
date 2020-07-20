@@ -4,6 +4,16 @@ import { IConfiguration } from "../types/configuration";
 import { get, isFunction } from "lodash";
 var bcrypt = require("bcryptjs");
 
+export const isMongodb = () => {
+  const { dbDialect } = process.env;
+  return dbDialect === "mongodb";
+};
+
+export const isSQL = () => {
+  const { dbDialect } = process.env;
+  return dbDialect.includes("sql") || dbDialect.includes("postgres");
+};
+
 export const generateError = (e: any, statusCode: Number = 404) => {
   return new ApolloError(e.message);
 };
@@ -95,14 +105,14 @@ export const firstLetterLowerCase = (s) => {
 };
 
 export const identityColumn = () => {
-  const { dbDialect } = process.env;
-  const isSQL = dbDialect.includes("sql");
-  return isSQL ? "id" : "_id";
+  const issql = isSQL();
+  return issql ? "id" : "_id";
 };
 
 export const loadModulesFromConfiguration = (configuration: IConfiguration) => {
   let list = [];
   let modules = [...configuration.builtinModules.split(","), ...get(configuration, "modules", [])];
+  modules = modules.filter((c) => c);
   modules.forEach(async (element) => {
     let module;
     if (element.constructor === String) {
@@ -120,12 +130,8 @@ export const loadModulesFromConfiguration = (configuration: IConfiguration) => {
 };
 
 export const removeColumnsFromAccordingToSelectIgnoreFields = (attributesObject, ignoreFields) => {
-  const { dbDialect } = process.env;
-  const isSQL = dbDialect.includes("sql");
-  const isMongodb = dbDialect === "mongodb";
-
-  if (isMongodb) {
-  } else if (isSQL) {
+  if (isMongodb()) {
+  } else if (isSQL()) {
     attributesObject.attributes = get(attributesObject, "attributes", []).filter((c) => {
       if (ignoreFields) {
         return ignoreFields.includes(c) === false;

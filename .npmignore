@@ -14,4 +14,4 @@ notice.log
 info.log
 warning.log
 .env
-storage
+uploads

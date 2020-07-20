@@ -1,12 +1,10 @@
 import getRequestedFieldsFromResolverInfo from "./../helpers/getRequestedFieldsFromResolverInfo";
 import { IConfiguration, IConfigurationCustomModule } from "../types/configuration";
 import { get, isFunction } from "lodash";
-import { firstLetterLowerCase } from "../helpers/index";
+import { firstLetterLowerCase, isSQL } from "../helpers/index";
 
-const { dbDialect } = process.env;
-const isSQL = dbDialect.includes("sql");
-const identityColumn = isSQL ? "id" : "_id";
-const identityColumnGraphQLType = isSQL ? "Int" : "String";
+const identityColumn = isSQL() ? "id" : "_id";
+const identityColumnGraphQLType = isSQL() ? "Int" : "String";
 
 export const generateQueriesCrudSchema = (moduleName: String, operationsRead) => {
   let string = "";
