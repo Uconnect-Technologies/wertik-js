@@ -159,7 +159,7 @@ export default {
     allowedIpAddresses: ["*"],
   },
   storage: {
-    storageDirectory: "./storage/",
+    storageDirectory: "./uploads/",
   },
   cron: {
     cronList: [

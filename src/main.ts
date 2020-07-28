@@ -33,7 +33,6 @@ export default function (configurationOriginal: IConfiguration) {
                           let graphql = require("./framework/graphql/index").default;
                           let restApi = require("./framework/restApi/index").default;
                           let cron = require("./framework/cron/index").default;
-                          let websockets = require("./framework/socket/index").default(configuration);
                           // let database = require("./framework/database/connect").default(configuration);
                           let dbTables = require("./framework/database/loadTables").default(database, configuration);
                           let models = require("./framework/database/models").default(dbTables, configuration);
@@ -49,6 +48,17 @@ export default function (configurationOriginal: IConfiguration) {
                           });
                           /* Storage */
                           let multerInstance = multer({ storage: storage });
+                          let websockets = require("./framework/socket/index").default(configuration, {
+                            expressApp: expressApp,
+                            configuration: configuration,
+                            dbTables: dbTables,
+                            models: models,
+                            sendEmail: sendEmail,
+                            emailTemplates: emailTemplates,
+                            database: database,
+                            runEvent: runEvent,
+                            mailerInstance: mailerInstance,
+                          });
 
                           let graphqlAppInstance = graphql({
                             expressApp: expressApp,

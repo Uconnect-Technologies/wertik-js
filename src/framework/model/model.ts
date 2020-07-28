@@ -16,15 +16,13 @@ import {
   mongoose,
 } from "../reporting";
 import { IConfiguration, IConfigurationCustomModule } from "../types/configuration";
-import { removeColumnsFromAccordingToSelectIgnoreFields } from "../helpers/index";
+import { removeColumnsFromAccordingToSelectIgnoreFields, isSQL, isMongodb } from "../helpers/index";
 
 export default function (props) {
   const { dbDialect } = process.env;
-  const isSQL = dbDialect.includes("sql");
-  const isMongodb = dbDialect === "mongodb";
   return {
     // properties
-    identityColumn: isSQL ? "id" : "_id",
+    identityColumn: isSQL() ? "id" : "_id",
     tableName: props.tableName,
     dbTables: props.dbTables,
     instance: null,
@@ -70,7 +68,7 @@ export default function (props) {
             countThisweek,
             countLastMonth,
             countLast90Days;
-          if (isSQL) {
+          if (isSQL()) {
             let selectOptions = {
               type: database.QueryTypes.SELECT,
             };
@@ -111,7 +109,7 @@ export default function (props) {
             statsInfo.total_created_last_90_days = get(countLast90Days, "[0].total_created_last_90_days", 0);
             statsInfo.total_created_last_year = get(countLastYear, "[0].total_created_last_year", 0);
             statsInfo.total_created_this_year = get(countThisYear, "[0].total_created_this_year", 0);
-          } else if (isMongodb) {
+          } else if (isMongodb()) {
             if (requestedReports.includes("total_count")) {
               statsInfo.total_count = await mongoose.getTotalCount(model);
             }
@@ -155,7 +153,7 @@ export default function (props) {
           const model = this.dbTables[this.tableName];
           let instance = null;
           let _this = this;
-          if (isSQL) {
+          if (isSQL()) {
             if (this.instance) {
               instance = await this.instance.update(args);
             } else {
@@ -197,14 +195,14 @@ export default function (props) {
         let model = this.dbTables[this.tableName];
         try {
           if (this.instance) {
-            if (isSQL) {
+            if (isSQL()) {
               await this.instance.destroy();
             } else {
               await model.deleteOne(args);
             }
             resolve(true);
           } else {
-            if (isSQL) {
+            if (isSQL()) {
               await model.destroy({
                 where: args,
               });
@@ -223,9 +221,9 @@ export default function (props) {
       return new Promise(async (resolve, reject) => {
         try {
           let model = this.dbTables[this.tableName];
-          if (isSQL) {
+          if (isSQL()) {
             this.instance = await model.create(args);
-          } else if (isMongodb) {
+          } else if (isMongodb()) {
             let mongoModel = new model(args);
             await mongoModel.save();
             this.instance = mongoModel;
@@ -247,7 +245,7 @@ export default function (props) {
           let filters = get(args, "filters", []);
           const model = this.dbTables[this.tableName];
           let sorting = get(args, "sorting", []);
-          if (isSQL) {
+          if (isSQL()) {
             // return paginate(model, args, requestedFields);
             let baseFields: any = "*";
             let attributesObject = {};
@@ -303,7 +301,7 @@ export default function (props) {
                 pages: Math.ceil(list.count / limit),
               },
             });
-          } else if (isMongodb) {
+          } else if (isMongodb()) {
             let filtersQuery = convertedFiltersIntoMongooseQuery(filters);
             let sortString = sorting
               .map((c) => {
@@ -348,12 +346,12 @@ export default function (props) {
           const updated = [];
           await Promise.all(
             args.map(async (c) => {
-              if (isSQL) {
+              if (isSQL()) {
                 await model.update(c, {
                   where: { id: c.id },
                 });
                 updated.push(await model.findOne({ where: { id: c.id } }));
-              } else if (isMongodb) {
+              } else if (isMongodb()) {
                 let update = await _this.update(c);
                 updated.push(update.instance);
               }
@@ -371,7 +369,7 @@ export default function (props) {
       return new Promise(async (resolve, reject) => {
         const model = this.dbTables[this.tableName];
         try {
-          if (isSQL) {
+          if (isSQL()) {
             await model.destroy({
               where: {
                 id: args.map((c) => c.id),
@@ -381,7 +379,7 @@ export default function (props) {
               message: "Items deleted",
               statusCode: 200,
             });
-          } else if (isMongodb) {
+          } else if (isMongodb()) {
             model.deleteMany(
               {
                 _id: {
@@ -407,7 +405,7 @@ export default function (props) {
       return new Promise(async (resolve, reject) => {
         try {
           const model = this.dbTables[this.tableName];
-          if (isSQL) {
+          if (isSQL()) {
             await model.update(
               { is_deleted: 1 },
               {
@@ -420,7 +418,7 @@ export default function (props) {
               message: "Items deleted",
               statusCode: 200,
             });
-          } else if (isMongodb) {
+          } else if (isMongodb()) {
             await model.updateMany(
               {
                 _id: {
@@ -444,10 +442,10 @@ export default function (props) {
         let _this = this;
         const model = this.dbTables[this.tableName];
         try {
-          if (isSQL) {
+          if (isSQL()) {
             _this.bulkInstances = await model.bulkCreate(args);
             resolve(_this);
-          } else if (isMongodb) {
+          } else if (isMongodb()) {
             model.insertMany(args, function (err, docs) {
               if (!err) {
                 _this.bulkInstances = docs;
@@ -481,9 +479,9 @@ export default function (props) {
         try {
           if (args && args.constructor === Array) {
             if (args.length > 0) {
-              if (isSQL) {
+              if (isSQL()) {
                 whr = await convertFiltersIntoSequalizeObject(args);
-              } else if (isMongodb) {
+              } else if (isMongodb()) {
                 whr = await convertedFiltersIntoMongooseQuery(args);
               }
             } else {
@@ -495,25 +493,29 @@ export default function (props) {
           const model = this.dbTables[this.tableName];
           let attributesObject: any = {};
           if (requestedFields && requestedFields.constructor === Array && requestedFields[0] !== "*") {
-            if (isSQL) {
+            if (isSQL()) {
               attributesObject["attributes"] = requestedFields;
-            } else if (isMongodb) {
+            } else if (isMongodb()) {
               attributesObject["attributes"] = requestedFields.join(" ");
             }
-          }
-          attributesObject = removeColumnsFromAccordingToSelectIgnoreFields(attributesObject, wertikModule.database.selectIgnoreFields);
-
-          if (attributesObject.attributes.length === 0) {
-            attributesObject.attributes = ["*"];
+            attributesObject = removeColumnsFromAccordingToSelectIgnoreFields(attributesObject, wertikModule.database.selectIgnoreFields);
           }
 
-          if (isSQL) {
+          if (!attributesObject) {
+            attributesObject = {};
+          }
+
+          if (attributesObject && attributesObject.attributes && attributesObject.attributes.length === 0) {
+            delete attributesObject["attributes"];
+          }
+
+          if (isSQL()) {
             this.instance = await model.findOne({
               where: whr,
               ...attributesObject,
             });
             resolve(this);
-          } else if (isMongodb) {
+          } else if (isMongodb()) {
             if (attributesObject["attributes"]) {
               this.instance = await model.findOne(whr, attributesObject["attributes"]);
             } else {
