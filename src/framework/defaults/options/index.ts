@@ -73,6 +73,7 @@ export const defaultApolloGraphqlOptions = {
   cacheControl: {
     defaultMaxAge: 0,
   },
+  tracing: true,
   subscriptions: {
     path: "/subscriptions",
   },
