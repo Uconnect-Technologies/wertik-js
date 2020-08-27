@@ -72,6 +72,7 @@ export default {
       fields: {
         name: {
           type: "STRING",
+          unique: true,
         },
         default_permissions: {
           type: "STRING",
@@ -87,13 +88,20 @@ export default {
     mongodb: {
       tableName: "role",
       schema: {
-        name: String,
-        default_permissions: String,
+        name: {
+          type: String,
+          unique: true,
+        },
+        default_permissions: { type: String },
         created_by: { type: Schema.Types.ObjectId, ref: "user" },
-        created_by_id: Number,
-        is_deleted: Number,
-        created_at: String,
-        updated_at: String,
+        created_by_id: {
+          type: Number,
+        },
+        is_deleted: {
+          type: Number,
+        },
+        created_at: { type: String },
+        updated_at: { type: String },
       },
     },
   },

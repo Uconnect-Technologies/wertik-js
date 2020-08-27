@@ -111,6 +111,7 @@ export default {
         },
         email: {
           type: "String",
+          unique: true,
         },
         password: {
           type: "String",
@@ -129,19 +130,46 @@ export default {
     mongodb: {
       tableName: "user",
       schema: {
-        name: String,
-        username: String,
-        refresh_token: String,
-        access_token: String,
-        is_activated: Boolean,
-        activated_on: String,
-        two_factor_code: String,
-        is_super_user: Boolean,
-        activation_token: String,
-        email: String,
-        password: String,
-        gender: String,
-        referer: String,
+        name: {
+          type: String
+        },
+        username: {
+          type: String
+        },
+        refresh_token: {
+          type: String
+        },
+        access_token: {
+          type: String
+        },
+        is_activated: {
+          type: Boolean
+        },
+        activated_on: {
+          type: String
+        },
+        two_factor_code: {
+          type: String
+        },
+        is_super_user: {
+          type: Boolean
+        },
+        activation_token: {
+          type: String
+        },
+        email: {
+          type: String,
+          unique: true,
+        },
+        password: {
+          type: String
+        },
+        gender: {
+          type: String
+        },
+        referer: {
+          type: String
+        },
       },
     },
   },

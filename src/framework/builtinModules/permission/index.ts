@@ -48,7 +48,7 @@ export default {
   },
   restApi: {},
   database: {
-    selectIgnoreFields: ["user_permissions", "role_permissions","created_by"],
+    selectIgnoreFields: ["user_permissions", "role_permissions", "created_by"],
     relationships: {
       oneToMany: {
         UserPermission: {
@@ -64,15 +64,16 @@ export default {
         User: {
           graphqlName: "created_by",
           foreignKey: "id",
-          relationColumn: "created_by_id"
-        }
-      }
+          relationColumn: "created_by_id",
+        },
+      },
     },
     sql: {
       tableName: "permission",
       fields: {
         name: {
           type: "STRING",
+          unique: true,
         },
         cant: {
           type: "STRING",
@@ -91,13 +92,26 @@ export default {
     mongodb: {
       tableName: "permission",
       schema: {
-        name: String,
-        cant: String,
-        can: String,
+        name: {
+          type: String,
+          unique: true,
+        },
+        cant: {
+          type: String,
+        },
+        can: {
+          type: String,
+        },
         created_by: { type: Schema.Types.ObjectId, ref: "user" },
-        created_by_id: Number,
-        created_at: String,
-        updated_at: String,
+        created_by_id: {
+          type: Number,
+        },
+        created_at: {
+          type: String,
+        },
+        updated_at: {
+          type: String,
+        },
       },
     },
   },

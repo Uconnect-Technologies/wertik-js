@@ -100,6 +100,7 @@ export default {
         },
         filename: {
           type: "STRING",
+          unique: true,
         },
         size: {
           type: "STRING",
