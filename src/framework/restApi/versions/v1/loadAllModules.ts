@@ -6,7 +6,6 @@ import { firstLetterLowerCase, isMongodb, isSQL } from "../../../helpers/index";
 
 export const getModuleApiPaths = (name: string) => {
   let a = {
-    save: `/api/v1/${kebabCase(name)}/save`,
     view: `/api/v1/${kebabCase(name)}/view/:id`,
     module: `/api/v1/${kebabCase(name)}/`,
     delete: `/api/v1/${kebabCase(name)}/:id/delete`,
@@ -31,7 +30,6 @@ export default async function (expressApp, configuration: IConfiguration, custom
     const overrideModuleQuery = get(configuration, `override.${module.name}.restApi.${firstLetterLowerCase(firstLetterLowerCase)}`, null);
     const overrideView = get(configuration, `override.${module.name}.restApi.view`, null);
     const overrideList = get(configuration, `override.${module.name}.restApi.list`, null);
-    const overrideSave = get(configuration, `override.${module.name}.restApi.save`, null);
     const overrideDelete = get(configuration, `override.${module.name}.restApi.delete`, null);
     const overrideSoftDelete = get(configuration, `override.${module.name}.restApi.softDelete`, null);
     const overrideBulkSoftDelete = get(configuration, `override.${module.name}.restApi.bulkSoftDelete`, null);
@@ -176,27 +174,6 @@ export default async function (expressApp, configuration: IConfiguration, custom
         }
       });
 
-      expressApp.post(modulePaths.save, async (req, res) => {
-        try {
-          let model = req.models[module.name].getModel();
-          if (overrideSave && overrideSave.constructor == Function) {
-            overrideSave(req, res);
-          } else {
-            let result = await model.save(req.body.input);
-            restApiSuccessResponse({
-              res: res,
-              data: result.instance,
-              message: `${module.name} saved`,
-            });
-          }
-        } catch (e) {
-          restApiErrorResponse({
-            err: e,
-            res: res,
-            data: {},
-          });
-        }
-      });
 
       expressApp.post(modulePaths.bulkCreate, async (req, res) => {
         try {

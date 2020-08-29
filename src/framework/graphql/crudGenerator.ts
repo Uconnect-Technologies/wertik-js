@@ -29,11 +29,9 @@ export const generateQueriesCrudSchema = (moduleName: String, operationsRead) =>
 };
 
 export const generateMutationsCrudSubscriptionSchema = (moduleName: String, operationsModify, operationsRead) => {
-  const savedString = `${moduleName}Saved: ${moduleName}`;
   const deletedString = `${moduleName}Deleted: SuccessResponse`;
   const softDeleteString = `${moduleName}SoftDeleted: ${moduleName}`;
   return `
-    ${savedString}
     ${deletedString}
     ${softDeleteString}
   `;
@@ -41,7 +39,6 @@ export const generateMutationsCrudSubscriptionSchema = (moduleName: String, oper
 
 export const getSubscriptionConstants = (moduleName: String) => {
   return {
-    savedModule: `${moduleName}Saved`,
     deletedModule: `${moduleName}Deleted`,
     softDeletedModule: `${moduleName}SoftDeleted`,
   };
@@ -49,11 +46,8 @@ export const getSubscriptionConstants = (moduleName: String) => {
 
 export const generateSubscriptionsCrudResolvers = (moduleName: String, pubsub: any, operationsModify) => {
   const operationsModifySplit = operationsModify.toLowerCase().split(" ");
-  const { deletedModule, softDeletedModule, savedModule } = getSubscriptionConstants(moduleName);
+  const { deletedModule, softDeletedModule } = getSubscriptionConstants(moduleName);
   let object = {
-    [savedModule]: {
-      subscribe: () => pubsub.asyncIterator([savedModule]),
-    },
     [deletedModule]: {
       subscribe: () => pubsub.asyncIterator([deletedModule]),
     },
@@ -74,7 +68,6 @@ export const generateSubscriptionsCrudResolvers = (moduleName: String, pubsub: a
 
 export const generateMutationsCrudSchema = (moduleName: String, operations) => {
   const operationsSplit = operations.toLowerCase().split(" ");
-  const saveString = `save${moduleName}(input: ${moduleName}Input): ${moduleName}`;
   const deleteString = `delete${moduleName}(input: IDDeleteInput): SuccessResponse`;
   const softDeleteString = `softDelete${moduleName}(input: IDDeleteInput): SuccessResponse`;
   const bulkUpdateString = `bulkUpdate${moduleName}(input: [${moduleName}Input]): [${moduleName}]`;
@@ -84,7 +77,6 @@ export const generateMutationsCrudSchema = (moduleName: String, operations) => {
   if (operations == "*") {
     return `
       ${deleteString}
-      ${saveString}
       ${softDeleteString}
       ${bulkUpdateString}
       ${bulkCreateString}
@@ -93,7 +85,6 @@ export const generateMutationsCrudSchema = (moduleName: String, operations) => {
     `;
   } else {
     return `
-      ${operationsSplit.includes("save") ? saveString : ""}
       ${operationsSplit.includes("softDelete") ? softDeleteString : ""}
       ${operationsSplit.includes("delete") ? deleteString : ""}
       ${operationsSplit.includes("bulkupdate") ? bulkUpdateString : ""}
@@ -107,7 +98,6 @@ export const generateMutationsCrudSchema = (moduleName: String, operations) => {
 export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub, operationsModify, operationsRead, configuration: IConfiguration) => {
   const operationsModifySplit = operationsModify.toLowerCase().split(" ");
   const operationsReadSplit = operationsRead.toLowerCase().split(" ");
-  const overrideMutationSave = get(configuration, `override.${module.name}.graphql.mutation.save`, null);
   const overrideMutationDelete = get(configuration, `override.${module.name}.graphql.mutation.delete`, null);
   const overrideMutationSoftDelete = get(configuration, `override.${module.name}.graphql.mutation.softDelete`, null);
   const overrideMutationBulkCreate = get(configuration, `override.${module.name}.graphql.mutation.bulkCreate`, null);
@@ -144,23 +134,10 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
   const beforeByModule = get(configuration, `events.database.${module.name}.beforeByModule`, null);
   const afterByModule = get(configuration, `events.database.${module.name}.afterByModule`, null);
 
-  const { deletedModule , softDeletedModule, savedModule } = getSubscriptionConstants(module.name);
+  const { deletedModule , softDeletedModule } = getSubscriptionConstants(module.name);
 
   let object = {
     mutations: {
-      [`save${module.name}`]: async (_: any, args: any, context: any, info: any) => {
-        if (overrideMutationSave && overrideMutationSave.constructor == Function) {
-          let response = await overrideMutationSave(_, args, context, info);
-          return response;
-        }
-        let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        let model = context.models[module.name].getModel();
-        let result = await model.save(args.input, requestedFields);
-        pubsub.publish(savedModule, {
-          [savedModule]: result,
-        });
-        return result.instance;
-      },
       [`delete${module.name}`]: async (_: any, args: any, context: any, info: any) => {
         if (overrideMutationDelete && overrideMutationDelete.constructor == Function) {
           let response = await overrideMutationDelete(_, args, context, info);
@@ -464,6 +441,14 @@ export const generateListTypeForModule = (moduleName: String) => {
       pagination: Pagination
       filters: [Filter]
       sorting: Sorting
+    }
+    type ${moduleName}MutationResponse {
+      returning: ${moduleName}
+      affected_rows: Int
+    }
+    type ${moduleName}BulkMutationResponse {
+      returning: ${moduleName}
+      affected_rows: Int
     }
   `;
 };

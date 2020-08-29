@@ -161,8 +161,6 @@ export interface IConfigurationEvents {
   database?: {
     [Key: string]: {
       // Cud
-      beforeSave: Function;
-      afterSave: Function;
       beforeDelete: Function;
       afterDelete: Function;
       beforeSoftDelete: Function;
