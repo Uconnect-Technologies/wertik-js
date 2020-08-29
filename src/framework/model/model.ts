@@ -4,17 +4,7 @@ import convertFiltersIntoSequalizeObject from "../database/helpers/convertFilter
 import convertedFiltersIntoMongooseQuery from "../database/helpers/convertedFiltersIntoMongooseQuery";
 import internalServerError from "../../framework/helpers/internalServerError";
 import { convertFieldsIntoSequelizeFields } from "../database/helpers";
-import {
-  getQueryForLast7Days,
-  getQueryForLastYear,
-  getQueryForThisYear,
-  getQueryForThisMonth,
-  getQueryForLastMonth,
-  getQueryForThisWeek,
-  getQueryForToday,
-  getQueryForLast90Days,
-  mongoose,
-} from "../reporting";
+import { getQueryForLast7Days, getQueryForLastYear, getQueryForThisYear, getQueryForThisMonth, getQueryForLastMonth, getQueryForThisWeek, getQueryForToday, getQueryForLast90Days, mongoose } from "../reporting";
 import { IConfiguration, IConfigurationCustomModule } from "../types/configuration";
 import { removeColumnsFromAccordingToSelectIgnoreFields, isSQL, isMongodb } from "../helpers/index";
 
@@ -27,6 +17,7 @@ export default function (props) {
     dbTables: props.dbTables,
     instance: null,
     bulkInstances: [],
+    affectedRows: 0,
     id: null,
     wertikModule: props.module,
 
@@ -59,15 +50,7 @@ export default function (props) {
         };
         try {
           const model = this.dbTables[this.tableName];
-          let count,
-            countLast7Days,
-            countToday,
-            countLastYear,
-            countThisYear,
-            countThisMonth,
-            countThisweek,
-            countLastMonth,
-            countLast90Days;
+          let count, countLast7Days, countToday, countLastYear, countThisYear, countThisMonth, countThisweek, countLastMonth, countLast90Days;
           if (isSQL()) {
             let selectOptions = {
               type: database.QueryTypes.SELECT,
@@ -342,6 +325,7 @@ export default function (props) {
       return new Promise(async (resolve, reject) => {
         try {
           let _this = this;
+          _this.affectedRows = 0;
           const model = _this.dbTables[_this.tableName];
           const updated = [];
           await Promise.all(
@@ -351,8 +335,10 @@ export default function (props) {
                   where: { id: c.id },
                 });
                 updated.push(await model.findOne({ where: { id: c.id } }));
+                _this.affectedRows = _this.affectedRows + 1;
               } else if (isMongodb()) {
                 let update = await _this.update(c);
+                _this.affectedRows = _this.affectedRows + 1;
                 updated.push(update.instance);
               }
             })
@@ -444,11 +430,13 @@ export default function (props) {
         try {
           if (isSQL()) {
             _this.bulkInstances = await model.bulkCreate(args);
+            _this.affectedRows = _this.bulkInstances.length;
             resolve(_this);
           } else if (isMongodb()) {
             model.insertMany(args, function (err, docs) {
               if (!err) {
                 _this.bulkInstances = docs;
+                _this.affectedRows = docs.length;
                 resolve(_this);
               } else {
                 throw internalServerError(err);

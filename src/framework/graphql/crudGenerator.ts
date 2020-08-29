@@ -70,8 +70,8 @@ export const generateMutationsCrudSchema = (moduleName: String, operations) => {
   const operationsSplit = operations.toLowerCase().split(" ");
   const deleteString = `delete${moduleName}(input: IDDeleteInput): SuccessResponse`;
   const softDeleteString = `softDelete${moduleName}(input: IDDeleteInput): SuccessResponse`;
-  const bulkUpdateString = `bulkUpdate${moduleName}(input: [${moduleName}Input]): [${moduleName}]`;
-  const bulkCreateString = `bulkCreate${moduleName}(input: [${moduleName}Input]): [${moduleName}]`;
+  const bulkUpdateString = `bulkUpdate${moduleName}(input: [${moduleName}Input]): ${moduleName}BulkMutationResponse`;
+  const bulkCreateString = `bulkCreate${moduleName}(input: [${moduleName}Input]): ${moduleName}BulkMutationResponse`;
   const bulkDeleteString = `bulkDelete${moduleName}(input: [IDDeleteInput]): SuccessResponse`;
   const bulkSoftDeleteString = `bulkSoftDelete${moduleName}(input: [IDDeleteInput]): SuccessResponse`;
   if (operations == "*") {
@@ -134,7 +134,7 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
   const beforeByModule = get(configuration, `events.database.${module.name}.beforeByModule`, null);
   const afterByModule = get(configuration, `events.database.${module.name}.afterByModule`, null);
 
-  const { deletedModule , softDeletedModule } = getSubscriptionConstants(module.name);
+  const { deletedModule, softDeletedModule } = getSubscriptionConstants(module.name);
 
   let object = {
     mutations: {
@@ -268,7 +268,10 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
             params: { _, args, context, info, instance: result.bulkInstances },
           });
         }
-        return result.bulkInstances;
+        return {
+          returning: [...result.bulkInstances],
+          affectedRows: result.affectedRows,
+        };
       },
       [`bulkUpdate${module.name}`]: async (_: any, args: any, context: any, info: any) => {
         if (overrideMutationBulkUpdate && overrideMutationBulkUpdate.constructor == Function) {
@@ -293,7 +296,11 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
             params: { _, args, context, info, instance: result.bulkInstances },
           });
         }
-        return result.bulkInstances;
+        // return result.bulkInstances;
+        return {
+          returning: [...result.bulkInstances],
+          affectedRows: result.affectedRows,
+        };
       },
     },
     queries: {
@@ -442,13 +449,9 @@ export const generateListTypeForModule = (moduleName: String) => {
       filters: [Filter]
       sorting: Sorting
     }
-    type ${moduleName}MutationResponse {
-      returning: ${moduleName}
-      affected_rows: Int
-    }
     type ${moduleName}BulkMutationResponse {
-      returning: ${moduleName}
-      affected_rows: Int
+      returning: [${moduleName}]
+      affectedRows: Int
     }
   `;
 };
