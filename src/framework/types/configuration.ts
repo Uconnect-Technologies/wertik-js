@@ -263,8 +263,6 @@ export interface IConfiguration {
   override: IConfigurationOverride;
   restApi: IConfigurationRestApi;
   graphql: IConfigurationGraphql;
-  forceStartGraphqlServer: Boolean;
-  forceStartRestApiServer: Boolean;
   ports: IConfigurationPorts;
   modules: Array<IConfigurationCustomModule>;
   events: IConfigurationEvents;

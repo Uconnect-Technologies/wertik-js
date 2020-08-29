@@ -34,8 +34,6 @@ export default {
     disable: false,
     port: 7000,
   },
-  forceStartGraphqlServer: true,
-  forceStartRestApiServer: true,
   ports: {
     graphql: 4000,
     restApi: 7000,
