@@ -10,6 +10,7 @@ import loadDefaults from "./framework/defaults/loadDefaults";
 import initiateLogger from "./framework/logger/index";
 import initiateMailer from "./framework/mailer/index";
 import { randomString } from "./framework/helpers";
+import startServers from "./framework/initialization/startServers";
 let connectDatabase = require("./framework/database/connect").default;
 
 export default function (configurationOriginal: IConfiguration) {
@@ -28,12 +29,11 @@ export default function (configurationOriginal: IConfiguration) {
                   initiateMailer(configuration)
                     .then((mailerInstance) => {
                       connectDatabase(configuration)
-                        .then((database) => {
+                        .then(async (database) => {
                           let runEvent = require("./framework/events/runEvent").default(configuration.events);
                           let graphql = require("./framework/graphql/index").default;
                           let restApi = require("./framework/restApi/index").default;
                           let cron = require("./framework/cron/index").default;
-                          // let database = require("./framework/database/connect").default(configuration);
                           let dbTables = require("./framework/database/loadTables").default(database, configuration);
                           let models = require("./framework/database/models").default(dbTables, configuration);
                           let sendEmail = get(configuration, "email.disable", false) === false ? require("./framework/mailer/index").sendEmail(configuration, mailerInstance) : null;
@@ -60,7 +60,7 @@ export default function (configurationOriginal: IConfiguration) {
                             mailerInstance: mailerInstance,
                           });
 
-                          let graphqlAppInstance = graphql({
+                          let { graphql: graphqlAppInstance, graphqlVoyager } = await graphql({
                             expressApp: expressApp,
                             configuration: configuration,
                             dbTables: dbTables,
@@ -72,7 +72,7 @@ export default function (configurationOriginal: IConfiguration) {
                             mailerInstance: mailerInstance,
                             websockets: websockets,
                           });
-                          let restApiInstance = restApi({
+                          let restApiInstance = await restApi({
                             expressApp: expressApp,
                             configuration: configuration,
                             dbTables: dbTables,
@@ -99,6 +99,11 @@ export default function (configurationOriginal: IConfiguration) {
                             runEvent: runEvent,
                             multerInstance: multerInstance,
                             mailerInstance: mailerInstance,
+                          });
+                          await startServers(configuration, {
+                            graphql: graphqlAppInstance,
+                            restApi: restApiInstance,
+                            graphqlVoyager: graphqlVoyager,
                           });
                           resolve({
                             graphql: graphqlAppInstance,

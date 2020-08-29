@@ -23,7 +23,7 @@ export default async function (options: IGraphQLInitialize) {
     return null;
   }
   const modules = await loadAllModules(configuration);
-  voyager(configuration, require("express"));
+  const graphqlVoyager = voyager(configuration, require("express"));
   let apollo = new ApolloServer({
     typeDefs: modules.schema,
     resolvers: modules.resolvers,
@@ -62,11 +62,9 @@ export default async function (options: IGraphQLInitialize) {
     },
     ...apolloGraphqlOptions,
   });
-  if (forceStartGraphqlServer == true) {
-    apollo.listen(port).then(({ url, subscriptionsUrl }) => {
-      successMessage("GraphQL Subscriptions server started at ", subscriptionsUrl);
-      successMessage("GraphQL Server started at", url);
-    });
-  }
-  return apollo;
+
+  return {
+    graphql: apollo,
+    graphqlVoyager: graphqlVoyager,
+  };
 }
