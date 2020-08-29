@@ -113,8 +113,8 @@ export default {
             description: String,
             created_at: String,
             updated_at: String,
-          }
-        }
+          },
+        },
       },
     },
   ],
@@ -126,11 +126,7 @@ export default {
       console.log("beforeRestApiStart");
     },
     database: {
-      Permission: {
-        afterCreate() {
-          console.log("permision created");
-        },
-      },
+      Permission: {},
     },
   },
   seeds: {
