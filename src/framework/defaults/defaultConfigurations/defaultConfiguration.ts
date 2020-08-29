@@ -138,14 +138,14 @@ export default {
   sockets: {
     disable: false,
     port: 2000,
-    onClientConnected: function (ws, req, wss) {
+    onClientConnected: function ({ws, req, wss}) {
       ws.id = Math.floor(Math.random() * 1000000);
       console.log("on client connected", `Total connections right now ${wss.clients.size}`);
     },
-    onMessageReceived: function (ws, message) {
+    onMessageReceived: function ({ws, message}) {
       console.log("on message received: " + message);
     },
-    onClientDisconnect: function (wss) {
+    onClientDisconnect: function ({wss}) {
       console.log("on client disconnected", `Total connections right now ${wss.clients.size}`);
     },
   },

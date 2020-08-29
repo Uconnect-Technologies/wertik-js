@@ -48,6 +48,7 @@ export default function (configurationOriginal: IConfiguration) {
                           });
                           /* Storage */
                           let multerInstance = multer({ storage: storage });
+
                           let websockets = require("./framework/socket/index").default(configuration, {
                             expressApp: expressApp,
                             configuration: configuration,
@@ -59,7 +60,7 @@ export default function (configurationOriginal: IConfiguration) {
                             runEvent: runEvent,
                             mailerInstance: mailerInstance,
                           });
-
+                          
                           let { graphql: graphqlAppInstance, graphqlVoyager } = await graphql({
                             expressApp: expressApp,
                             configuration: configuration,
