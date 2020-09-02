@@ -1,50 +1,20 @@
-let javascript = {
-  where: {
-    id: {
-      _eq: 1,
-    },
-    _or: [
-      {
-        id: {
-          _eq: 1,
-        },
-      },
-    ],
-    a: {
-      _eq: {
-        eq: {
-          _eq: 1,
-        },
-      },
-    },
-    _and: [
-      {
-        id: {
-          _eq: 1,
-        },
-      },
-      {
-        last_name: {
-          _eq: "nice",
-        },
-      },
-    ],
-  },
-};
+import { isPlainObject } from "lodash";
+import sequelize from "sequelize";
+const Op = sequelize.Op;
 
 const wrap = (operator) => {
-  return "____" + operator;
+  return Op[operator.replace("_", "")];
 };
 
 const iterate = (obj) => {
-  const isObject = obj && obj.constructor === Object;
-  const isArray = obj && obj.constructor === Array;
+  const isObject = isPlainObject(obj);
+  const isArray = Array.isArray(obj);
   if (isObject) {
     const keys = Object.keys(obj);
     keys.forEach((element) => {
       const value = obj[element];
-      const isArray = value && value.constructor === Array;
-      const isObject = value && value.constructor === Object;
+      const isArray = Array.isArray(value);
+      const isObject = isPlainObject(value);
       if (element.indexOf("_") === 0) {
         const newWrapValue = wrap(element);
         obj[newWrapValue] = obj[element];

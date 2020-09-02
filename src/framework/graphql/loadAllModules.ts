@@ -58,7 +58,7 @@ export default async function (configuration: IConfiguration) {
         currentGenerateQueryOperations,
         configuration
       );
-      let currentModuleListSchema = currentGenerateQuery || currentGenerateMutation ? generateListTypeForModule(moduleName) : "";
+      let currentModuleListSchema = currentGenerateQuery || currentGenerateMutation ? generateListTypeForModule(module) : "";
       let currentModuleSubscriptionResolvers = generateSubscriptionsCrudResolvers(moduleName, pubsub, currentGenerateMutationOperations);
       // relations
       let customResolvers = get(graphql, "customResolvers", {});

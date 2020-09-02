@@ -11,7 +11,7 @@ export const generateQueriesCrudSchema = (moduleName: String, operationsRead) =>
   const byId = `${firstLetterLowerCase(moduleName)}ById(${identityColumn}: ${identityColumnGraphQLType}): ${moduleName}`;
   const byFilter = `${firstLetterLowerCase(moduleName)}(filters: [FilterInput]): ${moduleName}`;
   const viewString = `view${moduleName}(${identityColumn}: ${identityColumnGraphQLType}): ${moduleName}`;
-  const listString = `list${moduleName}(pagination: PaginationInput, filters: [FilterInput], sorting: [SortingInput]): ${moduleName}List`;
+  const listString = `list${moduleName}(pagination: PaginationInput, filters: ${moduleName}FilterInput, sorting: [SortingInput]): ${moduleName}List`;
   const statsString = `${firstLetterLowerCase(moduleName)}Stats: ModuleStats`;
   if (operationsRead == "*") {
     string = `
@@ -441,16 +441,48 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
   return object;
 };
 
-export const generateListTypeForModule = (moduleName: String) => {
+export const generateModuleSearchShema = (module) => {
+  let string = `
+    input ${module.name}FilterInput {
+      id: IntFilterInput
+  `;
+  const fields = get(module, "database.sql.fields", null);
+  const keys = Object.keys(fields);
+  keys.forEach((key) => {
+    const field = fields[key];
+
+    const getType = () => {
+      const type = field.oldType.toLowerCase();
+      if (type === "string") {
+        return "String";
+      } else if (type === "integer") {
+        return "Int";
+      } else if (type === "boolean") {
+        return "Boolean";
+      }
+    };
+
+    string =
+      string +
+      `
+     ${key}: ${getType()}FilterInput
+    `;
+  });
+  string = string + " }";
+  return string;
+};
+
+export const generateListTypeForModule = (module: IConfigurationCustomModule) => {
   return `
-    type ${moduleName}List {
-      list: [${moduleName}]
+    ${generateModuleSearchShema(module)}
+    type ${module.name}List {
+      list: [${module.name}]
       pagination: Pagination
       filters: [Filter]
       sorting: Sorting
     }
-    type ${moduleName}BulkMutationResponse {
-      returning: [${moduleName}]
+    type ${module.name}BulkMutationResponse {
+      returning: [${module.name}]
       affectedRows: Int
     }
   `;

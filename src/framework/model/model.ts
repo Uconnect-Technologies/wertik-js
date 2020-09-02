@@ -248,7 +248,6 @@ export default function (props) {
 
             let convertedFilters = await convertFiltersIntoSequalizeObject(filters);
             let offset = limit * (page - 1);
-            let totalFilters = filters.length;
             let list: any = {};
             if (baseFields == "*") {
               delete attributesObject["attributes"];
@@ -256,22 +255,13 @@ export default function (props) {
             if (sorting.length == 0) {
               delete sortingObject["sorting"];
             }
-            if (totalFilters > 0) {
-              list = await model.findAndCountAll({
-                offset: offset,
-                limit: limit,
-                where: convertedFilters,
-                ...attributesObject,
-                ...sortingObject,
-              });
-            } else {
-              list = await model.findAndCountAll({
-                offset: offset,
-                limit: limit,
-                ...attributesObject,
-                ...sortingObject,
-              });
-            }
+            list = await model.findAndCountAll({
+              offset: offset,
+              limit: limit,
+              where: convertedFilters,
+              ...attributesObject,
+              ...sortingObject,
+            });
             resolve({
               filters,
               pagination: { page, limit },
