@@ -444,6 +444,8 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
 export const generateModuleSearchShema = (module) => {
   let string = `
     input ${module.name}FilterInput {
+      _or: [${module.name}FilterInput]
+      _and: [${module.name}FilterInput]
       id: IntFilterInput
   `;
   const fields = get(module, "database.sql.fields", null);

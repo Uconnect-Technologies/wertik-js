@@ -262,6 +262,7 @@ export default function (props) {
               ...attributesObject,
               ...sortingObject,
             });
+
             resolve({
               filters,
               pagination: { page, limit },
@@ -274,6 +275,7 @@ export default function (props) {
                 pages: Math.ceil(list.count / limit),
               },
             });
+            
           } else if (isMongodb()) {
             let filtersQuery = convertedFiltersIntoMongooseQuery(filters);
             let sortString = sorting
