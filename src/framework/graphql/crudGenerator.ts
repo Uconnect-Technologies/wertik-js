@@ -447,6 +447,8 @@ export const generateModuleSearchShema = (module) => {
       _or: [${module.name}FilterInput]
       _and: [${module.name}FilterInput]
       id: IntFilterInput
+      created_at: DateFilterInput
+      updated: DateFilterInput
   `;
   const fields = get(module, "database.sql.fields", null);
   const keys = Object.keys(fields);

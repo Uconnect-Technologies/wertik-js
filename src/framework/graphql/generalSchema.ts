@@ -29,6 +29,16 @@ export default `input StringFilterInput {
 		_or: IntFilterInput
 		_and: IntFilterInput
 	}
+	input DateFilterInput {
+		_eq: String
+		_gt: String
+		_gte: String
+		_in: [String!]
+		_lt: String
+		_lte: String
+		_neq: String
+		_nin: [String!]
+	}
 	input BooleanFilterInput {
 		_eq: Boolean
 		_ne: Boolean
