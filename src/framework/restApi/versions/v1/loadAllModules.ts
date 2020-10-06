@@ -6,9 +6,6 @@ import { firstLetterLowerCase, isMongodb, isSQL } from "../../../helpers/index";
 
 export const getModuleApiPaths = (name: string) => {
   let a = {
-    save: `/api/v1/${kebabCase(name)}/save`,
-    create: `/api/v1/${kebabCase(name)}/create`,
-    update: `/api/v1/${kebabCase(name)}/update`,
     view: `/api/v1/${kebabCase(name)}/view/:id`,
     module: `/api/v1/${kebabCase(name)}/`,
     delete: `/api/v1/${kebabCase(name)}/:id/delete`,
@@ -33,9 +30,6 @@ export default async function (expressApp, configuration: IConfiguration, custom
     const overrideModuleQuery = get(configuration, `override.${module.name}.restApi.${firstLetterLowerCase(firstLetterLowerCase)}`, null);
     const overrideView = get(configuration, `override.${module.name}.restApi.view`, null);
     const overrideList = get(configuration, `override.${module.name}.restApi.list`, null);
-    const overrideCreate = get(configuration, `override.${module.name}.restApi.create`, null);
-    const overrideSave = get(configuration, `override.${module.name}.restApi.save`, null);
-    const overrideUpdate = get(configuration, `override.${module.name}.restApi.update`, null);
     const overrideDelete = get(configuration, `override.${module.name}.restApi.delete`, null);
     const overrideSoftDelete = get(configuration, `override.${module.name}.restApi.softDelete`, null);
     const overrideBulkSoftDelete = get(configuration, `override.${module.name}.restApi.bulkSoftDelete`, null);
@@ -43,10 +37,6 @@ export default async function (expressApp, configuration: IConfiguration, custom
     const overrideBuklUpdate = get(configuration, `override.${module.name}.restApi.bulkUpdate`, null);
     const overrideBuklDelete = get(configuration, `override.${module.name}.restApi.bulkDelete`, null);
 
-    const beforeCreate = get(configuration, `events.database.${module.name}.beforeCreate`, null);
-    const afterCreate = get(configuration, `events.database.${module.name}.afterCreate`, null);
-    const beforeUpdate = get(configuration, `events.database.${module.name}.beforeUpdate`, null);
-    const afterUpdate = get(configuration, `events.database.${module.name}.afterUpdate`, null);
     const beforeDelete = get(configuration, `events.database.${module.name}.beforeDelete`, null);
     const afterDelete = get(configuration, `events.database.${module.name}.afterDelete`, null);
     const beforeSoftDelete = get(configuration, `events.database.${module.name}.beforeSoftDelete`, null);
@@ -184,58 +174,6 @@ export default async function (expressApp, configuration: IConfiguration, custom
         }
       });
 
-      expressApp.post(modulePaths.create, async (req, res) => {
-        try {
-          let model = req.models[module.name].getModel();
-          if (overrideCreate && overrideCreate.constructor == Function) {
-            overrideCreate(req, res);
-          } else {
-            let finalArgs;
-            if (isFunction(beforeCreate)) {
-              finalArgs = await beforeCreate({ mode: "restApi", params: { req, res } });
-            } else {
-              finalArgs = req.body.input;
-            }
-            let result = await model.create(finalArgs);
-            if (isFunction(afterCreate)) {
-              await afterCreate({ mode: "restApi", params: { req, res, instance: result.instance } });
-            }
-            restApiSuccessResponse({
-              res: res,
-              data: result.instance,
-              message: `${module.name} created`,
-            });
-          }
-        } catch (e) {
-          restApiErrorResponse({
-            err: e,
-            res: res,
-            data: {},
-          });
-        }
-      });
-
-      expressApp.post(modulePaths.save, async (req, res) => {
-        try {
-          let model = req.models[module.name].getModel();
-          if (overrideSave && overrideSave.constructor == Function) {
-            overrideSave(req, res);
-          } else {
-            let result = await model.save(req.body.input);
-            restApiSuccessResponse({
-              res: res,
-              data: result.instance,
-              message: `${module.name} saved`,
-            });
-          }
-        } catch (e) {
-          restApiErrorResponse({
-            err: e,
-            res: res,
-            data: {},
-          });
-        }
-      });
 
       expressApp.post(modulePaths.bulkCreate, async (req, res) => {
         try {
@@ -257,37 +195,6 @@ export default async function (expressApp, configuration: IConfiguration, custom
               res: res,
               data: result.instances,
               message: `${module.name} bulk operation successfull.`,
-            });
-          }
-        } catch (e) {
-          restApiErrorResponse({
-            err: e,
-            res: res,
-            data: {},
-          });
-        }
-      });
-
-      expressApp.put(modulePaths.update, async (req, res) => {
-        try {
-          let model = req.models[module.name].getModel();
-          if (overrideUpdate && overrideUpdate.constructor == Function) {
-            overrideUpdate(req, res);
-          } else {
-            let finalArgs;
-            if (isFunction(beforeUpdate)) {
-              finalArgs = await beforeUpdate({ mode: "restApi", params: { req, res } });
-            } else {
-              finalArgs = req.body.input;
-            }
-            let result = await model.update(finalArgs);
-            if (isFunction(afterUpdate)) {
-              await afterUpdate({ mode: "restApi", params: { req, res } });
-            }
-            restApiSuccessResponse({
-              res: res,
-              message: `${module.name} updated`,
-              data: result.instance,
             });
           }
         } catch (e) {

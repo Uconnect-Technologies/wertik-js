@@ -45,7 +45,6 @@ import customApi from "./customApi";
 export default function (options: IRestApiInitialize) {
   const { configuration, dbTables, models, sendEmail, emailTemplates, expressApp, database, runEvent, multerInstance, mailerInstance, websockets, logger } = options;
   let { restApi } = configuration;
-  const port = get(restApi, "port", 4000);
   if (get(restApi, "disable", true) === true) {
     return expressApp;
   }
@@ -89,19 +88,6 @@ export default function (options: IRestApiInitialize) {
       version: require("./../../../package.json").version,
     });
   });
-
-  expressApp.get("*", function (req, res) {
-    res.status(404).json({
-      message: "Not found",
-      detail: "Request page didn't found",
-    });
-  });
-
-  if (configuration.forceStartRestApiServer === true) {
-    expressApp.listen(port, () => {
-      successMessage(`Rest API server started at`, `http://localhost:${port}`);
-    });
-  }
 
   return expressApp;
 }

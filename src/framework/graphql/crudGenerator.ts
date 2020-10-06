@@ -11,7 +11,7 @@ export const generateQueriesCrudSchema = (moduleName: String, operationsRead) =>
   const byId = `${firstLetterLowerCase(moduleName)}ById(${identityColumn}: ${identityColumnGraphQLType}): ${moduleName}`;
   const byFilter = `${firstLetterLowerCase(moduleName)}(filters: [FilterInput]): ${moduleName}`;
   const viewString = `view${moduleName}(${identityColumn}: ${identityColumnGraphQLType}): ${moduleName}`;
-  const listString = `list${moduleName}(pagination: PaginationInput, filters: [FilterInput], sorting: [SortingInput]): ${moduleName}List`;
+  const listString = `list${moduleName}(pagination: PaginationInput, filters: ${moduleName}FilterInput, sorting: [SortingInput]): ${moduleName}List`;
   const statsString = `${firstLetterLowerCase(moduleName)}Stats: ModuleStats`;
   if (operationsRead == "*") {
     string = `
@@ -29,57 +29,33 @@ export const generateQueriesCrudSchema = (moduleName: String, operationsRead) =>
 };
 
 export const generateMutationsCrudSubscriptionSchema = (moduleName: String, operationsModify, operationsRead) => {
-  const createdString = `${moduleName}Created: ${moduleName}`;
-  const savedString = `${moduleName}Saved: ${moduleName}`;
   const deletedString = `${moduleName}Deleted: SuccessResponse`;
-  const updatedString = `${moduleName}Updated: ${moduleName}`;
   const softDeleteString = `${moduleName}SoftDeleted: ${moduleName}`;
   return `
-    ${createdString}
-    ${savedString}
     ${deletedString}
-    ${updatedString}
     ${softDeleteString}
   `;
 };
 
 export const getSubscriptionConstants = (moduleName: String) => {
   return {
-    createdModule: `${moduleName}Created`,
-    savedModule: `${moduleName}Saved`,
     deletedModule: `${moduleName}Deleted`,
     softDeletedModule: `${moduleName}SoftDeleted`,
-    updatedModule: `${moduleName}Updated`,
   };
 };
 
 export const generateSubscriptionsCrudResolvers = (moduleName: String, pubsub: any, operationsModify) => {
   const operationsModifySplit = operationsModify.toLowerCase().split(" ");
-  const { createdModule, deletedModule, updatedModule, softDeletedModule, savedModule } = getSubscriptionConstants(moduleName);
+  const { deletedModule, softDeletedModule } = getSubscriptionConstants(moduleName);
   let object = {
-    [createdModule]: {
-      subscribe: () => pubsub.asyncIterator([createdModule]),
-    },
-    [savedModule]: {
-      subscribe: () => pubsub.asyncIterator([savedModule]),
-    },
     [deletedModule]: {
       subscribe: () => pubsub.asyncIterator([deletedModule]),
-    },
-    [updatedModule]: {
-      subscribe: () => pubsub.asyncIterator([updatedModule]),
     },
     [softDeletedModule]: {
       subscribe: () => pubsub.asyncIterator([softDeletedModule]),
     },
   };
   if (operationsModify !== "*") {
-    if (!operationsModifySplit.includes("create")) {
-      delete object[createdModule];
-    }
-    if (!operationsModifySplit.includes("update")) {
-      delete object[updatedModule];
-    }
     if (!operationsModifySplit.includes("delete")) {
       delete object[deletedModule];
     }
@@ -92,21 +68,15 @@ export const generateSubscriptionsCrudResolvers = (moduleName: String, pubsub: a
 
 export const generateMutationsCrudSchema = (moduleName: String, operations) => {
   const operationsSplit = operations.toLowerCase().split(" ");
-  const createString = `create${moduleName}(input: ${moduleName}Input): ${moduleName}`;
-  const saveString = `save${moduleName}(input: ${moduleName}Input): ${moduleName}`;
   const deleteString = `delete${moduleName}(input: IDDeleteInput): SuccessResponse`;
-  const updateString = `update${moduleName}(input: ${moduleName}Input): ${moduleName}`;
   const softDeleteString = `softDelete${moduleName}(input: IDDeleteInput): SuccessResponse`;
-  const bulkUpdateString = `bulkUpdate${moduleName}(input: [${moduleName}Input]): [${moduleName}]`;
-  const bulkCreateString = `bulkCreate${moduleName}(input: [${moduleName}Input]): [${moduleName}]`;
+  const bulkUpdateString = `bulkUpdate${moduleName}(input: [${moduleName}Input]): ${moduleName}BulkMutationResponse`;
+  const bulkCreateString = `bulkCreate${moduleName}(input: [${moduleName}Input]): ${moduleName}BulkMutationResponse`;
   const bulkDeleteString = `bulkDelete${moduleName}(input: [IDDeleteInput]): SuccessResponse`;
   const bulkSoftDeleteString = `bulkSoftDelete${moduleName}(input: [IDDeleteInput]): SuccessResponse`;
   if (operations == "*") {
     return `
-      ${createString}
       ${deleteString}
-      ${saveString}
-      ${updateString}
       ${softDeleteString}
       ${bulkUpdateString}
       ${bulkCreateString}
@@ -115,9 +85,6 @@ export const generateMutationsCrudSchema = (moduleName: String, operations) => {
     `;
   } else {
     return `
-      ${operationsSplit.includes("create") ? createString : ""}
-      ${operationsSplit.includes("save") ? saveString : ""}
-      ${operationsSplit.includes("update") ? updateString : ""}
       ${operationsSplit.includes("softDelete") ? softDeleteString : ""}
       ${operationsSplit.includes("delete") ? deleteString : ""}
       ${operationsSplit.includes("bulkupdate") ? bulkUpdateString : ""}
@@ -131,9 +98,6 @@ export const generateMutationsCrudSchema = (moduleName: String, operations) => {
 export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub, operationsModify, operationsRead, configuration: IConfiguration) => {
   const operationsModifySplit = operationsModify.toLowerCase().split(" ");
   const operationsReadSplit = operationsRead.toLowerCase().split(" ");
-  const overrideMutationCreate = get(configuration, `override.${module.name}.graphql.mutation.create`, null);
-  const overrideMutationSave = get(configuration, `override.${module.name}.graphql.mutation.save`, null);
-  const overrideMutationUpdate = get(configuration, `override.${module.name}.graphql.mutation.update`, null);
   const overrideMutationDelete = get(configuration, `override.${module.name}.graphql.mutation.delete`, null);
   const overrideMutationSoftDelete = get(configuration, `override.${module.name}.graphql.mutation.softDelete`, null);
   const overrideMutationBulkCreate = get(configuration, `override.${module.name}.graphql.mutation.bulkCreate`, null);
@@ -145,10 +109,6 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
   const overrideQueryView = get(configuration, `override.${module.name}.graphql.query.view`, null);
   const overrideQueryById = get(configuration, `override.${module.name}.graphql.query.byId`, null);
 
-  const beforeCreate = get(configuration, `events.database.${module.name}.beforeCreate`, null);
-  const afterCreate = get(configuration, `events.database.${module.name}.afterCreate`, null);
-  const beforeUpdate = get(configuration, `events.database.${module.name}.beforeUpdate`, null);
-  const afterUpdate = get(configuration, `events.database.${module.name}.afterUpdate`, null);
   const beforeDelete = get(configuration, `events.database.${module.name}.beforeDelete`, null);
   const afterDelete = get(configuration, `events.database.${module.name}.afterDelete`, null);
   const beforeSoftDelete = get(configuration, `events.database.${module.name}.beforeSoftDelete`, null);
@@ -159,12 +119,8 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
   const afterBulkSoftDelete = get(configuration, `events.database.${module.name}.afterBulkSoftDelete`, null);
   const beforeBulkCreate = get(configuration, `events.database.${module.name}.beforeBulkCreate`, null);
   const afterBulkCreate = get(configuration, `events.database.${module.name}.afterBulkCreate`, null);
-  const beforeBulkSoftCreate = get(configuration, `events.database.${module.name}.beforeBulkSoftCreate`, null);
-  const afterBulkSoftCreate = get(configuration, `events.database.${module.name}.afterBulkSoftCreate`, null);
   const beforeBulkUpdate = get(configuration, `events.database.${module.name}.beforeBulkUpdate`, null);
   const afterBulkUpdate = get(configuration, `events.database.${module.name}.afterBulkUpdate`, null);
-  const beforeBulkSoftUpdate = get(configuration, `events.database.${module.name}.beforeBulkSoftUpdate`, null);
-  const afterBulkSoftUpdate = get(configuration, `events.database.${module.name}.afterBulkSoftUpdate`, null);
   // R
   const beforeList = get(configuration, `events.database.${module.name}.beforeList`, null);
   const afterList = get(configuration, `events.database.${module.name}.afterList`, null);
@@ -178,79 +134,10 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
   const beforeByModule = get(configuration, `events.database.${module.name}.beforeByModule`, null);
   const afterByModule = get(configuration, `events.database.${module.name}.afterByModule`, null);
 
-  const { createdModule, deletedModule, updatedModule, softDeletedModule, savedModule } = getSubscriptionConstants(module.name);
+  const { deletedModule, softDeletedModule } = getSubscriptionConstants(module.name);
 
   let object = {
     mutations: {
-      [`create${module.name}`]: async (_: any, args: any, context: any, info: any) => {
-        if (overrideMutationCreate && overrideMutationCreate.constructor == Function) {
-          let response = await overrideMutationCreate(_, args, context, info);
-          return response;
-        }
-        let finalArgs;
-        if (isFunction(beforeCreate)) {
-          finalArgs = await beforeCreate({
-            mode: "graphql",
-            params: { _, args, context, info },
-          });
-        } else {
-          finalArgs = args.input;
-        }
-        let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        let model = context.models[module.name].getModel();
-        let result = await model.create(finalArgs, requestedFields);
-        pubsub.publish(createdModule, {
-          [createdModule]: result.instance,
-        });
-        if (isFunction(afterCreate)) {
-          await afterCreate({
-            mode: "graphql",
-            params: { instance: result.instance, _, args, context, info },
-          });
-        }
-        return result.instance;
-      },
-      [`update${module.name}`]: async (_: any, args: any, context: any, info: any) => {
-        if (overrideMutationUpdate && overrideMutationUpdate.constructor == Function) {
-          let response = await overrideMutationUpdate(_, args, context, info);
-          return response;
-        }
-        let finalArgs;
-        if (isFunction(beforeUpdate)) {
-          finalArgs = await beforeUpdate({
-            mode: "graphql",
-            params: { _, args, context, info },
-          });
-        } else {
-          finalArgs = args.input;
-        }
-        let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        let model = context.models[module.name].getModel();
-        let result = await model.update(finalArgs, requestedFields);
-        pubsub.publish(updatedModule, {
-          [updatedModule]: result.instance,
-        });
-        if (isFunction(afterUpdate)) {
-          await afterUpdate({
-            mode: "graphql",
-            params: { _, args, context, info, instance: result.instance },
-          });
-        }
-        return result.instance;
-      },
-      [`save${module.name}`]: async (_: any, args: any, context: any, info: any) => {
-        if (overrideMutationSave && overrideMutationSave.constructor == Function) {
-          let response = await overrideMutationSave(_, args, context, info);
-          return response;
-        }
-        let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        let model = context.models[module.name].getModel();
-        let result = await model.save(args.input, requestedFields);
-        pubsub.publish(createdModule, {
-          [savedModule]: result,
-        });
-        return result.instance;
-      },
       [`delete${module.name}`]: async (_: any, args: any, context: any, info: any) => {
         if (overrideMutationDelete && overrideMutationDelete.constructor == Function) {
           let response = await overrideMutationDelete(_, args, context, info);
@@ -381,7 +268,10 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
             params: { _, args, context, info, instance: result.bulkInstances },
           });
         }
-        return result.bulkInstances;
+        return {
+          returning: [...result.bulkInstances],
+          affectedRows: result.affectedRows,
+        };
       },
       [`bulkUpdate${module.name}`]: async (_: any, args: any, context: any, info: any) => {
         if (overrideMutationBulkUpdate && overrideMutationBulkUpdate.constructor == Function) {
@@ -406,7 +296,11 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
             params: { _, args, context, info, instance: result.bulkInstances },
           });
         }
-        return result.bulkInstances;
+        // return result.bulkInstances;
+        return {
+          returning: [...result.bulkInstances],
+          affectedRows: result.affectedRows,
+        };
       },
     },
     queries: {
@@ -520,12 +414,6 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
     },
   };
   if (operationsModify !== "*") {
-    if (!operationsModifySplit.includes("create")) {
-      delete object.mutations[`create${module.name}`];
-    }
-    if (!operationsModifySplit.includes("update")) {
-      delete object.mutations[`update${module.name}`];
-    }
     if (!operationsModifySplit.includes("delete")) {
       delete object.mutations[`delete${module.name}`];
     }
@@ -553,13 +441,53 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
   return object;
 };
 
-export const generateListTypeForModule = (moduleName: String) => {
+export const generateModuleSearchShema = (module) => {
+  let string = `
+    input ${module.name}FilterInput {
+      _or: [${module.name}FilterInput]
+      _and: [${module.name}FilterInput]
+      id: IntFilterInput
+      created_at: DateFilterInput
+      updated: DateFilterInput
+  `;
+  const fields = get(module, "database.sql.fields", null);
+  const keys = Object.keys(fields);
+  keys.forEach((key) => {
+    const field = fields[key];
+
+    const getType = () => {
+      const type = field.oldType.toLowerCase();
+      if (type === "string") {
+        return "String";
+      } else if (type === "integer") {
+        return "Int";
+      } else if (type === "boolean") {
+        return "Boolean";
+      }
+    };
+
+    string =
+      string +
+      `
+     ${key}: ${getType()}FilterInput
+    `;
+  });
+  string = string + " }";
+  return string;
+};
+
+export const generateListTypeForModule = (module: IConfigurationCustomModule) => {
   return `
-    type ${moduleName}List {
-      list: [${moduleName}]
+    ${generateModuleSearchShema(module)}
+    type ${module.name}List {
+      list: [${module.name}]
       pagination: Pagination
       filters: [Filter]
       sorting: Sorting
+    }
+    type ${module.name}BulkMutationResponse {
+      returning: [${module.name}]
+      affectedRows: Int
     }
   `;
 };

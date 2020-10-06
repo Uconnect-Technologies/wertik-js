@@ -161,12 +161,6 @@ export interface IConfigurationEvents {
   database?: {
     [Key: string]: {
       // Cud
-      beforeCreate: Function;
-      afterCreate: Function;
-      beforeSave: Function;
-      afterSave: Function;
-      beforeUpdate: Function;
-      afterUpdate: Function;
       beforeDelete: Function;
       afterDelete: Function;
       beforeSoftDelete: Function;
@@ -269,8 +263,6 @@ export interface IConfiguration {
   override: IConfigurationOverride;
   restApi: IConfigurationRestApi;
   graphql: IConfigurationGraphql;
-  forceStartGraphqlServer: Boolean;
-  forceStartRestApiServer: Boolean;
   ports: IConfigurationPorts;
   modules: Array<IConfigurationCustomModule>;
   events: IConfigurationEvents;

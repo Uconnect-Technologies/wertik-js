@@ -1,4 +1,4 @@
-let { ApolloServer } = require("apollo-server");
+// let { ApolloServer } = require("apollo-server");
 let { get } = require("lodash");
 let loadAllModules = require("./loadAllModules").default;
 import getUserWithAccessToken from "./../security/getUserWithAccessToken";
@@ -10,21 +10,21 @@ import isIPAllowed from "./../security/isIPAllowed";
 import { successMessage } from "./../logger/consoleMessages";
 import voyager from "./voyager/index";
 import { defaultApolloGraphqlOptions } from "../defaults/options/index";
+const { ApolloServer } = require("apollo-server-express");
 
 //expressApp,configuration,dbTables,models,emailTemplates,sendEmail,database,WertikEventEmitter
 
 export default async function (options: IGraphQLInitialize) {
   const { mailerInstance, configuration, dbTables, models, sendEmail, emailTemplates, database, websockets, logger } = options;
   const apolloGraphqlOptions = get(options, "apolloGraphqlOptions", defaultApolloGraphqlOptions);
-  const forceStartGraphqlServer = get(configuration, "forceStartGraphqlServer", true);
   let { graphql } = configuration;
   const port = get(graphql, "port", 4000);
   if (get(graphql, "disable", true) === true) {
     return null;
   }
   const modules = await loadAllModules(configuration);
-  voyager(configuration, require("express"));
-  let apollo = new ApolloServer({
+  const graphqlVoyager = voyager(configuration);
+  const apollo = new ApolloServer({
     typeDefs: modules.schema,
     resolvers: modules.resolvers,
     context: async ({ req, res, connection }) => {
@@ -62,11 +62,9 @@ export default async function (options: IGraphQLInitialize) {
     },
     ...apolloGraphqlOptions,
   });
-  if (forceStartGraphqlServer == true) {
-    apollo.listen(port).then(({ url, subscriptionsUrl }) => {
-      successMessage("GraphQL Subscriptions server started at ", subscriptionsUrl);
-      successMessage("GraphQL Server started at", url);
-    });
-  }
-  return apollo;
+
+  return {
+    graphql: apollo,
+    graphqlVoyager: graphqlVoyager,
+  };
 }

@@ -4,7 +4,7 @@ export default {
   database: {
     dbDialect: "mysql",
     dbUsername: "root",
-    dbPassword: "pass",
+    dbPassword: "",
     dbName: "graphql",
     dbHost: "localhost",
     dbPort: "3306",
@@ -34,8 +34,6 @@ export default {
     disable: false,
     port: 7000,
   },
-  forceStartGraphqlServer: true,
-  forceStartRestApiServer: true,
   ports: {
     graphql: 4000,
     restApi: 7000,
@@ -113,8 +111,8 @@ export default {
             description: String,
             created_at: String,
             updated_at: String,
-          }
-        }
+          },
+        },
       },
     },
   ],
@@ -126,11 +124,7 @@ export default {
       console.log("beforeRestApiStart");
     },
     database: {
-      Permission: {
-        afterCreate() {
-          console.log("permision created");
-        },
-      },
+      Permission: {},
     },
   },
   seeds: {
@@ -144,14 +138,14 @@ export default {
   sockets: {
     disable: false,
     port: 2000,
-    onClientConnected: function (ws, req, wss) {
+    onClientConnected: function ({ws, req, wss}) {
       ws.id = Math.floor(Math.random() * 1000000);
       console.log("on client connected", `Total connections right now ${wss.clients.size}`);
     },
-    onMessageReceived: function (ws, message) {
+    onMessageReceived: function ({ws, message}) {
       console.log("on message received: " + message);
     },
-    onClientDisconnect: function (wss) {
+    onClientDisconnect: function ({wss}) {
       console.log("on client disconnected", `Total connections right now ${wss.clients.size}`);
     },
   },

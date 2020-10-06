@@ -17,6 +17,7 @@ export const defaultSocketInstance = (options: ISocketConfiguration, context: an
     port: port,
     ...defaultSocketOptions,
   });
+  
   wss.on("connection", function connection(ws, req) {
     let f = isIPAllowed(req.connection.remoteAddress, options.security.allowedIpAddresses, "ws", { ws });
     if (f === true) {
