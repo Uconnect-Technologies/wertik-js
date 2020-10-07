@@ -39,17 +39,9 @@ export interface IConfigurationCustomModuleGraphql {
   query: IConfigurationCustomModuleGraphqlQuery;
 }
 
-export interface IConfigurationCustomModuleRestApiDocs {
-  description: string;
-  params: string;
-  response: string;
-  title: string;
-}
-
 export interface IConfigurationCustomModuleRestApiEndpoint {
   path: string;
   methodType: string;
-  docs: IConfigurationCustomModuleRestApiDocs;
   handler: Function;
 }
 
@@ -191,8 +183,8 @@ export interface IConfigurationEvents {
 }
 
 export interface IConfigurationContext {
-  data: Object;
-  createContext: Function;
+  initializeContext: Function;
+  requestContext: Function;
 }
 
 export interface IConfigurationRestApi {

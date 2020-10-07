@@ -21,7 +21,7 @@ export default {
     data: {
       myName: "My powerful app",
     },
-    createContext: async function (mode, context) {
+    requestContext: async function (mode, context) {
       return {
         value: "Value 1",
       };

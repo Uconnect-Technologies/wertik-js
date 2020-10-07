@@ -9,15 +9,16 @@ export default {
     dbHost: "localhost",
     dbPort: "3306",
   },
-
   frontendAppUrl: "http://localhost:8080/",
   frontendAppActivationUrl: "http://localhost:8080/activate-account",
   frontendAppPasswordResetUrl: "http://localhost:8080/reset-password",
   context: {
-    data: {
-      myName: "My powerful app",
+    initializeContext: function (mode, context) {
+      return {
+        someKey: "somekeyvalue"
+      }
     },
-    createContext: async function (mode, context) {
+    requestContext: async function (mode, context) {
       return {
         value: "Value 1",
       };
@@ -77,11 +78,6 @@ export default {
       restApi: {
         endpoints: [
           {
-            docs: {
-              title: "Apple module response.",
-              description: "Just a message.",
-              response: `@apiSuccess {Object} returns an object {message: true}.`,
-            },
             path: "/apple/response",
             methodType: "get",
             handler: function (req, res) {
