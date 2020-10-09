@@ -191,6 +191,8 @@ export interface IConfigurationRestApi {
 
 export interface IConfigurationGraphql {
   disable: Boolean;
+  path: string;
+  graphqlVoyagerPath: string;
 }
 
 export interface IConfigurationSecurity {

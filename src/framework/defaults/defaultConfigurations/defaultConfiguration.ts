@@ -29,7 +29,7 @@ export default {
     disable: true,
   },
   graphql: {
-    disable: false,
+    disable: false
   },
   restApi: {
     disable: false,

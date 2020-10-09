@@ -144,3 +144,4 @@ export const removeColumnsFromAccordingToSelectIgnoreFields = (attributesObject,
 
 
 export const defaultPort = 7000;
+export const defaultGraphqlPath = "/graphql"
