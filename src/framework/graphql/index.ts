@@ -17,8 +17,13 @@ const { ApolloServer } = require("apollo-server-express");
 export default async function (options: IGraphQLInitialize) {
   const { mailerInstance, configuration, dbTables, models, sendEmail, emailTemplates, database, websockets, logger } = options;
   const apolloGraphqlOptions = get(options, "apolloGraphqlOptions", defaultApolloGraphqlOptions);
+  let initializeContext = get(configuration, "context.initializeContext", async function () {});
+  initializeContext = await initializeContext("graphql",{
+    dbTables,
+    models,
+    database,
+  });
   let { graphql } = configuration;
-  const port = get(graphql, "port", 4000);
   if (get(graphql, "disable", true) === true) {
     return null;
   }
@@ -54,10 +59,10 @@ export default async function (options: IGraphQLInitialize) {
         res,
         websockets,
         logger,
-        ...get(configuration.context, "data", {}),
+        initializeContext: initializeContext
       };
-      let createContext = await get(configuration.context, "createContext", () => {})("graphql", cxt);
-      cxt["createContext"] = createContext;
+      let requestContext = await get(configuration.context, "requestContext", () => {})("graphql", cxt);
+      cxt["requestContext"] = requestContext;
       return cxt;
     },
     ...apolloGraphqlOptions,

@@ -141,3 +141,7 @@ export const removeColumnsFromAccordingToSelectIgnoreFields = (attributesObject,
     return attributesObject;
   }
 };
+
+
+export const defaultPort = 7000;
+export const defaultGraphqlPath = "/graphql"

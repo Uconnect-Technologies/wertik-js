@@ -42,12 +42,32 @@ import customApi from "./customApi";
 */
 
 //expressApp,configuration,dbTables, models, allEmailTemplates,sendEmail,database,WertikEventEmitter
-export default function (options: IRestApiInitialize) {
-  const { configuration, dbTables, models, sendEmail, emailTemplates, expressApp, database, runEvent, multerInstance, mailerInstance, websockets, logger } = options;
+export default async function (options: IRestApiInitialize) {
+  const {
+    configuration,
+    dbTables,
+    models,
+    sendEmail,
+    emailTemplates,
+    expressApp,
+    database,
+    runEvent,
+    multerInstance,
+    mailerInstance,
+    websockets,
+    logger,
+  } = options;
   let { restApi } = configuration;
   if (get(restApi, "disable", true) === true) {
     return expressApp;
   }
+  let initializeContext = get(configuration, "context.initializeContext", async function () {});
+  initializeContext = await initializeContext("restApi",{
+    dbTables,
+    models,
+    expressApp,
+    database,
+  });
   expressApp.use(cors());
   expressApp.use(bodyParser.urlencoded({ extended: false }));
   expressApp.use(bodyParser.json());
@@ -70,19 +90,20 @@ export default function (options: IRestApiInitialize) {
     req.dbTables = dbTables;
     req.models = models;
     req.websockets = websockets;
-    req.context = get(configuration.context, "data", {});
+    // req.context = get(configuration.context, "data", {});
     req.sendEmail = sendEmail;
     req.emailTemplates = emailTemplates;
     req.multerInstance = multerInstance;
     req.logger = logger;
-    let createContext = await get(configuration.context, "createContext", () => {})("restApi", req);
-    req.createContext = createContext;
+    let requestContext = await get(configuration.context, "requestContext", () => {})("restApi", req);
+    req.requestContext = requestContext;
+    req.initializeContext = initializeContext;
     next();
   });
 
   require("./versions/v1/loadAllModules").default(expressApp, configuration, customApi);
 
-  expressApp.get("/", (req, res) => {
+  expressApp.get("/w/info", (req, res) => {
     res.status(200).json({
       message: require("./../../../package.json").welcomeResponse,
       version: require("./../../../package.json").version,
