@@ -193,6 +193,7 @@ export interface IConfigurationGraphql {
   disable: Boolean;
   path: string;
   graphqlVoyagerPath: string;
+  disableGraphqlVoyager: Boolean;
 }
 
 export interface IConfigurationSecurity {
