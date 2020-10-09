@@ -204,7 +204,7 @@ So when you enable useDatabase feature, If you have enabled RestAPI these API's 
       [DELETE] http://localhost:7000/api/v1/person/soft-delete - {input: {id: 12} }
       [DELETE] http://localhost:7000/api/v1/person/bulk-soft-delete - {input: [12,13,15]}
 
-7000 is your RestAPI port. You can change it. To create custom Rest API endpoints, You can do something like this:
+7000 is your Wertik JS default port. You can change it. To create custom Rest API endpoints, You can do something like this:
 
 ```javascript
 let configuration = {

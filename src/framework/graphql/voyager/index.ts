@@ -1,7 +1,10 @@
+import { get } from "lodash";
+import { defaultPort } from "../../helpers/index";
 import { IConfiguration } from "src/framework/types/configuration";
 import { successMessage } from "./../../logger/consoleMessages";
 
 export default function (configuration: IConfiguration) {
+  const port = get(configuration,'port',defaultPort)
   let html = `
     <!DOCTYPE html>
     <html>
@@ -17,7 +20,7 @@ export default function (configuration: IConfiguration) {
         <div id="voyager">Loading...</div>
         <script>
           function introspectionProvider(introspectionQuery) {
-            return fetch('http://localhost:${configuration.ports.graphql}', {
+            return fetch('http://localhost:${port}', {
               method: 'post',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({query: introspectionQuery}),

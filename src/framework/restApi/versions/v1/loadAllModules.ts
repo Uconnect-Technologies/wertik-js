@@ -63,7 +63,7 @@ export default async function (expressApp, configuration: IConfiguration, custom
       const restApi = get(module, "restApi", {});
       const restApiEndpoints = get(restApi, "endpoints", []);
       restApiEndpoints.forEach((restApiEndpointsElement) => {
-        customApi(expressApp, restApiEndpointsElement, module);
+        customApi(expressApp, restApiEndpointsElement, module, configuration);
       });
 
       expressApp.post(modulePaths.paginate, async (req, res) => {

@@ -1,9 +1,10 @@
 import { successMessage } from "./../logger/consoleMessages";
 import { get } from "lodash";
 import http from "http"
+import { defaultPort } from "../helpers/index";
 
 export default function (configuration, servers: any) {
-  const expressAppPort = get(configuration, "restApi.port", 7000);
+  const expressAppPort = get(configuration, "port", defaultPort);
   const { graphql, restApi, graphqlVoyager } = servers;
   const httpServer = http.createServer(restApi);
   restApi.get("/graphql-voyager", (req, res) => res.send(graphqlVoyager));

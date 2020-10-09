@@ -1,10 +1,6 @@
 import { ISocketConfiguration } from "./servers";
 import { IConfigurationOverride } from "./override";
 import { IConfigurationRbac } from "./rbac";
-export interface IConfigurationPorts {
-  graphql: Number;
-  restApi: Number;
-}
 
 export interface IConfigurationCustomModuleGraphqlCrudQuery {
   generate: Boolean;
@@ -190,11 +186,11 @@ export interface IConfigurationContext {
 export interface IConfigurationRestApi {
   disable: Boolean;
   port: Number;
+  onCustomApiFailure: Function;
 }
 
 export interface IConfigurationGraphql {
   disable: Boolean;
-  port: Number;
 }
 
 export interface IConfigurationSecurity {
@@ -233,6 +229,7 @@ export interface IConfiguration {
   name: string;
   builtinModules: string;
   expressApp: any;
+  port: number;
   extendBuiltinModules: {
     [Key: string]: {
       database: {
@@ -255,7 +252,6 @@ export interface IConfiguration {
   override: IConfigurationOverride;
   restApi: IConfigurationRestApi;
   graphql: IConfigurationGraphql;
-  ports: IConfigurationPorts;
   modules: Array<IConfigurationCustomModule>;
   events: IConfigurationEvents;
   seeds: any;

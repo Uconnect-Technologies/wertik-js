@@ -29,15 +29,9 @@ export default {
   },
   graphql: {
     disable: false,
-    port: 4000,
   },
   restApi: {
     disable: false,
-    port: 7000,
-  },
-  ports: {
-    graphql: 4000,
-    restApi: 7000,
   },
   modules: [], // For modules please see http://wapgee.com/wertik-js/getting-started/custom-modules,
   events: {
@@ -87,11 +81,11 @@ export default {
 
 Now run your app and you see logs something like this if everything went fine
 
-    ✔ [Wertik-js]: WebSocket server started at ws://localhost:2000
-    ✔ [Wertik-js]: Rest API server started at http://localhost:7000
-    ✔ [Wertik-js]: GraphQL voyager is running at server: http://localhost:9090
-    ✔ [Wertik-js]: GraphQL subscriptions started at ws://localhost:4000/subscriptions
-    ✔ [Wertik-js]: GraphQL server started at http://localhost:4000/
-    ✔ [Wertik-js]: Datbase Connected
+√  [Wertik-js]:  WebSocket server started at ws://localhost:2000
+√  [Wertik-js]:  Rest API server started at http://localhost:5000
+√  [Wertik-js]:  GraphQL Voyager running at http://localhost:5000/graphql-voyager
+√  [Wertik-js]:  GraphQL Server started at http://localhost:5000/graphql
+√  [Wertik-js]:  GraphQL Subscriptions are running at ws://localhost:5000/subscriptions
+√  [Wertik-js]:  SQL: Database Connected
 
 For Dependencies you can check wertik-js package.json file.

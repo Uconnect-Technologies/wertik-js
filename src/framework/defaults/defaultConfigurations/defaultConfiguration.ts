@@ -9,14 +9,15 @@ export default {
     dbHost: "localhost",
     dbPort: "3306",
   },
+  port: 5000,
   frontendAppUrl: "http://localhost:8080/",
   frontendAppActivationUrl: "http://localhost:8080/activate-account",
   frontendAppPasswordResetUrl: "http://localhost:8080/reset-password",
   context: {
     initializeContext: function (mode, context) {
       return {
-        someKey: "somekeyvalue"
-      }
+        someKey: "somekeyvalue",
+      };
     },
     requestContext: async function (mode, context) {
       return {
@@ -29,15 +30,12 @@ export default {
   },
   graphql: {
     disable: false,
-    port: 4000,
   },
   restApi: {
     disable: false,
-    port: 7000,
-  },
-  ports: {
-    graphql: 4000,
-    restApi: 7000,
+    onCustomApiFailure: function ({ path, res }) {
+      res.send("failed at " + path);
+    },
   },
   modules: [
     {
@@ -134,14 +132,14 @@ export default {
   sockets: {
     disable: false,
     port: 2000,
-    onClientConnected: function ({ws, req, wss}) {
+    onClientConnected: function ({ ws, req, wss }) {
       ws.id = Math.floor(Math.random() * 1000000);
       console.log("on client connected", `Total connections right now ${wss.clients.size}`);
     },
-    onMessageReceived: function ({ws, message}) {
+    onMessageReceived: function ({ ws, message }) {
       console.log("on message received: " + message);
     },
-    onClientDisconnect: function ({wss}) {
+    onClientDisconnect: function ({ wss }) {
       console.log("on client disconnected", `Total connections right now ${wss.clients.size}`);
     },
   },
