@@ -29,7 +29,6 @@ export default function (configuration: IConfiguration, servers: any) {
       graphql.applyMiddleware({ app: restApi, path: graphqlPath });
       graphql.installSubscriptionHandlers(httpServer);
     }
-    console.log(showWertik404Page)
     if (showWertik404Page) {
       restApi.get("*", function (req, res) {
         res.status(404).json({
