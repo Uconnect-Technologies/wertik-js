@@ -7,7 +7,7 @@ export default function (configuration: IConfiguration, servers: any) {
   const startServers = get(configuration, "startServers", true);
   if (startServers === true) {
     const expressAppPort = get(configuration, "port", defaultPort);
-    const showWertik404Page = get(configuration, "showWertik404Page", true);
+    const showWertik404Page = get(configuration, "restApi.showWertik404Page", true);
     const { graphql, restApi, graphqlVoyager, httpServer } = servers;
     const graphqlPath = get(configuration, "graphql.path", "/graphql");
     const graphqlVoyagerPath = get(
@@ -29,11 +29,14 @@ export default function (configuration: IConfiguration, servers: any) {
       graphql.applyMiddleware({ app: restApi, path: graphqlPath });
       graphql.installSubscriptionHandlers(httpServer);
     }
+    console.log(showWertik404Page)
     if (showWertik404Page) {
       restApi.get("*", function (req, res) {
         res.status(404).json({
           message: "Not found",
-          detail: "Request page didn't found",
+          data: {
+            message: "Request page didn't found"
+          },
         });
       });
     }
