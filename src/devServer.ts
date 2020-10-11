@@ -13,4 +13,6 @@ wertik(configuration).then((wertikApp: any) => {
   if (configuration.database.dbDialect.includes("sql")) {
     wertikApp.database.sync();
   }
+  const {express} = wertikApp;
+  
 });

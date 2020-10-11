@@ -57,10 +57,6 @@ export default async function (options: IRestApiInitialize) {
     websockets,
     logger,
   } = options;
-  let { restApi } = configuration;
-  if (get(restApi, "disable", true) === true) {
-    return expressApp;
-  }
   let initializeContext = get(configuration, "context.initializeContext", async function () {});
   initializeContext = await initializeContext("restApi",{
     dbTables,
