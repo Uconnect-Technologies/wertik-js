@@ -184,9 +184,8 @@ export interface IConfigurationContext {
 }
 
 export interface IConfigurationRestApi {
-  disable: Boolean;
-  port: Number;
   onCustomApiFailure: Function;
+  showWertik404Page: boolean;
 }
 
 export interface IConfigurationGraphql {
@@ -233,6 +232,7 @@ export interface IConfiguration {
   builtinModules: string;
   expressApp: any;
   port: number;
+  startServers: boolean;
   extendBuiltinModules: {
     [Key: string]: {
       database: {

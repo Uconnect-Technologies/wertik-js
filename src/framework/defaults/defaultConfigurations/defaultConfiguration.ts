@@ -4,12 +4,13 @@ export default {
   database: {
     dbDialect: "mysql",
     dbUsername: "root",
-    dbPassword: "",
-    dbName: "graphql",
+    dbPassword: "pass",
+    dbName: "wertik",
     dbHost: "localhost",
     dbPort: "3306",
   },
   port: 5000,
+  startServers: true,
   frontendAppUrl: "http://localhost:8080/",
   frontendAppActivationUrl: "http://localhost:8080/activate-account",
   frontendAppPasswordResetUrl: "http://localhost:8080/reset-password",
@@ -32,7 +33,7 @@ export default {
     disable: false
   },
   restApi: {
-    disable: false,
+    showWertik404Page: true,
     onCustomApiFailure: function ({ path, res }) {
       res.send("failed at " + path);
     },

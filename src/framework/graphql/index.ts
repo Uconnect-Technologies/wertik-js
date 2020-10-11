@@ -23,10 +23,6 @@ export default async function (options: IGraphQLInitialize) {
     models,
     database,
   });
-  let { graphql } = configuration;
-  if (get(graphql, "disable", true) === true) {
-    return null;
-  }
   const modules = await loadAllModules(configuration);
   const graphqlVoyager = voyager(configuration);
   const apollo = new ApolloServer({
