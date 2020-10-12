@@ -9,37 +9,8 @@ import getUserAllPermissions from "./../security/getUserAllPermissions";
 import { successMessage } from "./../logger/consoleMessages";
 import { IRestApiInitialize } from "./../types/servers";
 import getUserRoles from "./../security/getUserRoles";
-import isIPAllowed from "../security/isIPAllowed";
 import customApi from "./customApi";
 
-/*
-
-  Wertik-js rest api.
-
-  Each api request, sends data in this format:
-
-
-  result: {
-    status: StatusCodeNumber,
-    success: true,
-    message: ""
-    data: {
-      
-    }
-  }
-
-  And for the errors:
-
-  result: {
-    status: StatusCodeNumber,
-    success: false,
-    message: "Something went wrong",
-    data: {
-
-    }
-  }
-
-*/
 
 //expressApp,configuration,dbTables, models, allEmailTemplates,sendEmail,database,WertikEventEmitter
 export default async function (options: IRestApiInitialize) {
@@ -51,10 +22,9 @@ export default async function (options: IRestApiInitialize) {
     emailTemplates,
     expressApp,
     database,
-    runEvent,
     multerInstance,
     mailerInstance,
-    websockets,
+    socketio,
     logger,
   } = options;
   let initializeContext = get(configuration, "context.initializeContext", async function () {});
@@ -70,7 +40,6 @@ export default async function (options: IRestApiInitialize) {
   expressApp.use(morgan("combined"));
   expressApp.use(async function (req, res, next) {
     const ip = req.connection.remoteAddress;
-    isIPAllowed(ip, configuration.security.allowedIpAddresses, "express", { res });
     const authToken = get(req, "headers.authorization", "");
     let user;
     if (authToken) {
@@ -85,7 +54,7 @@ export default async function (options: IRestApiInitialize) {
     req.mailerInstance = mailerInstance;
     req.dbTables = dbTables;
     req.models = models;
-    req.websockets = websockets;
+    req.socketio = socketio;
     // req.context = get(configuration.context, "data", {});
     req.sendEmail = sendEmail;
     req.emailTemplates = emailTemplates;

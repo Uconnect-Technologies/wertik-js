@@ -196,9 +196,6 @@ export interface IConfigurationGraphql {
   disableGraphqlVoyager: Boolean;
 }
 
-export interface IConfigurationSecurity {
-  allowedIpAddresses: Array<string>;
-}
 
 export interface IConfigurationStorage {
   disable: Boolean;
@@ -260,7 +257,6 @@ export interface IConfiguration {
   events: IConfigurationEvents;
   seeds: any;
   sockets: ISocketConfiguration;
-  security: IConfigurationSecurity;
   rbac: IConfigurationRbac;
   storage: IConfigurationStorage;
   cron: IConfigurationCron;

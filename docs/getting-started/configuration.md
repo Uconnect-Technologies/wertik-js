@@ -5,8 +5,7 @@ This is the default configuration for Wertik used in source code.
 ```javascript
 export default {
   name: "Wertik",
-  builtinModules:
-    "user,auth,forgetPassword,permission,role,rolePermission,userPermission,userRole,me,storage",
+  builtinModules: "user,auth,forgetPassword,permission,role,rolePermission,userPermission,userRole,me,storage",
   database: {
     dbDialect: "mysql",
     dbUsername: "root",
@@ -62,25 +61,15 @@ export default {
   },
   sockets: {
     disable: false,
-    port: 2000,
-    onClientConnected: function (req, wss) {
-      console.log(
-        "on client connected",
-        `Total connections right now ${wss.clients.size}`
-      );
+    onClientConnected: function () {
+      console.log("onClientConnected");
     },
-    onMessageReceived: function (message) {
-      console.log("on message received: " + message);
+    onMessageReceived: function () {
+      console.log("onMessageReceived");
     },
-    onClientDisconnect: function (wss) {
-      console.log(
-        "on client disconnected",
-        `Total connections right now ${wss.clients.size}`
-      );
+    onClientDisconnect: function () {
+      console.log("onClientDisconnect");
     },
-  },
-  security: {
-    allowedIpAddresses: ["*"],
   },
   storage: {
     storageDirectory: "./storage/",
@@ -90,11 +79,11 @@ export default {
 
 Now run your app and you see logs something like this if everything went fine
 
-√ [Wertik-js]: WebSocket server started at ws://localhost:2000
-√ [Wertik-js]: Rest API server started at http://localhost:5000
-√ [Wertik-js]: GraphQL Voyager running at http://localhost:5000/graphql-voyager
-√ [Wertik-js]: GraphQL Server started at http://localhost:5000/graphql
-√ [Wertik-js]: GraphQL Subscriptions are running at ws://localhost:5000/subscriptions
-√ [Wertik-js]: SQL: Database Connected
+√  [Wertik-js]:  Socket.IO server running at http://localhost:5000
+√  [Wertik-js]:  Rest API server started at http://localhost:5000
+√  [Wertik-js]:  GraphQL Voyager running at http://localhost:5000/graphql-voyager
+√  [Wertik-js]:  GraphQL Server started at http://localhost:5000/graphql
+√  [Wertik-js]:  GraphQL Subscriptions are running at ws://localhost:5000/subscriptions
+√  [Wertik-js]:  SQL: Database Connected
 
 For Dependencies you can check wertik-js package.json file.

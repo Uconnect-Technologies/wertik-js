@@ -1,53 +1,25 @@
 import { ISocketConfiguration } from "../types/servers";
 import { get } from "lodash";
-import isIPAllowed from "../security/isIPAllowed";
 import { IConfiguration } from "../types/configuration";
 import { successMessage } from "../logger/consoleMessages";
 import { defaultSocketOptions } from "../defaults/options/index";
+import SocketIO from "socket.io";
 
 export const defaultSocketInstance = (options: ISocketConfiguration, context: any) => {
-  const WebSocket = require("ws");
-  const port = get(options, "port", 2000);
   const disable = get(options, "disable", false);
   if (disable === true) {
     return null;
   }
-
-  const wss = new WebSocket.Server({
-    port: port,
-    ...defaultSocketOptions,
+  const { httpServer } = context;
+  const io = SocketIO(httpServer);
+  io.on("connection", (socket) => {
+    options.onClientConnected({
+      socket,
+    });
+    socket.on("message", options.onMessageReceived);
+    socket.on("disconnect", options.onClientDisconnect);
   });
-  
-  wss.on("connection", function connection(ws, req) {
-    let f = isIPAllowed(req.connection.remoteAddress, options.security.allowedIpAddresses, "ws", { ws });
-    if (f === true) {
-      ws.on("message", function incoming(message) {
-        options.onMessageReceived({
-          ws: ws,
-          message: message,
-          wss: wss,
-          context: context,
-        });
-      });
-      ws.on("close", function close() {
-        options.onClientDisconnect({
-          wss: wss,
-          context: context,
-        });
-      });
-      options.onClientConnected({
-        ws: ws,
-        req: req,
-        wss: wss,
-        context: context,
-      });
-      ws.send("Socket connected, message from server side.");
-    }
-  });
-
-  successMessage(`WebSocket server started at`, `ws://localhost:${port}`);
-
-  return wss;
+  return io;
 };
 
 export default function (options: IConfiguration, context: any) {
@@ -57,8 +29,6 @@ export default function (options: IConfiguration, context: any) {
       onMessageReceived: options.sockets.onMessageReceived,
       onClientDisconnect: options.sockets.onClientDisconnect,
       disable: options.sockets.disable,
-      port: options.sockets.port,
-      security: options.security,
     },
     context
   );

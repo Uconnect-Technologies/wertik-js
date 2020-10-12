@@ -6,8 +6,6 @@ import getUserAllPermissions from "./../security/getUserAllPermissions";
 import getUserRoles from "./../security/getUserRoles";
 import { IGraphQLInitialize } from "./../types/servers";
 import { get } from "lodash";
-import isIPAllowed from "./../security/isIPAllowed";
-import { successMessage } from "./../logger/consoleMessages";
 import voyager from "./voyager/index";
 import { defaultApolloGraphqlOptions } from "../defaults/options/index";
 const { ApolloServer } = require("apollo-server-express");
@@ -15,7 +13,7 @@ const { ApolloServer } = require("apollo-server-express");
 //expressApp,configuration,dbTables,models,emailTemplates,sendEmail,database,WertikEventEmitter
 
 export default async function (options: IGraphQLInitialize) {
-  const { mailerInstance, configuration, dbTables, models, sendEmail, emailTemplates, database, websockets, logger } = options;
+  const { mailerInstance, configuration, dbTables, models, sendEmail, emailTemplates, database, socketio, logger } = options;
   const apolloGraphqlOptions = get(options, "apolloGraphqlOptions", defaultApolloGraphqlOptions);
   let initializeContext = get(configuration, "context.initializeContext", async function () {});
   initializeContext = await initializeContext("graphql",{
@@ -30,10 +28,6 @@ export default async function (options: IGraphQLInitialize) {
     resolvers: modules.resolvers,
     context: async ({ req, res, connection }) => {
       let ip = get(req, "connection.remoteAddress", null);
-      if (connection === null) {
-        ip = get(connection, "remoteAddress", null);
-        isIPAllowed(ip, configuration.security.allowedIpAddresses, "graphql", {});
-      }
       const authToken = get(req, "headers.authorization", "");
       let user;
       if (authToken) {
@@ -53,7 +47,7 @@ export default async function (options: IGraphQLInitialize) {
         mailerInstance: mailerInstance,
         req,
         res,
-        websockets,
+        socketio,
         logger,
         initializeContext: initializeContext
       };

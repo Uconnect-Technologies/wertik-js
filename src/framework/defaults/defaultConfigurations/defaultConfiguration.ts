@@ -4,8 +4,8 @@ export default {
   database: {
     dbDialect: "mysql",
     dbUsername: "root",
-    dbPassword: "pass",
-    dbName: "wertik",
+    dbPassword: "",
+    dbName: "graphql",
     dbHost: "localhost",
     dbPort: "3306",
   },
@@ -30,13 +30,13 @@ export default {
     disable: true,
   },
   graphql: {
-    disable: false
+    disable: false,
   },
   restApi: {
     showWertik404Page: true,
     onCustomApiFailure: function ({ path, res }) {
       res.send("failed at " + path);
-    }
+    },
   },
   modules: [
     {
@@ -132,20 +132,15 @@ export default {
   },
   sockets: {
     disable: false,
-    port: 2000,
-    onClientConnected: function ({ ws, req, wss }) {
-      ws.id = Math.floor(Math.random() * 1000000);
-      console.log("on client connected", `Total connections right now ${wss.clients.size}`);
+    onClientConnected: function () {
+      console.log("onClientConnected")
     },
-    onMessageReceived: function ({ ws, message }) {
-      console.log("on message received: " + message);
+    onMessageReceived: function () {
+      console.log("onMessageReceived")
     },
-    onClientDisconnect: function ({ wss }) {
-      console.log("on client disconnected", `Total connections right now ${wss.clients.size}`);
+    onClientDisconnect: function () { 
+      console.log("onClientDisconnect")
     },
-  },
-  security: {
-    allowedIpAddresses: ["*"],
   },
   storage: {
     storageDirectory: "./uploads/",
