@@ -1,3 +1,4 @@
+require('dotenv').config()
 import { get } from "lodash";
 import multer from "multer";
 import http from "http";
