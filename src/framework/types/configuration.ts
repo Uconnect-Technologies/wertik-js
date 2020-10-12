@@ -186,6 +186,7 @@ export interface IConfigurationContext {
 export interface IConfigurationRestApi {
   onCustomApiFailure: Function;
   showWertik404Page: boolean;
+  beforeStart: Function;
 }
 
 export interface IConfigurationGraphql {

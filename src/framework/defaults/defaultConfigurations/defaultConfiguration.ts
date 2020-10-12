@@ -36,7 +36,7 @@ export default {
     showWertik404Page: true,
     onCustomApiFailure: function ({ path, res }) {
       res.send("failed at " + path);
-    },
+    }
   },
   modules: [
     {
