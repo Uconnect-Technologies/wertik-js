@@ -6,9 +6,12 @@ import { IConfiguration } from "../types/configuration";
 export default function (configuration: IConfiguration, servers: any) {
   const startServers = get(configuration, "startServers", true);
   if (startServers === true) {
+    const { graphql, restApi, graphqlVoyager, httpServer } = servers;
+    
     const expressAppPort = get(configuration, "port", defaultPort);
     const showWertik404Page = get(configuration, "restApi.showWertik404Page", true);
-    const { graphql, restApi, graphqlVoyager, httpServer } = servers;
+    const restApiBeforeStart = get(configuration, 'restApi.beforeStart', function () {})
+    
     const graphqlPath = get(configuration, "graphql.path", "/graphql");
     const graphqlVoyagerPath = get(
       configuration,
@@ -29,6 +32,7 @@ export default function (configuration: IConfiguration, servers: any) {
       graphql.applyMiddleware({ app: restApi, path: graphqlPath });
       graphql.installSubscriptionHandlers(httpServer);
     }
+    restApiBeforeStart({express: restApi})
     if (showWertik404Page) {
       restApi.get("*", function (req, res) {
         res.status(404).json({
@@ -39,6 +43,7 @@ export default function (configuration: IConfiguration, servers: any) {
         });
       });
     }
+    
     httpServer.listen(expressAppPort, () => {
       successMessage(
         `Rest API server started at`,
