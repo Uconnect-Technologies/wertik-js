@@ -35,4 +35,7 @@ export interface ISocketConfiguration {
   onClientConnected: Function;
   onClientDisconnect: Function;
   disable: Boolean;
+  options: {
+    [key: string]: any
+  }
 }
