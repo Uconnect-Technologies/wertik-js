@@ -152,7 +152,7 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
         } else {
           finalArgs = args.input;
         }
-        let model = context.models[module.name].getModel();
+        let model = context.wertik.models[module.name].getModel();
         await model.delete(finalArgs);
         pubsub.publish(deletedModule, {
           [deletedModule]: {
@@ -181,7 +181,7 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
         } else {
           finalArgs = args.input;
         }
-        let model = context.models[module.name].getModel();
+        let model = context.wertik.models[module.name].getModel();
         let result = await model.update({
           ...finalArgs,
           is_deleted: 1,
@@ -211,7 +211,7 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
         } else {
           finalArgs = args.input;
         }
-        let model = context.models[module.name].getModel();
+        let model = context.wertik.models[module.name].getModel();
         let result = await model.bulkDelete(finalArgs);
         if (isFunction(afterBulkDelete)) {
           await afterBulkDelete({
@@ -235,7 +235,7 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
         } else {
           finalArgs = args.input;
         }
-        let model = context.models[module.name].getModel();
+        let model = context.wertik.models[module.name].getModel();
         let result = await model.bulkSoftDelete(finalArgs);
         if (isFunction(afterBulkSoftDelete)) {
           await afterBulkSoftDelete({
@@ -259,7 +259,7 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
         } else {
           finalArgs = args.input;
         }
-        let model = context.models[module.name].getModel();
+        let model = context.wertik.models[module.name].getModel();
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let result = await model.bulkCreate(finalArgs, requestedFields);
         if (isFunction(afterBulkCreate)) {
@@ -287,7 +287,7 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
         } else {
           finalArgs = args.input;
         }
-        let model = context.models[module.name].getModel();
+        let model = context.wertik.models[module.name].getModel();
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let result = await model.bulkUpdate(finalArgs, requestedFields);
         if (isFunction(afterBulkUpdate)) {
@@ -305,13 +305,13 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
     },
     queries: {
       [`${firstLetterLowerCase(module.name)}Stats`]: async (_: any, args: any, context: any, info: any) => {
-        let database = context.database;
+        let database = context.wertik.database;
         let requestedReports = getRequestedFieldsFromResolverInfo(info);
-        let model = context.models[module.name].getModel();
+        let model = context.wertik.models[module.name].getModel();
         return model.stats(database, requestedReports);
       },
       [`${firstLetterLowerCase(module.name)}ById`]: async (_: any, args: any, context: any, info: any) => {
-        let model = context.models[module.name].getModel();
+        let model = context.wertik.models[module.name].getModel();
         if (overrideQueryById && overrideQueryById.constructor == Function) {
           let response = await overrideQueryById(_, args, context, info);
           return response;
@@ -336,7 +336,7 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
         return findById.instance;
       },
       [`${firstLetterLowerCase(module.name)}`]: async (_: any, args: any, context: any, info: any) => {
-        let model = context.models[module.name].getModel();
+        let model = context.wertik.models[module.name].getModel();
         if (overrideModuleQuery && overrideModuleQuery.constructor == Function) {
           let response = await overrideModuleQuery(_, args, context, info);
           return response;
@@ -375,7 +375,7 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
         } else {
           finalArgs = args;
         }
-        let model = context.models[module.name].getModel();
+        let model = context.wertik.models[module.name].getModel();
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let view = await model.view(finalArgs, Object.keys(requestedFields));
         if (isFunction(afterView)) {
@@ -400,7 +400,7 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
         } else {
           finalArgs = args;
         }
-        let model = context.models[module.name].getModel();
+        let model = context.wertik.models[module.name].getModel();
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let response = await model.paginate(finalArgs, Object.keys(requestedFields.list));
         if (isFunction(afterList)) {

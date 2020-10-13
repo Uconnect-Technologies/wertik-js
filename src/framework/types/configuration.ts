@@ -125,13 +125,12 @@ export interface IConfigurationCustomModule {
 
 export interface IConfigurationDatabase {
   dbDialect: string;
-  dbConnectionstring?: string;
+  dbConnectionString?: string;
   dbUsername?: string;
   dbPassword?: string;
   dbName?: string;
   dbHost?: string;
   dbPort?: string;
-  mongoDBURI?: string;
   dbInitializeOptions: {
     [Key: string]: any;
   };

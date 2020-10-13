@@ -7,38 +7,60 @@ export const applyRelationship = (
     [key: string]: any;
   }
 ) => {
-
-  let dbDialect = process.env.dbDialect;
+  // fixme Loop through relationships and assign to models.
   let relationships = get(module, "database.relationships", null);
-
-  const processRelationship = (obj: any) => {
-    const { key, type, relationshipInfo } = obj;
-    const foreignModel = tables[key];
-    const currentModel = tables[module.name];
-    if (type === "oneToMany") {
-      currentModel.hasMany(foreignModel, {
-        foreignKey: relationshipInfo.foreignKey,
-      });
-    }else {
-      currentModel.hasOne(foreignModel, {
-        as: relationshipInfo.relationColumn,
-        foreignKey: relationshipInfo.foreignKey,
-      });
-    }
-  };
-
-  // If module has relatioship
   if (relationships) {
     const oneToOne = get(relationships, "oneToOne", {});
     const oneToMany = get(relationships, "oneToMany", {});
     Object.keys(oneToMany).forEach((key) => {
-      processRelationship({
-        key: key,
-        relationshipInfo: oneToMany[key],
-        type: "oneToMany",
-      });
+      const relationshipInfo = oneToMany[key];
+
+    });
+    Object.keys(oneToOne).forEach((key) => {
+      const relationshipInfo = oneToOne[key];
     });
   }
+  // let dbDialect = process.env.dbDialect;
+  // let relationships = get(module, "database.relationships", null);
+  // if (relationships) {
+  //   const oneToOne = get(relationships, "oneToOne", {});
+  //   const oneToMany = get(relationships, "oneToMany", {});
+  //   Object.keys(oneToMany).forEach((key) => {
+  //     const relationshipInfo = oneToMany[key];
+  //   });
+  //   Object.keys(oneToOne).forEach((key) => {
+  //     const relationshipInfo = oneToOne[key];
+  //   });
+  // }
+
+  // const processRelationship = (obj: any) => {
+  //   const { key, type, relationshipInfo } = obj;
+  //   const foreignModel = tables[key];
+  //   const currentModel = tables[module.name];
+  //   if (type === "oneToMany") {
+  //     currentModel.hasMany(foreignModel, {
+  //       foreignKey: relationshipInfo.foreignKey,
+  //     });
+  //   }else {
+  //     currentModel.hasOne(foreignModel, {
+  //       as: relationshipInfo.relationColumn,
+  //       foreignKey: relationshipInfo.foreignKey,
+  //     });
+  //   }
+  // };
+
+  // // If module has relatioship
+  // if (relationships) {
+  //   const oneToOne = get(relationships, "oneToOne", {});
+  //   const oneToMany = get(relationships, "oneToMany", {});
+  //   Object.keys(oneToMany).forEach((key) => {
+  //     processRelationship({
+  //       key: key,
+  //       relationshipInfo: oneToMany[key],
+  //       type: "oneToMany",
+  //     });
+  //   });
+  // }
 };
 
 // Object.keys(relationships).forEach((key) => {
