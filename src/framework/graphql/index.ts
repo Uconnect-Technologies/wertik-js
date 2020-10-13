@@ -9,6 +9,7 @@ import { get } from "lodash";
 import voyager from "./voyager/index";
 import { defaultApolloGraphqlOptions } from "../defaults/options/index";
 const { ApolloServer } = require("apollo-server-express");
+import * as auth from "./../helpers/auth"
 
 //expressApp,configuration,dbTables,models,emailTemplates,sendEmail,database,WertikEventEmitter
 
@@ -36,20 +37,26 @@ export default async function (options: IGraphQLInitialize) {
       let userPermissions = user ? await getUserAllPermissions(user.id, database) : [];
       let userRoles = user ? await getUserRoles(user.id, database) : [];
       let cxt = {
-        database: database,
-        user: user,
-        dbTables,
-        models,
-        sendEmail: sendEmail,
-        emailTemplates: emailTemplates,
-        userPermissions: userPermissions,
-        userRoles: userRoles,
-        mailerInstance: mailerInstance,
-        req,
-        res,
-        socketio,
-        logger,
-        initializeContext: initializeContext
+        wertik: {
+          database: database,
+          auth: {
+            helpers: auth,
+            user: user
+          },
+          dbTables,
+          models,
+          sendEmail: sendEmail,
+          emailTemplates: emailTemplates,
+          userPermissions: userPermissions,
+          userRoles: userRoles,
+          mailerInstance: mailerInstance,
+          req,
+          res,
+          socketio,
+          logger,
+          initializeContext: initializeContext,
+          configuration: configuration
+        }
       };
       let requestContext = await get(configuration.context, "requestContext", () => {})("graphql", cxt);
       cxt["requestContext"] = requestContext;

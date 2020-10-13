@@ -196,7 +196,6 @@ export interface IConfigurationGraphql {
   disableGraphqlVoyager: Boolean;
 }
 
-
 export interface IConfigurationStorage {
   disable: Boolean;
   storageDirectory: string;
@@ -210,6 +209,7 @@ export interface IConfigurationEmail {
   templates: {
     [Key: string]: string;
   };
+  sendEmailOnSignup: Boolean;
 }
 
 export interface IConfigurationCron {

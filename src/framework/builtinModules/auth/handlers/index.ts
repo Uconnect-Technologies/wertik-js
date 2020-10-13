@@ -1,12 +1,13 @@
 import moment from "moment";
-import statusCodes from "./../../../../framework/helpers/statusCodes";
 import createJwtToken from "./../../../../framework/security/createJwtToken";
 import { ApolloError } from "apollo-server";
-import { verifyPassword, generateHashPassword } from "./../../../../framework/helpers/index";
+import { verifyPassword, generateHashPassword } from "./../../../../framework/helpers/auth";
 import { get } from "lodash";
 
 export const signup = async function(obj) {
-  const { userModel, data, emailTemplates, sendEmail } = obj;
+  
+  const { userModel, data, emailTemplates, sendEmail, configuration } = obj;
+  const {sendEmailOnSignup} = get(configuration,'email.sendEmailOnSignup',true)
   let { email, password, confirmPassword, ...restData } = data;
   if (password !== confirmPassword) throw new ApolloError("Passwords doesn't match.");
   let user = await userModel.findOneByArgs({
@@ -49,23 +50,28 @@ export const signup = async function(obj) {
     ...restData
   });
   let userInstance = newUser.instance;
-  await sendEmail(
-    emailTemplates.welcome,
-    {
-      email: newUser.instance.email,
-      username: newUser.instance.email,
-      date: moment().format("dddd, MMMM Do YYYY, h:mm:ss a"),
-      siteName: process.env.name,
-      activationUrl: `${process.env.frontendAppUrl}/activate-account/`,
-      activationToken: newUser.instance.activationToken
-    },
-    {
-      from: process.env.mailerServiceUsername,
-      to: newUser.instance.email,
-      subject: `Welcome to ${process.env.name}`
-    }
-  );
-  return userInstance;
+  if (sendEmailOnSignup){
+    await sendEmail(
+      emailTemplates.welcome,
+      {
+        email: newUser.instance.email,
+        username: newUser.instance.email,
+        date: moment().format("dddd, MMMM Do YYYY, h:mm:ss a"),
+        siteName: process.env.name,
+        activationUrl: `${process.env.frontendAppUrl}/activate-account/`,
+        activationToken: newUser.instance.activationToken
+      },
+      {
+        from: process.env.mailerServiceUsername,
+        to: newUser.instance.email,
+        subject: `Welcome to ${process.env.name}`
+      }
+    );
+  }
+  return {
+    message: "Signup Completed",
+    returning: userInstance
+  };
 };
 export const login = async function(obj, NoUserFoundMessage: string = '"No User found with such email"') {
   const { userModel, data } = obj;
@@ -89,10 +95,13 @@ export const login = async function(obj, NoUserFoundMessage: string = '"No User 
       .add(5, "days")
       .unix()
   });
-  await user.update({
+  user = await user.update({
     accessToken: token
   });
-  return user.instance;
+  return {
+    message: "Login Completed",
+    returning: user.instance
+  };
 };
 export const twoFactorLogin = async function(obj) {
   const { userModel, emailTemplates, sendEmail, data } = obj;

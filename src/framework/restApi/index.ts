@@ -1,18 +1,15 @@
-const logSymbols = require("log-symbols");
-const { get } = require("lodash");
-const cors = require("cors");
-const bodyParser = require("body-parser");
-const morgan = require("morgan");
+import {get} from "lodash"
+import cors from "cors"
+import bodyParser from "body-parser"
+import morgan from "morgan";
 
 import getUserWithAccessToken from "./../security/getUserWithAccessToken";
 import getUserAllPermissions from "./../security/getUserAllPermissions";
-import { successMessage } from "./../logger/consoleMessages";
 import { IRestApiInitialize } from "./../types/servers";
 import getUserRoles from "./../security/getUserRoles";
 import customApi from "./customApi";
+import * as auth from "./../helpers/auth"
 
-
-//expressApp,configuration,dbTables, models, allEmailTemplates,sendEmail,database,WertikEventEmitter
 export default async function (options: IRestApiInitialize) {
   const {
     configuration,
@@ -39,7 +36,6 @@ export default async function (options: IRestApiInitialize) {
   expressApp.use(bodyParser.json());
   expressApp.use(morgan("combined"));
   expressApp.use(async function (req, res, next) {
-    const ip = req.connection.remoteAddress;
     const authToken = get(req, "headers.authorization", "");
     let user;
     if (authToken) {
@@ -47,22 +43,28 @@ export default async function (options: IRestApiInitialize) {
     }
     let userPermissions = user ? await getUserAllPermissions(user.id, database) : [];
     let userRoles = user ? await getUserRoles(user.id, database) : [];
-    req.database = database;
-    req.user = user;
-    req.userPermissions = userPermissions;
-    req.userRoles = userRoles;
-    req.mailerInstance = mailerInstance;
-    req.dbTables = dbTables;
-    req.models = models;
-    req.socketio = socketio;
-    // req.context = get(configuration.context, "data", {});
-    req.sendEmail = sendEmail;
-    req.emailTemplates = emailTemplates;
-    req.multerInstance = multerInstance;
-    req.logger = logger;
     let requestContext = await get(configuration.context, "requestContext", () => {})("restApi", req);
-    req.requestContext = requestContext;
-    req.initializeContext = initializeContext;
+    req.wertik = {
+      database: database,
+      auth: {
+        helpers: auth,
+        user: user
+      },
+      userPermissions: userPermissions,
+      userRoles: userRoles,
+      mailerInstance: mailerInstance,
+      dbTables: dbTables,
+      models: models,
+      socketio: socketio,
+      sendEmail: sendEmail,
+      emailTemplates: emailTemplates,
+      multerInstance: multerInstance,
+      logger: logger,
+      requestContext: requestContext,
+      initializeContext: initializeContext,
+      configuration: configuration,
+    };
+    
     next();
   });
 

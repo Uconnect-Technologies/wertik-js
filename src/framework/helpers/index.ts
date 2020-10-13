@@ -1,8 +1,7 @@
-let { ApolloError } = require("apollo-server");
+import {ApolloError} from "apollo-server"
 import fs from "fs";
 import { IConfiguration } from "../types/configuration";
 import { get, isFunction } from "lodash";
-var bcrypt = require("bcryptjs");
 
 export const isMongodb = () => {
   const { dbDialect } = process.env;
@@ -90,14 +89,7 @@ export const deleteFile = async (path: string, cb: Function) => {
   }
 };
 
-export const generateHashPassword = (password: string) => {
-  var salt = bcrypt.genSaltSync(10);
-  var hash = bcrypt.hashSync(password, salt);
-  return hash;
-};
-export const verifyPassword = async (tryingPassword, storedPassword) => {
-  return await bcrypt.compareSync(tryingPassword, storedPassword);
-};
+
 
 export const firstLetterLowerCase = (s) => {
   if (typeof s !== "string") return "";

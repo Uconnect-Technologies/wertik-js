@@ -71,7 +71,7 @@ export default async function (expressApp, configuration: IConfiguration, custom
           if (overrideList && overrideList.constructor == Function) {
             overrideList(req, res);
           } else {
-            let model = req.models[module.name];
+            let model = req.wertik.models[module.name];
             let args = {
               pagination: get(req.body, "pagination", {}),
               filters: get(req.body, "filters", []),
@@ -104,7 +104,7 @@ export default async function (expressApp, configuration: IConfiguration, custom
 
       expressApp.post(modulePaths.module, async (req, res) => {
         try {
-          let model = req.models[module.name].getModel();
+          let model = req.wertik.models[module.name].getModel();
           if (overrideModuleQuery && overrideModuleQuery.constructor == Function) {
             overrideModuleQuery(req, res);
           } else {
@@ -136,7 +136,7 @@ export default async function (expressApp, configuration: IConfiguration, custom
 
       expressApp.get(modulePaths.view, async (req, res) => {
         try {
-          let model = req.models[module.name].getModel();
+          let model = req.wertik.models[module.name].getModel();
           if (overrideView && overrideView.constructor == Function) {
             overrideView(req, res);
           } else {
@@ -144,7 +144,7 @@ export default async function (expressApp, configuration: IConfiguration, custom
             if (isFunction(beforeView)) {
               finalArgs = await beforeView({ mode: "restApi", params: { req, res } });
             } else {
-              finalArgs = req.params[identityColumn];
+              finalArgs = req.wertik.params[identityColumn];
             }
             let result = await model.view({ id: finalArgs }, ["*"]);
             if (result.instance) {
@@ -177,7 +177,7 @@ export default async function (expressApp, configuration: IConfiguration, custom
 
       expressApp.post(modulePaths.bulkCreate, async (req, res) => {
         try {
-          let model = req.models[module.name].getModel();
+          let model = req.wertik.models[module.name].getModel();
           if (overrideBulkCreate && overrideBulkCreate.constructor == Function) {
             overrideBulkCreate(req, res);
           } else {
@@ -208,7 +208,7 @@ export default async function (expressApp, configuration: IConfiguration, custom
 
       expressApp.put(modulePaths.bulkUpdate, async (req, res) => {
         try {
-          let model = req.models[module.name].getModel();
+          let model = req.wertik.models[module.name].getModel();
           if (overrideBuklUpdate && overrideBuklUpdate.constructor == Function) {
             overrideBuklUpdate(req, res);
           } else {
@@ -239,7 +239,7 @@ export default async function (expressApp, configuration: IConfiguration, custom
 
       expressApp.delete(modulePaths.bulkSoftDelete, async (req, res) => {
         try {
-          let model = req.models[module.name].getModel();
+          let model = req.wertik.models[module.name].getModel();
           if (overrideBulkSoftDelete && overrideBulkSoftDelete.constructor == Function) {
             overrideBulkSoftDelete(req, res);
           } else {
@@ -270,7 +270,7 @@ export default async function (expressApp, configuration: IConfiguration, custom
 
       expressApp.delete(modulePaths.delete, async (req, res) => {
         try {
-          let model = req.models[module.name].getModel();
+          let model = req.wertik.models[module.name].getModel();
           if (overrideDelete && overrideDelete.constructor == Function) {
             overrideDelete(req, res);
           } else {
@@ -278,7 +278,7 @@ export default async function (expressApp, configuration: IConfiguration, custom
             if (isFunction(beforeDelete)) {
               finalArgs = await beforeDelete({ mode: "graphql", params: { req, res } });
             } else {
-              finalArgs = req.params[identityColumn];
+              finalArgs = req.wertik.params[identityColumn];
             }
             await model.delete({ id: finalArgs });
             if (isFunction(afterDelete)) {
@@ -300,7 +300,7 @@ export default async function (expressApp, configuration: IConfiguration, custom
       });
       expressApp.delete(modulePaths.bulkDelete, async (req, res) => {
         try {
-          let model = req.models[module.name].getModel();
+          let model = req.wertik.models[module.name].getModel();
           if (overrideBuklDelete && overrideBuklDelete.constructor == Function) {
             overrideBuklDelete(req, res);
           } else {
@@ -331,7 +331,7 @@ export default async function (expressApp, configuration: IConfiguration, custom
 
       expressApp.delete(modulePaths.softDelete, async (req, res) => {
         try {
-          let model = req.models[module.name].getModel();
+          let model = req.wertik.models[module.name].getModel();
           if (overrideSoftDelete && overrideSoftDelete.constructor == Function) {
             overrideSoftDelete(req, res);
           } else {

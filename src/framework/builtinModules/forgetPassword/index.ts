@@ -47,17 +47,17 @@ export default {
       resolvers: {
         requestPasswordReset: async (_: any, args: any, context: any, info: any) => {
           return await requestPasswordResetHandler({
-            userModel: context.models.User,
-            forgetPasswordModel: context.models.ForgetPassword,
+            userModel: context.wertik.models.User,
+            forgetPasswordModel: context.wertik.models.ForgetPassword,
             data: args.input,
-            emailTemplates: context.emailTemplates,
-            sendEmail: context.sendEmail,
+            emailTemplates: context.wertik.emailTemplates,
+            sendEmail: context.wertik.sendEmail,
           });
         },
         resetPassword: async (_: any, args: any, context: any, info: any) => {
           return await resetPasswordHandler({
-            userModel: context.models.User,
-            forgetPasswordModel: context.models.ForgetPassword,
+            userModel: context.wertik.models.User,
+            forgetPasswordModel: context.wertik.models.ForgetPassword,
             data: args.input,
           });
         },
@@ -76,11 +76,11 @@ export default {
         handler: async function (req, res) {
           try {
             let response = await requestPasswordResetHandler({
-              userModel: req.models.User,
-              forgetPasswordModel: req.models.ForgetPassword,
+              userModel: req.wertik.models.User,
+              forgetPasswordModel: req.wertik.models.ForgetPassword,
               data: req.body.input,
-              emailTemplates: req.emailTemplates,
-              sendEmail: req.sendEmail,
+              emailTemplates: req.wertik.emailTemplates,
+              sendEmail: req.wertik.sendEmail,
             });
             res.json({
               message: response,
@@ -100,8 +100,8 @@ export default {
         handler: async function (req, res) {
           try {
             let response = await resetPasswordHandler({
-              userModel: req.models.User,
-              forgetPasswordModel: req.models.ForgetPassword,
+              userModel: req.wertik.models.User,
+              forgetPasswordModel: req.wertik.models.ForgetPassword,
               data: req.body.input,
             });
             res.json({

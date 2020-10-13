@@ -39,6 +39,10 @@ export default {
         email: String!
         password: String!
       }
+      type AuthResponse {
+        message: String
+        returning: User
+      }
     `,
     mutation: {
       schema: `
@@ -46,52 +50,53 @@ export default {
         twoFactorLoginValidate(input: TwoFactorCodeInput): User
         loginWithAccessToken(input: AccessTokenInput): User
         activateAccount(input: ActivationTokenInput): User
-        signup(input: SignupInput): User
-        login(input: loginInput): User
+        signup(input: SignupInput): AuthResponse
+        login(input: loginInput): AuthResponse
         refreshToken(input: RefreshTokenInput): User
       `,
       resolvers: {
         twoFactorLogin: async (_: any, args: any, context: any, info: any) => {
           return await twoFactorLogin({
-            userModel: context.models["User"],
-            emailTemplates: context.emailTemplates,
-            sendEmail: context.sendEmail,
+            userModel: context.wertik.models["User"],
+            emailTemplates: context.wertik.emailTemplates,
+            sendEmail: context.wertik.sendEmail,
             data: args.input
           });
         },
         twoFactorLoginValidate: async (_: any, args: any, context: any, info: any) => {
           return await twoFactorLoginValidate({
-            userModel: context.models["User"],
+            userModel: context.wertik.models["User"],
             data: args.input
           });
         },
         loginWithAccessToken: async (_: any, args: any, context: any, info: any) => {
           return await loginWithAccessToken({
-            userModel: context.models["User"],
+            userModel: context.wertik.models["User"],
             data: args.input
           });
         },
         activateAccount: async (_: any, args: any, context: any, info: any) => {
           return await activateAccount({
-            userModel: context.models["User"],
-            emailTemplates: context.emailTemplates,
-            sendEmail: context.sendEmail,
+            userModel: context.wertik.models["User"],
+            emailTemplates: context.wertik.emailTemplates,
+            sendEmail: context.wertik.sendEmail,
             data: args.input
           });
         },
         signup: async (_: any, args: any, context: any, info: any) => {
           return await signup({
-            userModel: context.models["User"],
-            emailTemplates: context.emailTemplates,
-            sendEmail: context.sendEmail,
-            data: args.input
+            userModel: context.wertik.models["User"],
+            emailTemplates: context.wertik.emailTemplates,
+            sendEmail: context.wertik.sendEmail,
+            data: args.input,
+            configuration: context.wertik.configuration
           });
         },
         login: async (_: any, args: any, context: any, info: any) => {
-          return await login({ userModel: context.models["User"], data: args.input });
+          return await login({ userModel: context.wertik.models["User"], data: args.input });
         },
         refreshToken: async (_: any, args: any, context: any, info: any) => {
-          return await refreshTokenHandler({ userModel: context.models["User"], data: args.input });
+          return await refreshTokenHandler({ userModel: context.wertik.models["User"], data: args.input });
         }
       }
     },
@@ -108,9 +113,9 @@ export default {
         handler: async function(req, res) {
           try {
             let response = await twoFactorLogin({
-              userModel: req.models["User"],
-              emailTemplates: req.emailTemplates,
-              sendEmail: req.sendEmail,
+              userModel: req.wertik.models["User"],
+              emailTemplates: req.wertik.emailTemplates,
+              sendEmail: req.wertik.sendEmail,
               data: req.body
             });
             res.json({
@@ -133,7 +138,7 @@ export default {
         handler: async function(req, res) {
           try {
             let response = await twoFactorLoginValidate({
-              userModel: req.models["User"],
+              userModel: req.wertik.models["User"],
               data: req.body
             });
             res.json({
@@ -156,7 +161,7 @@ export default {
         handler: async function(req, res) {
           try {
             let response = await loginWithAccessToken({
-              userModel: req.models["User"],
+              userModel: req.wertik.models["User"],
               data: req.body
             });
             res.json({
@@ -179,9 +184,9 @@ export default {
         handler: async function(req, res) {
           try {
             let response = await activateAccount({
-              userModel: req.models["User"],
-              emailTemplates: req.emailTemplates,
-              sendEmail: req.sendEmail,
+              userModel: req.wertik.models["User"],
+              emailTemplates: req.wertik.emailTemplates,
+              sendEmail: req.wertik.sendEmail,
               data: req.body
             });
             res.json({
@@ -204,7 +209,7 @@ export default {
         handler: async function(req, res) {
           try {
             let response = await refreshTokenHandler({
-              userModel: req.models["User"],
+              userModel: req.wertik.models["User"],
               data: req.body
             });
             res.json({
@@ -226,7 +231,7 @@ export default {
         methodType: "post",
         handler: async function(req, res) {
           try {
-            let response = await login({ userModel: req.models["User"], data: req.body });
+            let response = await login({ userModel: req.wertik.models["User"], data: req.body });
             res.json({
               success: true,
               message: "You are logged in",
@@ -247,9 +252,9 @@ export default {
         handler: async function(req, res) {
           try {
             let response = await signup({
-              userModel: req.models["User"],
-              emailTemplates: req.emailTemplates,
-              sendEmail: req.sendEmail,
+              userModel: req.wertik.models["User"],
+              emailTemplates: req.wertik.emailTemplates,
+              sendEmail: req.wertik.sendEmail,
               data: req.body
             });
             res.json({
