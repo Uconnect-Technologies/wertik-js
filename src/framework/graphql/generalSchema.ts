@@ -1,5 +1,5 @@
 export default `
-	input StringFilterSqlInput {
+	input StringFilterInput {
 		_eq: String
 		_ne: String
 		_like: String
@@ -13,10 +13,10 @@ export default `
 		_notRegexp: String
 		_iRegexp: String
 		_notIRegexp: String
-		_or: StringFilterSqlInput
-		_and: StringFilterSqlInput
+		_or: StringFilterInput
+		_and: StringFilterInput
 	}
-	input IntFilterSqlInput {
+	input IntFilterInput {
 		_eq: Int
 		_gt: Int
 		_gte: Int
@@ -27,10 +27,10 @@ export default `
 		_notBetween: [Int]
 		_in: [Int]
 		_notIn: [Int]
-		_or: IntFilterSqlInput
-		_and: IntFilterSqlInput
+		_or: IntFilterInput
+		_and: IntFilterInput
 	}
-	input DateFilterSqlInput {
+	input DateFilterInput {
 		_eq: String
 		_gt: String
 		_gte: String
@@ -40,55 +40,11 @@ export default `
 		_neq: String
 		_nin: [String!]
 	}
-	input BooleanFilterSqlInput {
+	input BooleanFilterInput {
 		_eq: Boolean
 		_ne: Boolean
 	}
-	input StringFilterMongoDBInput {
-		_eq: String
-		_ne: String
-		_like: String
-		_notLike: String
-		_iLike: String
-		_notILike: String
-		_startsWith: String
-		_endsWith: String
-		_substring: String
-		_regexp: String
-		_notRegexp: String
-		_iRegexp: String
-		_notIRegexp: String
-		_or: StringFilterMongoDBInput
-		_and: StringFilterMongoDBInput
-	}
-	input IntFilterMongoDBInput {
-		_eq: Int
-		_gt: Int
-		_gte: Int
-		_lt: Int
-		_lte: Int
-		_ne: Int
-		_between: [Int]
-		_notBetween: [Int]
-		_in: [Int]
-		_notIn: [Int]
-		_or: IntFilterMongoDBInput
-		_and: IntFilterMongoDBInput
-	}
-	input DateFilterMongoDBInput {
-		_eq: String
-		_gt: String
-		_gte: String
-		_in: [String!]
-		_lt: String
-		_lte: String
-		_neq: String
-		_nin: [String!]
-	}
-	input BooleanFilterMongoDBInput {
-		_eq: Boolean
-		_ne: Boolean
-	}
+
 	type ModuleStats {
 		total_count: Int
 		total_created_this_month: Int

@@ -450,9 +450,9 @@ export const generateModuleSearchShema = (module) => {
       
   `;
     string = `${string}
-      id: IntFilterSqlInput
-      created_at: DateFilterSqlInput
-      updated_at: DateFilterSqlInput
+      id: IntFilterInput
+      created_at: DateFilterInput
+      updated_at: DateFilterInput
     `
     const fields = get(module, "database.sql.fields", {});
     const keys = Object.keys(fields);
@@ -472,7 +472,7 @@ export const generateModuleSearchShema = (module) => {
       string =
         string +
         `
-      ${key}: ${getType()}FilterSqlInput
+      ${key}: ${getType()}FilterInput
       `;
     });
   string = string + " }";

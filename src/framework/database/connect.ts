@@ -35,7 +35,7 @@ export default async function (configurationObject: IConfiguration) {
       if (dialect === "mysql" || dialect == "postgres") {
         DATABASE_INSTANCE.authenticate()
           .then(() => {
-            successMessage(`SQL: Database Connected`);
+            successMessage(`Database: Successfully Connected!`);
           })
           .catch((e) => {
             console.log(e);
