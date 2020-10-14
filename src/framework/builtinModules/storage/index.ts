@@ -1,6 +1,3 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
-
 export default {
   name: "Storage",
   graphql: {
@@ -117,21 +114,6 @@ export default {
         created_by_id: {
           type: "INTEGER",
         },
-      },
-    },
-    mongodb: {
-      tableName: "storage",
-      schema: {
-        name: {type: String},
-        filename: {type: String},
-        size: {type: String},
-        type: {type: String},
-        folder: {type: String},
-        created_by: { type: Schema.Types.ObjectId, ref: "user" },
-        created_by_id: {type: Number},
-        deleted: {type: Boolean},
-        created_at: {type: String},
-        updated_at: {type: String},
       },
     },
   },

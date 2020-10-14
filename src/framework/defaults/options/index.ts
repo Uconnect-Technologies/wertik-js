@@ -4,9 +4,7 @@ export const databaseDefaultOptions = {
     dbInitializeOptions: {
       logging: false,
       operatorsAliases: "0",
-      dialectOptions: {
-        ssl: true,
-      },
+      native: true
     },
   },
   sql: {
