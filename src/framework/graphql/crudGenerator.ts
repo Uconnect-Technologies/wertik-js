@@ -1,7 +1,7 @@
 import getRequestedFieldsFromResolverInfo from "./../helpers/getRequestedFieldsFromResolverInfo";
 import { IConfiguration, IConfigurationCustomModule } from "../types/configuration";
 import { get, isFunction } from "lodash";
-import { firstLetterLowerCase, isSQL } from "../helpers/index";
+import { firstLetterLowerCase, isSQL, isMongodb } from "../helpers/index";
 
 const identityColumn = isSQL() ? "id" : "_id";
 const identityColumnGraphQLType = isSQL() ? "Int" : "String";
@@ -446,33 +446,66 @@ export const generateModuleSearchShema = (module) => {
     input ${module.name}FilterInput {
       _or: [${module.name}FilterInput]
       _and: [${module.name}FilterInput]
-      id: IntFilterInput
-      created_at: DateFilterInput
-      updated: DateFilterInput
+      
+      
   `;
-  const fields = get(module, "database.sql.fields", null);
-  const keys = Object.keys(fields);
-  keys.forEach((key) => {
-    const field = fields[key];
+  if (isSQL()) {
+    string = `${string}
+      id: IntFilterSqlInput
+      created_at: DateFilterInput
+      updated_at: DateFilterInput
+    `
+    const fields = get(module, "database.sql.fields", {});
+    const keys = Object.keys(fields);
+    keys.forEach((key) => {
+      const field = fields[key];
 
-    const getType = () => {
-      const type = field.oldType.toLowerCase();
-      if (type === "string") {
-        return "String";
-      } else if (type === "integer") {
-        return "Int";
-      } else if (type === "boolean") {
-        return "Boolean";
+      const getType = () => {
+        const type = field.oldType.toLowerCase();
+        if (type === "string") {
+          return "String";
+        } else if (type === "integer") {
+          return "Int";
+        } else if (type === "boolean") {
+          return "Boolean";
+        }
+      };
+      string =
+        string +
+        `
+      ${key}: ${getType()}FilterSqlSqlInput
+      `;
+    });
+  }else if (isMongodb) {
+    string = `${string}
+      id: StringFilterMongoDBInput
+    `
+    const fields = get(module, "database.mongodb.schema", {});
+    const mongoose = require("mongoose");
+    const Schema = mongoose.Schema;
+    const keys = Object.keys(fields);
+    keys.forEach(field => {
+      const fieldInfo = fields[field];
+      const getType = () => {
+        const type = fieldInfo.type;
+        if (type === String || type === Schema.Types.ObjectId) {
+          return "String";
+        }else if (type === Number) {
+          return "Int"
+        }else if (type === Boolean) {
+          return "Boolean"
+        }
       }
-    };
-
-    string =
-      string +
-      `
-     ${key}: ${getType()}FilterInput
-    `;
-  });
+      string =
+        string +
+        `
+      ${field}: ${getType()}FilterMongoDBInput
+      `;
+    });
+  }
   string = string + " }";
+
+  console.log(string);
   return string;
 };
 

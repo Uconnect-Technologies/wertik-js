@@ -1,7 +1,7 @@
 import { get } from "lodash";
 import { IConfigurationCustomModule } from "../types/configuration";
 
-export const applyRelationship = (
+export const applyRelationshipSql = (
   module: IConfigurationCustomModule,
   tables: {
     [key: string]: any;

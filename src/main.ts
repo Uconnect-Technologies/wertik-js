@@ -129,7 +129,7 @@ export default function (configurationOriginal: IConfiguration) {
                         })
                         .catch((err2) => {
                           errorMessage(
-                            `Something went wrong while initializing Wertik js, Please check docs, and make sure you that you pass correct configuration.`
+                            `Failed connecting with database.`
                           );
                           errorMessage(err2);
                           reject(err2);

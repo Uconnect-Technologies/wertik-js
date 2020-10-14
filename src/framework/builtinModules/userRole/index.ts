@@ -96,15 +96,27 @@ export default {
     mongodb: {
       tableName: "userRole",
       schema: {
-        name: String,
+        name: {
+          type: String,
+        },
         user: { type: Schema.Types.ObjectId, ref: "user" },
-        user_id: Number,
+        user_id: {
+          type: Number,
+        },
         role: { type: Schema.Types.ObjectId, ref: "role" },
-        role_id: Number,
+        role_id: {
+          type: Number,
+        },
         created_by: { type: Schema.Types.ObjectId, ref: "user" },
-        created_by_id: Number,
-        created_at: String,
-        updated_at: String,
+        created_by_id: {
+          type: Number,
+        },
+        created_at: {
+          type: String,
+        },
+        updated_at: {
+          type: String,
+        },
       },
     },
   },

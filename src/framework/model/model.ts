@@ -225,7 +225,7 @@ export default function (props) {
         try {
           let page = get(args, "pagination.page", 1);
           let limit = get(args, "pagination.limit", 10);
-          let filters = get(args, "filters", []);
+          let filters = get(args, "filters", {});
           const model = this.dbTables[this.tableName];
           let sorting = get(args, "sorting", []);
           if (isSQL()) {
@@ -291,18 +291,22 @@ export default function (props) {
                 sort: sortString,
               },
               function (err, result) {
-                resolve({
-                  list: result.docs,
-                  filters,
-                  pagination: { page, limit },
-                  paginationProperties: {
-                    total: result.totalDocs,
-                    nextPage: page + 1,
-                    page: page,
-                    previousPage: page == 1 ? 1 : page - 1,
-                    pages: Math.ceil(result.totalDocs / limit),
-                  },
-                });
+                if (err) {
+                  reject(err)
+                }else {
+                  resolve({
+                    list: result.docs,
+                    filters,
+                    pagination: { page, limit },
+                    paginationProperties: {
+                      total: result.totalDocs,
+                      nextPage: page + 1,
+                      page: page,
+                      previousPage: page == 1 ? 1 : page - 1,
+                      pages: Math.ceil(result.totalDocs / limit),
+                    },
+                  });
+                }
               }
             );
           }

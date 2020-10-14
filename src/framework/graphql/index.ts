@@ -1,6 +1,6 @@
 // let { ApolloServer } = require("apollo-server");
 let { get } = require("lodash");
-let loadAllModules = require("./loadAllModules").default;
+import loadAllModules from "./loadAllModules"
 import getUserWithAccessToken from "./../security/getUserWithAccessToken";
 import getUserAllPermissions from "./../security/getUserAllPermissions";
 import getUserRoles from "./../security/getUserRoles";
@@ -28,7 +28,6 @@ export default async function (options: IGraphQLInitialize) {
     typeDefs: modules.schema,
     resolvers: modules.resolvers,
     context: async ({ req, res, connection }) => {
-      let ip = get(req, "connection.remoteAddress", null);
       const authToken = get(req, "headers.authorization", "");
       let user;
       if (authToken) {
