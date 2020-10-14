@@ -134,8 +134,6 @@ export interface IConfigurationDatabase {
   dbInitializeOptions: {
     [Key: string]: any;
   };
-
-  // MongoDB
 }
 
 export interface IDocServerConfiguration {

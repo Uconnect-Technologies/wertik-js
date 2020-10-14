@@ -123,9 +123,9 @@ export default {
     relationships: {
       oneToOne: {
         User: {
-          relationColumn: "email",
+          relationColumn: "user_id",
           graphqlName: "user",
-          foreignKey: "email",
+          foreignKey: "id",
         },
       },
     },

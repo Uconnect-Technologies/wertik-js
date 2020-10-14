@@ -57,7 +57,7 @@ export default {
         },
         RolePermission: {
           graphqlName: "role_permissions",
-          foreignKey: "permission_id",
+          foreignKey: "permission_id"
         },
       },
       oneToOne: {

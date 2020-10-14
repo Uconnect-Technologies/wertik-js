@@ -67,7 +67,7 @@ export default {
         Permission: {
           relationColumn: "permission_id",
           graphqlName: "permission",
-          foreignKey: "id",
+          foreignKey: "id"
         },
       },
     },
