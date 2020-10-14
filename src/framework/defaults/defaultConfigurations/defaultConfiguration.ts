@@ -2,22 +2,25 @@ export default {
   name: "Wertik",
   builtinModules: "user,auth,forgetPassword,permission,role,rolePermission,userPermission,userRole,me,storage",
   database: {
-    dbDialect: "mysql",
-    dbUsername: "root",
-    dbPassword: "pass",
-    dbName: "graphql",
-    dbHost: "localhost",
-    dbPort: "3306",
+    dbDialect: process.env.dbDialect,
+    dbUsername: process.env.dbUsername,
+    dbPassword: process.env.dbPassword,
+    dbName: process.env.dbName,
+    dbHost: process.env.dbHost,
+    dbPort: process.env.dbPort,
   },
-
+  port: 5000,
+  startServers: true,
   frontendAppUrl: "http://localhost:8080/",
   frontendAppActivationUrl: "http://localhost:8080/activate-account",
   frontendAppPasswordResetUrl: "http://localhost:8080/reset-password",
   context: {
-    data: {
-      myName: "My powerful app",
+    initializeContext: function (mode, context) {
+      return {
+        someKey: "somekeyvalue",
+      };
     },
-    createContext: async function (mode, context) {
+    requestContext: async function (mode, context) {
       return {
         value: "Value 1",
       };
@@ -28,17 +31,12 @@ export default {
   },
   graphql: {
     disable: false,
-    port: 4000,
   },
   restApi: {
-    disable: false,
-    port: 7000,
-  },
-  forceStartGraphqlServer: true,
-  forceStartRestApiServer: true,
-  ports: {
-    graphql: 4000,
-    restApi: 7000,
+    showWertik404Page: true,
+    onCustomApiFailure: function ({ path, res }) {
+      res.send("failed at " + path);
+    },
   },
   modules: [
     {
@@ -79,11 +77,6 @@ export default {
       restApi: {
         endpoints: [
           {
-            docs: {
-              title: "Apple module response.",
-              description: "Just a message.",
-              response: `@apiSuccess {Object} returns an object {message: true}.`,
-            },
             path: "/apple/response",
             methodType: "get",
             handler: function (req, res) {
@@ -106,15 +99,6 @@ export default {
             },
           },
         },
-        mongodb: {
-          tableName: "article",
-          fields: {
-            title: String,
-            description: String,
-            created_at: String,
-            updated_at: String,
-          }
-        }
       },
     },
   ],
@@ -126,11 +110,7 @@ export default {
       console.log("beforeRestApiStart");
     },
     database: {
-      Permission: {
-        afterCreate() {
-          console.log("permision created");
-        },
-      },
+      Permission: {},
     },
   },
   seeds: {
@@ -143,20 +123,15 @@ export default {
   },
   sockets: {
     disable: false,
-    port: 2000,
-    onClientConnected: function (ws, req, wss) {
-      ws.id = Math.floor(Math.random() * 1000000);
-      console.log("on client connected", `Total connections right now ${wss.clients.size}`);
+    onClientConnected: function () {
+      console.log("onClientConnected")
     },
-    onMessageReceived: function (ws, message) {
-      console.log("on message received: " + message);
+    onMessageReceived: function () {
+      console.log("onMessageReceived")
     },
-    onClientDisconnect: function (wss) {
-      console.log("on client disconnected", `Total connections right now ${wss.clients.size}`);
+    onClientDisconnect: function () { 
+      console.log("onClientDisconnect")
     },
-  },
-  security: {
-    allowedIpAddresses: ["*"],
   },
   storage: {
     storageDirectory: "./uploads/",

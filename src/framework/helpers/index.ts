@@ -1,18 +1,7 @@
-let { ApolloError } = require("apollo-server");
+import { ApolloError } from "apollo-server";
 import fs from "fs";
 import { IConfiguration } from "../types/configuration";
 import { get, isFunction } from "lodash";
-var bcrypt = require("bcryptjs");
-
-export const isMongodb = () => {
-  const { dbDialect } = process.env;
-  return dbDialect === "mongodb";
-};
-
-export const isSQL = () => {
-  const { dbDialect } = process.env;
-  return dbDialect.includes("sql") || dbDialect.includes("postgres");
-};
 
 export const generateError = (e: any, statusCode: Number = 404) => {
   return new ApolloError(e.message);
@@ -24,7 +13,10 @@ export const getDirectoriesInFolder = (path: string) => {
   });
 };
 
-export const randomString = (len, charSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789") => {
+export const randomString = (
+  len,
+  charSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+) => {
   charSet = charSet;
   var randomString = "";
   for (var i = 0; i < len; i++) {
@@ -90,15 +82,6 @@ export const deleteFile = async (path: string, cb: Function) => {
   }
 };
 
-export const generateHashPassword = (password: string) => {
-  var salt = bcrypt.genSaltSync(10);
-  var hash = bcrypt.hashSync(password, salt);
-  return hash;
-};
-export const verifyPassword = async (tryingPassword, storedPassword) => {
-  return await bcrypt.compareSync(tryingPassword, storedPassword);
-};
-
 export const firstLetterLowerCase = (s) => {
   if (typeof s !== "string") return "";
   return s.charAt(0).toLowerCase() + s.slice(1);
@@ -111,7 +94,10 @@ export const identityColumn = () => {
 
 export const loadModulesFromConfiguration = (configuration: IConfiguration) => {
   let list = [];
-  let modules = [...configuration.builtinModules.split(","), ...get(configuration, "modules", [])];
+  let modules = [
+    ...configuration.builtinModules.split(","),
+    ...get(configuration, "modules", []),
+  ];
   modules = modules.filter((c) => c);
   modules.forEach(async (element) => {
     let module;
@@ -129,15 +115,20 @@ export const loadModulesFromConfiguration = (configuration: IConfiguration) => {
   return list;
 };
 
-export const removeColumnsFromAccordingToSelectIgnoreFields = (attributesObject, ignoreFields) => {
-  if (isMongodb()) {
-  } else if (isSQL()) {
-    attributesObject.attributes = get(attributesObject, "attributes", []).filter((c) => {
+export const removeColumnsFromAccordingToSelectIgnoreFields = (
+  attributesObject,
+  ignoreFields
+) => {
+  attributesObject.attributes = get(attributesObject, "attributes", []).filter(
+    (c) => {
       if (ignoreFields) {
         return ignoreFields.includes(c) === false;
       }
       return true;
-    });
-    return attributesObject;
-  }
+    }
+  );
+  return attributesObject;
 };
+
+export const defaultPort = 7000;
+export const defaultGraphqlPath = "/graphql";

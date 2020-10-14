@@ -27,7 +27,7 @@ Building SaaS applications backend is not an easy thing, this requires a lot of 
 
 #### Why Wertik-js
 
-Wertik-js comes to play here to build a backend that is powered with all features mentioned above. Wertik-js allows GraphQL and RestAPI in single backend application. The library also provides MySQL, PostgreSQL and MongoDB database. Wertik-js allows sockets integrations. For more you can check this folder to see all Wertik-js features: https://github.com/Uconnect-Technologies/wertik-js/tree/master/src/framework.
+Wertik-js comes to play here to build a backend that is powered with all features mentioned above. Wertik-js allows GraphQL and RestAPI in single backend application. The library also provides database that Seqeulize supports. Wertik-js allows sockets integrations. For more you can check this folder to see all Wertik-js features: https://github.com/Uconnect-Technologies/wertik-js/tree/master/src/framework.
 
 #### Upcoming Features
 
@@ -36,3 +36,4 @@ These are the upcoming features for Wertik-js:
 - MongoDB Implentation
 - Logs with database
 - Cron Jobs
+

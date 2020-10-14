@@ -21,7 +21,7 @@ export default {
     data: {
       myName: "My powerful app",
     },
-    createContext: async function (mode, context) {
+    requestContext: async function (mode, context) {
       return {
         value: "Value 1",
       };
@@ -29,17 +29,11 @@ export default {
   },
   graphql: {
     disable: false,
-    port: 4000,
   },
   restApi: {
-    disable: false,
-    port: 7000,
-  },
-  forceStartGraphqlServer: true,
-  forceStartRestApiServer: true,
-  ports: {
-    graphql: 4000,
-    restApi: 7000,
+    onCustomApiFailure: function ({ path, res }) {
+      res.send("failed at " + path);
+    },
   },
   modules: [], // For modules please see http://wapgee.com/wertik-js/getting-started/custom-modules,
   events: {
@@ -67,19 +61,15 @@ export default {
   },
   sockets: {
     disable: false,
-    port: 2000,
-    onClientConnected: function (req, wss) {
-      console.log("on client connected", `Total connections right now ${wss.clients.size}`);
+    onClientConnected: function () {
+      console.log("onClientConnected");
     },
-    onMessageReceived: function (message) {
-      console.log("on message received: " + message);
+    onMessageReceived: function () {
+      console.log("onMessageReceived");
     },
-    onClientDisconnect: function (wss) {
-      console.log("on client disconnected", `Total connections right now ${wss.clients.size}`);
+    onClientDisconnect: function () {
+      console.log("onClientDisconnect");
     },
-  },
-  security: {
-    allowedIpAddresses: ["*"],
   },
   storage: {
     storageDirectory: "./storage/",
@@ -89,11 +79,11 @@ export default {
 
 Now run your app and you see logs something like this if everything went fine
 
-    ✔ [Wertik-js]: WebSocket server started at ws://localhost:2000
-    ✔ [Wertik-js]: Rest API server started at http://localhost:7000
-    ✔ [Wertik-js]: GraphQL voyager is running at server: http://localhost:9090
-    ✔ [Wertik-js]: GraphQL subscriptions started at ws://localhost:4000/subscriptions
-    ✔ [Wertik-js]: GraphQL server started at http://localhost:4000/
-    ✔ [Wertik-js]: Datbase Connected
+√  [Wertik-js]:  Socket.IO server running at http://localhost:5000
+√  [Wertik-js]:  Rest API server started at http://localhost:5000
+√  [Wertik-js]:  GraphQL Voyager running at http://localhost:5000/graphql-voyager
+√  [Wertik-js]:  GraphQL Server started at http://localhost:5000/graphql
+√  [Wertik-js]:  GraphQL Subscriptions are running at ws://localhost:5000/subscriptions
+√  [Wertik-js]:  SQL: Database Connected
 
 For Dependencies you can check wertik-js package.json file.

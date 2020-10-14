@@ -1,63 +1,34 @@
 import { ISocketConfiguration } from "../types/servers";
 import { get } from "lodash";
-import isIPAllowed from "../security/isIPAllowed";
 import { IConfiguration } from "../types/configuration";
-import { successMessage } from "../logger/consoleMessages";
-import { defaultSocketOptions } from "../defaults/options/index";
+import SocketIO from "socket.io";
 
-export const defaultSocketInstance = (options: ISocketConfiguration, context: any) => {
-  const WebSocket = require("ws");
-  const port = get(options, "port", 2000);
-  const disable = get(options, "disable", false);
+export const defaultSocketInstance = (sockets: ISocketConfiguration, context: any) => {
+  const {disable,options, onMessageReceived, onClientConnected, onClientDisconnect} = sockets;
   if (disable === true) {
     return null;
   }
-
-  const wss = new WebSocket.Server({
-    port: port,
-    ...defaultSocketOptions,
-  });
-  wss.on("connection", function connection(ws, req) {
-    let f = isIPAllowed(req.connection.remoteAddress, options.security.allowedIpAddresses, "ws", { ws });
-    if (f === true) {
-      ws.on("message", function incoming(message) {
-        options.onMessageReceived({
-          ws: ws,
-          message: message,
-          wss: wss,
-          context: context,
-        });
-      });
-      ws.on("close", function close() {
-        options.onClientDisconnect({
-          wss: wss,
-          context: context,
-        });
-      });
-      options.onClientConnected({
-        ws: ws,
-        req: req,
-        wss: wss,
-        context: context,
-      });
-      ws.send("Socket connected, message from server side.");
-    }
+  const { httpServer } = context;
+  const io = SocketIO(httpServer, options);
+  io.on("connection", (socket) => {
+    onClientConnected({
+      socket,
+    });
+    socket.on("message", onMessageReceived);
+    socket.on("disconnect", onClientDisconnect);
   });
 
-  successMessage(`WebSocket server started at`, `ws://localhost:${port}`);
-
-  return wss;
+  return io;
 };
 
 export default function (options: IConfiguration, context: any) {
   let ws = defaultSocketInstance(
     {
-      onClientConnected: options.sockets.onClientConnected,
-      onMessageReceived: options.sockets.onMessageReceived,
-      onClientDisconnect: options.sockets.onClientDisconnect,
-      disable: options.sockets.disable,
-      port: options.sockets.port,
-      security: options.security,
+      onClientConnected: get(options,'sockets.onClientConnected', function ()  {}),
+      onMessageReceived: get(options,'sockets.onMessageReceived', function ()  {}),
+      onClientDisconnect: get(options,'sockets.onClientDisconnect', function ()  {}),
+      disable: get(options,'sockets.disable', false),
+      options: get(options,'sockets.options',{}),
     },
     context
   );

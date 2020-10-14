@@ -41,6 +41,7 @@ export default async function (configuration: IConfiguration) {
   const processModule = function (module) {
     if (module && module.hasOwnProperty("graphql")) {
       let graphql = module.graphql;
+      const useDatabase = get(module, "useDatabase", true);
       let moduleName = module.name;
       let schema = graphql.schema;
       let currentGenerateQuery = get(graphql, "crud.query.generate", true);
@@ -58,15 +59,23 @@ export default async function (configuration: IConfiguration) {
         currentGenerateQueryOperations,
         configuration
       );
-      let currentModuleListSchema = currentGenerateQuery || currentGenerateMutation ? generateListTypeForModule(moduleName) : "";
-      let currentModuleSubscriptionResolvers = generateSubscriptionsCrudResolvers(moduleName, pubsub, currentGenerateMutationOperations);
+      let currentModuleSubscriptionResolvers = {};
+      let currentModuleListSchema = currentGenerateQuery || currentGenerateMutation ? generateListTypeForModule(module) : "";
+      if (useDatabase === true) {
+        currentModuleSubscriptionResolvers = generateSubscriptionsCrudResolvers(moduleName, pubsub, currentGenerateMutationOperations);
+      }
       // relations
       let customResolvers = get(graphql, "customResolvers", {});
-      if (module.name !== "Auth") {
-        appCustomResolvers[module.name] = {
-          ...customResolvers,
-          ...GraphQLModuleRelationMapper(module),
-        };
+      
+      appCustomResolvers[module.name] = {
+        ...customResolvers,
+        ...GraphQLModuleRelationMapper(module),
+      };
+
+      // Issue: https://github.com/Uconnect-Technologies/wertik-js/issues/215
+      const totalResolvers = Object.keys(appCustomResolvers[module.name]).length
+      if (totalResolvers === 0) {
+        delete appCustomResolvers[module.name]
       }
       // relations
       // require information

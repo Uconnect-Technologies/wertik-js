@@ -5,7 +5,7 @@ import getRequestedFieldsFromResolverInfo from "./../helpers/getRequestedFieldsF
 
 const processManyToManyRelationship = (relationshipInfo, key) => {
   return async (parentRow: any, args: any, context: any, info: any) => {
-    let model = context.models[key].getModel();
+    let model = context.wertik.models[key].getModel();
     let parentRowValue = parentRow[identityColumn()].toString();
     if (!parentRowValue) {
       return null;
@@ -25,7 +25,7 @@ const processManyToManyRelationship = (relationshipInfo, key) => {
 const processOneToOneRelationship = (relationshipInfo, key) => {
   return async (parentRow: any, args: any, context: any, info: any) => {
     let requestedFields = getRequestedFieldsFromResolverInfo(info);
-    let model = context.models[key].getModel();
+    let model = context.wertik.models[key].getModel();
     let parentRowValue = parentRow[relationshipInfo.relationColumn];
     if (!parentRowValue) {
       return null;

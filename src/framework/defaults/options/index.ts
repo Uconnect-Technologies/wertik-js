@@ -4,9 +4,7 @@ export const databaseDefaultOptions = {
     dbInitializeOptions: {
       logging: false,
       operatorsAliases: "0",
-      dialectOptions: {
-        ssl: true,
-      },
+      native: true
     },
   },
   sql: {
@@ -32,17 +30,6 @@ export const databaseDefaultOptions = {
         type: "TIMESTAMP",
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
         allowNull: false,
-      },
-    },
-  },
-  mongoDB: {
-    defaultTableOptions: {
-      timestamps: {
-        currentTime: function () {
-          return new Date().toISOString()
-        },
-        createdAt: "created_at",
-        updatedAt: "updated_at",
       },
     },
   },

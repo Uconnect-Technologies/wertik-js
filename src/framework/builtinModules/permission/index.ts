@@ -1,5 +1,3 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
 export default {
   name: "Permission",
   graphql: {
@@ -57,7 +55,7 @@ export default {
         },
         RolePermission: {
           graphqlName: "role_permissions",
-          foreignKey: "permission_id",
+          foreignKey: "permission_id"
         },
       },
       oneToOne: {
@@ -86,31 +84,6 @@ export default {
         },
         created_by_id: {
           type: "INTEGER",
-        },
-      },
-    },
-    mongodb: {
-      tableName: "permission",
-      schema: {
-        name: {
-          type: String,
-          unique: true,
-        },
-        cant: {
-          type: String,
-        },
-        can: {
-          type: String,
-        },
-        created_by: { type: Schema.Types.ObjectId, ref: "user" },
-        created_by_id: {
-          type: Number,
-        },
-        created_at: {
-          type: String,
-        },
-        updated_at: {
-          type: String,
         },
       },
     },

@@ -1,6 +1,3 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
-
 export default {
   name: "Role",
   graphql: {
@@ -16,7 +13,6 @@ export default {
     },
     schema: `
       type Role {
-        _id: String
         id: Int
         name: String
         default_permissions: String
@@ -29,7 +25,6 @@ export default {
         role_permissions: RolePermissionList
       }
       input RoleInput {
-        _id: String
         id: Int
         default_permissions: String
         created_by_id: Int
@@ -83,25 +78,6 @@ export default {
         created_by_id: {
           type: "INTEGER",
         },
-      },
-    },
-    mongodb: {
-      tableName: "role",
-      schema: {
-        name: {
-          type: String,
-          unique: true,
-        },
-        default_permissions: { type: String },
-        created_by: { type: Schema.Types.ObjectId, ref: "user" },
-        created_by_id: {
-          type: Number,
-        },
-        is_deleted: {
-          type: Number,
-        },
-        created_at: { type: String },
-        updated_at: { type: String },
       },
     },
   },

@@ -1,10 +1,6 @@
 import { ISocketConfiguration } from "./servers";
 import { IConfigurationOverride } from "./override";
 import { IConfigurationRbac } from "./rbac";
-export interface IConfigurationPorts {
-  graphql: Number;
-  restApi: Number;
-}
 
 export interface IConfigurationCustomModuleGraphqlCrudQuery {
   generate: Boolean;
@@ -39,17 +35,9 @@ export interface IConfigurationCustomModuleGraphql {
   query: IConfigurationCustomModuleGraphqlQuery;
 }
 
-export interface IConfigurationCustomModuleRestApiDocs {
-  description: string;
-  params: string;
-  response: string;
-  title: string;
-}
-
 export interface IConfigurationCustomModuleRestApiEndpoint {
   path: string;
   methodType: string;
-  docs: IConfigurationCustomModuleRestApiDocs;
   handler: Function;
 }
 
@@ -62,18 +50,12 @@ export interface IConfigurationCustomModuleDatabaseSql {
   tableName: string;
   tableOptions: Object;
 }
-export interface IConfigurationCustomModuleDatabaseMongo {
-  tableName: string;
-  schema: Object;
-  onReady?: Function;
-}
 
 /*
 
   Defines the type of relationship with another table. If options is passed foreignKey will be ignored. You can also add foreignKey in options.
 
   SQL/PostgreSQL(Sequelize): https://sequelize.org/master/manual/assocs.html
-  MongoDB(Mongoose): https://mongoosejs.com/docs/guide.html#definition
 
   */
 
@@ -123,7 +105,6 @@ export interface IConfigurationCustomModuleDatabaseRelationship {
 
 export interface IConfigurationCustomModuleDatabase {
   sql: IConfigurationCustomModuleDatabaseSql;
-  mongo: IConfigurationCustomModuleDatabaseMongo;
   relationships: IConfigurationCustomModuleDatabaseRelationship;
   selectIgnoreFields: Array<string>;
 }
@@ -137,18 +118,15 @@ export interface IConfigurationCustomModule {
 
 export interface IConfigurationDatabase {
   dbDialect: string;
-  dbConnectionstring?: string;
+  dbConnectionString?: string;
   dbUsername?: string;
   dbPassword?: string;
   dbName?: string;
   dbHost?: string;
   dbPort?: string;
-  mongoDBURI?: string;
   dbInitializeOptions: {
     [Key: string]: any;
   };
-
-  // MongoDB
 }
 
 export interface IDocServerConfiguration {
@@ -161,12 +139,6 @@ export interface IConfigurationEvents {
   database?: {
     [Key: string]: {
       // Cud
-      beforeCreate: Function;
-      afterCreate: Function;
-      beforeSave: Function;
-      afterSave: Function;
-      beforeUpdate: Function;
-      afterUpdate: Function;
       beforeDelete: Function;
       afterDelete: Function;
       beforeSoftDelete: Function;
@@ -197,22 +169,21 @@ export interface IConfigurationEvents {
 }
 
 export interface IConfigurationContext {
-  data: Object;
-  createContext: Function;
+  initializeContext: Function;
+  requestContext: Function;
 }
 
 export interface IConfigurationRestApi {
-  disable: Boolean;
-  port: Number;
+  onCustomApiFailure: Function;
+  showWertik404Page: boolean;
+  beforeStart: Function;
 }
 
 export interface IConfigurationGraphql {
   disable: Boolean;
-  port: Number;
-}
-
-export interface IConfigurationSecurity {
-  allowedIpAddresses: Array<string>;
+  path: string;
+  graphqlVoyagerPath: string;
+  disableGraphqlVoyager: Boolean;
 }
 
 export interface IConfigurationStorage {
@@ -228,6 +199,7 @@ export interface IConfigurationEmail {
   templates: {
     [Key: string]: string;
   };
+  sendEmailOnSignup: Boolean;
 }
 
 export interface IConfigurationCron {
@@ -247,6 +219,8 @@ export interface IConfiguration {
   name: string;
   builtinModules: string;
   expressApp: any;
+  port: number;
+  startServers: boolean;
   extendBuiltinModules: {
     [Key: string]: {
       database: {
@@ -269,14 +243,10 @@ export interface IConfiguration {
   override: IConfigurationOverride;
   restApi: IConfigurationRestApi;
   graphql: IConfigurationGraphql;
-  forceStartGraphqlServer: Boolean;
-  forceStartRestApiServer: Boolean;
-  ports: IConfigurationPorts;
   modules: Array<IConfigurationCustomModule>;
   events: IConfigurationEvents;
   seeds: any;
   sockets: ISocketConfiguration;
-  security: IConfigurationSecurity;
   rbac: IConfigurationRbac;
   storage: IConfigurationStorage;
   cron: IConfigurationCron;

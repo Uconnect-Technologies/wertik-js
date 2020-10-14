@@ -1,7 +1,3 @@
-import getRequestedFieldsFromResolverInfo from "./../../helpers/getRequestedFieldsFromResolverInfo";
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
-
 export default {
   name: "UserPermission",
   graphql: {
@@ -67,7 +63,7 @@ export default {
         Permission: {
           relationColumn: "permission_id",
           graphqlName: "permission",
-          foreignKey: "id",
+          foreignKey: "id"
         },
       },
     },
@@ -89,20 +85,6 @@ export default {
         created_by_id: {
           type: "INTEGER",
         },
-      },
-    },
-    mongodb: {
-      tableName: "userPermission",
-      schema: {
-        name: String,
-        role: { type: Schema.Types.ObjectId, ref: "role" },
-        role_id: Number,
-        permission: { type: Schema.Types.ObjectId, ref: "permission" },
-        permission_id: Number,
-        created_by: { type: Schema.Types.ObjectId, ref: "user" },
-        created_by_id: Number,
-        created_at: String,
-        updated_at: String,
       },
     },
   },

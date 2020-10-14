@@ -4,7 +4,6 @@ import path from "path";
 const port = 5200;
 const app = express();
 import { get } from "lodash";
-import isIPAllowed from "../../security/isIPAllowed";
 import { successMessage } from "../../logger/consoleMessages";
 
 export default function(options: IDocServerConfiguration, cb: Function) {
@@ -14,7 +13,6 @@ export default function(options: IDocServerConfiguration, cb: Function) {
   app.use(express.static(path.join(__dirname, "/content")));
   app.use(async function(req, res, next) {
     const ip = req.connection.remoteAddress;
-    isIPAllowed(ip, configuration.security.allowedIpAddresses, "express", { res });
     next();
   });
   app.get("/", function(req, res) {

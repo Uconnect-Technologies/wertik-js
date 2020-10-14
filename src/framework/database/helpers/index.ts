@@ -7,6 +7,7 @@ export const convertFieldsIntoSequelizeFields = (fields) => {
   k.forEach((element) => {
     const t = fields[element].type;
     fields[element].type = sequelize[t.toUpperCase()];
+    fields[element].oldType = t;
   });
   return fields;
 };

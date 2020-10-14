@@ -59,7 +59,7 @@ It is good to know how Wertik-js works, [Here](http://www.wapgee.com/wertik-js/h
 
 ### Database
 
-Currrently Wertik-js only supports Mysql at the moment, We will be supporting MongoDB very soon.
+Currrently Wertik-js is supporting databases which Sequelize supports. In future we will be adding Mongo DB Support.
 
 ### GraphQL
 

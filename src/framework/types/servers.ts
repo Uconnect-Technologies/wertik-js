@@ -1,9 +1,8 @@
-import { IConfiguration, IConfigurationSecurity } from "./configuration";
+import { IConfiguration } from "./configuration";
 
 export interface IGraphQLInitialize {
   apolloGraphqlOptions: any;
   sendEmail: Function;
-  runEvent: Function;
   expressApp: any;
   configuration: IConfiguration;
   dbTables: Array<any>;
@@ -12,13 +11,12 @@ export interface IGraphQLInitialize {
   database: any;
   WertikEventEmitter: any;
   mailerInstance: any;
-  websockets: any;
+  socketio: any;
   logger: any;
 }
 
 export interface IRestApiInitialize {
   sendEmail: Function;
-  runEvent: Function;
   configuration: IConfiguration;
   mailerInstance: any;
   expressApp: any;
@@ -28,18 +26,16 @@ export interface IRestApiInitialize {
   database: any;
   WertikEventEmitter: any;
   multerInstance: any;
-  websockets: any;
+  socketio: any;
   logger: any;
 }
 
-// export interface IWSConfiguration {
-//   port: Number
-// }
 export interface ISocketConfiguration {
   onMessageReceived: Function;
   onClientConnected: Function;
   onClientDisconnect: Function;
   disable: Boolean;
-  port: Number;
-  security: IConfigurationSecurity;
+  options: {
+    [key: string]: any
+  }
 }

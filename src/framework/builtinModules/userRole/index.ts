@@ -1,7 +1,3 @@
-import getRequestedFieldsFromResolverInfo from "./../../helpers/getRequestedFieldsFromResolverInfo";
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
-
 export default {
   name: "UserRole",
   graphql: {
@@ -91,20 +87,6 @@ export default {
         created_by_id: {
           type: "INTEGER",
         },
-      },
-    },
-    mongodb: {
-      tableName: "userRole",
-      schema: {
-        name: String,
-        user: { type: Schema.Types.ObjectId, ref: "user" },
-        user_id: Number,
-        role: { type: Schema.Types.ObjectId, ref: "role" },
-        role_id: Number,
-        created_by: { type: Schema.Types.ObjectId, ref: "user" },
-        created_by_id: Number,
-        created_at: String,
-        updated_at: String,
       },
     },
   },
