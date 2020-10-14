@@ -6,7 +6,6 @@ import { errorMessage } from "../logger/consoleMessages";
 import { databaseDefaultOptions } from "../defaults/options/index";
 import { IConfigurationCustomModule, IConfiguration } from "../types/configuration";
 import { applyRelationshipSql } from "../moduleRelationships/database";
-import { isSQL } from "../helpers";
 
 const checkDatabaseOptions = (moduleName, tableName) => {
   if (moduleName && !tableName) {
@@ -49,15 +48,6 @@ export default function (connection, configuration: IConfiguration) {
             },
           }
         );
-      } else if (dialect == "mongodb") {
-        let mongoose = require("mongoose");
-        let tableName = get(module, "database.mongodb.tableName", "");
-        let tableOptions = get(module, "database.mongodb.tableOptions", databaseDefaultOptions.mongoDB.defaultTableOptions);
-        let tableSchema = get(module, "database.mongodb.schema", null);
-        checkDatabaseOptions(moduleName, tableName);
-        if (tableSchema && tableName) {
-          tables[moduleName] = connection.model(tableName, new mongoose.Schema(tableSchema, tableOptions));
-        }
       }
     }
   };
@@ -80,9 +70,7 @@ export default function (connection, configuration: IConfiguration) {
     } else if (element.constructor === Object) {
       module = element;
     }
-    if (isSQL()) {
       applyRelationshipSql(module, tables);
-    }
   });
 
   return tables;

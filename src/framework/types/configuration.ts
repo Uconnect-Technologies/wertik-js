@@ -50,18 +50,12 @@ export interface IConfigurationCustomModuleDatabaseSql {
   tableName: string;
   tableOptions: Object;
 }
-export interface IConfigurationCustomModuleDatabaseMongo {
-  tableName: string;
-  schema: Object;
-  onReady?: Function;
-}
 
 /*
 
   Defines the type of relationship with another table. If options is passed foreignKey will be ignored. You can also add foreignKey in options.
 
   SQL/PostgreSQL(Sequelize): https://sequelize.org/master/manual/assocs.html
-  MongoDB(Mongoose): https://mongoosejs.com/docs/guide.html#definition
 
   */
 
@@ -111,7 +105,6 @@ export interface IConfigurationCustomModuleDatabaseRelationship {
 
 export interface IConfigurationCustomModuleDatabase {
   sql: IConfigurationCustomModuleDatabaseSql;
-  mongo: IConfigurationCustomModuleDatabaseMongo;
   relationships: IConfigurationCustomModuleDatabaseRelationship;
   selectIgnoreFields: Array<string>;
 }

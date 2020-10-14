@@ -1,18 +1,29 @@
 import { has, get } from "lodash";
 import moment from "moment";
 import convertFiltersIntoSequalizeObject from "../database/helpers/convertFiltersIntoSequalizeObject";
-import convertedFiltersIntoMongooseQuery from "../database/helpers/convertedFiltersIntoMongooseQuery";
 import internalServerError from "../../framework/helpers/internalServerError";
 import { convertFieldsIntoSequelizeFields } from "../database/helpers";
-import { getQueryForLast7Days, getQueryForLastYear, getQueryForThisYear, getQueryForThisMonth, getQueryForLastMonth, getQueryForThisWeek, getQueryForToday, getQueryForLast90Days, mongoose } from "../reporting";
-import { IConfiguration, IConfigurationCustomModule } from "../types/configuration";
-import { removeColumnsFromAccordingToSelectIgnoreFields, isSQL, isMongodb } from "../helpers/index";
+import {
+  getQueryForLast7Days,
+  getQueryForLastYear,
+  getQueryForThisYear,
+  getQueryForThisMonth,
+  getQueryForLastMonth,
+  getQueryForThisWeek,
+  getQueryForToday,
+  getQueryForLast90Days,
+} from "../reporting";
+import {
+  IConfigurationCustomModule,
+} from "../types/configuration";
+import {
+  removeColumnsFromAccordingToSelectIgnoreFields,
+} from "../helpers/index";
 
 export default function (props) {
-  const { dbDialect } = process.env;
   return {
     // properties
-    identityColumn: isSQL() ? "id" : "_id",
+    identityColumn: "id",
     tableName: props.tableName,
     dbTables: props.dbTables,
     instance: null,
@@ -31,9 +42,6 @@ export default function (props) {
     getSequelizeModel: function () {
       return this.dbTables[this.tableName];
     },
-    getMongooseModel: function () {
-      return this.dbTables[this.tableName];
-    },
     stats: async function (database, requestedReports) {
       requestedReports = Object.keys(requestedReports);
       return new Promise(async (resolve, reject) => {
@@ -50,77 +58,115 @@ export default function (props) {
         };
         try {
           const model = this.dbTables[this.tableName];
-          let count, countLast7Days, countToday, countLastYear, countThisYear, countThisMonth, countThisweek, countLastMonth, countLast90Days;
-          if (isSQL()) {
-            let selectOptions = {
-              type: database.QueryTypes.SELECT,
-            };
-            if (requestedReports.includes("total_count")) {
-              count = await database.query(`select count(*) as total_count from ${model.getTableName()}`, selectOptions);
-            }
-            if (requestedReports.includes("total_created_last_7_days")) {
-              countLast7Days = await database.query(getQueryForLast7Days(model.getTableName()), selectOptions);
-            }
-            if (requestedReports.includes("total_created_today")) {
-              countToday = await database.query(getQueryForToday(model.getTableName()), selectOptions);
-            }
-            if (requestedReports.includes("total_created_last_year")) {
-              countLastYear = await database.query(getQueryForLastYear(model.getTableName()), selectOptions);
-            }
-            if (requestedReports.includes("total_created_this_year")) {
-              countThisYear = await database.query(getQueryForThisYear(model.getTableName()), selectOptions);
-            }
-            if (requestedReports.includes("total_created_this_month")) {
-              countThisMonth = await database.query(getQueryForThisMonth(model.getTableName()), selectOptions);
-            }
-            if (requestedReports.includes("total_created_this_week")) {
-              countThisweek = await database.query(getQueryForThisWeek(model.getTableName()), selectOptions);
-            }
-            if (requestedReports.includes("total_created_last_month")) {
-              countLastMonth = await database.query(getQueryForLastMonth(model.getTableName()), selectOptions);
-            }
-            if (requestedReports.includes("total_created_last_90_days")) {
-              countLast90Days = await database.query(getQueryForLast90Days(model.getTableName()), selectOptions);
-            }
-
-            statsInfo.total_count = get(count, "[0].total_count", 0);
-            statsInfo.total_created_this_month = get(countThisMonth, "[0].total_created_this_month", 0);
-            statsInfo.total_created_this_week = get(countThisweek, "[0].total_created_this_week", 0);
-            statsInfo.total_created_last_7_days = get(countLast7Days, "[0].total_created_last_7_days", 0);
-            statsInfo.total_created_today = get(countToday, "[0].total_created_today", 0);
-            statsInfo.total_created_last_month = get(countLastMonth, "[0].total_created_last_month", 0);
-            statsInfo.total_created_last_90_days = get(countLast90Days, "[0].total_created_last_90_days", 0);
-            statsInfo.total_created_last_year = get(countLastYear, "[0].total_created_last_year", 0);
-            statsInfo.total_created_this_year = get(countThisYear, "[0].total_created_this_year", 0);
-          } else if (isMongodb()) {
-            if (requestedReports.includes("total_count")) {
-              statsInfo.total_count = await mongoose.getTotalCount(model);
-            }
-            if (requestedReports.includes("total_created_this_week")) {
-              statsInfo.total_created_this_week = await mongoose.getThisWeekCount(model);
-            }
-            if (requestedReports.includes("total_created_last_7_days")) {
-              statsInfo.total_created_last_7_days = await mongoose.getLast7DaysCount(model);
-            }
-            if (requestedReports.includes("total_created_today")) {
-              statsInfo.total_created_today = await mongoose.getTodayCount(model);
-            }
-            if (requestedReports.includes("total_created_last_month")) {
-              statsInfo.total_created_last_month = await mongoose.getLastMonthCount(model);
-            }
-            if (requestedReports.includes("total_created_last_90_days")) {
-              statsInfo.total_created_last_90_days = await mongoose.getLast90DaysCount(model);
-            }
-            if (requestedReports.includes("total_created_this_month")) {
-              statsInfo.total_created_this_month = await mongoose.getThisMonthCount(model);
-            }
-            if (requestedReports.includes("total_created_this_year")) {
-              statsInfo.total_created_this_year = await mongoose.getThisYearCount(model);
-            }
-            if (requestedReports.includes("total_created_last_year")) {
-              statsInfo.total_created_last_year = await mongoose.getLastYearCount(model);
-            }
+          let count,
+            countLast7Days,
+            countToday,
+            countLastYear,
+            countThisYear,
+            countThisMonth,
+            countThisweek,
+            countLastMonth,
+            countLast90Days;
+          let selectOptions = {
+            type: database.QueryTypes.SELECT,
+          };
+          if (requestedReports.includes("total_count")) {
+            count = await database.query(
+              `select count(*) as total_count from ${model.getTableName()}`,
+              selectOptions
+            );
           }
+          if (requestedReports.includes("total_created_last_7_days")) {
+            countLast7Days = await database.query(
+              getQueryForLast7Days(model.getTableName()),
+              selectOptions
+            );
+          }
+          if (requestedReports.includes("total_created_today")) {
+            countToday = await database.query(
+              getQueryForToday(model.getTableName()),
+              selectOptions
+            );
+          }
+          if (requestedReports.includes("total_created_last_year")) {
+            countLastYear = await database.query(
+              getQueryForLastYear(model.getTableName()),
+              selectOptions
+            );
+          }
+          if (requestedReports.includes("total_created_this_year")) {
+            countThisYear = await database.query(
+              getQueryForThisYear(model.getTableName()),
+              selectOptions
+            );
+          }
+          if (requestedReports.includes("total_created_this_month")) {
+            countThisMonth = await database.query(
+              getQueryForThisMonth(model.getTableName()),
+              selectOptions
+            );
+          }
+          if (requestedReports.includes("total_created_this_week")) {
+            countThisweek = await database.query(
+              getQueryForThisWeek(model.getTableName()),
+              selectOptions
+            );
+          }
+          if (requestedReports.includes("total_created_last_month")) {
+            countLastMonth = await database.query(
+              getQueryForLastMonth(model.getTableName()),
+              selectOptions
+            );
+          }
+          if (requestedReports.includes("total_created_last_90_days")) {
+            countLast90Days = await database.query(
+              getQueryForLast90Days(model.getTableName()),
+              selectOptions
+            );
+          }
+
+          statsInfo.total_count = get(count, "[0].total_count", 0);
+          statsInfo.total_created_this_month = get(
+            countThisMonth,
+            "[0].total_created_this_month",
+            0
+          );
+          statsInfo.total_created_this_week = get(
+            countThisweek,
+            "[0].total_created_this_week",
+            0
+          );
+          statsInfo.total_created_last_7_days = get(
+            countLast7Days,
+            "[0].total_created_last_7_days",
+            0
+          );
+          statsInfo.total_created_today = get(
+            countToday,
+            "[0].total_created_today",
+            0
+          );
+          statsInfo.total_created_last_month = get(
+            countLastMonth,
+            "[0].total_created_last_month",
+            0
+          );
+          statsInfo.total_created_last_90_days = get(
+            countLast90Days,
+            "[0].total_created_last_90_days",
+            0
+          );
+          statsInfo.total_created_last_year = get(
+            countLastYear,
+            "[0].total_created_last_year",
+            0
+          );
+          statsInfo.total_created_this_year = get(
+            countThisYear,
+            "[0].total_created_this_year",
+            0
+          );
+
           resolve(statsInfo);
         } catch (e) {
           reject(e);
@@ -128,7 +174,9 @@ export default function (props) {
       });
     },
     save: async function (args) {
-      return has(args, "id") ? await this.update(args) : await this.create(args);
+      return has(args, "id")
+        ? await this.update(args)
+        : await this.create(args);
     },
     update: async function (args) {
       return new Promise(async (resolve, reject) => {
@@ -136,7 +184,6 @@ export default function (props) {
           const model = this.dbTables[this.tableName];
           let instance = null;
           let _this = this;
-          if (isSQL()) {
             if (this.instance) {
               instance = await this.instance.update(args);
             } else {
@@ -146,26 +193,12 @@ export default function (props) {
               if (this.instance) {
                 this.instance = await this.instance.update(args);
               } else {
-                throw internalServerError({ message: "Instance not found to update." });
+                throw internalServerError({
+                  message: "Instance not found to update.",
+                });
               }
             }
             resolve(this);
-          } else {
-            await model.findOneAndUpdate(
-              {
-                _id: this.instance ? this.instance._id : args._id,
-              },
-              {
-                $set: this.instance ? instance : args,
-              },
-              { new: true },
-              function (err, doc) {
-                if (err) throw internalServerError({ message: err.message });
-                _this.instance = doc;
-                resolve(_this);
-              }
-            );
-          }
         } catch (e) {
           reject(e);
         }
@@ -178,20 +211,11 @@ export default function (props) {
         let model = this.dbTables[this.tableName];
         try {
           if (this.instance) {
-            if (isSQL()) {
               await this.instance.destroy();
-            } else {
-              await model.deleteOne(args);
-            }
-            resolve(true);
           } else {
-            if (isSQL()) {
-              await model.destroy({
-                where: args,
-              });
-            } else {
-              await model.deleteOne(args);
-            }
+            await model.destroy({
+              where: args,
+            });
             resolve(true);
           }
         } catch (e) {
@@ -204,13 +228,7 @@ export default function (props) {
       return new Promise(async (resolve, reject) => {
         try {
           let model = this.dbTables[this.tableName];
-          if (isSQL()) {
-            this.instance = await model.create(args);
-          } else if (isMongodb()) {
-            let mongoModel = new model(args);
-            await mongoModel.save();
-            this.instance = mongoModel;
-          }
+          this.instance = await model.create(args);
           resolve(this);
         } catch (e) {
           reject(e);
@@ -228,88 +246,57 @@ export default function (props) {
           let filters = get(args, "filters", {});
           const model = this.dbTables[this.tableName];
           let sorting = get(args, "sorting", []);
-          if (isSQL()) {
-            // return paginate(model, args, requestedFields);
-            let baseFields: any = "*";
-            let attributesObject = {};
+          // return paginate(model, args, requestedFields);
+          let baseFields: any = "*";
+          let attributesObject = {};
 
-            if (requestedFields && requestedFields.constructor === Array) {
-              baseFields = requestedFields;
-              attributesObject["attributes"] = baseFields;
-            }
-
-            attributesObject = removeColumnsFromAccordingToSelectIgnoreFields(attributesObject, wertikModule.database.selectIgnoreFields);
-
-            let sortingObject = {
-              order: sorting.map((c) => {
-                return [c.column, c.type];
-              }),
-            };
-
-            let convertedFilters = await convertFiltersIntoSequalizeObject(filters);
-            let offset = limit * (page - 1);
-            let list: any = {};
-            if (baseFields == "*") {
-              delete attributesObject["attributes"];
-            }
-            if (sorting.length == 0) {
-              delete sortingObject["sorting"];
-            }
-            list = await model.findAndCountAll({
-              offset: offset,
-              limit: limit,
-              where: convertedFilters,
-              ...attributesObject,
-              ...sortingObject,
-            });
-
-            resolve({
-              filters,
-              pagination: { page, limit },
-              list: list.rows,
-              paginationProperties: {
-                total: list.count,
-                nextPage: page + 1,
-                page: page,
-                previousPage: page == 1 ? 1 : page - 1,
-                pages: Math.ceil(list.count / limit),
-              },
-            });
-            
-          } else if (isMongodb()) {
-            let filtersQuery = convertedFiltersIntoMongooseQuery(filters);
-            let sortString = sorting
-              .map((c) => {
-                return `${c.type == "desc" ? "-" : ""}${c.column}`;
-              })
-              .join(" ");
-            model.paginate(
-              filtersQuery,
-              {
-                page: page,
-                limit: limit,
-                sort: sortString,
-              },
-              function (err, result) {
-                if (err) {
-                  reject(err)
-                }else {
-                  resolve({
-                    list: result.docs,
-                    filters,
-                    pagination: { page, limit },
-                    paginationProperties: {
-                      total: result.totalDocs,
-                      nextPage: page + 1,
-                      page: page,
-                      previousPage: page == 1 ? 1 : page - 1,
-                      pages: Math.ceil(result.totalDocs / limit),
-                    },
-                  });
-                }
-              }
-            );
+          if (requestedFields && requestedFields.constructor === Array) {
+            baseFields = requestedFields;
+            attributesObject["attributes"] = baseFields;
           }
+
+          attributesObject = removeColumnsFromAccordingToSelectIgnoreFields(
+            attributesObject,
+            wertikModule.database.selectIgnoreFields
+          );
+
+          let sortingObject = {
+            order: sorting.map((c) => {
+              return [c.column, c.type];
+            }),
+          };
+
+          let convertedFilters = await convertFiltersIntoSequalizeObject(
+            filters
+          );
+          let offset = limit * (page - 1);
+          let list: any = {};
+          if (baseFields == "*") {
+            delete attributesObject["attributes"];
+          }
+          if (sorting.length == 0) {
+            delete sortingObject["sorting"];
+          }
+          list = await model.findAndCountAll({
+            offset: offset,
+            limit: limit,
+            where: convertedFilters,
+            ...attributesObject,
+            ...sortingObject,
+          });
+
+          resolve({
+            filters,
+            pagination: { page, limit },
+            list: list.rows,
+            paginationProperties: {
+              total: list.count,
+              nextPage: page + 1,
+              page: page,
+              previousPage: page == 1 ? 1 : page - 1,
+              pages: Math.ceil(list.count / limit),
+            },
+          });
         } catch (e) {
           reject(e);
         }
@@ -326,17 +313,11 @@ export default function (props) {
           const updated = [];
           await Promise.all(
             args.map(async (c) => {
-              if (isSQL()) {
-                await model.update(c, {
-                  where: { id: c.id },
-                });
-                updated.push(await model.findOne({ where: { id: c.id } }));
-                _this.affectedRows = _this.affectedRows + 1;
-              } else if (isMongodb()) {
-                let update = await _this.update(c);
-                _this.affectedRows = _this.affectedRows + 1;
-                updated.push(update.instance);
-              }
+              await model.update(c, {
+                where: { id: c.id },
+              });
+              updated.push(await model.findOne({ where: { id: c.id } }));
+              _this.affectedRows = _this.affectedRows + 1;
             })
           );
           _this.bulkInstances = updated;
@@ -351,33 +332,15 @@ export default function (props) {
       return new Promise(async (resolve, reject) => {
         const model = this.dbTables[this.tableName];
         try {
-          if (isSQL()) {
-            await model.destroy({
-              where: {
-                id: args.map((c) => c.id),
-              },
-            });
-            resolve({
-              message: "Items deleted",
-              statusCode: 200,
-            });
-          } else if (isMongodb()) {
-            model.deleteMany(
-              {
-                _id: {
-                  $in: args.map((c) => c._id),
-                },
-              },
-              function (err) {
-                if (!err) {
-                  resolve({
-                    message: "Items deleted",
-                    statusCode: 200,
-                  });
-                }
-              }
-            );
-          }
+          await model.destroy({
+            where: {
+              id: args.map((c) => c.id),
+            },
+          });
+          resolve({
+            message: "Items deleted",
+            statusCode: 200,
+          });
         } catch (e) {
           reject(e);
         }
@@ -387,33 +350,18 @@ export default function (props) {
       return new Promise(async (resolve, reject) => {
         try {
           const model = this.dbTables[this.tableName];
-          if (isSQL()) {
-            await model.update(
-              { is_deleted: 1 },
-              {
-                where: {
-                  id: args.map((c) => c),
-                },
-              }
-            );
-            resolve({
-              message: "Items deleted",
-              statusCode: 200,
-            });
-          } else if (isMongodb()) {
-            await model.updateMany(
-              {
-                _id: {
-                  $in: args.map((c) => c._id),
-                },
+          await model.update(
+            { is_deleted: 1 },
+            {
+              where: {
+                id: args.map((c) => c),
               },
-              { is_deleted: 1 }
-            );
-            resolve({
-              message: "Items deleted",
-              statusCode: 200,
-            });
-          }
+            }
+          );
+          resolve({
+            message: "Items deleted",
+            statusCode: 200,
+          });
         } catch (e) {
           reject(e);
         }
@@ -424,21 +372,9 @@ export default function (props) {
         let _this = this;
         const model = this.dbTables[this.tableName];
         try {
-          if (isSQL()) {
-            _this.bulkInstances = await model.bulkCreate(args);
-            _this.affectedRows = _this.bulkInstances.length;
-            resolve(_this);
-          } else if (isMongodb()) {
-            model.insertMany(args, function (err, docs) {
-              if (!err) {
-                _this.bulkInstances = docs;
-                _this.affectedRows = docs.length;
-                resolve(_this);
-              } else {
-                throw internalServerError(err);
-              }
-            });
-          }
+          _this.bulkInstances = await model.bulkCreate(args);
+          _this.affectedRows = _this.bulkInstances.length;
+          resolve(_this);
         } catch (e) {
           reject(e);
         }
@@ -463,11 +399,7 @@ export default function (props) {
         try {
           if (args && args.constructor === Array) {
             if (args.length > 0) {
-              if (isSQL()) {
-                whr = await convertFiltersIntoSequalizeObject(args);
-              } else if (isMongodb()) {
-                whr = await convertedFiltersIntoMongooseQuery(args);
-              }
+              whr = await convertFiltersIntoSequalizeObject(args);
             } else {
               whr = {};
             }
@@ -476,37 +408,35 @@ export default function (props) {
           }
           const model = this.dbTables[this.tableName];
           let attributesObject: any = {};
-          if (requestedFields && requestedFields.constructor === Array && requestedFields[0] !== "*") {
-            if (isSQL()) {
-              attributesObject["attributes"] = requestedFields;
-            } else if (isMongodb()) {
-              attributesObject["attributes"] = requestedFields.join(" ");
-            }
-            attributesObject = removeColumnsFromAccordingToSelectIgnoreFields(attributesObject, wertikModule.database.selectIgnoreFields);
+          if (
+            requestedFields &&
+            requestedFields.constructor === Array &&
+            requestedFields[0] !== "*"
+          ) {
+            attributesObject["attributes"] = requestedFields;
+            attributesObject = removeColumnsFromAccordingToSelectIgnoreFields(
+              attributesObject,
+              wertikModule.database.selectIgnoreFields
+            );
           }
 
           if (!attributesObject) {
             attributesObject = {};
           }
 
-          if (attributesObject && attributesObject.attributes && attributesObject.attributes.length === 0) {
+          if (
+            attributesObject &&
+            attributesObject.attributes &&
+            attributesObject.attributes.length === 0
+          ) {
             delete attributesObject["attributes"];
           }
 
-          if (isSQL()) {
-            this.instance = await model.findOne({
-              where: whr,
-              ...attributesObject,
-            });
-            resolve(this);
-          } else if (isMongodb()) {
-            if (attributesObject["attributes"]) {
-              this.instance = await model.findOne(whr, attributesObject["attributes"]);
-            } else {
-              this.instance = await model.findOne(whr);
-            }
-            resolve(this);
-          }
+          this.instance = await model.findOne({
+            where: whr,
+            ...attributesObject,
+          });
+          resolve(this);
         } catch (e) {
           reject(e);
         }

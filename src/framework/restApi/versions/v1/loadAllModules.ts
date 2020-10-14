@@ -2,7 +2,7 @@ import { get, kebabCase, isFunction } from "lodash";
 import { IConfiguration } from "src/framework/types/configuration";
 import restApiErrorResponse from "../../restApiErrorResponse";
 import restApiSuccessResponse from "../../restApiSuccessResponse";
-import { firstLetterLowerCase, isMongodb, isSQL } from "../../../helpers/index";
+import { firstLetterLowerCase, } from "../../../helpers/index";
 
 export const getModuleApiPaths = (name: string) => {
   let a = {
@@ -24,7 +24,7 @@ export default async function (expressApp, configuration: IConfiguration, custom
   modules = modules.filter((c) => c);
   modules = [...modules, ...get(configuration, "modules", [])];
 
-  const identityColumn = isSQL() ? "id" : "_id";
+  const identityColumn = "id"
 
   const processModule = (module) => {
     const overrideModuleQuery = get(configuration, `override.${module.name}.restApi.${firstLetterLowerCase(firstLetterLowerCase)}`, null);

@@ -127,50 +127,5 @@ export default {
         },
       },
     },
-    mongodb: {
-      tableName: "user",
-      schema: {
-        name: {
-          type: String
-        },
-        username: {
-          type: String
-        },
-        refresh_token: {
-          type: String
-        },
-        access_token: {
-          type: String
-        },
-        is_activated: {
-          type: Boolean
-        },
-        activated_on: {
-          type: String
-        },
-        two_factor_code: {
-          type: String
-        },
-        is_super_user: {
-          type: Boolean
-        },
-        activation_token: {
-          type: String
-        },
-        email: {
-          type: String,
-          unique: true,
-        },
-        password: {
-          type: String
-        },
-        gender: {
-          type: String
-        },
-        referer: {
-          type: String
-        },
-      },
-    },
   },
 };

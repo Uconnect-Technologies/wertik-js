@@ -23,24 +23,7 @@ export default async function (configurationObject: IConfiguration) {
           port: database.dbPort,
           ...options,
         });
-      } else if (dialect == "mongodb") {
-        // Steps to make mongo DB complete
-
-        // 1. Create initializer. [In Progrss] [connect.ts]
-        // 2. Import modules and setup mongodb models from them [To do] [loadTables]
-        // 3. Create wertik model.ts function [To do] [src/framework/model/model.ts]
-
-        DATABASE_INSTANCE = require("mongoose");
-        const mongoosePaginate = require("mongoose-paginate-v2");
-        await DATABASE_INSTANCE.connect(database.dbConnectionString, { useNewUrlParser: true, useFindAndModify: false,useUnifiedTopology: true });
-        DATABASE_INSTANCE.plugin(mongoosePaginate);
-
-        DATABASE_INSTANCE.connection.on("error", console.error.bind(console, "connection error:"));
-
-        DATABASE_INSTANCE.connection.once("open", function () {
-          successMessage(`MongoDB: Database Connected`);
-        });
-      } else {
+      } else if (dialect === "mysql") {
         options = get(configurationObject, "database.dbInitializeOptions", databaseDefaultOptions.sql.dbInitializeOptions);
         DATABASE_INSTANCE = new Sequelize(`${database.dbName}`, database.dbUsername, database.dbPassword, {
           dialect: "mysql",

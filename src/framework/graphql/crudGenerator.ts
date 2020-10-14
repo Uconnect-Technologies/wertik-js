@@ -1,10 +1,10 @@
 import getRequestedFieldsFromResolverInfo from "./../helpers/getRequestedFieldsFromResolverInfo";
 import { IConfiguration, IConfigurationCustomModule } from "../types/configuration";
 import { get, isFunction } from "lodash";
-import { firstLetterLowerCase, isSQL, isMongodb } from "../helpers/index";
+import { firstLetterLowerCase } from "../helpers/index";
 
-const identityColumn = isSQL() ? "id" : "_id";
-const identityColumnGraphQLType = isSQL() ? "Int" : "String";
+const identityColumn = "id";
+const identityColumnGraphQLType = "Int";
 
 export const generateQueriesCrudSchema = (moduleName: String, operationsRead) => {
   let string = "";
@@ -449,11 +449,10 @@ export const generateModuleSearchShema = (module) => {
       
       
   `;
-  if (isSQL()) {
     string = `${string}
       id: IntFilterSqlInput
-      created_at: DateFilterInput
-      updated_at: DateFilterInput
+      created_at: DateFilterSqlInput
+      updated_at: DateFilterSqlInput
     `
     const fields = get(module, "database.sql.fields", {});
     const keys = Object.keys(fields);
@@ -473,39 +472,11 @@ export const generateModuleSearchShema = (module) => {
       string =
         string +
         `
-      ${key}: ${getType()}FilterSqlSqlInput
+      ${key}: ${getType()}FilterSqlInput
       `;
     });
-  }else if (isMongodb) {
-    string = `${string}
-      id: StringFilterMongoDBInput
-    `
-    const fields = get(module, "database.mongodb.schema", {});
-    const mongoose = require("mongoose");
-    const Schema = mongoose.Schema;
-    const keys = Object.keys(fields);
-    keys.forEach(field => {
-      const fieldInfo = fields[field];
-      const getType = () => {
-        const type = fieldInfo.type;
-        if (type === String || type === Schema.Types.ObjectId) {
-          return "String";
-        }else if (type === Number) {
-          return "Int"
-        }else if (type === Boolean) {
-          return "Boolean"
-        }
-      }
-      string =
-        string +
-        `
-      ${field}: ${getType()}FilterMongoDBInput
-      `;
-    });
-  }
   string = string + " }";
-
-  console.log(string);
+  
   return string;
 };
 

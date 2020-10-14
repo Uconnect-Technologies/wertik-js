@@ -32,10 +32,6 @@ export default function (configuration: IConfiguration) {
         check("pg");
         check("pg-hstore");
       }
-      if (dbDialect == "mongodb") {
-        check("mongoose");
-        check("mongoose-paginate-v2");
-      }
       resolve();
     } catch (e) {
       reject(e);

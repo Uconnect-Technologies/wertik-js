@@ -1,5 +1,3 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
 import { requestPasswordResetHandler, resetPasswordHandler } from "./handlers";
 import getRequestedFieldsFromResolverInfo from "./../../helpers/getRequestedFieldsFromResolverInfo";
 
@@ -19,7 +17,6 @@ export default {
     },
     schema: `
       type ForgetPassword {
-        _id: String
         id: Int
         name: String
         email: String
@@ -147,19 +144,6 @@ export default {
         is_deleted: {
           type: "INTEGER",
         },
-      },
-    },
-    mongodb: {
-      tableName: "forgetPassword",
-      schema: {
-        name: {type: String},
-        email: {type: String},
-        user: { type: Schema.Types.ObjectId, ref: "user" },
-        user_id: {type: Number},
-        token: {type: String},
-        is_deleted: {type: Number},
-        created_at: {type: String},
-        updated_at: {type: String},
       },
     },
   },
