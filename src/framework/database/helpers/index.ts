@@ -1,8 +1,4 @@
-import { Console } from "console";
-
 const sequelize = require("sequelize");
-
-sequelize['NUMBER'] = sequelize['INTEGER'];
 
 export const convertFieldsIntoSequelizeFields = (fields) => {
   let k = Object.keys(fields);
