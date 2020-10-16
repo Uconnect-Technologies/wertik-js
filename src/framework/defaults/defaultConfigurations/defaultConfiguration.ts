@@ -34,9 +34,11 @@ export default {
   },
   restApi: {
     showWertik404Page: true,
-    onCustomApiFailure: function ({ path, res }) {
+    onCustomApiFailure: function ({ path, res, err }) {
       res.send("failed at " + path);
     },
+    // Below function for custom 404 page or response.
+    // restApi404Handler: function () {}
   },
   modules: [
     {
@@ -124,13 +126,13 @@ export default {
   sockets: {
     disable: false,
     onClientConnected: function () {
-      console.log("onClientConnected")
+      console.log("onClientConnected");
     },
     onMessageReceived: function () {
-      console.log("onMessageReceived")
+      console.log("onMessageReceived");
     },
-    onClientDisconnect: function () { 
-      console.log("onClientDisconnect")
+    onClientDisconnect: function () {
+      console.log("onClientDisconnect");
     },
   },
   storage: {

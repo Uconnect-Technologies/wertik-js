@@ -10,11 +10,20 @@ export default function (configuration: IConfiguration, servers: any) {
 
     const expressAppPort = get(configuration, "port", defaultPort);
     const showWertik404Page = get(configuration, "restApi.showWertik404Page", true);
+    const restApi404Handler = get(configuration, "restApi.restApi404Handler", function (req, res) {
+      res.status(404).json({
+        message: "Not found",
+        data: {
+          message: "Request page didn't found",
+        },
+      });
+    });
     const restApiBeforeStart = get(configuration, "restApi.beforeStart", function () {});
 
     const graphqlPath = get(configuration, "graphql.path", "/graphql");
     const graphqlVoyagerPath = get(configuration, "graphql.graphqlVoyagerPath", "/graphql-voyager");
     const disableGraphqlVoyager = get(configuration, "graphql.disableGraphqlVoyager", false);
+    
     const disableGraphql = get(configuration, "graphql.disable", false);
     const disableSockets = get(configuration, "sockets.disable", false);
 
@@ -25,16 +34,11 @@ export default function (configuration: IConfiguration, servers: any) {
       graphql.applyMiddleware({ app: restApi, path: graphqlPath });
       graphql.installSubscriptionHandlers(httpServer);
     }
+
     restApiBeforeStart({ express: restApi });
+    
     if (showWertik404Page) {
-      restApi.get("*", function (req, res) {
-        res.status(404).json({
-          message: "Not found",
-          data: {
-            message: "Request page didn't found",
-          },
-        });
-      });
+      restApi.get("*", restApi404Handler);
     }
 
     httpServer.listen(expressAppPort, () => {

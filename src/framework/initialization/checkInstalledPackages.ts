@@ -31,6 +31,7 @@ export default function (configuration: IConfiguration) {
       if (dbDialect == "postgres") {
         check("pg");
         check("pg-hstore");
+        check("pg-native");
       }
       resolve();
     } catch (e) {

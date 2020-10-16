@@ -1,6 +1,6 @@
 {
   "name": "wertik-js",
-  "version": "1.9.96",
+  "version": "1.9.97-beta",
   "main": "lib/main.js",
   "repository": "https://github.com/Uconnect-Technologies/wertik-js.git",
   "welcomeResponse": "Welcome to wertik, You are successfully running Wertik.",
@@ -54,7 +54,6 @@
     "nodemailer": "^5.0.0",
     "pg": "^7.18.2",
     "pg-hstore": "^2.3.3",
-    "pg-native": "^3.0.0",
     "request-ip": "^2.1.3",
     "shelljs": "^0.8.3",
     "socket.io": "^2.3.0",
