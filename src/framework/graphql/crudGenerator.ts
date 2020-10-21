@@ -488,6 +488,7 @@ export const generateListTypeForModule = (module: IConfigurationCustomModule) =>
       pagination: Pagination
       filters: [Filter]
       sorting: Sorting
+      paginationProperties: PaginationProperties
     }
     type ${module.name}BulkMutationResponse {
       returning: [${module.name}]
