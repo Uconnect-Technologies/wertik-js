@@ -59,7 +59,7 @@ export default {
               size: req.file.size,
               type: req.file.mimetype,
             };
-            let response = await req.models.Storage.create(object);
+            let response = await req.wertik.models.Storage.create(object);
             response = response.instance;
             restApiSuccessResponse({
               res: res,
