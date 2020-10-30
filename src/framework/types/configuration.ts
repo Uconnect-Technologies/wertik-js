@@ -234,6 +234,7 @@ export interface IConfiguration {
     };
   };
   database: IConfigurationDatabase;
+  databaseInstance: any;
   frontendAppUrl: string;
   frontendAppActivationUrl: string;
   frontendAppPasswordResetUrl: string;

@@ -1,15 +1,22 @@
-// import express from "express";
-import wertik from "./main";
+import wertik, { connectDatabase } from "./main";
 import { IConfiguration } from "./framework/types/configuration";
-const defaultConfiguration: IConfiguration = require("./framework/defaults/defaultConfigurations/defaultConfiguration").default;
-const postgresConfiguration: IConfiguration = require("./framework/defaults/defaultConfigurations/postgresConfiguration").default;
-
-// let app = express();
+const defaultConfiguration: IConfiguration = require("./framework/defaults/defaultConfigurations/defaultConfiguration")
+  .default;
+const postgresConfiguration: IConfiguration = require("./framework/defaults/defaultConfigurations/postgresConfiguration")
+  .default;
 
 let configuration = defaultConfiguration;
 
-wertik(configuration).then((wertikApp: any) => {
-  if (configuration.database.dbDialect.includes("sql")) {
-    wertikApp.database.sync();
-  }
-});
+connectDatabase(configuration.database)
+  .then((databaseInstance) => {
+    configuration.databaseInstance = databaseInstance;
+    wertik(configuration).then((wertikApp: any) => {
+      if (configuration.database.dbDialect.includes("sql")) {
+        wertikApp.database.sync();
+      }
+    });
+  })
+  .catch((e) => {
+    console.log(`Error connecting with database`);
+    console.log(e);
+  });
