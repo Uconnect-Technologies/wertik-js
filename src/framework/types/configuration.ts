@@ -185,6 +185,7 @@ export interface IConfigurationGraphql {
   path: string;
   graphqlVoyagerPath: string;
   disableGraphqlVoyager: Boolean;
+  apolloGraphqlServerOptions: any;
 }
 
 export interface IConfigurationStorage {
@@ -234,6 +235,7 @@ export interface IConfiguration {
     };
   };
   database: IConfigurationDatabase;
+  databaseInstance: any;
   frontendAppUrl: string;
   frontendAppActivationUrl: string;
   frontendAppPasswordResetUrl: string;

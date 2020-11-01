@@ -1,6 +1,6 @@
 export default {
   name: "Wertik",
-  builtinModules: "user,auth,forgetPassword,permission,role,rolePermission,userPermission,userRole,me,storage",
+  builtinModules: "user,auth,forgetPassword,permission,role,rolePermission,userPermission,userRole,me,storage,mail",
   database: {
     dbDialect: process.env.dbDialect,
     dbUsername: process.env.dbUsername,
