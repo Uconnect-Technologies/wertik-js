@@ -15,7 +15,7 @@ import * as auth from "./../helpers/auth"
 
 export default async function (options: IGraphQLInitialize) {
   const { mailerInstance, configuration, dbTables, models, sendEmail, emailTemplates, database, socketio, logger } = options;
-  const apolloGraphqlOptions = get(options, "apolloGraphqlOptions", defaultApolloGraphqlOptions);
+  const apolloGraphqlOptions = get(configuration, "graphql.apolloGraphqlServerOptions", defaultApolloGraphqlOptions);
   let initializeContext = get(configuration, "context.initializeContext", async function () {});
   initializeContext = await initializeContext("graphql",{
     dbTables,
