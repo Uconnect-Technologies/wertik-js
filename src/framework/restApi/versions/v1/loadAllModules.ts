@@ -66,6 +66,10 @@ export default async function (expressApp, configuration: IConfiguration, custom
         customApi(expressApp, restApiEndpointsElement, module, configuration);
       });
 
+      const expressAccess = get(module,'restApi.expressAccess', function () {});
+
+      expressAccess(expressApp);
+      
       expressApp.post(modulePaths.paginate, async (req, res) => {
         try {
           if (overrideList && overrideList.constructor == Function) {
