@@ -16,7 +16,7 @@ let connectDatabaseFn = require("./framework/database/connect").default;
 
 export const connectDatabase = connectDatabaseFn
 
-export default function (configurationOriginal: IConfiguration) {
+export const serve =  function (configurationOriginal: IConfiguration) {
   let expressApp = get(configurationOriginal, "expressApp", null);
   if (!expressApp) {
     expressApp = require("express")();

@@ -1,4 +1,4 @@
-import wertik, { connectDatabase } from "./main";
+import { connectDatabase, serve } from "./main";
 import { IConfiguration } from "./framework/types/configuration";
 const defaultConfiguration: IConfiguration = require("./framework/defaults/defaultConfigurations/defaultConfiguration")
   .default;
@@ -10,7 +10,7 @@ let configuration = defaultConfiguration;
 connectDatabase(configuration.database)
   .then((databaseInstance) => {
     configuration.databaseInstance = databaseInstance;
-    wertik(configuration).then((wertikApp: any) => {
+    serve(configuration).then((wertikApp: any) => {
       if (configuration.database.dbDialect.includes("sql")) {
         wertikApp.database.sync();
       }
