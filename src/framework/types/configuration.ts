@@ -42,6 +42,7 @@ export interface IConfigurationCustomModuleRestApiEndpoint {
 }
 
 export interface IConfigurationCustomModuleRestApi {
+  expressAccess: Function;
   endpoints: Array<IConfigurationCustomModuleRestApiEndpoint>;
 }
 
