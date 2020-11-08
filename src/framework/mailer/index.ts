@@ -8,10 +8,10 @@ export const defaultMailerInstance = async function(configuration: IConfiguratio
   const wertiknodemailerDefaultConfiguration = {
     host: "smtp.ethereal.email",
     port: 587,
-    secure: false, // true for 465, false for other ports
+    secure: false,
     auth: {
-      user: testAccount.user, // generated ethereal user
-      pass: testAccount.pass // generated ethereal password
+      user: testAccount.user,
+      pass: testAccount.pass
     }
   };
   let transporterConfiguration = get(configuration, "email.configuration", wertiknodemailerDefaultConfiguration);
