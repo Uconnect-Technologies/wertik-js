@@ -6,29 +6,22 @@ import { firstLetterLowerCase } from "../helpers/index";
 const identityColumn = "id";
 const identityColumnGraphQLType = "Int";
 
-export const generateQueriesCrudSchema = (moduleName: String, operationsRead) => {
+export const generateQueriesCrudSchema = (moduleName: String) => {
   let string = "";
   const byId = `${firstLetterLowerCase(moduleName)}ById(${identityColumn}: ${identityColumnGraphQLType}): ${moduleName}`;
   const byFilter = `${firstLetterLowerCase(moduleName)}(filters: [FilterInput]): ${moduleName}`;
   const viewString = `view${moduleName}(${identityColumn}: ${identityColumnGraphQLType}): ${moduleName}`;
   const listString = `list${moduleName}(pagination: PaginationInput, filters: ${moduleName}FilterInput, sorting: [SortingInput]): ${moduleName}List`;
   const statsString = `${firstLetterLowerCase(moduleName)}Stats: ModuleStats`;
-  if (operationsRead == "*") {
-    string = `
-      ${viewString}
-      ${listString}
-    `;
-  } else {
-    string = `
-      ${operationsRead.toLowerCase().includes("view") ? viewString : ""}
-      ${operationsRead.toLowerCase().includes("list") ? listString : ""}
-    `;
-  }
+  string = `
+    ${viewString}
+    ${listString}
+  `;
   string = string + " " + byId + " " + byFilter + " " + statsString;
   return string;
 };
 
-export const generateMutationsCrudSubscriptionSchema = (moduleName: String, operationsModify, operationsRead) => {
+export const generateMutationsCrudSubscriptionSchema = (moduleName: String) => {
   const deletedString = `${moduleName}Deleted: SuccessResponse`;
   const softDeleteString = `${moduleName}SoftDeleted: ${moduleName}`;
   return `
@@ -44,8 +37,7 @@ export const getSubscriptionConstants = (moduleName: String) => {
   };
 };
 
-export const generateSubscriptionsCrudResolvers = (moduleName: String, pubsub: any, operationsModify) => {
-  const operationsModifySplit = operationsModify.toLowerCase().split(" ");
+export const generateSubscriptionsCrudResolvers = (moduleName: String, pubsub: any) => {
   const { deletedModule, softDeletedModule } = getSubscriptionConstants(moduleName);
   let object = {
     [deletedModule]: {
@@ -55,49 +47,27 @@ export const generateSubscriptionsCrudResolvers = (moduleName: String, pubsub: a
       subscribe: () => pubsub.asyncIterator([softDeletedModule]),
     },
   };
-  if (operationsModify !== "*") {
-    if (!operationsModifySplit.includes("delete")) {
-      delete object[deletedModule];
-    }
-    if (!operationsModifySplit.includes("softDelete")) {
-      delete object[softDeletedModule];
-    }
-  }
   return object;
 };
 
-export const generateMutationsCrudSchema = (moduleName: String, operations) => {
-  const operationsSplit = operations.toLowerCase().split(" ");
+export const generateMutationsCrudSchema = (moduleName: String) => {
   const deleteString = `delete${moduleName}(input: IDDeleteInput): SuccessResponse`;
   const softDeleteString = `softDelete${moduleName}(input: IDDeleteInput): SuccessResponse`;
   const bulkUpdateString = `bulkUpdate${moduleName}(input: [${moduleName}Input]): ${moduleName}BulkMutationResponse`;
   const bulkCreateString = `bulkCreate${moduleName}(input: [${moduleName}Input]): ${moduleName}BulkMutationResponse`;
   const bulkDeleteString = `bulkDelete${moduleName}(input: [IDDeleteInput]): SuccessResponse`;
   const bulkSoftDeleteString = `bulkSoftDelete${moduleName}(input: [IDDeleteInput]): SuccessResponse`;
-  if (operations == "*") {
-    return `
-      ${deleteString}
-      ${softDeleteString}
-      ${bulkUpdateString}
-      ${bulkCreateString}
-      ${bulkDeleteString}
-      ${bulkSoftDeleteString}
-    `;
-  } else {
-    return `
-      ${operationsSplit.includes("softDelete") ? softDeleteString : ""}
-      ${operationsSplit.includes("delete") ? deleteString : ""}
-      ${operationsSplit.includes("bulkupdate") ? bulkUpdateString : ""}
-      ${operationsSplit.includes("bulkdelete") ? bulkDeleteString : ""}
-      ${operationsSplit.includes("bulksoftdelete") ? bulkSoftDeleteString : ""}
-      ${operationsSplit.includes("bulkcreate") ? bulkCreateString : ""}
-    `;
-  }
+  return `
+    ${deleteString}
+    ${softDeleteString}
+    ${bulkUpdateString}
+    ${bulkCreateString}
+    ${bulkDeleteString}
+    ${bulkSoftDeleteString}
+  `;
 };
 
-export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub, operationsModify, operationsRead, configuration: IConfiguration) => {
-  const operationsModifySplit = operationsModify.toLowerCase().split(" ");
-  const operationsReadSplit = operationsRead.toLowerCase().split(" ");
+export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub, configuration: IConfiguration) => {
   const overrideMutationDelete = get(configuration, `override.${module.name}.graphql.mutation.delete`, null);
   const overrideMutationSoftDelete = get(configuration, `override.${module.name}.graphql.mutation.softDelete`, null);
   const overrideMutationBulkCreate = get(configuration, `override.${module.name}.graphql.mutation.bulkCreate`, null);
@@ -413,31 +383,6 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
       },
     },
   };
-  if (operationsModify !== "*") {
-    if (!operationsModifySplit.includes("delete")) {
-      delete object.mutations[`delete${module.name}`];
-    }
-    if (!operationsModifySplit.includes("bulkcreate")) {
-      delete object.mutations[`bulkCreate${module.name}`];
-    }
-    if (!operationsModifySplit.includes("bulkupdate")) {
-      delete object.mutations[`bulkUpdate${module.name}`];
-    }
-    if (!operationsModifySplit.includes("bulkdelete")) {
-      delete object.mutations[`bulkDelete${module.name}`];
-    }
-  }
-
-  if (operationsRead !== "*") {
-    if (!operationsReadSplit.includes("view")) {
-      delete object.queries[`view${module.name}`];
-    }
-
-    if (!operationsReadSplit.includes("list")) {
-      delete object.queries[`list${module.name}`];
-    }
-  }
-
   return object;
 };
 

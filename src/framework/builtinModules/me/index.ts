@@ -2,16 +2,6 @@ export default {
   name: "Me",
   useDatabase: false,
   graphql: {
-    crud: {
-      query: {
-        generate: false,
-        operations: "*"
-      },
-      mutation: {
-        generate: false,
-        operations: "*"
-      }
-    },
     schema: `
       type Me {
         user: User

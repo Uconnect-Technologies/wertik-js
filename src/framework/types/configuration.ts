@@ -2,20 +2,7 @@ import { ISocketConfiguration } from "./servers";
 import { IConfigurationOverride } from "./override";
 import { IConfigurationRbac } from "./rbac";
 
-export interface IConfigurationCustomModuleGraphqlCrudQuery {
-  generate: Boolean;
-  operations: string;
-}
 
-export interface IConfigurationCustomModuleGraphqlCrudMutation {
-  generate: Boolean;
-  operations: string;
-}
-
-export interface IConfigurationCustomModuleGraphqlCrud {
-  query: IConfigurationCustomModuleGraphqlCrudQuery;
-  mutation: IConfigurationCustomModuleGraphqlCrudMutation;
-}
 export interface IConfigurationCustomModuleGraphqlMutation {
   schema: string;
   resolvers: Object;
@@ -26,7 +13,6 @@ export interface IConfigurationCustomModuleGraphqlQuery {
 }
 
 export interface IConfigurationCustomModuleGraphql {
-  crud: IConfigurationCustomModuleGraphqlCrud;
   schema: string;
   customResolvers: {
     [Key: string]: Function;
@@ -140,8 +126,6 @@ export interface IConfigurationEvents {
   database?: {
     [Key: string]: {
       // Cud
-      beforeDelete: Function;
-      afterDelete: Function;
       beforeSoftDelete: Function;
       afterSoftDelete: Function;
       beforeBulkDelete: Function;

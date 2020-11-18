@@ -4,17 +4,6 @@ import getRequestedFieldsFromResolverInfo from "./../../helpers/getRequestedFiel
 export default {
   name: "ForgetPassword",
   graphql: {
-    crud: {
-      query: {
-        generate: true,
-        operations: "view",
-      },
-
-      mutation: {
-        generate: false,
-        operations: "*",
-      },
-    },
     schema: `
       type ForgetPassword {
         id: Int

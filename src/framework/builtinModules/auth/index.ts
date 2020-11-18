@@ -12,16 +12,6 @@ export default {
   name: "Auth",
   useDatabase: false,
   graphql: {
-    crud: {
-      query: {
-        generate: false,
-        operations: "*"
-      },
-      mutation: {
-        generate: false,
-        operations: "*"
-      }
-    },
     schema: `
       input TwoFactorCodeInput {
         twoFactorCode: String!

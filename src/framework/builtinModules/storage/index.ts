@@ -1,16 +1,6 @@
 export default {
   name: "Storage",
   graphql: {
-    crud: {
-      query: {
-        generate: true,
-        operations: "*",
-      },
-      mutation: {
-        generate: false,
-        operations: "*",
-      },
-    },
     schema: `
       type Storage {
         _id: String

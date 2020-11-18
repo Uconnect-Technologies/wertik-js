@@ -1,16 +1,6 @@
 export default {
   name: "UserPermission",
   graphql: {
-    crud: {
-      query: {
-        generate: true,
-        operations: "*",
-      },
-      mutation: {
-        generate: true,
-        operations: "*",
-      },
-    },
     schema: `
       type UserPermission {
         _id: String
