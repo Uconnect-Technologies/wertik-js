@@ -1,71 +1,83 @@
-﻿# Wertick JS
+﻿# Wertik JS
 
-**💪 GraphQL + Rest API** framework to kick start your project.
+Wertik is a **💪 GraphQL + Rest API** framework to build servers that gives you support for GraphQL, Rest Api, Emailing, Storage, Sockets and Cron Jobs feature.
 
 <div>
-	<img style="float: left;margin: 10px 0;" src="https://img.shields.io/github/downloads/ilyaskarim/wertik-js/total?style=flat-square">
-	<img style="float: left;margin: 10px 0;" src="https://img.shields.io/npm/dw/wertik-js?style=flat-square">
-	<img style="float: left;margin: 10px 0;" src="https://img.shields.io/github/issues-raw/ilyaskarim/wertik-js?style=flat-square">
+	<img  style="float: left;margin: 10px 0;"  src="https://img.shields.io/github/downloads/ilyaskarim/wertik-js/total?style=flat-square">
+	<img  style="float: left;margin: 10px 0;"  src="https://img.shields.io/npm/dw/wertik-js?style=flat-square">
+	<img  style="float: left;margin: 10px 0;"  src="https://img.shields.io/github/issues-raw/ilyaskarim/wertik-js?style=flat-square">
 </div>
 
-<br />
+### Installation
 
-### Table of contents
+To install you can use npm or yarn, To install with npm:
 
-1.  [Install](#install)
-2.  [Introduction](#introduction)
-3.  [Folder Structure](#concepts)
-4.  [Database](#database)
-5.  [GraphQL](#graphql)
-6.  [Rest API](#rest-api)
-7.  [Contributing](#contributing)
-8.  [License](#license)
+```
 
-### Install
+npm install --save wertik-js
 
-Install with npm
-
-    npm install --save wertik-js
+```
 
 Install with yarn
 
-    yarn add wertik-js --dev
+```
 
-Please see <a href="https://github.com/Uconnect-Technologies/wertik-js/blob/master/Demo.md" >Demo</a> file for dev server configuration example.
+yarn add wertik-js --dev
 
-### Introduction
+```
 
-Wertik-js is a node js library to kick start your project using GraphQL and Rest API. You can use Weritk-js with running project, Wertik-js relies on [Express](https://expressjs.com/) and [Apollo GraphQL](https://www.apollographql.com/). Wertik-js also comes with socket, logger, seeds and events feature.
+### Setting up server
 
-### Documentation
+Lets setup an app:
 
-You can find Wertik documentation on <a href="http://www.wapgee.com" target="_blank" >Wapgee</a>, Documentation Details:
+```javascript
+import { connectDatabase, serve } from "wertik-js";
 
-- <a href="http://www.wapgee.com/wertik-js/" target="_blank" >Main Page</a>
-- <a href="http://www.wapgee.com/wertik-js/getting-started/installation" target="_blank" >Installation</a>
-- <a href="http://www.wapgee.com/wertik-js/getting-started/configuration" target="_blank" >Configuration</a>
-- <a href="http://www.wapgee.com/wertik-js/getting-started/context" target="_blank" >Context</a>
-- <a href="http://www.wapgee.com/wertik-js/getting-started/built-in-modules" target="_blank" >Built in modules</a>
-- <a href="http://www.wapgee.com/wertik-js/getting-started/custom-modules" target="_blank" >Custom modules</a>
-- <a href="http://www.wapgee.com/wertik-js/how-wertik-works/folder-structure" target="_blank" >How Wertik Works / Folder Structure</a>
-- <a href="http://www.wapgee.com/wertik-js/how-wertik-works/graphql" target="_blank" >How Wertik Works / GraphQL</a>
-- <a href="http://www.wapgee.com/wertik-js/how-wertik-works/rest-api" target="_blank" >How Wertik Works / RestAPI</a>
+import configuration from "./path/to/your/configuration";
 
-### Folder Structure
+connectDatabase(configuration.database)
+  .then((databaseInstance) => {
+    configuration.databaseInstance = databaseInstance;
+    serve(configuration).then((wertikApp: any) => {
+      wertikApp.database.sync();
+    });
+  })
+  .catch((e) => {
+    console.log(`Error connecting with database`);
+    console.log(e);
+  });
+```
 
-It is good to know how Wertik-js works, [Here](http://www.wapgee.com/wertik-js/how-wertik-works/folder-structure) is a guide to know how wertik works.
+If everything goes fine, you will see:
 
-### Database
+```
+✔ [Wertik-js]: Socket.IO server running at http://localhost:5000
+✔ [Wertik-js]: Rest API server started at http://localhost:5000
+✔ [Wertik-js]: GraphQL Voyager running at http://localhost:5000/graphql-voyager
+✔ [Wertik-js]: GraphQL Server started at http://localhost:5000/graphql
+✔ [Wertik-js]: GraphQL Subscriptions are running at ws://localhost:5000/subscriptions
+✔ [Wertik-js]: Database: Successfully Connected!
+```
 
-Currrently Wertik-js is supporting databases which Sequelize supports. In future we will be adding Mongo DB Support.
+**Note: 5000 is the default port**
 
-### GraphQL
+The above code example is taken from: [Dev Server Example](https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/devServer.ts)
 
-Wertik-js GraphQL relies on [Apollo GraphQL](https://www.apollographql.com/), [Here](https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/framework/graphql/loadAllModules.ts) GraphQL is loaded. Wertik-js allows you to write custom GraphQL modules(Queries and Mutations), [Read More](http://www.wapgee.com/wertik-js/getting-started/custom-modules) about custom modules in our documentation.
+### Further Steps
 
-### Rest API
+Now you have installed weritk-js in your app, now next step is to get familiar with the configuration to use. Let's go with the documentation flow:
 
-Wertik-js RestAPI relies on only one which is [Express](https://expressjs.com/). [Here](https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/framework/restApi/loadAllModules.ts) Rest API is initialized.[Read More](http://www.wapgee.com/wertik-js/getting-started/custom-modules) about custom modules to create custom API's for your modules.
+1. Configuration
+2. Database
+3. Rest Api
+4. GraphQL
+5. Mailer
+6. Sockets
+7. Storage
+8. Custom Modules
+9. Cron Jobs
+
+The documentation is hosted at [http://wapgee.com/wertik-js](http://wapgee.com/wertik-js).
 
 ### Versioning
 
@@ -77,7 +89,7 @@ Wertik-js follows semantic versioning (semver) principles. The version can be lo
 
 ### Contributing
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+Pull Requests are welcome. If you think something is missing or needs to changed. Please open a pull request or new issue.
 
 ## License
 
