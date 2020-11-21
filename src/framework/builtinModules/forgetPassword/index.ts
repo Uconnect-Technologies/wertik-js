@@ -23,6 +23,13 @@ export default {
         password: String!
         confirmPassword: String!
       }
+      input ForgetPasswordInput {
+        id: Int
+        name: String
+        email: String
+        user_id: Int
+        token: String 
+      }
      `,
     customResolvers: {},
     mutation: {

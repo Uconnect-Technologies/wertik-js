@@ -3,7 +3,6 @@ export default {
   graphql: {
     schema: `
       type Permission {
-        _id: String
         id: Int
         name: String
         cant: String
@@ -16,7 +15,6 @@ export default {
         role_permissions: RolePermissionList 
       }
       input PermissionInput {
-        _id: String
         id: Int
         name: String
         cant: String

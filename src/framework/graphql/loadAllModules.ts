@@ -1,7 +1,7 @@
 /*
     This is all where GraphQL thing happens. This file loads all graphql schemas from the app.
 */
-import {get, isFunction} from "lodash"
+import { get, isFunction } from "lodash";
 import generalSchema from "./generalSchema";
 import {
   generateSubscriptionsCrudResolvers,
@@ -11,7 +11,7 @@ import {
   generateMutationsCrudSchema,
   generateCrudResolvers,
 } from "./crudGenerator";
-import { PubSub } from "apollo-server"
+import { PubSub } from "apollo-server";
 import { IConfiguration } from "../types/configuration";
 import { GraphQLModuleRelationMapper } from "../moduleRelationships/graphql";
 const pubsub = new PubSub();
@@ -38,68 +38,131 @@ export default async function (configuration: IConfiguration) {
   let appSubscriptions = {};
   let appCustomResolvers = {};
 
-  const processModule = function (module) {
-    if (module && module.hasOwnProperty("graphql")) {
-      // fixme: re create the functino again. The current one sucks!
-      process.exit()
-      let graphql = module.graphql;
-      const useDatabase = get(module, "useDatabase", true);
-      let moduleName = module.name;
-      let schema = graphql.schema;
-      let currentMutationSchema = get(graphql, "mutation.schema", "");
-      let currentMutationResolvers = get(graphql, "mutation.resolvers", {});
-      let currentQuerySchema = get(graphql, "query.schema", "");
-      let currentQueryResolvers = get(graphql, "query.resolvers", {});
-      let currentModuleCrudResolvers: any =  useDatabase ?  generateCrudResolvers(
-        module,
-        pubsub,
-        configuration
-      ) : {}
-      let currentModuleSubscriptionResolvers = {};
-      let currentModuleListSchema = useDatabase ? generateListTypeForModule(module) : "";
-      if (useDatabase === true) {
-        currentModuleSubscriptionResolvers = generateSubscriptionsCrudResolvers(moduleName, pubsub);
-      }
-      // relations
-      let customResolvers = get(graphql, "customResolvers", {});
-      
-      appCustomResolvers[module.name] = {
-        ...customResolvers,
-        ...GraphQLModuleRelationMapper(module),
+  const processModule = function (currentModule) {
+    if (currentModule && currentModule.hasOwnProperty("graphql")) {
+      // Process Module Graphql
+      const moduleGraphql = currentModule.graphql;
+      const useDatabase = get(currentModule, "useDatabase", true);
+      const currentModuleName = currentModule.name;
+
+      const currentModuleGraphqlSchema = get(moduleGraphql, "schema", "");
+
+      const currentModuleGraphqlQuerySchema = get(
+        moduleGraphql,
+        "query.schema",
+        ""
+      );
+      const currentModuleGraphqlQueryResolvers = get(
+        moduleGraphql,
+        "query.resolvers",
+        {}
+      );
+
+      const currentModuleGraphqlMutationSchema = get(
+        moduleGraphql,
+        "mutation.schema",
+        ""
+      );
+      const currentModuleGraphqlMutationResolvers = get(
+        moduleGraphql,
+        "mutation.resolvers",
+        {}
+      );
+
+      const customResolvers = get(moduleGraphql, "customResolvers", {});
+
+      modulesSchema = `${modulesSchema}
+        ${currentModuleGraphqlSchema}`;
+
+      modulesQuerySchema = `${modulesQuerySchema}
+        ${currentModuleGraphqlQuerySchema}`;
+
+      appQueries = {
+        ...appQueries,
+        ...currentModuleGraphqlQueryResolvers,
       };
 
-      // Issue: https://github.com/Uconnect-Technologies/wertik-js/issues/215
-      const totalResolvers = Object.keys(appCustomResolvers[module.name]).length
-      if (totalResolvers === 0) {
-        delete appCustomResolvers[module.name]
+      modulesMutationSchema = `${modulesMutationSchema}
+        ${currentModuleGraphqlMutationSchema}`;
+
+      appMutations = {
+        ...appMutations,
+        ...currentModuleGraphqlMutationResolvers,
+      };
+
+      appCustomResolvers[currentModuleName] = {
+        ...customResolvers,
+        ...GraphQLModuleRelationMapper(currentModule),
+      };
+
+      // Process Module Graphql
+
+      // Process Crud for Module:
+
+      if (useDatabase === true) {
+        let currentModuleListSchema = generateListTypeForModule(currentModule);
+
+        modulesSchema = `${modulesSchema}
+        ${currentModuleListSchema}`;
+
+        const crudResolvers = generateCrudResolvers(
+          currentModule,
+          pubsub,
+          configuration
+        );
+
+        const crudMutationSchema = generateMutationsCrudSchema(
+          currentModuleName
+        );
+        const crudMutationResolvers = crudResolvers.mutations;
+
+        const crudQuerySchema = generateQueriesCrudSchema(currentModuleName);
+        const crudQueryResolvers = crudResolvers.queries;
+
+        const crudSubscriptionSchema = generateMutationsCrudSubscriptionSchema(
+          currentModuleName
+        );
+        const crudSubscriptionResolvers = generateSubscriptionsCrudResolvers(
+          currentModuleName,
+          pubsub
+        );
+
+        modulesQuerySchema = `${modulesQuerySchema}
+        ${crudQuerySchema}`;
+
+        appQueries = {
+          ...appQueries,
+          ...crudQueryResolvers,
+        };
+
+        modulesMutationSchema = `${modulesMutationSchema}
+        ${crudMutationSchema}`;
+
+        appMutations = {
+          ...appMutations,
+          ...crudMutationResolvers,
+        };
+
+        modulesSubscriptionSchema =
+          modulesSubscriptionSchema + crudSubscriptionSchema;
+
+        appSubscriptions = {
+          ...appSubscriptions,
+          ...crudSubscriptionResolvers,
+        };
       }
-      // relations
-      // require information
-      // crud
-      modulesQuerySchema = modulesQuerySchema + (useDatabase) ? generateQueriesCrudSchema(moduleName) : "";
-      appQueries = { ...appQueries, ...currentModuleCrudResolvers.queries };
 
-      modulesMutationSchema = modulesMutationSchema + (useDatabase) ? generateMutationsCrudSchema(moduleName) : "";
-      appMutations = { ...appMutations, ...currentModuleCrudResolvers.mutations };
+      // Check for empty resolvers and remove them
 
-      // crud
-      // Subscription
+      const totalResolvers = Object.keys(get(appCustomResolvers,currentModuleName,{})).length;
+      // cosnoel
+      if (totalResolvers === 0) {
+        delete appCustomResolvers[currentModuleName];
+      }
 
-      let currentModuleCrudSubscription = (useDatabase) ? generateMutationsCrudSubscriptionSchema(moduleName) : ""
-
-      // Subscription
-      modulesSchema = modulesSchema + schema;
-      modulesSchema = modulesSchema + currentModuleListSchema;
-      modulesQuerySchema = modulesQuerySchema + currentQuerySchema;
-      modulesMutationSchema = modulesMutationSchema + currentMutationSchema;
-      modulesSubscriptionSchema = modulesSubscriptionSchema + currentModuleCrudSubscription;
-      appQueries = { ...appQueries, ...currentQueryResolvers };
-      appMutations = { ...appMutations, ...currentMutationResolvers };
-      appSubscriptions = { ...appSubscriptions, ...currentModuleSubscriptionResolvers };
+      // Process Crud for module:
     }
   };
-
-  
 
   modules.forEach(async (element: any) => {
     let module;
@@ -115,13 +178,14 @@ export default async function (configuration: IConfiguration) {
     processModule(module);
   });
 
-  
-
   schemaMap = schemaMap.replace("[generalSchema__replace]", generalSchema);
   schemaMap = schemaMap.replace("[modulesSchema__replace]", modulesSchema);
   schemaMap = schemaMap.replace("[mutation__replace]", modulesMutationSchema);
   schemaMap = schemaMap.replace("[query__replace]", modulesQuerySchema);
-  schemaMap = schemaMap.replace("[subscription__replace]", modulesSubscriptionSchema);
+  schemaMap = schemaMap.replace(
+    "[subscription__replace]",
+    modulesSubscriptionSchema
+  );
 
   return {
     schema: schemaMap,

@@ -3,7 +3,6 @@ export default {
   graphql: {
     schema: `
       type User {
-        _id: String
         id: Int
         name: String
         username: String
@@ -23,7 +22,6 @@ export default {
         user_permissions: UserPermissionList
       }
       input UserInput {
-        _id: String
         id: Int
         name: String
         username: String

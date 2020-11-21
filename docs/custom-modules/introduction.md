@@ -20,16 +20,6 @@ let configuration = {
         },
       },
       graphql: {
-        crud: {
-          query: {
-            generate: true,
-            operations: "*",
-          },
-          mutation: {
-            generate: true,
-            operations: "*",
-          },
-        },
         // Main schema for Article
         schema: `
 						type Article {
@@ -119,16 +109,6 @@ let configuration = {
     {
       // other module configuration
       graphql: {
-        crud: {
-          query: {
-            generate: true,
-            operations: "*", // Options are view, list
-          },
-          mutation: {
-            generate: true,
-            operations: "*", // Options are create update delete softDelete bulkcreate bulkupdate bulkdelete bulkSoftDelete
-          },
-        },
         // In schema you have to Provide same type as you provided the moduleName, Consider you have provided Person you have to set it as Person with attributes
         // PersonInput is an input that will be used for mutations. If you set your module to Person then input name should be PersonInput
         schema: `
