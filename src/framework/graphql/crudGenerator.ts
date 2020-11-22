@@ -22,29 +22,32 @@ export const generateQueriesCrudSchema = (moduleName: String) => {
 };
 
 export const generateMutationsCrudSubscriptionSchema = (moduleName: String) => {
-  const deletedString = `${moduleName}Deleted: SuccessResponse`;
-  const softDeleteString = `${moduleName}SoftDeleted: ${moduleName}`;
   return `
-    ${deletedString}
-    ${softDeleteString}
+    ${moduleName}Deleted: SuccessResponse
+    ${moduleName}BulkCreated: [${moduleName}]
+    ${moduleName}BulkUpdated: [${moduleName}]
   `;
 };
 
 export const getSubscriptionConstants = (moduleName: String) => {
   return {
     deletedModule: `${moduleName}Deleted`,
-    softDeletedModule: `${moduleName}SoftDeleted`,
+    bulkCreatedModule: `${moduleName}BulkCreated`,
+    bulkUpdatedModule: `${moduleName}BulkUpdated`,
   };
 };
 
 export const generateSubscriptionsCrudResolvers = (moduleName: String, pubsub: any) => {
-  const { deletedModule, softDeletedModule } = getSubscriptionConstants(moduleName);
+  const { deletedModule, bulkCreatedModule, bulkUpdatedModule } = getSubscriptionConstants(moduleName);
   let object = {
     [deletedModule]: {
       subscribe: () => pubsub.asyncIterator([deletedModule]),
     },
-    [softDeletedModule]: {
-      subscribe: () => pubsub.asyncIterator([softDeletedModule]),
+    [bulkCreatedModule]: {
+      subscribe: () => pubsub.asyncIterator([bulkCreatedModule]),
+    },
+    [bulkUpdatedModule]: {
+      subscribe: () => pubsub.asyncIterator([bulkUpdatedModule]),
     },
   };
   return object;
@@ -52,28 +55,22 @@ export const generateSubscriptionsCrudResolvers = (moduleName: String, pubsub: a
 
 export const generateMutationsCrudSchema = (moduleName: String) => {
   const deleteString = `delete${moduleName}(input: IDDeleteInput): SuccessResponse`;
-  const softDeleteString = `softDelete${moduleName}(input: IDDeleteInput): SuccessResponse`;
   const bulkUpdateString = `bulkUpdate${moduleName}(input: [${moduleName}Input]): ${moduleName}BulkMutationResponse`;
   const bulkCreateString = `bulkCreate${moduleName}(input: [${moduleName}Input]): ${moduleName}BulkMutationResponse`;
   const bulkDeleteString = `bulkDelete${moduleName}(input: [IDDeleteInput]): SuccessResponse`;
-  const bulkSoftDeleteString = `bulkSoftDelete${moduleName}(input: [IDDeleteInput]): SuccessResponse`;
   return `
     ${deleteString}
-    ${softDeleteString}
     ${bulkUpdateString}
     ${bulkCreateString}
     ${bulkDeleteString}
-    ${bulkSoftDeleteString}
   `;
 };
 
 export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub, configuration: IConfiguration) => {
   const overrideMutationDelete = get(configuration, `override.${module.name}.graphql.mutation.delete`, null);
-  const overrideMutationSoftDelete = get(configuration, `override.${module.name}.graphql.mutation.softDelete`, null);
   const overrideMutationBulkCreate = get(configuration, `override.${module.name}.graphql.mutation.bulkCreate`, null);
   const overrideMutationBulkUpdate = get(configuration, `override.${module.name}.graphql.mutation.bulkUpdate`, null);
   const overrideMutationBulkDelete = get(configuration, `override.${module.name}.graphql.mutation.bulkDelete`, null);
-  const overrideMutationBulkSoftDelete = get(configuration, `override.${module.name}.graphql.mutation.bulkSoftDelete`, null);
   const overrideModuleQuery = get(configuration, `override.${module.name}.graphql.query.${firstLetterLowerCase(module.name)}`, null);
   const overrideQueryList = get(configuration, `override.${module.name}.graphql.query.list`, null);
   const overrideQueryView = get(configuration, `override.${module.name}.graphql.query.view`, null);
@@ -81,12 +78,8 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
 
   const beforeDelete = get(configuration, `events.database.${module.name}.beforeDelete`, null);
   const afterDelete = get(configuration, `events.database.${module.name}.afterDelete`, null);
-  const beforeSoftDelete = get(configuration, `events.database.${module.name}.beforeSoftDelete`, null);
-  const afterSoftDelete = get(configuration, `events.database.${module.name}.afterSoftDelete`, null);
   const beforeBulkDelete = get(configuration, `events.database.${module.name}.beforeBulkDelete`, null);
   const afterBulkDelete = get(configuration, `events.database.${module.name}.afterBulkDelete`, null);
-  const beforeBulkSoftDelete = get(configuration, `events.database.${module.name}.beforeBulkSoftDelete`, null);
-  const afterBulkSoftDelete = get(configuration, `events.database.${module.name}.afterBulkSoftDelete`, null);
   const beforeBulkCreate = get(configuration, `events.database.${module.name}.beforeBulkCreate`, null);
   const afterBulkCreate = get(configuration, `events.database.${module.name}.afterBulkCreate`, null);
   const beforeBulkUpdate = get(configuration, `events.database.${module.name}.beforeBulkUpdate`, null);
@@ -104,7 +97,7 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
   const beforeByModule = get(configuration, `events.database.${module.name}.beforeByModule`, null);
   const afterByModule = get(configuration, `events.database.${module.name}.afterByModule`, null);
 
-  const { deletedModule, softDeletedModule } = getSubscriptionConstants(module.name);
+  const { deletedModule, bulkCreatedModule, bulkUpdatedModule } = getSubscriptionConstants(module.name);
 
   let object = {
     mutations: {
@@ -137,39 +130,9 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
         }
         return { message: `${module.name} successfully deleted` };
       },
-      [`softDelete${module.name}`]: async (_: any, args: any, context: any, info: any) => {
-        if (overrideMutationSoftDelete && overrideMutationSoftDelete.constructor == Function) {
-          let response = await overrideMutationSoftDelete(_, args, context, info);
-          return response;
-        }
-        let finalArgs;
-        if (isFunction(beforeSoftDelete)) {
-          finalArgs = await beforeSoftDelete({
-            mode: "graphql",
-            params: { _, args, context, info },
-          });
-        } else {
-          finalArgs = args.input;
-        }
-        let model = context.wertik.models[module.name].getModel();
-        let result = await model.update({
-          ...finalArgs,
-          is_deleted: 1,
-        });
-        pubsub.publish(softDeletedModule, {
-          [softDeletedModule]: result,
-        });
-        if (isFunction(afterSoftDelete)) {
-          await afterSoftDelete({
-            mode: "graphql",
-            params: { _, args, context, info },
-          });
-        }
-        return { message: `${module.name} successfully deleted` };
-      },
       [`bulkDelete${module.name}`]: async (_: any, args: any, context: any, info: any) => {
-        if (overrideMutationBulkSoftDelete && overrideMutationBulkSoftDelete.constructor == Function) {
-          let response = await overrideMutationBulkSoftDelete(_, args, context, info);
+        if (overrideMutationBulkDelete && overrideMutationBulkDelete.constructor == Function) {
+          let response = await overrideMutationBulkDelete(_, args, context, info);
           return response;
         }
         let finalArgs;
@@ -185,30 +148,6 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
         let result = await model.bulkDelete(finalArgs);
         if (isFunction(afterBulkDelete)) {
           await afterBulkDelete({
-            mode: "graphql",
-            params: { _, args, context, info },
-          });
-        }
-        return { message: `${module.name} bulk items deleted successfully.` };
-      },
-      [`bulkSoftDelete${module.name}`]: async (_: any, args: any, context: any, info: any) => {
-        if (overrideMutationBulkDelete && overrideMutationBulkDelete.constructor == Function) {
-          let response = await overrideMutationBulkDelete(_, args, context, info);
-          return response;
-        }
-        let finalArgs;
-        if (isFunction(beforeBulkSoftDelete)) {
-          finalArgs = await beforeBulkSoftDelete({
-            mode: "graphql",
-            params: { _, args, context, info },
-          });
-        } else {
-          finalArgs = args.input;
-        }
-        let model = context.wertik.models[module.name].getModel();
-        let result = await model.bulkSoftDelete(finalArgs);
-        if (isFunction(afterBulkSoftDelete)) {
-          await afterBulkSoftDelete({
             mode: "graphql",
             params: { _, args, context, info },
           });
@@ -232,6 +171,9 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
         let model = context.wertik.models[module.name].getModel();
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let result = await model.bulkCreate(finalArgs, requestedFields);
+        pubsub.publish(bulkCreatedModule, {
+          [bulkCreatedModule]: result.bulkInstances,
+        });
         if (isFunction(afterBulkCreate)) {
           afterBulkCreate({
             mode: "graphql",
@@ -260,6 +202,9 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
         let model = context.wertik.models[module.name].getModel();
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let result = await model.bulkUpdate(finalArgs, requestedFields);
+        pubsub.publish(bulkUpdatedModule, {
+          [bulkUpdatedModule]: result.bulkInstances,
+        });
         if (isFunction(afterBulkUpdate)) {
           afterBulkUpdate({
             mode: "graphql",
