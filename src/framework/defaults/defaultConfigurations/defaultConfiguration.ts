@@ -1,6 +1,7 @@
 export default {
   name: "Wertik",
-  builtinModules: "user,auth,forgetPassword,permission,role,rolePermission,userPermission,userRole,me,storage,mail",
+  builtinModules:
+    "user,auth,forgetPassword,permission,role,rolePermission,userPermission,userRole,me,storage,mail",
   database: {
     dbDialect: process.env.dbDialect,
     dbUsername: process.env.dbUsername,
@@ -10,7 +11,6 @@ export default {
     dbPort: process.env.dbPort,
   },
   port: 5000,
-  startServers: true,
   frontendAppUrl: "http://localhost:8080/",
   frontendAppActivationUrl: "http://localhost:8080/activate-account",
   frontendAppPasswordResetUrl: "http://localhost:8080/reset-password",

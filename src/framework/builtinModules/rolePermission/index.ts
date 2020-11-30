@@ -1,16 +1,6 @@
 export default {
   name: "RolePermission",
   graphql: {
-    crud: {
-      query: {
-        generate: true,
-        operations: "*",
-      },
-      mutation: {
-        generate: true,
-        operations: "*",
-      },
-    },
     schema: `
       type RolePermission {
         id: Int

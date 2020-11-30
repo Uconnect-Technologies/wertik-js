@@ -1,19 +1,8 @@
 export default {
   name: "UserPermission",
   graphql: {
-    crud: {
-      query: {
-        generate: true,
-        operations: "*",
-      },
-      mutation: {
-        generate: true,
-        operations: "*",
-      },
-    },
     schema: `
       type UserPermission {
-        _id: String
         id: Int
         name: String
         user: User
@@ -26,7 +15,6 @@ export default {
         updated_at: String
       }
       input UserPermissionInput {
-        _id: String
         id: Int
         name: String
         user_id: Int

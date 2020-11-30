@@ -88,8 +88,7 @@ export const firstLetterLowerCase = (s) => {
 };
 
 export const identityColumn = () => {
-  const issql = isSQL();
-  return issql ? "id" : "_id";
+  return "id"
 };
 
 export const loadModulesFromConfiguration = (configuration: IConfiguration) => {

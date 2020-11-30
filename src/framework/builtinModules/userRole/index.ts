@@ -1,19 +1,8 @@
 export default {
   name: "UserRole",
   graphql: {
-    crud: {
-      query: {
-        generate: true,
-        operations: "*",
-      },
-      mutation: {
-        generate: true,
-        operations: "*",
-      },
-    },
     schema: `
       type UserRole {
-        _id: String
         id: Int
         name: String
         user: User
@@ -26,7 +15,6 @@ export default {
         updated_at: String
       }
       input UserRoleInput {
-        _id: String
         id: Int
         name: String
         user_id: Int
