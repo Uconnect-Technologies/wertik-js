@@ -163,6 +163,9 @@ export interface IConfigurationRestApi {
   showWertik404Page: boolean;
   beforeStart: Function;
   restApi404Handler: Function;
+  useCors: Boolean;
+  useBodyParser: Boolean;
+  useMorgan: Boolean;
 }
 
 export interface IConfigurationGraphql {
