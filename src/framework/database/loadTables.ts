@@ -6,6 +6,8 @@ import { errorMessage } from "../logger/consoleMessages";
 import { databaseDefaultOptions } from "../defaults/options/index";
 import { IConfigurationCustomModule, IConfiguration } from "../types/configuration";
 import { applyRelationshipSql } from "../moduleRelationships/database";
+import stats from "./helpers/stats";
+import paginate from "./helpers/paginate";
 
 const checkDatabaseOptions = (moduleName, tableName) => {
   if (moduleName && !tableName) {
@@ -71,6 +73,11 @@ export default function (connection, configuration: IConfiguration) {
       module = element;
     }
       applyRelationshipSql(module, tables);
+  });
+
+  Object.keys(tables).forEach(table => {
+    tables[table].stats = stats;
+    tables[table].paginate = paginate;
   });
 
   return tables;

@@ -102,229 +102,229 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
   let object = {
     mutations: {
       [`delete${module.name}`]: async (_: any, args: any, context: any, info: any) => {
-        if (overrideMutationDelete && overrideMutationDelete.constructor == Function) {
-          let response = await overrideMutationDelete(_, args, context, info);
-          return response;
-        }
-        let finalArgs;
-        if (isFunction(beforeDelete)) {
-          finalArgs = await beforeDelete({
-            mode: "graphql",
-            params: { _, args, context, info },
-          });
-        } else {
-          finalArgs = args.input;
-        }
-        let model = context.wertik.models[module.name].getModel();
-        await model.delete(finalArgs);
-        pubsub.publish(deletedModule, {
-          [deletedModule]: {
-            message: `${module.name} successfully deleted`,
-          },
-        });
-        if (isFunction(afterDelete)) {
-          await afterDelete({
-            mode: "graphql",
-            params: { _, args, context, info },
-          });
-        }
-        return { message: `${module.name} successfully deleted` };
+        // if (overrideMutationDelete && overrideMutationDelete.constructor == Function) {
+        //   let response = await overrideMutationDelete(_, args, context, info);
+        //   return response;
+        // }
+        // let finalArgs;
+        // if (isFunction(beforeDelete)) {
+        //   finalArgs = await beforeDelete({
+        //     mode: "graphql",
+        //     params: { _, args, context, info },
+        //   });
+        // } else {
+        //   finalArgs = args.input;
+        // }
+        // let model = context.wertik.models[module.name].getModel();
+        // await model.delete(finalArgs);
+        // pubsub.publish(deletedModule, {
+        //   [deletedModule]: {
+        //     message: `${module.name} successfully deleted`,
+        //   },
+        // });
+        // if (isFunction(afterDelete)) {
+        //   await afterDelete({
+        //     mode: "graphql",
+        //     params: { _, args, context, info },
+        //   });
+        // }
+        // return { message: `${module.name} successfully deleted` };
       },
       [`bulkDelete${module.name}`]: async (_: any, args: any, context: any, info: any) => {
-        if (overrideMutationBulkDelete && overrideMutationBulkDelete.constructor == Function) {
-          let response = await overrideMutationBulkDelete(_, args, context, info);
-          return response;
-        }
-        let finalArgs;
-        if (isFunction(beforeBulkDelete)) {
-          finalArgs = await beforeBulkDelete({
-            mode: "graphql",
-            params: { _, args, context, info },
-          });
-        } else {
-          finalArgs = args.input;
-        }
-        let model = context.wertik.models[module.name].getModel();
-        let result = await model.bulkDelete(finalArgs);
-        if (isFunction(afterBulkDelete)) {
-          await afterBulkDelete({
-            mode: "graphql",
-            params: { _, args, context, info },
-          });
-        }
-        return { message: `${module.name} bulk items deleted successfully.` };
+        // if (overrideMutationBulkDelete && overrideMutationBulkDelete.constructor == Function) {
+        //   let response = await overrideMutationBulkDelete(_, args, context, info);
+        //   return response;
+        // }
+        // let finalArgs;
+        // if (isFunction(beforeBulkDelete)) {
+        //   finalArgs = await beforeBulkDelete({
+        //     mode: "graphql",
+        //     params: { _, args, context, info },
+        //   });
+        // } else {
+        //   finalArgs = args.input;
+        // }
+        // let model = context.wertik.models[module.name].getModel();
+        // let result = await model.bulkDelete(finalArgs);
+        // if (isFunction(afterBulkDelete)) {
+        //   await afterBulkDelete({
+        //     mode: "graphql",
+        //     params: { _, args, context, info },
+        //   });
+        // }
+        // return { message: `${module.name} bulk items deleted successfully.` };
       },
       [`bulkCreate${module.name}`]: async (_: any, args: any, context: any, info: any) => {
-        if (overrideMutationBulkCreate && overrideMutationBulkCreate.constructor == Function) {
-          let response = await overrideMutationBulkCreate(_, args, context, info);
-          return response;
-        }
-        let finalArgs;
-        if (isFunction(beforeBulkCreate)) {
-          finalArgs = await beforeBulkCreate({
-            mode: "graphql",
-            params: { _, args, context, info },
-          });
-        } else {
-          finalArgs = args.input;
-        }
-        let model = context.wertik.models[module.name].getModel();
-        let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        let result = await model.bulkCreate(finalArgs, requestedFields);
-        pubsub.publish(bulkCreatedModule, {
-          [bulkCreatedModule]: result.bulkInstances,
-        });
-        if (isFunction(afterBulkCreate)) {
-          afterBulkCreate({
-            mode: "graphql",
-            params: { _, args, context, info, instance: result.bulkInstances },
-          });
-        }
-        return {
-          returning: [...result.bulkInstances],
-          affectedRows: result.affectedRows,
-        };
+        // if (overrideMutationBulkCreate && overrideMutationBulkCreate.constructor == Function) {
+        //   let response = await overrideMutationBulkCreate(_, args, context, info);
+        //   return response;
+        // }
+        // let finalArgs;
+        // if (isFunction(beforeBulkCreate)) {
+        //   finalArgs = await beforeBulkCreate({
+        //     mode: "graphql",
+        //     params: { _, args, context, info },
+        //   });
+        // } else {
+        //   finalArgs = args.input;
+        // }
+        // let model = context.wertik.models[module.name].getModel();
+        // let requestedFields = getRequestedFieldsFromResolverInfo(info);
+        // let result = await model.bulkCreate(finalArgs, requestedFields);
+        // pubsub.publish(bulkCreatedModule, {
+        //   [bulkCreatedModule]: result.bulkInstances,
+        // });
+        // if (isFunction(afterBulkCreate)) {
+        //   afterBulkCreate({
+        //     mode: "graphql",
+        //     params: { _, args, context, info, instance: result.bulkInstances },
+        //   });
+        // }
+        // return {
+        //   returning: [...result.bulkInstances],
+        //   affectedRows: result.affectedRows,
+        // };
       },
       [`bulkUpdate${module.name}`]: async (_: any, args: any, context: any, info: any) => {
-        if (overrideMutationBulkUpdate && overrideMutationBulkUpdate.constructor == Function) {
-          let response = await overrideMutationBulkUpdate(_, args, context, info);
-          return response;
-        }
-        let finalArgs;
-        if (isFunction(beforeBulkUpdate)) {
-          finalArgs = await beforeBulkUpdate({
-            mode: "graphql",
-            params: { _, args, context, info },
-          });
-        } else {
-          finalArgs = args.input;
-        }
-        let model = context.wertik.models[module.name].getModel();
-        let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        let result = await model.bulkUpdate(finalArgs, requestedFields);
-        pubsub.publish(bulkUpdatedModule, {
-          [bulkUpdatedModule]: result.bulkInstances,
-        });
-        if (isFunction(afterBulkUpdate)) {
-          afterBulkUpdate({
-            mode: "graphql",
-            params: { _, args, context, info, instance: result.bulkInstances },
-          });
-        }
-        // return result.bulkInstances;
-        return {
-          returning: [...result.bulkInstances],
-          affectedRows: result.affectedRows,
-        };
+        // if (overrideMutationBulkUpdate && overrideMutationBulkUpdate.constructor == Function) {
+        //   let response = await overrideMutationBulkUpdate(_, args, context, info);
+        //   return response;
+        // }
+        // let finalArgs;
+        // if (isFunction(beforeBulkUpdate)) {
+        //   finalArgs = await beforeBulkUpdate({
+        //     mode: "graphql",
+        //     params: { _, args, context, info },
+        //   });
+        // } else {
+        //   finalArgs = args.input;
+        // }
+        // let model = context.wertik.models[module.name].getModel();
+        // let requestedFields = getRequestedFieldsFromResolverInfo(info);
+        // let result = await model.bulkUpdate(finalArgs, requestedFields);
+        // pubsub.publish(bulkUpdatedModule, {
+        //   [bulkUpdatedModule]: result.bulkInstances,
+        // });
+        // if (isFunction(afterBulkUpdate)) {
+        //   afterBulkUpdate({
+        //     mode: "graphql",
+        //     params: { _, args, context, info, instance: result.bulkInstances },
+        //   });
+        // }
+        // // return result.bulkInstances;
+        // return {
+        //   returning: [...result.bulkInstances],
+        //   affectedRows: result.affectedRows,
+        // };
       },
     },
     queries: {
       [`${firstLetterLowerCase(module.name)}Stats`]: async (_: any, args: any, context: any, info: any) => {
-        let database = context.wertik.database;
-        let requestedReports = getRequestedFieldsFromResolverInfo(info);
-        let model = context.wertik.models[module.name].getModel();
-        return model.stats(database, requestedReports);
+        // let database = context.wertik.database;
+        // let requestedReports = getRequestedFieldsFromResolverInfo(info);
+        // let model = context.wertik.models[module.name].getModel();
+        // return model.stats(database, requestedReports);
       },
       [`${firstLetterLowerCase(module.name)}ById`]: async (_: any, args: any, context: any, info: any) => {
-        let model = context.wertik.models[module.name].getModel();
-        if (overrideQueryById && overrideQueryById.constructor == Function) {
-          let response = await overrideQueryById(_, args, context, info);
-          return response;
-        }
-        let finalArgs;
-        if (isFunction(beforeById)) {
-          finalArgs = await beforeById({
-            mode: "graphql",
-            params: { _, args, context, info },
-          });
-        } else {
-          finalArgs = args;
-        }
-        let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        let findById = await model.findOneById(finalArgs[identityColumn], Object.keys(requestedFields));
-        if (isFunction(afterById)) {
-          afterById({
-            mode: "graphql",
-            params: { _, args, context, info, instance: findById.instance },
-          });
-        }
-        return findById.instance;
+        // let model = context.wertik.models[module.name].getModel();
+        // if (overrideQueryById && overrideQueryById.constructor == Function) {
+        //   let response = await overrideQueryById(_, args, context, info);
+        //   return response;
+        // }
+        // let finalArgs;
+        // if (isFunction(beforeById)) {
+        //   finalArgs = await beforeById({
+        //     mode: "graphql",
+        //     params: { _, args, context, info },
+        //   });
+        // } else {
+        //   finalArgs = args;
+        // }
+        // let requestedFields = getRequestedFieldsFromResolverInfo(info);
+        // let findById = await model.findOneById(finalArgs[identityColumn], Object.keys(requestedFields));
+        // if (isFunction(afterById)) {
+        //   afterById({
+        //     mode: "graphql",
+        //     params: { _, args, context, info, instance: findById.instance },
+        //   });
+        // }
+        // return findById.instance;
       },
       [`${firstLetterLowerCase(module.name)}`]: async (_: any, args: any, context: any, info: any) => {
-        let model = context.wertik.models[module.name].getModel();
-        if (overrideModuleQuery && overrideModuleQuery.constructor == Function) {
-          let response = await overrideModuleQuery(_, args, context, info);
-          return response;
-        }
-        let finalArgs;
-        if (isFunction(beforeByModule)) {
-          finalArgs = await beforeByModule({
-            mode: "graphql",
-            params: { _, args, context, info },
-          });
-        } else {
-          finalArgs = args;
-        }
-        let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        const filters = get(finalArgs, "filters", []);
-        let response = await model.findOneByArgs(filters, Object.keys(requestedFields));
-        if (isFunction(afterById)) {
-          afterByModule({
-            mode: "graphql",
-            params: { _, args, context, info, instance: response.instance },
-          });
-        }
-        return response.instance;
+        // let model = context.wertik.models[module.name].getModel();
+        // if (overrideModuleQuery && overrideModuleQuery.constructor == Function) {
+        //   let response = await overrideModuleQuery(_, args, context, info);
+        //   return response;
+        // }
+        // let finalArgs;
+        // if (isFunction(beforeByModule)) {
+        //   finalArgs = await beforeByModule({
+        //     mode: "graphql",
+        //     params: { _, args, context, info },
+        //   });
+        // } else {
+        //   finalArgs = args;
+        // }
+        // let requestedFields = getRequestedFieldsFromResolverInfo(info);
+        // const filters = get(finalArgs, "filters", []);
+        // let response = await model.findOneByArgs(filters, Object.keys(requestedFields));
+        // if (isFunction(afterById)) {
+        //   afterByModule({
+        //     mode: "graphql",
+        //     params: { _, args, context, info, instance: response.instance },
+        //   });
+        // }
+        // return response.instance;
       },
       [`view${module.name}`]: async (_: any, args: any, context: any, info: any) => {
-        if (overrideQueryView && overrideQueryView.constructor == Function) {
-          let response = await overrideQueryView(_, args, context, info);
-          return response;
-        }
-        let finalArgs;
-        if (isFunction(beforeView)) {
-          finalArgs = await beforeView({
-            mode: "graphql",
-            params: { _, args, context, info },
-          });
-        } else {
-          finalArgs = args;
-        }
-        let model = context.wertik.models[module.name].getModel();
-        let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        let view = await model.view(finalArgs, Object.keys(requestedFields));
-        if (isFunction(afterView)) {
-          afterView({
-            mode: "graphql",
-            params: { _, args, context, info, instance: view.instance },
-          });
-        }
-        return view.instance;
+        // if (overrideQueryView && overrideQueryView.constructor == Function) {
+        //   let response = await overrideQueryView(_, args, context, info);
+        //   return response;
+        // }
+        // let finalArgs;
+        // if (isFunction(beforeView)) {
+        //   finalArgs = await beforeView({
+        //     mode: "graphql",
+        //     params: { _, args, context, info },
+        //   });
+        // } else {
+        //   finalArgs = args;
+        // }
+        // let model = context.wertik.models[module.name].getModel();
+        // let requestedFields = getRequestedFieldsFromResolverInfo(info);
+        // let view = await model.view(finalArgs, Object.keys(requestedFields));
+        // if (isFunction(afterView)) {
+        //   afterView({
+        //     mode: "graphql",
+        //     params: { _, args, context, info, instance: view.instance },
+        //   });
+        // }
+        // return view.instance;
       },
       [`list${module.name}`]: async (_: any, args: any, context: any, info: any) => {
-        if (overrideQueryList && overrideQueryList.constructor == Function) {
-          let response = await overrideQueryList(_, args, context, info);
-          return response;
-        }
-        let finalArgs;
-        if (isFunction(beforeList)) {
-          finalArgs = await beforeList({
-            mode: "graphql",
-            params: { _, args, context, info },
-          });
-        } else {
-          finalArgs = args;
-        }
-        let model = context.wertik.models[module.name].getModel();
-        let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        let response = await model.paginate(finalArgs, Object.keys(requestedFields.list));
-        if (isFunction(afterList)) {
-          afterList({
-            mode: "graphql",
-            params: { _, args, context, info, instance: response },
-          });
-        }
-        return response;
+        // if (overrideQueryList && overrideQueryList.constructor == Function) {
+        //   let response = await overrideQueryList(_, args, context, info);
+        //   return response;
+        // }
+        // let finalArgs;
+        // if (isFunction(beforeList)) {
+        //   finalArgs = await beforeList({
+        //     mode: "graphql",
+        //     params: { _, args, context, info },
+        //   });
+        // } else {
+        //   finalArgs = args;
+        // }
+        // let model = context.wertik.models[module.name].getModel();
+        // let requestedFields = getRequestedFieldsFromResolverInfo(info);
+        // let response = await model.paginate(finalArgs, Object.keys(requestedFields.list));
+        // if (isFunction(afterList)) {
+        //   afterList({
+        //     mode: "graphql",
+        //     params: { _, args, context, info, instance: response },
+        //   });
+        // }
+        // return response;
       },
     },
   };

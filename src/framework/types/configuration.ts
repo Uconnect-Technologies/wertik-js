@@ -130,8 +130,6 @@ export interface IConfigurationEvents {
       afterSoftDelete: Function;
       beforeBulkDelete: Function;
       afterBulkDelete: Function;
-      beforeBulkSoftDelete: Function;
-      afterBulkSoftDelete: Function;
       beforeBulkCreate: Function;
       afterBulkCreate: Function;
       beforeBulkSoftCreate: Function;

@@ -10,7 +10,6 @@ import * as auth from "./../helpers/auth";
 export default async function (options: IRestApiInitialize) {
   const {
     configuration,
-    dbTables,
     models,
     sendEmail,
     emailTemplates,
@@ -30,7 +29,6 @@ export default async function (options: IRestApiInitialize) {
   const useBodyParser = get(configuration, "restApi.useBodyParser", true);
   const useMorgan = get(configuration, "restApi.useMorgan", true);
   initializeContext = await initializeContext("restApi", {
-    dbTables,
     models,
     expressApp,
     database,
@@ -57,7 +55,6 @@ export default async function (options: IRestApiInitialize) {
         helpers: auth,
       },
       mailerInstance: mailerInstance,
-      dbTables: dbTables,
       models: models,
       socketio: socketio,
       sendEmail: sendEmail,
