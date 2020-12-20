@@ -130,8 +130,6 @@ export interface IConfigurationEvents {
       afterSoftDelete: Function;
       beforeBulkDelete: Function;
       afterBulkDelete: Function;
-      beforeBulkSoftDelete: Function;
-      afterBulkSoftDelete: Function;
       beforeBulkCreate: Function;
       afterBulkCreate: Function;
       beforeBulkSoftCreate: Function;
@@ -163,6 +161,9 @@ export interface IConfigurationRestApi {
   showWertik404Page: boolean;
   beforeStart: Function;
   restApi404Handler: Function;
+  useCors: Boolean;
+  useBodyParser: Boolean;
+  useMorgan: Boolean;
 }
 
 export interface IConfigurationGraphql {

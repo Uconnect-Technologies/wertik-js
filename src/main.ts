@@ -35,8 +35,9 @@ export const serve =  function (configurationOriginal: IConfiguration) {
                       let graphql = require("./framework/graphql/index").default;
                       let restApi = require("./framework/restApi/index").default;
                       let cron = require("./framework/cron/index").default;
-                      let dbTables = require("./framework/database/loadTables").default(database, configuration);
-                      let models = require("./framework/database/models").default(dbTables, configuration);
+                      
+                      let models = require("./framework/database/loadTables").default(database, configuration);
+                      // let models = require("./framework/database/models").default(dbTables, configuration);
                       let sendEmail =
                         get(configuration, "email.disable", false) === false
                           ? require("./framework/mailer/index").sendEmail(configuration, mailerInstance)
@@ -58,7 +59,6 @@ export const serve =  function (configurationOriginal: IConfiguration) {
                         expressApp: expressApp,
                         httpServer: httpServer,
                         configuration: configuration,
-                        dbTables: dbTables,
                         models: models,
                         sendEmail: sendEmail,
                         emailTemplates: emailTemplates,
@@ -69,7 +69,6 @@ export const serve =  function (configurationOriginal: IConfiguration) {
                       let { graphql: graphqlAppInstance, graphqlVoyager } = await graphql({
                         expressApp: expressApp,
                         configuration: configuration,
-                        dbTables: dbTables,
                         models: models,
                         sendEmail: sendEmail,
                         emailTemplates: emailTemplates,
@@ -80,7 +79,6 @@ export const serve =  function (configurationOriginal: IConfiguration) {
                       let restApiInstance = await restApi({
                         expressApp: expressApp,
                         configuration: configuration,
-                        dbTables: dbTables,
                         models: models,
                         emailTemplates: emailTemplates,
                         sendEmail: sendEmail,
@@ -94,7 +92,6 @@ export const serve =  function (configurationOriginal: IConfiguration) {
                         graphql: graphqlAppInstance,
                         restApi: restApiInstance,
                         socketio: socketio,
-                        dbTables: dbTables,
                         models: models,
                         emailTemplates: emailTemplates,
                         sendEmail: sendEmail,
@@ -113,7 +110,6 @@ export const serve =  function (configurationOriginal: IConfiguration) {
                       });
                       resolve({
                         socketio: socketio,
-                        dbTables: dbTables,
                         models: models,
                         emailTemplates: emailTemplates,
                         sendEmail: sendEmail,

@@ -1,31 +1,35 @@
 import { IConfigurationCustomModule } from "../types/configuration";
 import { get } from "lodash";
-import { identityColumn } from "../helpers/index";
+import { identityColumn, removeColumnsFromAccordingToSelectIgnoreFields } from "../helpers/index";
 import getRequestedFieldsFromResolverInfo from "./../helpers/getRequestedFieldsFromResolverInfo";
 
 const processManyToManyRelationship = (relationshipInfo, key) => {
   return async (parentRow: any, args: any, context: any, info: any) => {
-    let model = context.wertik.models[key].getModel();
+    let model = context.wertik.models[key]
     let parentRowValue = parentRow[identityColumn()].toString();
+    let requestedFields = getRequestedFieldsFromResolverInfo(info);
     if (!parentRowValue) {
       return null;
     }
-    return await model.paginate({
-      filters: [
-        {
-          column: relationshipInfo.foreignKey,
-          operator: "=",
-          value: parentRow[identityColumn()].toString(),
-        },
-      ],
-    });
+    return await model.paginate(
+      {
+        filters: [
+          {
+            column: relationshipInfo.foreignKey,
+            operator: "=",
+            value: parentRow[identityColumn()].toString(),
+          },
+        ],
+      },
+      Object.keys(requestedFields.list)
+    );
   };
 };
 
 const processOneToOneRelationship = (relationshipInfo, key) => {
   return async (parentRow: any, args: any, context: any, info: any) => {
     let requestedFields = getRequestedFieldsFromResolverInfo(info);
-    let model = context.wertik.models[key].getModel();
+    let model = context.wertik.models[key];
     let parentRowValue = parentRow[relationshipInfo.relationColumn];
     if (!parentRowValue) {
       return null;
@@ -34,7 +38,10 @@ const processOneToOneRelationship = (relationshipInfo, key) => {
       {
         [relationshipInfo.foreignKey]: parentRowValue,
       },
-      Object.keys(requestedFields)
+      removeColumnsFromAccordingToSelectIgnoreFields(
+        Object.keys(requestedFields),
+        model.selectIgnoreFields
+      )
     );
     return a.instance;
   };

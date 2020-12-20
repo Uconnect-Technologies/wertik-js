@@ -33,6 +33,9 @@ export default {
     disable: false,
   },
   restApi: {
+    useCors: true,
+    useBodyParser: true,
+    useMorgan: true,
     showWertik404Page: true,
     onCustomApiFailure: function ({ path, res, err }) {
       res.send("failed at " + path);

@@ -7,7 +7,6 @@ export interface IBuiltinModuleOverride {
       softDelete: Function;
       bulkCreate: Function;
       bulkDelete: Function;
-      bulkSoftDelete: Function;
       bulkUpdate: Function;
       save: Function;
     };
