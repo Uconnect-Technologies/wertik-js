@@ -3,7 +3,6 @@
   "version": "1.9.99-beta",
   "main": "lib/main.js",
   "repository": "https://github.com/Uconnect-Technologies/wertik-js.git",
-  "welcomeResponse": "Welcome to wertik, You are successfully running Wertik.",
   "keywords": [
     "mysql",
     "graphql",
