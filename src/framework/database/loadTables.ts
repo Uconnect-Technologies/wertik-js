@@ -50,6 +50,7 @@ export default function (connection, configuration: IConfiguration) {
             },
           }
         );
+        tables[moduleName].selectIgnoreFields = get(module,'database.selectIgnoreFields', [])
       }
     }
   };
@@ -72,12 +73,12 @@ export default function (connection, configuration: IConfiguration) {
     } else if (element.constructor === Object) {
       module = element;
     }
-      applyRelationshipSql(module, tables);
+    applyRelationshipSql(module, tables);
   });
 
-  Object.keys(tables).forEach(table => {
-    tables[table].stats = stats;
-    tables[table].paginate = paginate;
+  Object.keys(tables).forEach( async table => {
+    tables[table].stats = await stats(connection, tables[table]);
+    tables[table].paginate = await paginate(tables[table]);
   });
 
   return tables;
