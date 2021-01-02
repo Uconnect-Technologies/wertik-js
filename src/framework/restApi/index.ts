@@ -44,11 +44,6 @@ export default async function (options: IRestApiInitialize) {
     expressApp.use(morgan("combined"));
   }
   expressApp.use(async function (req, res, next) {
-    let requestContext = await get(
-      configuration.context,
-      "requestContext",
-      () => {}
-    )("restApi", req);
     req.wertik = {
       database: database,
       auth: {
@@ -61,10 +56,18 @@ export default async function (options: IRestApiInitialize) {
       emailTemplates: emailTemplates,
       multerInstance: multerInstance,
       logger: logger,
-      requestContext: requestContext,
+      // requestContext: requestContext,
       initializeContext: initializeContext,
       configuration: configuration,
     };
+    
+    let requestContext = await get(
+      configuration.context,
+      "requestContext",
+      () => {}
+    )("restApi", req);
+
+    req.wertik.requestContext = requestContext;
 
     next();
   });
