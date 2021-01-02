@@ -210,9 +210,13 @@ export interface IConfigurationBackup {
     key: String
   };
   digitalOceanSpaces: {
-    accessKeyId: String
-    secretAccessKey: String
-    spacesEndpoint: String
+    accessKeyId: String;
+    secretAccessKey: String;
+    spacesEndpoint: String;
+    uploadParams: {
+      Bucket: String;
+      ACL: String;
+    }
   };
 }
 
