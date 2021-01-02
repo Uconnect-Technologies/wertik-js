@@ -1,5 +1,9 @@
-
-import {dumpDatabase, dumpDatabaseToDigitalOcean, dumpDatabaseToDropbox} from "./helpers"
+import {
+  dumpDatabase,
+  dumpDatabaseToDigitalOcean,
+  dumpDatabaseToDropbox,
+  loadAllLocalBackups,
+} from "./helpers";
 export default {
   name: "Backup",
   graphql: {
@@ -33,46 +37,61 @@ export default {
       resolvers: {
         // fixme: continue progress
         backupLocal: async (_, args, context, info) => {
-          let op = await dumpDatabase({ database: context.wertik.configuration.database, models: context.wertik.models });
+          let op = await dumpDatabase({
+            database: context.wertik.configuration.database,
+            models: context.wertik.models,
+          });
           return {
-            message: "backup to your local system.",
+            message: "Backup to Local Drive has been completed.",
             filename: op.filename,
-            backup: op.backupInstance
+            backup: op.backupInstance,
           };
         },
         backupDigitalOceanSpaces: async (_, args, context, info) => {
-          let op = await dumpDatabase({ database: context.wertik.configuration.database, models: context.wertik.models });
-          
+          let op = await dumpDatabase({
+            database: context.wertik.configuration.database,
+            models: context.wertik.models,
+          });
+
           let opDigitalOcean = await dumpDatabaseToDigitalOcean({
             localDump: op,
-            configuration: context.wertik.configuration
+            configuration: context.wertik.configuration,
           });
 
           return {
-            message: "Backup to Digital Ocean Spaces completed",
+            message:
+              "Backup to DigitalOcean and Local Drive has been completed.",
             filename: opDigitalOcean.filename,
-            backup: opDigitalOcean.backupInstance
+            backup: opDigitalOcean.backupInstance,
           };
         },
         backupDropbox: async (_, args, context, info) => {
-          let op = await dumpDatabase({ database: context.wertik.configuration.database, models: context.wertik.models });
+          let op = await dumpDatabase({
+            database: context.wertik.configuration.database,
+            models: context.wertik.models,
+          });
           let opDropbox = await dumpDatabaseToDropbox({
             localDump: op,
-            configuration: context.wertik.configuration
+            configuration: context.wertik.configuration,
           });
           return {
             message: "Backup to Dropbox has been completed.",
             filename: opDropbox.filename,
-            backup: opDropbox.backupInstance
+            backup: opDropbox.backupInstance,
           };
         },
       },
     },
     query: {
       schema: `
-        allLocalBackupsList: [Backup]
+        localBackupsList: [String]
       `,
-      resolvers: {},
+      resolvers: {
+        localBackupsList: async () => {
+          const list = await loadAllLocalBackups();
+          return list;
+        },
+      },
     },
   },
   restApi: {},

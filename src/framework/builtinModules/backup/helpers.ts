@@ -1,6 +1,5 @@
-var shell = require("shelljs");
+import path from "path";
 import moment from "moment";
-import {get} from "lodash"
 import mysqldump from "mysqldump";
 import * as aws from "aws-sdk";
 import fs from "fs"
@@ -9,6 +8,7 @@ import { Dropbox, Error, files } from 'dropbox'; // eslint-disable-line no-unuse
 
 export const dumpDatabase = async ({ database, models }) => {
   const filename = `backups/${moment().format("MMMM-DD-YYYY-h-mm-ss-a")}-database-${database.dbName}.sql.gz`;
+  
   const backupInstance = await models.Backup.create({
     uploaded_filename: filename,
     uploaded_to: "local",
@@ -92,5 +92,15 @@ export const dumpDatabaseToDropbox = async ({ localDump, configuration }) => {
   } catch (e) {
     console.log(e)
     throw new Error(e.message);
+  }
+}
+
+export const loadAllLocalBackups = async () => {
+  try {
+    const backupsPath = path.join(__dirname,'../../../../backups')
+  let list = await fs.readdirSync(backupsPath);
+  return list;
+  } catch (e)  {
+    throw new Error(e)
   }
 }
