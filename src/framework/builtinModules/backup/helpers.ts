@@ -8,7 +8,7 @@ import { Dropbox, Error, files } from 'dropbox'; // eslint-disable-line no-unuse
 
 
 export const dumpDatabase = async ({ database, models }) => {
-  const filename = `backups/${moment().format("MMMM-DD-YYYY-h-mm-ss-a")}-database-${database.dbName}.sql`;
+  const filename = `backups/${moment().format("MMMM-DD-YYYY-h-mm-ss-a")}-database-${database.dbName}.sql.gz`;
   const backupInstance = await models.Backup.create({
     uploaded_filename: filename,
     uploaded_to: "local",
@@ -22,6 +22,7 @@ export const dumpDatabase = async ({ database, models }) => {
       database: database.dbName,
     },
     dumpToFile: filename,
+    compressFile: true,
   });
 
   return {
