@@ -80,7 +80,7 @@ export default async function (options: IRestApiInitialize) {
 
   expressApp.get("/w/info", (req, res) => {
     res.status(200).json({
-      message: require("./../../../package.json").welcomeResponse,
+      message: "Welcome to wertik, You are successfully running Wertik.",
       version: require("./../../../package.json").version,
     });
   });

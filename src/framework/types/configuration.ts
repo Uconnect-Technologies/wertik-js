@@ -202,6 +202,24 @@ export interface IConfigurationCron {
   }>;
 }
 
+export interface IConfigurationBackup {
+  local: {
+    output_directory: String;
+  };
+  dropbox: {
+    key: String
+  };
+  digitalOceanSpaces: {
+    accessKeyId: String;
+    secretAccessKey: String;
+    spacesEndpoint: String;
+    uploadParams: {
+      Bucket: String;
+      ACL: String;
+    }
+  };
+}
+
 export interface IConfiguration {
   dbDialect: string;
   name: string;
@@ -228,6 +246,7 @@ export interface IConfiguration {
   context: {
     [Key: string]: any;
   };
+  backup: IConfigurationBackup;
   email: IConfigurationEmail;
   override: IConfigurationOverride;
   restApi: IConfigurationRestApi;
