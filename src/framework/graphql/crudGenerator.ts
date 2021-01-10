@@ -1,22 +1,32 @@
 import getRequestedFieldsFromResolverInfo from "./../helpers/getRequestedFieldsFromResolverInfo";
-import { IConfiguration, IConfigurationCustomModule } from "../types/configuration";
+import {
+  IConfiguration,
+  IConfigurationCustomModule,
+} from "../types/configuration";
 import { get, isFunction } from "lodash";
-import { firstLetterLowerCase, removeColumnsFromAccordingToSelectIgnoreFields } from "../helpers/index";
+import {
+  firstLetterLowerCase,
+  removeColumnsFromAccordingToSelectIgnoreFields,
+} from "../helpers/index";
+import convertFiltersIntoSequalizeObject from "../database/helpers/convertFiltersIntoSequalizeObject";
 
 const identityColumn = "id";
 const identityColumnGraphQLType = "Int";
 
 export const generateQueriesCrudSchema = (moduleName: String) => {
   let string = "";
-  const byFilter = `${firstLetterLowerCase(moduleName)}(filters: [FilterInput]): ${moduleName}`;
+  const byFilter = `${firstLetterLowerCase(
+    moduleName
+  )}(filters: [FilterInput]): ${moduleName}`;
   const viewString = `view${moduleName}(${identityColumn}: ${identityColumnGraphQLType}): ${moduleName}`;
   const listString = `list${moduleName}(pagination: PaginationInput, filters: ${moduleName}FilterInput, sorting: [SortingInput]): ${moduleName}List`;
-  const statsString = `${firstLetterLowerCase(moduleName)}Stats: ModuleStats`;
+  const countString = `count${moduleName}(filters: ${moduleName}FilterInput):  Int`;
   string = `
     ${viewString}
     ${listString}
+    ${countString}
   `;
-  string = string + " " +  " " + byFilter + " " + statsString;
+  string = string + " " + " " + byFilter;
   return string;
 };
 
@@ -36,8 +46,15 @@ export const getSubscriptionConstants = (moduleName: String) => {
   };
 };
 
-export const generateSubscriptionsCrudResolvers = (moduleName: String, pubsub: any) => {
-  const { deletedModule, bulkCreatedModule, bulkUpdatedModule } = getSubscriptionConstants(moduleName);
+export const generateSubscriptionsCrudResolvers = (
+  moduleName: String,
+  pubsub: any
+) => {
+  const {
+    deletedModule,
+    bulkCreatedModule,
+    bulkUpdatedModule,
+  } = getSubscriptionConstants(moduleName);
   let object = {
     [deletedModule]: {
       subscribe: () => pubsub.asyncIterator([deletedModule]),
@@ -63,42 +80,123 @@ export const generateMutationsCrudSchema = (moduleName: String) => {
   `;
 };
 
-export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub, configuration: IConfiguration) => {
-  const overrideMutationBulkCreate = get(configuration, `override.${module.name}.graphql.mutation.bulkCreate`, null);
-  const overrideMutationBulkUpdate = get(configuration, `override.${module.name}.graphql.mutation.bulkUpdate`, null);
-  const overrideMutationBulkDelete = get(configuration, `override.${module.name}.graphql.mutation.bulkDelete`, null);
-  
-  const overrideQueryList = get(configuration, `override.${module.name}.graphql.query.list`, null);
-  const overrideQueryView = get(configuration, `override.${module.name}.graphql.query.view`, null);
+export const generateCrudResolvers = (
+  module: IConfigurationCustomModule,
+  pubsub,
+  configuration: IConfiguration
+) => {
+  const overrideMutationBulkCreate = get(
+    configuration,
+    `override.${module.name}.graphql.mutation.bulkCreate`,
+    null
+  );
+  const overrideMutationBulkUpdate = get(
+    configuration,
+    `override.${module.name}.graphql.mutation.bulkUpdate`,
+    null
+  );
+  const overrideMutationBulkDelete = get(
+    configuration,
+    `override.${module.name}.graphql.mutation.bulkDelete`,
+    null
+  );
 
-  const beforeBulkDelete = get(configuration, `events.database.${module.name}.beforeBulkDelete`, null);
-  const afterBulkDelete = get(configuration, `events.database.${module.name}.afterBulkDelete`, null);
-  const beforeBulkCreate = get(configuration, `events.database.${module.name}.beforeBulkCreate`, null);
-  const afterBulkCreate = get(configuration, `events.database.${module.name}.afterBulkCreate`, null);
-  const beforeBulkUpdate = get(configuration, `events.database.${module.name}.beforeBulkUpdate`, null);
-  const afterBulkUpdate = get(configuration, `events.database.${module.name}.afterBulkUpdate`, null);
+  const overrideQueryList = get(
+    configuration,
+    `override.${module.name}.graphql.query.list`,
+    null
+  );
+  const overrideQueryView = get(
+    configuration,
+    `override.${module.name}.graphql.query.view`,
+    null
+  );
+
+  const beforeBulkDelete = get(
+    configuration,
+    `events.database.${module.name}.beforeBulkDelete`,
+    null
+  );
+  const afterBulkDelete = get(
+    configuration,
+    `events.database.${module.name}.afterBulkDelete`,
+    null
+  );
+  const beforeBulkCreate = get(
+    configuration,
+    `events.database.${module.name}.beforeBulkCreate`,
+    null
+  );
+  const afterBulkCreate = get(
+    configuration,
+    `events.database.${module.name}.afterBulkCreate`,
+    null
+  );
+  const beforeBulkUpdate = get(
+    configuration,
+    `events.database.${module.name}.beforeBulkUpdate`,
+    null
+  );
+  const afterBulkUpdate = get(
+    configuration,
+    `events.database.${module.name}.afterBulkUpdate`,
+    null
+  );
   // R
-  const beforeList = get(configuration, `events.database.${module.name}.beforeList`, null);
-  const afterList = get(configuration, `events.database.${module.name}.afterList`, null);
+  const beforeList = get(
+    configuration,
+    `events.database.${module.name}.beforeList`,
+    null
+  );
+  const afterList = get(
+    configuration,
+    `events.database.${module.name}.afterList`,
+    null
+  );
 
-  const beforeView = get(configuration, `events.database.${module.name}.beforeView`, null);
-  const afterView = get(configuration, `events.database.${module.name}.afterView`, null);
+  const beforeView = get(
+    configuration,
+    `events.database.${module.name}.beforeView`,
+    null
+  );
+  const afterView = get(
+    configuration,
+    `events.database.${module.name}.afterView`,
+    null
+  );
 
-  const { bulkCreatedModule, bulkUpdatedModule } = getSubscriptionConstants(module.name);
+  const { bulkCreatedModule, bulkUpdatedModule } = getSubscriptionConstants(
+    module.name
+  );
 
   let object = {
     mutations: {
-      [`bulkDelete${module.name}`]: async (_: any, args: any, context: any, info: any) => {
-        if (overrideMutationBulkDelete && overrideMutationBulkDelete.constructor == Function) {
-          let response = await overrideMutationBulkDelete(_, args, context, info);
+      [`bulkDelete${module.name}`]: async (
+        _: any,
+        args: any,
+        context: any,
+        info: any
+      ) => {
+        if (
+          overrideMutationBulkDelete &&
+          overrideMutationBulkDelete.constructor == Function
+        ) {
+          let response = await overrideMutationBulkDelete(
+            _,
+            args,
+            context,
+            info
+          );
           return response;
         }
-        const finalArgs = isFunction(beforeBulkDelete) ? await beforeBulkDelete({
-          mode: "graphql",
-          params: { _, args, context, info },
-        }) : args;
+        const finalArgs = isFunction(beforeBulkDelete)
+          ? await beforeBulkDelete({
+              mode: "graphql",
+              params: { _, args, context, info },
+            })
+          : args;
         let model = context.wertik.models[module.name];
-        await model.destroy({ where: { id: finalArgs.input.id }})
+        await model.destroy({ where: { id: finalArgs.input.id } });
         if (isFunction(afterBulkDelete)) {
           await afterBulkDelete({
             mode: "graphql",
@@ -107,15 +205,30 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
         }
         return { message: `${module.name} deleted successfully.` };
       },
-      [`bulkCreate${module.name}`]: async (_: any, args: any, context: any, info: any) => {
-        if (overrideMutationBulkCreate && overrideMutationBulkCreate.constructor == Function) {
-          let response = await overrideMutationBulkCreate(_, args, context, info);
+      [`bulkCreate${module.name}`]: async (
+        _: any,
+        args: any,
+        context: any,
+        info: any
+      ) => {
+        if (
+          overrideMutationBulkCreate &&
+          overrideMutationBulkCreate.constructor == Function
+        ) {
+          let response = await overrideMutationBulkCreate(
+            _,
+            args,
+            context,
+            info
+          );
           return response;
         }
-        const finalArgs = isFunction(beforeBulkCreate) ? await beforeBulkCreate({
-          mode: "graphql",
-          params: { _, args, context, info },
-        }) : args;
+        const finalArgs = isFunction(beforeBulkCreate)
+          ? await beforeBulkCreate({
+              mode: "graphql",
+              params: { _, args, context, info },
+            })
+          : args;
         let model = context.wertik.models[module.name];
         let result = await model.bulkCreate(finalArgs.input);
         pubsub.publish(bulkCreatedModule, {
@@ -131,21 +244,36 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
           returning: result,
         };
       },
-      [`bulkUpdate${module.name}`]: async (_: any, args: any, context: any, info: any) => {
-        if (overrideMutationBulkUpdate && overrideMutationBulkUpdate.constructor == Function) {
-          let response = await overrideMutationBulkUpdate(_, args, context, info);
+      [`bulkUpdate${module.name}`]: async (
+        _: any,
+        args: any,
+        context: any,
+        info: any
+      ) => {
+        if (
+          overrideMutationBulkUpdate &&
+          overrideMutationBulkUpdate.constructor == Function
+        ) {
+          let response = await overrideMutationBulkUpdate(
+            _,
+            args,
+            context,
+            info
+          );
           return response;
         }
-        const finalArgs = isFunction(beforeBulkUpdate) ? await beforeBulkUpdate({
-          mode: "graphql",
-          params: { _, args, context, info },
-        }) : args;
+        const finalArgs = isFunction(beforeBulkUpdate)
+          ? await beforeBulkUpdate({
+              mode: "graphql",
+              params: { _, args, context, info },
+            })
+          : args;
         let model = context.wertik.models[module.name];
         let result = await model.bulkCreate(finalArgs.input, {
-          updateOnDuplicate: ["id"]
+          updateOnDuplicate: ["id"],
         });
         pubsub.publish(bulkUpdatedModule, {
-          [bulkUpdatedModule]: result
+          [bulkUpdatedModule]: result,
         });
         if (isFunction(afterBulkUpdate)) {
           afterBulkUpdate({
@@ -160,12 +288,20 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
       },
     },
     queries: {
-      [`${firstLetterLowerCase(module.name)}Stats`]: async (_: any, args: any, context: any, info: any) => {
-        let requestedReports = getRequestedFieldsFromResolverInfo(info);
+      [`count${module.name}`]: async (_, args, context, info) => {
         let model = context.wertik.models[module.name];
-        return model.stats(Object.keys(requestedReports));
+        const filters = await convertFiltersIntoSequalizeObject(args ? args.filters || {} : {});
+        let count = await model.count({
+          where: filters
+        })
+        return count;
       },
-      [`view${module.name}`]: async (_: any, args: any, context: any, info: any) => {
+      [`view${module.name}`]: async (
+        _: any,
+        args: any,
+        context: any,
+        info: any
+      ) => {
         if (overrideQueryView && overrideQueryView.constructor == Function) {
           let response = await overrideQueryView(_, args, context, info);
           return response;
@@ -183,7 +319,7 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
           attributes: removeColumnsFromAccordingToSelectIgnoreFields(
             Object.keys(requestedFields),
             model.selectIgnoreFields
-          )
+          ),
         });
         if (isFunction(afterView)) {
           afterView({
@@ -193,7 +329,12 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
         }
         return view;
       },
-      [`list${module.name}`]: async (_: any, args: any, context: any, info: any) => {
+      [`list${module.name}`]: async (
+        _: any,
+        args: any,
+        context: any,
+        info: any
+      ) => {
         if (overrideQueryList && overrideQueryList.constructor == Function) {
           let response = await overrideQueryList(_, args, context, info);
           return response;
@@ -204,9 +345,12 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
               params: { _, args, context, info },
             })
           : args;
-        let model = context.wertik.models[module.name]
+        let model = context.wertik.models[module.name];
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        let response = await model.paginate(finalArgs, Object.keys(requestedFields.list));
+        let response = await model.paginate(
+          finalArgs,
+          Object.keys(requestedFields.list)
+        );
         if (isFunction(afterList)) {
           afterList({
             mode: "graphql",
@@ -226,38 +370,40 @@ export const generateModuleSearchShema = (module) => {
       _or: [${module.name}FilterInput]
       _and: [${module.name}FilterInput]
   `;
-    string = `${string}
+  string = `${string}
       id: IntFilterInput
       created_at: DateFilterInput
       updated_at: DateFilterInput
-    `
-    const fields = get(module, "database.sql.fields", {});
-    const keys = Object.keys(fields);
-    keys.forEach((key) => {
-      const field = fields[key];
+    `;
+  const fields = get(module, "database.sql.fields", {});
+  const keys = Object.keys(fields);
+  keys.forEach((key) => {
+    const field = fields[key];
 
-      const getType = () => {
-        const type = field.oldType.toLowerCase();
-        if (type === "string") {
-          return "String";
-        } else if (type === "integer") {
-          return "Int";
-        } else if (type === "boolean") {
-          return "Boolean";
-        }
-      };
-      string =
-        string +
-        `
+    const getType = () => {
+      const type = field.oldType.toLowerCase();
+      if (type === "string") {
+        return "String";
+      } else if (type === "integer") {
+        return "Int";
+      } else if (type === "boolean") {
+        return "Boolean";
+      }
+    };
+    string =
+      string +
+      `
       ${key}: ${getType()}FilterInput
       `;
-    });
+  });
   string = string + " }";
-  
+
   return string;
 };
 
-export const generateListTypeForModule = (module: IConfigurationCustomModule) => {
+export const generateListTypeForModule = (
+  module: IConfigurationCustomModule
+) => {
   return `
     ${generateModuleSearchShema(module)}
     type ${module.name}List {
@@ -270,6 +416,9 @@ export const generateListTypeForModule = (module: IConfigurationCustomModule) =>
     type ${module.name}BulkMutationResponse {
       returning: [${module.name}]
       affectedRows: Int
+    }
+    type Count${module.name} {
+      count: Int
     }
   `;
 };

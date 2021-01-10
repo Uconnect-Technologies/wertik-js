@@ -1,7 +1,6 @@
 export default {
   name: "Wertik",
-  builtinModules:
-    "user,auth,forgetPassword,permission,role,rolePermission,userPermission,userRole,me,storage,mail",
+  builtinModules: "user,auth,forgetPassword,permission,role,rolePermission,userPermission,userRole,me,storage,mail,backup",
   database: {
     dbDialect: process.env.dbDialect,
     dbUsername: process.env.dbUsername,
@@ -42,6 +41,20 @@ export default {
     },
     // Below function for custom 404 page or response.
     // restApi404Handler: function () {}
+  },
+  backup: {
+    digitalOceanSpaces: {
+      accessKeyId: "",
+      secretAccessKey: "",
+      spacesEndpoint: "",
+      uploadParams: {
+        Bucket: "",
+        ACL: "",
+      },
+    },
+    dropbox: {
+      accessToken: "",
+    },
   },
   modules: [
     {

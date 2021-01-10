@@ -1,8 +1,8 @@
 import { get } from "lodash";
-import Sequelize from "sequelize";
+import { Sequelize } from 'sequelize'
 
 import { successMessage } from "../logger/consoleMessages";
-import { IConfiguration, IConfigurationDatabase } from "../types/configuration";
+import { IConfigurationDatabase } from "../types/configuration";
 import { databaseDefaultOptions } from "../defaults/options/index";
 
 export default async function (database: IConfigurationDatabase) {

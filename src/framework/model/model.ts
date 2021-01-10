@@ -371,6 +371,7 @@ export default function (props) {
         // return this;
       });
     },
+    
     findOneByArgs: async function (args, requestedFields: Array<string>) {
       let wertikModule: IConfigurationCustomModule = this.wertikModule;
       return new Promise(async (resolve, reject) => {

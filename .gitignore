@@ -15,3 +15,5 @@ info.log
 warning.log
 .env
 storage
+/backups
+.DS_STORE
