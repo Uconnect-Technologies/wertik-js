@@ -1,7 +1,8 @@
 import { ApolloError } from "apollo-server";
 import createJwtToken from "./../../../security/createJwtToken";
-import { randomString, generateHashPassword } from "./../../../helpers/index";
+import { randomString } from "./../../../helpers/index";
 import moment from "moment";
+import { generateHashPassword } from "../../../helpers/auth";
 
 export const requestPasswordResetHandler = async function(obj) {
   const { userModel, forgetPasswordModel, data, emailTemplates, sendEmail } = obj;

@@ -10,8 +10,7 @@
 		"baseUrl": "./",
 		"lib": ["es6", "esnext.asynciterable"],
 		"types": [
-			"node",
-			"es2017"
+			"node"
 		]
 	},
 	"include": [

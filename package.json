@@ -26,7 +26,7 @@
   "scripts": {
     "dev": "concurrently -n TS,DevServer  \"npm run watch-ts\"  \"nodemon lib/devServer.js\" ",
     "dev-without-nodemon": "concurrently \"npm run watch-ts\"  \"node lib/devServer.js\" ",
-    "build": "npm run clean && npm run build-ts",
+    "build": "yarn tsc",
     "production": "node lib/devServer.js",
     "watch-ts": "tsc -w"
   },
