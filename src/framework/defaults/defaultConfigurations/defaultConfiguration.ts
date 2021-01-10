@@ -42,6 +42,20 @@ export default {
     // Below function for custom 404 page or response.
     // restApi404Handler: function () {}
   },
+  backup: {
+    digitalOceanSpaces: {
+      accessKeyId: "",
+      secretAccessKey: "",
+      spacesEndpoint: "",
+      uploadParams: {
+        Bucket: "",
+        ACL: "",
+      },
+    },
+    dropbox: {
+      accessToken: "",
+    },
+  },
   modules: [
     {
       name: "Article",
