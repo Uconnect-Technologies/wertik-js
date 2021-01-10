@@ -1,6 +1,6 @@
 export default {
   name: "Wertik",
-  builtinModules: "user,auth,forgetPassword,permission,role,rolePermission,userPermission,userRole,me,storage,mail",
+  builtinModules: "user,auth,forgetPassword,permission,role,rolePermission,userPermission,userRole,me,storage,mail,backup",
   database: {
     dbDialect: process.env.dbDialect,
     dbUsername: process.env.dbUsername,
@@ -10,7 +10,6 @@ export default {
     dbPort: process.env.dbPort,
   },
   port: 5000,
-  startServers: true,
   frontendAppUrl: "http://localhost:8080/",
   frontendAppActivationUrl: "http://localhost:8080/activate-account",
   frontendAppPasswordResetUrl: "http://localhost:8080/reset-password",
@@ -33,12 +32,29 @@ export default {
     disable: false,
   },
   restApi: {
+    useCors: true,
+    useBodyParser: true,
+    useMorgan: true,
     showWertik404Page: true,
     onCustomApiFailure: function ({ path, res, err }) {
       res.send("failed at " + path);
     },
     // Below function for custom 404 page or response.
     // restApi404Handler: function () {}
+  },
+  backup: {
+    digitalOceanSpaces: {
+      accessKeyId: "",
+      secretAccessKey: "",
+      spacesEndpoint: "",
+      uploadParams: {
+        Bucket: "",
+        ACL: "",
+      },
+    },
+    dropbox: {
+      accessToken: "",
+    },
   },
   modules: [
     {

@@ -88,8 +88,7 @@ export const firstLetterLowerCase = (s) => {
 };
 
 export const identityColumn = () => {
-  const issql = isSQL();
-  return issql ? "id" : "_id";
+  return "id"
 };
 
 export const loadModulesFromConfiguration = (configuration: IConfiguration) => {
@@ -116,18 +115,15 @@ export const loadModulesFromConfiguration = (configuration: IConfiguration) => {
 };
 
 export const removeColumnsFromAccordingToSelectIgnoreFields = (
-  attributesObject,
+  requestedFields,
   ignoreFields
 ) => {
-  attributesObject.attributes = get(attributesObject, "attributes", []).filter(
-    (c) => {
-      if (ignoreFields) {
-        return ignoreFields.includes(c) === false;
-      }
-      return true;
+  requestedFields.forEach((element, index) => {
+    if (ignoreFields.includes(element)) {
+      requestedFields.splice(index, 1);
     }
-  );
-  return attributesObject;
+  });
+  return requestedFields;
 };
 
 export const defaultPort = 7000;

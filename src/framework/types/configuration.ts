@@ -2,20 +2,7 @@ import { ISocketConfiguration } from "./servers";
 import { IConfigurationOverride } from "./override";
 import { IConfigurationRbac } from "./rbac";
 
-export interface IConfigurationCustomModuleGraphqlCrudQuery {
-  generate: Boolean;
-  operations: string;
-}
 
-export interface IConfigurationCustomModuleGraphqlCrudMutation {
-  generate: Boolean;
-  operations: string;
-}
-
-export interface IConfigurationCustomModuleGraphqlCrud {
-  query: IConfigurationCustomModuleGraphqlCrudQuery;
-  mutation: IConfigurationCustomModuleGraphqlCrudMutation;
-}
 export interface IConfigurationCustomModuleGraphqlMutation {
   schema: string;
   resolvers: Object;
@@ -26,7 +13,6 @@ export interface IConfigurationCustomModuleGraphqlQuery {
 }
 
 export interface IConfigurationCustomModuleGraphql {
-  crud: IConfigurationCustomModuleGraphqlCrud;
   schema: string;
   customResolvers: {
     [Key: string]: Function;
@@ -140,14 +126,10 @@ export interface IConfigurationEvents {
   database?: {
     [Key: string]: {
       // Cud
-      beforeDelete: Function;
-      afterDelete: Function;
       beforeSoftDelete: Function;
       afterSoftDelete: Function;
       beforeBulkDelete: Function;
       afterBulkDelete: Function;
-      beforeBulkSoftDelete: Function;
-      afterBulkSoftDelete: Function;
       beforeBulkCreate: Function;
       afterBulkCreate: Function;
       beforeBulkSoftCreate: Function;
@@ -179,6 +161,9 @@ export interface IConfigurationRestApi {
   showWertik404Page: boolean;
   beforeStart: Function;
   restApi404Handler: Function;
+  useCors: Boolean;
+  useBodyParser: Boolean;
+  useMorgan: Boolean;
 }
 
 export interface IConfigurationGraphql {
@@ -217,6 +202,24 @@ export interface IConfigurationCron {
   }>;
 }
 
+export interface IConfigurationBackup {
+  local: {
+    output_directory: String;
+  };
+  dropbox: {
+    key: String
+  };
+  digitalOceanSpaces: {
+    accessKeyId: String;
+    secretAccessKey: String;
+    spacesEndpoint: String;
+    uploadParams: {
+      Bucket: String;
+      ACL: String;
+    }
+  };
+}
+
 export interface IConfiguration {
   dbDialect: string;
   name: string;
@@ -243,6 +246,7 @@ export interface IConfiguration {
   context: {
     [Key: string]: any;
   };
+  backup: IConfigurationBackup;
   email: IConfigurationEmail;
   override: IConfigurationOverride;
   restApi: IConfigurationRestApi;

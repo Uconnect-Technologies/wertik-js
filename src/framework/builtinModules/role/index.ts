@@ -1,16 +1,6 @@
 export default {
   name: "Role",
   graphql: {
-    crud: {
-      query: {
-        generate: true,
-        operations: "*",
-      },
-      mutation: {
-        generate: true,
-        operations: "*",
-      },
-    },
     schema: `
       type Role {
         id: Int

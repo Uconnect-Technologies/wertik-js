@@ -1,19 +1,8 @@
 export default {
   name: "Storage",
   graphql: {
-    crud: {
-      query: {
-        generate: true,
-        operations: "*",
-      },
-      mutation: {
-        generate: false,
-        operations: "*",
-      },
-    },
     schema: `
       type Storage {
-        _id: String
         id: Int
         name: String
         filename: String
@@ -25,6 +14,14 @@ export default {
         deleted: Boolean
         created_at: String
         updated_at: String
+      }
+      input StorageInput {
+        id: Int
+        name: String
+        filename: String
+        size: String
+        type: String
+        folder: String
       }
     `,
     mutation: {

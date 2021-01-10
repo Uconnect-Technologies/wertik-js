@@ -6,6 +6,8 @@ import { errorMessage } from "../logger/consoleMessages";
 import { databaseDefaultOptions } from "../defaults/options/index";
 import { IConfigurationCustomModule, IConfiguration } from "../types/configuration";
 import { applyRelationshipSql } from "../moduleRelationships/database";
+import stats from "./helpers/stats";
+import paginate from "./helpers/paginate";
 
 const checkDatabaseOptions = (moduleName, tableName) => {
   if (moduleName && !tableName) {
@@ -48,6 +50,7 @@ export default function (connection, configuration: IConfiguration) {
             },
           }
         );
+        tables[moduleName].selectIgnoreFields = get(module,'database.selectIgnoreFields', [])
       }
     }
   };
@@ -70,7 +73,12 @@ export default function (connection, configuration: IConfiguration) {
     } else if (element.constructor === Object) {
       module = element;
     }
-      applyRelationshipSql(module, tables);
+    applyRelationshipSql(module, tables);
+  });
+
+  Object.keys(tables).forEach( async table => {
+    tables[table].stats = await stats(connection, tables[table]);
+    tables[table].paginate = await paginate(tables[table]);
   });
 
   return tables;

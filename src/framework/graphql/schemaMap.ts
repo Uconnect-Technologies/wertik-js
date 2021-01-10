@@ -7,8 +7,7 @@ export default `
     message: String
   }
   input IDDeleteInput {
-    id: Int
-    _id: String
+    id: [Int]
   }
   [generalSchema__replace]
   [modulesSchema__replace]

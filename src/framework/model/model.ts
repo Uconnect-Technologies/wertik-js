@@ -346,27 +346,6 @@ export default function (props) {
         }
       });
     },
-    bulkSoftDelete: async function (args) {
-      return new Promise(async (resolve, reject) => {
-        try {
-          const model = this.dbTables[this.tableName];
-          await model.update(
-            { is_deleted: 1 },
-            {
-              where: {
-                id: args.map((c) => c),
-              },
-            }
-          );
-          resolve({
-            message: "Items deleted",
-            statusCode: 200,
-          });
-        } catch (e) {
-          reject(e);
-        }
-      });
-    },
     bulkCreate: async function (args) {
       return new Promise(async (resolve, reject) => {
         let _this = this;
@@ -392,6 +371,7 @@ export default function (props) {
         // return this;
       });
     },
+    
     findOneByArgs: async function (args, requestedFields: Array<string>) {
       let wertikModule: IConfigurationCustomModule = this.wertikModule;
       return new Promise(async (resolve, reject) => {

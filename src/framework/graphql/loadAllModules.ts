@@ -1,8 +1,7 @@
 /*
     This is all where GraphQL thing happens. This file loads all graphql schemas from the app.
 */
-
-const { get, isFunction } = require("lodash");
+import { get, isFunction } from "lodash";
 import generalSchema from "./generalSchema";
 import {
   generateSubscriptionsCrudResolvers,
@@ -12,13 +11,14 @@ import {
   generateMutationsCrudSchema,
   generateCrudResolvers,
 } from "./crudGenerator";
-let { PubSub } = require("apollo-server");
+import { PubSub } from "apollo-server";
 import { IConfiguration } from "../types/configuration";
 import { GraphQLModuleRelationMapper } from "../moduleRelationships/graphql";
 const pubsub = new PubSub();
 
 export default async function (configuration: IConfiguration) {
   let modulesSchema = ``;
+
   let modulesQuerySchema = ``;
   let modulesMutationSchema = ``;
   let modulesSubscriptionSchema = ``;
@@ -27,7 +27,7 @@ export default async function (configuration: IConfiguration) {
   modules = [...modules, ...get(configuration, "modules", [])];
   let response = () => {
     return {
-      message: require("../../../package.json").welcomeResponse,
+      message: "Welcome to wertik, You are successfully running Wertik.",
       version: require("../../../package.json").version,
     };
   };
@@ -38,74 +38,129 @@ export default async function (configuration: IConfiguration) {
   let appSubscriptions = {};
   let appCustomResolvers = {};
 
-  const processModule = function (module) {
-    if (module && module.hasOwnProperty("graphql")) {
-      let graphql = module.graphql;
-      const useDatabase = get(module, "useDatabase", true);
-      let moduleName = module.name;
-      let schema = graphql.schema;
-      let currentGenerateQuery = get(graphql, "crud.query.generate", true);
-      let currentGenerateQueryOperations = get(graphql, "crud.query.operations", "*");
-      let currentGenerateMutation = get(graphql, "crud.mutation.generate", true);
-      let currentGenerateMutationOperations = get(graphql, "crud.mutation.operations", "*");
-      let currentMutationSchema = get(graphql, "mutation.schema", "");
-      let currentMutationResolvers = get(graphql, "mutation.resolvers", {});
-      let currentQuerySchema = get(graphql, "query.schema", "");
-      let currentQueryResolvers = get(graphql, "query.resolvers", {});
-      let currentModuleCrudResolvers = generateCrudResolvers(
-        module,
-        pubsub,
-        currentGenerateMutationOperations,
-        currentGenerateQueryOperations,
-        configuration
+  const processModule = function (currentModule) {
+    if (currentModule && currentModule.hasOwnProperty("graphql")) {
+      // Process Module Graphql
+      const moduleGraphql = currentModule.graphql;
+      const useDatabase = get(currentModule, "useDatabase", true);
+      const currentModuleName = currentModule.name;
+
+      const currentModuleGraphqlSchema = get(moduleGraphql, "schema", "");
+
+      const currentModuleGraphqlQuerySchema = get(
+        moduleGraphql,
+        "query.schema",
+        ""
       );
-      let currentModuleSubscriptionResolvers = {};
-      let currentModuleListSchema = currentGenerateQuery || currentGenerateMutation ? generateListTypeForModule(module) : "";
-      if (useDatabase === true) {
-        currentModuleSubscriptionResolvers = generateSubscriptionsCrudResolvers(moduleName, pubsub, currentGenerateMutationOperations);
-      }
-      // relations
-      let customResolvers = get(graphql, "customResolvers", {});
-      
-      appCustomResolvers[module.name] = {
-        ...customResolvers,
-        ...GraphQLModuleRelationMapper(module),
+      const currentModuleGraphqlQueryResolvers = get(
+        moduleGraphql,
+        "query.resolvers",
+        {}
+      );
+
+      const currentModuleGraphqlMutationSchema = get(
+        moduleGraphql,
+        "mutation.schema",
+        ""
+      );
+      const currentModuleGraphqlMutationResolvers = get(
+        moduleGraphql,
+        "mutation.resolvers",
+        {}
+      );
+
+      const customResolvers = get(moduleGraphql, "customResolvers", {});
+
+      modulesSchema = `${modulesSchema}
+        ${currentModuleGraphqlSchema}`;
+
+      modulesQuerySchema = `${modulesQuerySchema}
+        ${currentModuleGraphqlQuerySchema}`;
+
+      appQueries = {
+        ...appQueries,
+        ...currentModuleGraphqlQueryResolvers,
       };
 
-      // Issue: https://github.com/Uconnect-Technologies/wertik-js/issues/215
-      const totalResolvers = Object.keys(appCustomResolvers[module.name]).length
+      modulesMutationSchema = `${modulesMutationSchema}
+        ${currentModuleGraphqlMutationSchema}`;
+
+      appMutations = {
+        ...appMutations,
+        ...currentModuleGraphqlMutationResolvers,
+      };
+
+      appCustomResolvers[currentModuleName] = {
+        ...customResolvers,
+        ...GraphQLModuleRelationMapper(currentModule),
+      };
+
+      // Process Module Graphql
+
+      // Process Crud for Module:
+
+      if (useDatabase === true) {
+        let currentModuleListSchema = generateListTypeForModule(currentModule);
+
+        modulesSchema = `${modulesSchema}
+        ${currentModuleListSchema}`;
+
+        const crudResolvers = generateCrudResolvers(
+          currentModule,
+          pubsub,
+          configuration
+        );
+
+        const crudMutationSchema = generateMutationsCrudSchema(
+          currentModuleName
+        );
+        const crudMutationResolvers = crudResolvers.mutations;
+
+        const crudQuerySchema = generateQueriesCrudSchema(currentModuleName);
+        const crudQueryResolvers = crudResolvers.queries;
+
+        const crudSubscriptionSchema = generateMutationsCrudSubscriptionSchema(
+          currentModuleName
+        );
+        const crudSubscriptionResolvers = generateSubscriptionsCrudResolvers(
+          currentModuleName,
+          pubsub
+        );
+
+        modulesQuerySchema = `${modulesQuerySchema}
+        ${crudQuerySchema}`;
+
+        appQueries = {
+          ...appQueries,
+          ...crudQueryResolvers,
+        };
+
+        modulesMutationSchema = `${modulesMutationSchema}
+        ${crudMutationSchema}`;
+
+        appMutations = {
+          ...appMutations,
+          ...crudMutationResolvers,
+        };
+
+        modulesSubscriptionSchema =
+          modulesSubscriptionSchema + crudSubscriptionSchema;
+
+        appSubscriptions = {
+          ...appSubscriptions,
+          ...crudSubscriptionResolvers,
+        };
+      }
+
+      // Check for empty resolvers and remove them
+
+      const totalResolvers = Object.keys(get(appCustomResolvers,currentModuleName,{})).length;
+      // cosnoel
       if (totalResolvers === 0) {
-        delete appCustomResolvers[module.name]
+        delete appCustomResolvers[currentModuleName];
       }
-      // relations
-      // require information
-      // crud
-      if (currentGenerateQuery) {
-        modulesQuerySchema = modulesQuerySchema + generateQueriesCrudSchema(moduleName, currentGenerateQueryOperations);
-        appQueries = { ...appQueries, ...currentModuleCrudResolvers.queries };
-      }
-      if (currentGenerateMutation) {
-        modulesMutationSchema = modulesMutationSchema + generateMutationsCrudSchema(moduleName, currentGenerateMutationOperations);
-        appMutations = { ...appMutations, ...currentModuleCrudResolvers.mutations };
-      }
-      // crud
-      // Subscription
 
-      let currentModuleCrudSubscription = currentGenerateMutation
-        ? generateMutationsCrudSubscriptionSchema(moduleName, currentGenerateMutationOperations, currentGenerateQueryOperations)
-        : "";
-
-      // Subscription
-      modulesSchema = modulesSchema + schema;
-      modulesSchema = modulesSchema + currentModuleListSchema;
-      modulesQuerySchema = modulesQuerySchema + currentQuerySchema;
-      modulesMutationSchema = modulesMutationSchema + currentMutationSchema;
-      modulesSubscriptionSchema = modulesSubscriptionSchema + currentModuleCrudSubscription;
-      appQueries = { ...appQueries, ...currentQueryResolvers };
-      appMutations = { ...appMutations, ...currentMutationResolvers };
-      if (currentGenerateMutation) {
-        appSubscriptions = { ...appSubscriptions, ...currentModuleSubscriptionResolvers };
-      }
+      // Process Crud for module:
     }
   };
 
@@ -127,7 +182,10 @@ export default async function (configuration: IConfiguration) {
   schemaMap = schemaMap.replace("[modulesSchema__replace]", modulesSchema);
   schemaMap = schemaMap.replace("[mutation__replace]", modulesMutationSchema);
   schemaMap = schemaMap.replace("[query__replace]", modulesQuerySchema);
-  schemaMap = schemaMap.replace("[subscription__replace]", modulesSubscriptionSchema);
+  schemaMap = schemaMap.replace(
+    "[subscription__replace]",
+    modulesSubscriptionSchema
+  );
 
   return {
     schema: schemaMap,
