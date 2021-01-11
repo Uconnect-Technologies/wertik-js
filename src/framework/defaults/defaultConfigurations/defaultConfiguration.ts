@@ -128,7 +128,11 @@ export default {
       console.log("beforeRestApiStart");
     },
     database: {
-      Permission: {},
+      User: {
+        beforeBulkCreate() {
+          throw new Error("Use signup mutation.");
+        }
+      },
     },
   },
   seeds: {
