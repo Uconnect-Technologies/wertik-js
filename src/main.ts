@@ -37,7 +37,6 @@ export const serve =  function (configurationOriginal: IConfiguration) {
                       let cron = require("./framework/cron/index").default;
                       
                       let models = require("./framework/database/loadTables").default(database, configuration);
-                      // let models = require("./framework/database/models").default(dbTables, configuration);
                       let sendEmail =
                         get(configuration, "email.disable", false) === false
                           ? require("./framework/mailer/index").sendEmail(configuration, mailerInstance)

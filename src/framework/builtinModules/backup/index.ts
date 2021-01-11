@@ -37,7 +37,7 @@ export default {
       resolvers: {
         // fixme: continue progress
         backupLocal: async (_, args, context, info) => {
-          let op = await dumpDatabase({
+          let op: any = await dumpDatabase({
             database: context.wertik.configuration.database,
             models: context.wertik.models,
           });

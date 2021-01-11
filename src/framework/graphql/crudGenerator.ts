@@ -324,7 +324,7 @@ export const generateCrudResolvers = (
         if (isFunction(afterView)) {
           afterView({
             mode: "graphql",
-            params: { _, args, context, info, instance: view.instance },
+            params: { _, args, context, info, instance: view },
           });
         }
         return view;

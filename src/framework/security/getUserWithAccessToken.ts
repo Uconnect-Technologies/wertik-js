@@ -1,7 +1,12 @@
 let { get } = require("lodash");
 export default async function (UserModel: any, token: string) {
   try {
-    let find = await UserModel.findOneByArgs({ access_token: token }, "*");
+    let find = await UserModel.findOne({
+      where: {
+        access_token: token,
+      },
+      include: "*",
+    });
     return get(find, "instance", null);
   } catch (errorInstance) {
     let modules: any = process.env.builtinModules;

@@ -13,13 +13,11 @@ const processManyToManyRelationship = (relationshipInfo, key) => {
     }
     return await model.paginate(
       {
-        filters: [
-          {
-            column: relationshipInfo.foreignKey,
-            operator: "=",
-            value: parentRow[identityColumn()].toString(),
+        filters: {
+          [relationshipInfo.foreignKey]: {
+            _eq: parentRow[identityColumn()].toString(),
           },
-        ],
+        },
       },
       Object.keys(requestedFields.list)
     );
@@ -34,16 +32,16 @@ const processOneToOneRelationship = (relationshipInfo, key) => {
     if (!parentRowValue) {
       return null;
     }
-    let a = await model.findOneByArgs(
-      {
+    let a = await model.findOne({
+      where: {
         [relationshipInfo.foreignKey]: parentRowValue,
       },
-      removeColumnsFromAccordingToSelectIgnoreFields(
+      attributes: removeColumnsFromAccordingToSelectIgnoreFields(
         Object.keys(requestedFields),
         model.selectIgnoreFields
-      )
-    );
-    return a.instance;
+      ),
+    });
+    return a;
   };
 };
 
