@@ -65,3 +65,5 @@ export const defaultApolloGraphqlOptions = {
     path: "/subscriptions",
   },
 };
+
+export const defaultPort = 7000;

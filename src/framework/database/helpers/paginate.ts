@@ -1,14 +1,12 @@
-import {get} from "lodash"
+import { get } from "lodash";
 import convertFiltersIntoSequalizeObject from "./convertFiltersIntoSequalizeObject";
-import { request } from "express";
 import { removeColumnsFromAccordingToSelectIgnoreFields } from "../../helpers/index";
 export default async function (model) {
-  return function (args, requestedFields: any = [])  {
+  return function (args, requestedFields: any = []) {
     return new Promise(async (resolve, reject) => {
       try {
         if (!Array.isArray(requestedFields)) {
-          console.error("Requested fields must be an array");
-          process.exit();
+          throw new Error("Requested fields must be an array");
         }
         let page = get(args, "pagination.page", 1);
         let limit = get(args, "pagination.limit", 10);
@@ -34,6 +32,14 @@ export default async function (model) {
         if (mainObject.order.length == 0) {
           delete mainObject["order"];
         }
+        const filterableModules = get(
+          model.wertikModule,
+          "database.filterableModules",
+          []
+        );
+        filterableModules.forEach((moduleName) => {
+          delete convertedFilters[moduleName];
+        });
         const list = await model.findAndCountAll({
           offset: offset,
           limit: limit,
@@ -56,5 +62,5 @@ export default async function (model) {
         reject(error);
       }
     });
-  }
+  };
 }

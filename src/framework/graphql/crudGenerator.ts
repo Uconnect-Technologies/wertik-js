@@ -290,10 +290,12 @@ export const generateCrudResolvers = (
     queries: {
       [`count${module.name}`]: async (_, args, context, info) => {
         let model = context.wertik.models[module.name];
-        const filters = await convertFiltersIntoSequalizeObject(args ? args.filters || {} : {});
+        const filters = await convertFiltersIntoSequalizeObject(
+          args ? args.filters || {} : {}
+        );
         let count = await model.count({
-          where: filters
-        })
+          where: filters,
+        });
         return count;
       },
       [`view${module.name}`]: async (
@@ -376,6 +378,7 @@ export const generateModuleSearchShema = (module) => {
       updated_at: DateFilterInput
     `;
   const fields = get(module, "database.sql.fields", {});
+  const filterableModules = get(module, "database.filterableModules", []);
   const keys = Object.keys(fields);
   keys.forEach((key) => {
     const field = fields[key];
@@ -396,6 +399,17 @@ export const generateModuleSearchShema = (module) => {
       ${key}: ${getType()}FilterInput
       `;
   });
+
+  if (filterableModules.length > 0) {
+    for (const filterableModule of filterableModules) {
+      string = `
+        ${string}
+
+        ${filterableModule}: ${filterableModule}FilterInput
+      `
+    }
+  }
+
   string = string + " }";
 
   return string;

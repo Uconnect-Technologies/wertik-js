@@ -4,14 +4,19 @@ import moment from "moment";
 import { convertFieldsIntoSequelizeFields } from "./helpers/index";
 import { errorMessage } from "../logger/consoleMessages";
 import { databaseDefaultOptions } from "../defaults/options/index";
-import { IConfigurationCustomModule, IConfiguration } from "../types/configuration";
+import {
+  IConfigurationCustomModule,
+  IConfiguration,
+} from "../types/configuration";
 import { applyRelationshipSql } from "../moduleRelationships/database";
 import stats from "./helpers/stats";
 import paginate from "./helpers/paginate";
 
 const checkDatabaseOptions = (moduleName, tableName) => {
   if (moduleName && !tableName) {
-    errorMessage(`Module ${moduleName} didn't provided table name. Exiting process.`);
+    errorMessage(
+      `Module ${moduleName} didn't provided table name. Exiting process.`
+    );
     process.exit();
   }
 };
@@ -26,32 +31,43 @@ export default function (connection, configuration: IConfiguration) {
     let moduleName = get(module, "name", "");
     let useDatabase = get(module, "useDatabase", true);
 
+    // continue: Work filtering through associations, Right now I have passed current module to a model that paginate is running.
+
     if (useDatabase) {
-      if (dialect == "mysql" || dialect == "postgres") {
-        let tableName = get(module, "database.sql.tableName", "");
-        checkDatabaseOptions(moduleName, tableName);
-        let tableFields = convertFieldsIntoSequelizeFields(module.database.sql.fields);
-        let tableOptions = get(module, "database.sql.tableOptions", databaseDefaultOptions.sql.defaultTableOptions);
-        tables[moduleName] = connection.define(
-          tableName,
-          {
-            ...tableFields,
-            ...databaseDefaultOptions.sql.timestamps,
-          },
-          {
-            ...tableOptions,
-            getterMethods: {
-              created_at: function () {
-                return moment(this.getDataValue("created_at")).format();
-              },
-              updated_at: function () {
-                return moment(this.getDataValue("updated_at")).format();
-              },
+      let tableName = get(module, "database.sql.tableName", "");
+      checkDatabaseOptions(moduleName, tableName);
+      let tableFields = convertFieldsIntoSequelizeFields(
+        module.database.sql.fields
+      );
+      let tableOptions = get(
+        module,
+        "database.sql.tableOptions",
+        databaseDefaultOptions.sql.defaultTableOptions
+      );
+      tables[moduleName] = connection.define(
+        tableName,
+        {
+          ...tableFields,
+          ...databaseDefaultOptions.sql.timestamps,
+        },
+        {
+          ...tableOptions,
+          getterMethods: {
+            created_at: function () {
+              return moment(this.getDataValue("created_at")).format();
             },
-          }
-        );
-        tables[moduleName].selectIgnoreFields = get(module,'database.selectIgnoreFields', [])
-      }
+            updated_at: function () {
+              return moment(this.getDataValue("updated_at")).format();
+            },
+          },
+        }
+      );
+      tables[moduleName].wertikModule = module;
+      tables[moduleName].selectIgnoreFields = get(
+        module,
+        "database.selectIgnoreFields",
+        []
+      );
     }
   };
   modules.forEach((element) => {
@@ -76,7 +92,7 @@ export default function (connection, configuration: IConfiguration) {
     applyRelationshipSql(module, tables);
   });
 
-  Object.keys(tables).forEach( async table => {
+  Object.keys(tables).forEach(async (table) => {
     tables[table].stats = await stats(connection, tables[table]);
     tables[table].paginate = await paginate(tables[table]);
   });
