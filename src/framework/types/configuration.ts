@@ -94,7 +94,6 @@ export interface IConfigurationCustomModuleDatabase {
   sql: IConfigurationCustomModuleDatabaseSql;
   relationships: IConfigurationCustomModuleDatabaseRelationship;
   selectIgnoreFields: Array<string>;
-  filterableModules: Array<String>
 }
 
 export interface IConfigurationCustomModule {

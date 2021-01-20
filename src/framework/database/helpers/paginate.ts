@@ -15,10 +15,7 @@ export default async function (model) {
         let offset = limit * (page - 1);
         let convertedFilters = await convertFiltersIntoSequalizeObject(filters);
 
-        requestedFields = removeColumnsFromAccordingToSelectIgnoreFields(
-          requestedFields,
-          model.selectIgnoreFields
-        );
+        requestedFields = removeColumnsFromAccordingToSelectIgnoreFields(requestedFields, model.selectIgnoreFields);
 
         let mainObject = {
           order: sorting.map((c) => {
@@ -32,20 +29,13 @@ export default async function (model) {
         if (mainObject.order.length == 0) {
           delete mainObject["order"];
         }
-        const filterableModules = get(
-          model.wertikModule,
-          "database.filterableModules",
-          []
-        );
-        filterableModules.forEach((moduleName) => {
-          delete convertedFilters[moduleName];
-        });
         const list = await model.findAndCountAll({
           offset: offset,
           limit: limit,
           where: convertedFilters,
           ...mainObject,
         });
+
         resolve({
           filters,
           pagination: { page, limit },

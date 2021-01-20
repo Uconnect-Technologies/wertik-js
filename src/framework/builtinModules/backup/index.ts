@@ -35,7 +35,6 @@ export default {
         backupDropbox: BackupSuccessResponse
       `,
       resolvers: {
-        // fixme: continue progress
         backupLocal: async (_, args, context, info) => {
           let op: any = await dumpDatabase({
             database: context.wertik.configuration.database,

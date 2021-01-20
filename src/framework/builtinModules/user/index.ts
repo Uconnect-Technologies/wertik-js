@@ -54,7 +54,6 @@ export default {
   },
   restApi: {},
   database: {
-    filterableModules: ["UserPermission"],
     selectIgnoreFields: ["user_permissions", "user_roles"],
     relationships: {
       oneToMany: {
