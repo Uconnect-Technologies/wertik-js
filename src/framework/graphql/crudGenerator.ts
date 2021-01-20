@@ -347,6 +347,7 @@ export const generateCrudResolvers = (
               params: { _, args, context, info },
             })
           : args;
+
         let model = context.wertik.models[module.name];
         let requestedFields = getRequestedFieldsFromResolverInfo(info);
         let response = await model.paginate(

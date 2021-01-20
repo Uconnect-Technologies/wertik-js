@@ -1,20 +1,20 @@
+import moment from "moment";
+
 export default function () {
   return new Promise((resolve, reject) => {
     const { createLogger, format, transports } = require("winston");
-    const { printf, combine, timestamp, label } = format;
+    const { printf } = format;
 
-    const myFormat = printf(({ level, message, label, timestamp }) => {
-      // return `${timestamp} [${label}] ${level}: ${message}`;
+    const myFormat = printf((obj) => {
       return JSON.stringify({
-        timestamp: timestamp,
-        label: label,
-        level: level,
-        message: message && message.constructor == String ? message : message,
+        timestamp: moment().format(),
+        formattedTimeStamp: moment().format("MMMM Do YYYY, h:mm:ss a"),
+        ...obj,
       });
     });
 
     const logger = createLogger({
-      format: combine(label({ label: "right meow!" }), timestamp(), myFormat),
+      format: myFormat,
       transports: [
         new transports.Console(),
         new transports.File({
@@ -31,7 +31,7 @@ export default function () {
         }),
       ],
     });
-
+    
     resolve(logger);
   });
 }

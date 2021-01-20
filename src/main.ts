@@ -63,6 +63,7 @@ export const serve =  function (configurationOriginal: IConfiguration) {
                         emailTemplates: emailTemplates,
                         database: database,
                         mailerInstance: mailerInstance,
+                        logger: logger,
                       });
 
                       let { graphql: graphqlAppInstance, graphqlVoyager } = await graphql({
@@ -74,6 +75,7 @@ export const serve =  function (configurationOriginal: IConfiguration) {
                         database: database,
                         mailerInstance: mailerInstance,
                         socketio: socketio,
+                        logger: logger,
                       });
                       let restApiInstance = await restApi({
                         expressApp: expressApp,
@@ -85,6 +87,7 @@ export const serve =  function (configurationOriginal: IConfiguration) {
                         multerInstance: multerInstance,
                         mailerInstance: mailerInstance,
                         socketio: socketio,
+                        logger: logger,
                       });
 
                       cron(configuration, {

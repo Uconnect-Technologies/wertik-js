@@ -20,11 +20,7 @@ export default async function (options: IRestApiInitialize) {
     socketio,
     logger,
   } = options;
-  let initializeContext = get(
-    configuration,
-    "context.initializeContext",
-    async function () {}
-  );
+  let initializeContext = get(configuration, "context.initializeContext", async function () {});
   const useCors = get(configuration, "restApi.useCors", true);
   const useBodyParser = get(configuration, "restApi.useBodyParser", true);
   const useMorgan = get(configuration, "restApi.useMorgan", true);
@@ -60,23 +56,15 @@ export default async function (options: IRestApiInitialize) {
       initializeContext: initializeContext,
       configuration: configuration,
     };
-    
-    let requestContext = await get(
-      configuration.context,
-      "requestContext",
-      () => {}
-    )("restApi", req);
+
+    let requestContext = await get(configuration.context, "requestContext", () => {})("restApi", req);
 
     req.wertik.requestContext = requestContext;
 
     next();
   });
 
-  require("./versions/v1/loadAllModules").default(
-    expressApp,
-    configuration,
-    customApi
-  );
+  require("./versions/v1/loadAllModules").default(expressApp, configuration, customApi);
 
   expressApp.get("/w/info", (req, res) => {
     res.status(200).json({
