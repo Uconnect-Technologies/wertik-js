@@ -131,16 +131,17 @@ export default {
       User: {
         beforeBulkCreate() {
           throw new Error("Use signup mutation.");
-        }
+        },
       },
     },
   },
   seeds: {
-    Role: [{ name: "Admin" }, { name: "Kako" }],
     Permission: [
-      { name: "ca", cant: "true", can: "true" },
-      { name: "ca1", cant: "true1", can: "true1" },
-      { name: "ca2", cant: "true2", can: "true2" },
+      {
+        value: { name: "ca", cant: "true", can: "true" },
+      },
+      { value: { name: "ca1", cant: "true1", can: "true1" } },
+      { value: { name: "ca2", cant: "true2", can: "true2" } },
     ],
   },
   sockets: {

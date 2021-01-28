@@ -232,12 +232,12 @@ export const generateCrudResolvers = (
         let model = context.wertik.models[module.name];
         let result = await model.bulkCreate(finalArgs.input);
         pubsub.publish(bulkCreatedModule, {
-          [bulkCreatedModule]: result.bulkInstances,
+          [bulkCreatedModule]: result,
         });
         if (isFunction(afterBulkCreate)) {
           afterBulkCreate({
             mode: "graphql",
-            params: { _, args, context, info, instance: result.bulkInstances },
+            params: { _, args, context, info, instance: result },
           });
         }
         return {
