@@ -89,4 +89,8 @@ export default `
 		nextPage: Int
 		previousPage: Int
 	}
+	input CacheOptionsInput {
+		name: String
+		expiry: Int
+	}
 `;

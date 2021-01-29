@@ -10,7 +10,7 @@ import * as auth from "./../helpers/auth"
 //expressApp,configuration,models,emailTemplates,sendEmail,database,WertikEventEmitter
 
 export default async function (options: IGraphQLInitialize) {
-  const { mailerInstance, configuration, models, sendEmail, emailTemplates, database, socketio, logger } = options;
+  const { mailerInstance, configuration, models, sendEmail, emailTemplates, database, socketio, logger, cache } = options;
   const apolloGraphqlOptions = get(configuration, "graphql.apolloGraphqlServerOptions", defaultApolloGraphqlOptions);
   let initializeContext = get(configuration, "context.initializeContext", async function () {});
   initializeContext = await initializeContext("graphql",{
@@ -33,6 +33,7 @@ export default async function (options: IGraphQLInitialize) {
           sendEmail: sendEmail,
           emailTemplates: emailTemplates,
           mailerInstance: mailerInstance,
+          cache,
           req,
           res,
           socketio,

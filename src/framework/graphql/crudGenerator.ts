@@ -19,7 +19,7 @@ export const generateQueriesCrudSchema = (moduleName: String) => {
     moduleName
   )}(filters: [FilterInput]): ${moduleName}`;
   const viewString = `view${moduleName}(${identityColumn}: ${identityColumnGraphQLType}): ${moduleName}`;
-  const listString = `list${moduleName}(pagination: PaginationInput, filters: ${moduleName}FilterInput, sorting: [SortingInput]): ${moduleName}List`;
+  const listString = `list${moduleName}(cache: CacheOptionsInput, pagination: PaginationInput, filters: ${moduleName}FilterInput, sorting: [SortingInput]): ${moduleName}List`;
   const countString = `count${moduleName}(filters: ${moduleName}FilterInput):  Int`;
   string = `
     ${viewString}
@@ -337,6 +337,7 @@ export const generateCrudResolvers = (
         context: any,
         info: any
       ) => {
+        let response;
         if (overrideQueryList && overrideQueryList.constructor == Function) {
           let response = await overrideQueryList(_, args, context, info);
           return response;
@@ -347,18 +348,33 @@ export const generateCrudResolvers = (
               params: { _, args, context, info },
             })
           : args;
+        const cacheWith = args.cache && args.cache.name;
+        const cacheValue = context.wertik.cache.get(cacheWith);
 
-        let model = context.wertik.models[module.name];
-        let requestedFields = getRequestedFieldsFromResolverInfo(info);
-        let response = await model.paginate(
-          finalArgs,
-          Object.keys(requestedFields.list)
-        );
+        console.log(cacheValue, cacheWith);
+
+        if (cacheWith && cacheValue) {
+          response = cacheValue;
+        } else {
+          let model = context.wertik.models[module.name];
+          let requestedFields = getRequestedFieldsFromResolverInfo(info);
+          response = await model.paginate(
+            finalArgs,
+            Object.keys(requestedFields.list)
+          );
+        }
         if (isFunction(afterList)) {
           afterList({
             mode: "graphql",
             params: { _, args, context, info, instance: response },
           });
+        }
+        if (cacheWith) {
+          context.wertik.cache.set(
+            cacheWith,
+            response,
+            (args.cache && args.cache.expiry) || 0
+          );
         }
         return response;
       },
