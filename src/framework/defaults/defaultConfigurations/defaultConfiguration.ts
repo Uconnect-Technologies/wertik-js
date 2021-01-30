@@ -1,6 +1,7 @@
 export default {
   name: "Wertik",
-  builtinModules: "user,auth,forgetPassword,permission,role,rolePermission,userPermission,userRole,me,storage,mail,backup",
+  builtinModules:
+    "user,auth,forgetPassword,permission,role,rolePermission,userPermission,userRole,me,storage,mail,backup",
   database: {
     dbDialect: process.env.dbDialect,
     dbUsername: process.env.dbUsername,
@@ -146,14 +147,19 @@ export default {
   },
   sockets: {
     disable: false,
-    onClientConnected: function () {
-      console.log("onClientConnected");
-    },
-    onMessageReceived: function () {
-      console.log("onMessageReceived");
-    },
-    onClientDisconnect: function () {
-      console.log("onClientDisconnect");
+    middlewares: [
+      ({ socket, next, context }) => {
+        console.log("Message while running a socket middleware")
+        next();
+      },
+    ],
+    onClientConnected: function ({ socket, context }) {
+      socket.on("message", () => {
+        console.log(`message yallah`);
+      });
+      socket.on("disconnect", () => {
+        console.log(`disconnect yallah`);
+      });
     },
   },
   storage: {

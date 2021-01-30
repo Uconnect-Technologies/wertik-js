@@ -32,9 +32,8 @@ export interface IRestApiInitialize {
 }
 
 export interface ISocketConfiguration {
-  onMessageReceived: Function;
   onClientConnected: Function;
-  onClientDisconnect: Function;
+  middlewares: Array<Function>;
   disable: Boolean;
   options: {
     [key: string]: any

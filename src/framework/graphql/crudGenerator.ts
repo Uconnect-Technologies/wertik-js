@@ -351,8 +351,6 @@ export const generateCrudResolvers = (
         const cacheWith = args.cache && args.cache.name;
         const cacheValue = context.wertik.cache.get(cacheWith);
 
-        console.log(cacheValue, cacheWith);
-
         if (cacheWith && cacheValue) {
           response = cacheValue;
         } else {
