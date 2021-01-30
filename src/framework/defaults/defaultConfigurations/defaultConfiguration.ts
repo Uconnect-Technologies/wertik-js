@@ -148,17 +148,26 @@ export default {
   sockets: {
     disable: false,
     middlewares: [
-      ({ socket, next, context }) => {
-        console.log("Message while running a socket middleware")
+      async ({ socket, next, context }) => {
+        console.log("Message while running a socket middleware");
+        console.log(
+          "Validate your realtime user here. All context is available."
+        );
         next();
       },
     ],
     onClientConnected: function ({ socket, context }) {
-      socket.on("message", () => {
-        console.log(`message yallah`);
+      console.log("client is connected");
+      /*
+
+      This runs when a user is connected to realtime server, Use middlewares to secure your socket server.
+
+      */
+      socket.on("message", (val) => {
+        console.log(`message`, val);
       });
       socket.on("disconnect", () => {
-        console.log(`disconnect yallah`);
+        console.log(`disconnect`);
       });
     },
   },
