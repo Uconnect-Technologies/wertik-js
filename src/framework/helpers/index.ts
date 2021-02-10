@@ -118,10 +118,9 @@ export const removeColumnsFromAccordingToSelectIgnoreFields = (
   requestedFields,
   ignoreFields
 ) => {
-  requestedFields.forEach((element, index) => {
-    if (ignoreFields.includes(element)) {
-      requestedFields.splice(index, 1);
-    }
+  ignoreFields.forEach(element => {
+    const index = requestedFields.indexOf(element);
+    requestedFields.splice(index, 1)
   });
   return requestedFields;
 };

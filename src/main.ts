@@ -21,6 +21,11 @@ export const serve = function (configurationOriginal: IConfiguration) {
   let expressApp = get(configurationOriginal, "expressApp", null);
   if (!expressApp) {
     expressApp = require("express")();
+
+    expressApp.use((req, res, next) => {
+      req.wow = true;
+      next()
+    })
   }
   return new Promise((resolve, reject) => {
     loadDefaults(configurationOriginal)
@@ -34,31 +39,17 @@ export const serve = function (configurationOriginal: IConfiguration) {
                     .then(async (mailerInstance) => {
                       const cache = new NodeCache();
                       const database = configuration.databaseInstance;
-                      let graphql = require("./framework/graphql/index")
-                        .default;
-                      let restApi = require("./framework/restApi/index")
-                        .default;
+                      let graphql = require("./framework/graphql/index").default;
+                      let restApi = require("./framework/restApi/index").default;
                       let cron = require("./framework/cron/index").default;
 
-                      let models = require("./framework/database/loadTables").default(
-                        database,
-                        configuration
-                      );
+                      let models = require("./framework/database/loadTables").default(database, configuration);
                       let sendEmail =
                         get(configuration, "email.disable", false) === false
-                          ? require("./framework/mailer/index").sendEmail(
-                              configuration,
-                              mailerInstance
-                            )
+                          ? require("./framework/mailer/index").sendEmail(configuration, mailerInstance)
                           : null;
-                      let seeds = require("./framework/seeds/index").default(
-                        configuration,
-                        models
-                      );
-                      let emailTemplates = require("./framework/mailer/emailTemplates").default(
-                        configuration,
-                        __dirname
-                      );
+                      let seeds = require("./framework/seeds/index").default(configuration, models);
+                      let emailTemplates = require("./framework/mailer/emailTemplates").default(configuration, __dirname);
                       /* Storage */
                       let storage = multer.diskStorage({
                         destination: configuration.storage.storageDirectory,
@@ -70,26 +61,20 @@ export const serve = function (configurationOriginal: IConfiguration) {
                       const httpServer = http.createServer(expressApp);
                       let multerInstance = multer({ storage: storage });
 
-                      let socketio = require("./framework/socket/index").default(
-                        configuration,
-                        {
-                          expressApp: expressApp,
-                          httpServer: httpServer,
-                          configuration: configuration,
-                          models: models,
-                          sendEmail: sendEmail,
-                          emailTemplates: emailTemplates,
-                          database: database,
-                          mailerInstance: mailerInstance,
-                          logger: logger,
-                          cache: cache,
-                        }
-                      );
+                      let socketio = require("./framework/socket/index").default(configuration, {
+                        expressApp: expressApp,
+                        httpServer: httpServer,
+                        configuration: configuration,
+                        models: models,
+                        sendEmail: sendEmail,
+                        emailTemplates: emailTemplates,
+                        database: database,
+                        mailerInstance: mailerInstance,
+                        logger: logger,
+                        cache: cache,
+                      });
 
-                      let {
-                        graphql: graphqlAppInstance,
-                        graphqlVoyager,
-                      } = await graphql({
+                      let { graphql: graphqlAppInstance, graphqlVoyager } = await graphql({
                         expressApp: expressApp,
                         configuration: configuration,
                         models: models,
@@ -171,10 +156,7 @@ export const serve = function (configurationOriginal: IConfiguration) {
           });
       })
       .catch((err: any) => {
-        errorMessage(
-          "Something went wrong while verifying default configuration \n Received: " +
-            err.message
-        );
+        errorMessage("Something went wrong while verifying default configuration \n Received: " + err.message);
       });
   });
 };

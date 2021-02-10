@@ -9,7 +9,7 @@ export default async function (model) {
           throw new Error("Requested fields must be an array");
         }
         let page = get(args, "pagination.page", 1);
-        let limit = get(args, "pagination.limit", 10);
+        let limit = get(args, "pagination.limit", 500);
         let filters = get(args, "filters", {});
         let sorting = get(args, "sorting", []);
         let offset = limit * (page - 1);

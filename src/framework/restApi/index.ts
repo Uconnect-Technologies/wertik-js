@@ -13,7 +13,7 @@ export default async function (options: IRestApiInitialize) {
     models,
     sendEmail,
     emailTemplates,
-    cache, 
+    cache,
     expressApp,
     database,
     multerInstance,
@@ -31,7 +31,12 @@ export default async function (options: IRestApiInitialize) {
     database,
   });
   if (useCors) {
-    expressApp.use(cors());
+    expressApp.use(
+      cors({
+        credentials: true,
+        methods: ["GET", "PUT", "POST", "OPTIONS", "DELETE", "PATCH"],
+      })
+    );
   }
   if (useBodyParser) {
     expressApp.use(bodyParser.urlencoded({ extended: false }));
