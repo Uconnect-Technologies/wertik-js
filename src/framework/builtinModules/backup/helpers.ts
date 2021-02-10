@@ -121,3 +121,18 @@ export const loadAllLocalBackups = async () => {
     throw new Error(e);
   }
 };
+
+export const removeLocalBackups = async () => {
+  const backupsPath = path.join(__dirname, "../../../../backups");
+  return new Promise(async (resolve, reject) => {
+    try {
+      const files = fs.readdirSync(backupsPath);
+      for (const file of files) {
+        await fs.unlinkSync(path.join(backupsPath, file));
+      }
+      resolve("Deleted");
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
