@@ -27,7 +27,7 @@ export default {
     },
   },
   email: {
-    disable: true,
+    disable: false,
   },
   graphql: {
     disable: false,
