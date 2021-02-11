@@ -10,12 +10,6 @@
   onClientConnected: function () {
     console.log("onClientConnected");
   },
-  onMessageReceived: function () {
-    console.log("onMessageReceived");
-  },
-  onClientDisconnect: function () {
-    console.log("onClientDisconnect");
-  },
 };
 ```
 

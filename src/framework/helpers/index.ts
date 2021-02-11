@@ -13,10 +13,7 @@ export const getDirectoriesInFolder = (path: string) => {
   });
 };
 
-export const randomString = (
-  len,
-  charSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-) => {
+export const randomString = (len, charSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789") => {
   charSet = charSet;
   var randomString = "";
   for (var i = 0; i < len; i++) {
@@ -88,15 +85,12 @@ export const firstLetterLowerCase = (s) => {
 };
 
 export const identityColumn = () => {
-  return "id"
+  return "id";
 };
 
 export const loadModulesFromConfiguration = (configuration: IConfiguration) => {
   let list = [];
-  let modules = [
-    ...configuration.builtinModules.split(","),
-    ...get(configuration, "modules", []),
-  ];
+  let modules = [...configuration.builtinModules.split(","), ...get(configuration, "modules", [])];
   modules = modules.filter((c) => c);
   modules.forEach(async (element) => {
     let module;
@@ -114,17 +108,12 @@ export const loadModulesFromConfiguration = (configuration: IConfiguration) => {
   return list;
 };
 
-export const removeColumnsFromAccordingToSelectIgnoreFields = (
-  requestedFields,
-  ignoreFields
-) => {
-  requestedFields.forEach((element, index) => {
-    if (ignoreFields.includes(element)) {
-      requestedFields.splice(index, 1);
+export const removeColumnsFromAccordingToSelectIgnoreFields = (requestedFields, ignoreFields) => {
+  const arr = [];
+  requestedFields.forEach((element) => {
+    if (!ignoreFields.includes(element)) {
+      arr.push(element);
     }
   });
-  return requestedFields;
+  return arr;
 };
-
-export const defaultPort = 7000;
-export const defaultGraphqlPath = "/graphql";

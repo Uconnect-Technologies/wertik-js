@@ -26,7 +26,7 @@ export default {
     },
   },
   email: {
-    disable: true,
+    disable: false,
   },
   graphql: {
     disable: false,
@@ -95,11 +95,36 @@ export default {
       restApi: {
         endpoints: [
           {
-            path: "/apple/response",
+            path: "/relations",
             methodType: "get",
-            handler: function (req, res) {
+            handler: async function (req, res) {
+              const models = req.wertik.models;
+              const {UserPermission, User, Permission, UserRole, Role} = models;
+              const All = await User.findAll({
+                attributes: ['id','email'],
+                include: [
+                  {
+                    model: UserRole,
+                    as: 'user_roles',
+                    attributes: ['id','user_id','role_id'],
+                    include: [
+                      {
+                        model: Role,
+                        as: "role",
+                        attributes: ['id','name'],
+                      },
+                      {
+                        model: User,
+                        as: "user",
+                        attributes: ['id','email'],
+                      }
+                    ]
+                  }
+                ]
+              });
               res.json({
                 message: true,
+                data: All
               });
             },
           },
@@ -128,27 +153,57 @@ export default {
       console.log("beforeRestApiStart");
     },
     database: {
-      Permission: {},
+      Role: {
+        beforeBulkCreate({ mode, params: { args, context } }) {
+          return args;
+        },
+      },
+      User: {
+        beforeBulkCreate() {
+          throw new Error("Use signup mutation.");
+        },
+      },
     },
   },
   seeds: {
-    Role: [{ name: "Admin" }, { name: "Kako" }],
+    RolePermission: [
+      {
+        value: { role_id: 1, permission_id: 1 },
+        afterCreate(instance) {
+          console.log("Role permission created", instance.id);
+        },
+      },
+    ],
     Permission: [
-      { name: "ca", cant: "true", can: "true" },
-      { name: "ca1", cant: "true1", can: "true1" },
-      { name: "ca2", cant: "true2", can: "true2" },
+      {
+        value: { name: "ca", cant: "true", can: "true" },
+      },
+      { value: { name: "ca1", cant: "true1", can: "true1" } },
+      { value: { name: "ca2", cant: "true2", can: "true2" } },
     ],
   },
   sockets: {
     disable: false,
-    onClientConnected: function () {
-      console.log("onClientConnected");
-    },
-    onMessageReceived: function () {
-      console.log("onMessageReceived");
-    },
-    onClientDisconnect: function () {
-      console.log("onClientDisconnect");
+    middlewares: [
+      async ({ socket, next, context }) => {
+        console.log("Message while running a socket middleware");
+        console.log("Validate your realtime user here. All context is available.");
+        next();
+      },
+    ],
+    onClientConnected: function ({ socket, context }) {
+      console.log("client is connected");
+      /*
+
+      This runs when a user is connected to realtime server, Use middlewares to secure your socket server.
+
+      */
+      socket.on("message", (val) => {
+        console.log(`message`, val);
+      });
+      socket.on("disconnect", () => {
+        console.log(`disconnect`);
+      });
     },
   },
   storage: {

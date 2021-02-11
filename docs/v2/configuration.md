@@ -180,12 +180,6 @@ For rest api: https://github.com/Uconnect-Technologies/wertik-js/blob/master/src
   onClientConnected: function () {
     console.log("onClientConnected");
   },
-  onMessageReceived: function () {
-    console.log("onMessageReceived");
-  },
-  onClientDisconnect: function () {
-    console.log("onClientDisconnect");
-  },
 };
 ```
 

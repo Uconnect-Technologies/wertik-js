@@ -1,8 +1,8 @@
 import { successMessage } from "./../logger/consoleMessages";
 import { get } from "lodash";
-import { defaultPort } from "../helpers/index";
 import { IConfiguration } from "../types/configuration";
 import { isFunction } from "lodash";
+import { defaultPort } from "../defaults/options";
 
 export default function (configuration: IConfiguration, servers: any) {
   const startServers = get(configuration, "startServers", null);

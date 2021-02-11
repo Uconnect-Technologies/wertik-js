@@ -1,28 +1,25 @@
-export default function(configuration, models) {
-  return function(modules: Array<string>) {
-    return new Promise((resolve, reject) => {
-      if (modules && modules.constructor == Array) {
-        const seeds = configuration.seeds;
-          if (modules.length == 0) {
-            resolve("No Seeds provided.");
-            return;
-          }
-          modules.forEach((currentModule, index) => {
-            let isEnd = modules.length - 1 == index;
-            let moduleData = seeds[currentModule];
-            let model = models[currentModule];
-            moduleData.forEach((element, indexOfData) => {
-              model.create(element);
-              if (isEnd && indexOfData == moduleData.length - 1) {
-                resolve(`Seeds added for modules: ${modules.join(", ")}`);
+import { get } from "lodash";
+export default function (configuration, models) {
+  return function (modules: Array<string>) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const keys = Object.keys(configuration.seeds);
+        for (const name of keys) {
+          const nameSeeds = configuration.seeds[name];
+          if (Array.isArray(nameSeeds)) {
+            for (const seed of nameSeeds) {
+              const { value } = seed;
+              const afterCreate = get(seed, "afterCreate", function () {});
+              if (value) {
+                const instance = await models[name].create(value);
+                afterCreate(instance, models);
               }
-            });
-          });
-        
-      }else {
-        let message = `[Wertik Seeds]: modules expected in this format: Array<string>, but received: ${modules}`;
-        console.error(message);
-        reject(message);
+            }
+          }
+        }
+        resolve("Seeds Done");
+      } catch (e) {
+        reject(e);
       }
     });
   };

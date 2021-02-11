@@ -6,12 +6,16 @@ import { generateHashPassword } from "../../../helpers/auth";
 
 export const requestPasswordResetHandler = async function(obj) {
   const { userModel, forgetPasswordModel, data, emailTemplates, sendEmail } = obj;
-  let user = await userModel.findOneByArgs({
-    email: data.email
+  let user = await userModel.findOne({
+    where: {
+      email: data.email
+    }
   });
   if (!user.instance) throw new ApolloError("No User found with such email.");
-  let forgetPassword = await forgetPasswordModel.findOneByArgs({
-    email: data.email
+  let forgetPassword = await forgetPasswordModel.findOne({
+    where: {
+      email: data.email,
+    },
   });
   if (forgetPassword.instance) {
     await forgetPassword.delete();
@@ -50,12 +54,16 @@ export const requestPasswordResetHandler = async function(obj) {
 export const resetPasswordHandler = async function(obj) {
   const { userModel, forgetPasswordModel, data } = obj;
   const { token, password, confirmPassword } = data;
-  let forgetPassword = await forgetPasswordModel.findOneByArgs({
-    token: token
+  let forgetPassword = await forgetPasswordModel.findOne({
+    where: {
+      token: token,
+    },
   });
   if (!forgetPassword.instance) throw new ApolloError("Token mismatch or already used.");
-  let user = await userModel.findOneByArgs({
-    email: forgetPassword.instance.email
+  let user = await userModel.findOne({
+    where: {
+      email: forgetPassword.instance.email,
+    },
   });
   if (!user.instance) throw new ApolloError("User not found");
   const hash = generateHashPassword(password);

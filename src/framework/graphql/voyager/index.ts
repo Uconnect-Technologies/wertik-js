@@ -1,5 +1,5 @@
 import { get } from "lodash";
-import { defaultPort } from "../../helpers/index";
+import { defaultPort } from "../../defaults/options/index";
 import { IConfiguration } from "src/framework/types/configuration";
 import { successMessage } from "./../../logger/consoleMessages";
 

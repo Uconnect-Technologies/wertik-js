@@ -1,6 +1,6 @@
 {
   "name": "wertik-js",
-  "version": "1.99.99",
+  "version": "2.0.0",
   "main": "lib/main.js",
   "repository": "https://github.com/Uconnect-Technologies/wertik-js.git",
   "keywords": [
@@ -51,6 +51,7 @@
     "multer": "^1.4.2",
     "mysql2": "^1.6.4",
     "mysqldump": "^3.2.0",
+    "node-cache": "^5.1.2",
     "node-cron": "^2.0.3",
     "nodemailer": "^5.0.0",
     "pg": "^7.18.2",
