@@ -3,19 +3,29 @@ import { get } from "lodash";
 import { IConfiguration } from "../types/configuration";
 import SocketIO from "socket.io";
 
-export const defaultSocketInstance = (sockets: ISocketConfiguration, context: any) => {
-  const {disable,options, onMessageReceived, onClientConnected, onClientDisconnect} = sockets;
+export const defaultSocketInstance = (
+  sockets: ISocketConfiguration,
+  context: any
+) => {
+  const { disable, options, onClientConnected, middlewares } = sockets;
+
   if (disable === true) {
     return null;
   }
-  const { httpServer } = context;
+  const { httpServer, cache } = context;
   const io = SocketIO(httpServer, options);
+  middlewares &&
+    middlewares.forEach((fn) => {
+      io.use((socket, next) => {
+        fn({ socket, next, context });
+      });
+    });
+
   io.on("connection", (socket) => {
     onClientConnected({
       socket,
+      context,
     });
-    socket.on("message", onMessageReceived);
-    socket.on("disconnect", onClientDisconnect);
   });
 
   return io;
@@ -24,11 +34,14 @@ export const defaultSocketInstance = (sockets: ISocketConfiguration, context: an
 export default function (options: IConfiguration, context: any) {
   let ws = defaultSocketInstance(
     {
-      onClientConnected: get(options,'sockets.onClientConnected', function ()  {}),
-      onMessageReceived: get(options,'sockets.onMessageReceived', function ()  {}),
-      onClientDisconnect: get(options,'sockets.onClientDisconnect', function ()  {}),
-      disable: get(options,'sockets.disable', false),
-      options: get(options,'sockets.options',{}),
+      onClientConnected: get(
+        options,
+        "sockets.onClientConnected",
+        function () {}
+      ),
+      disable: get(options, "sockets.disable", false),
+      options: get(options, "sockets.options", {}),
+      middlewares: get(options, "sockets.middlewares", []),
     },
     context
   );

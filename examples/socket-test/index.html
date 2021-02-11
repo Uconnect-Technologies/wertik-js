@@ -9,7 +9,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
     <script>
       // Your port may change.
-      const socket = io("http://localhost:5000");
+      const socket = io("http://localhost:5000",{
+        query: {
+          token: "sometoken"
+        }
+      });
 
       socket.on("connect", () => {
         // either with send()

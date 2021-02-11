@@ -14,13 +14,20 @@ import {
 import { PubSub } from "apollo-server";
 import { IConfiguration } from "../types/configuration";
 import { GraphQLModuleRelationMapper } from "../moduleRelationships/graphql";
+import self from "./self";
 const pubsub = new PubSub();
 
 export default async function (configuration: IConfiguration) {
-  let modulesSchema = ``;
+  let modulesSchema = `
+    ${self.schema}
+  `;
 
-  let modulesQuerySchema = ``;
-  let modulesMutationSchema = ``;
+  let modulesQuerySchema = `
+  ${self.queries.schema}
+  `;
+  let modulesMutationSchema = `
+    ${self.mutations.schema}
+  `;
   let modulesSubscriptionSchema = ``;
   let modules = process.env.builtinModules.split(",");
   modules = modules.filter((c) => c);
@@ -33,8 +40,12 @@ export default async function (configuration: IConfiguration) {
   };
   let schemaMap = require("./schemaMap").default;
 
-  let appMutations = {};
-  let appQueries = {};
+  let appMutations = {
+    ...self.mutations.resolvers,
+  };
+  let appQueries = {
+    ...self.queries.resolvers,
+  };
   let appSubscriptions = {};
   let appCustomResolvers = {};
 
@@ -128,7 +139,8 @@ export default async function (configuration: IConfiguration) {
         );
 
         modulesQuerySchema = `${modulesQuerySchema}
-        ${crudQuerySchema}`;
+        ${crudQuerySchema}
+        `;
 
         appQueries = {
           ...appQueries,
@@ -154,7 +166,9 @@ export default async function (configuration: IConfiguration) {
 
       // Check for empty resolvers and remove them
 
-      const totalResolvers = Object.keys(get(appCustomResolvers,currentModuleName,{})).length;
+      const totalResolvers = Object.keys(
+        get(appCustomResolvers, currentModuleName, {})
+      ).length;
       // cosnoel
       if (totalResolvers === 0) {
         delete appCustomResolvers[currentModuleName];

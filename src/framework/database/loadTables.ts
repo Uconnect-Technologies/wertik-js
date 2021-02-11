@@ -27,31 +27,30 @@ export default function (connection, configuration: IConfiguration) {
     let useDatabase = get(module, "useDatabase", true);
 
     if (useDatabase) {
-      if (dialect == "mysql" || dialect == "postgres") {
-        let tableName = get(module, "database.sql.tableName", "");
-        checkDatabaseOptions(moduleName, tableName);
-        let tableFields = convertFieldsIntoSequelizeFields(module.database.sql.fields);
-        let tableOptions = get(module, "database.sql.tableOptions", databaseDefaultOptions.sql.defaultTableOptions);
-        tables[moduleName] = connection.define(
-          tableName,
-          {
-            ...tableFields,
-            ...databaseDefaultOptions.sql.timestamps,
-          },
-          {
-            ...tableOptions,
-            getterMethods: {
-              created_at: function () {
-                return moment(this.getDataValue("created_at")).format();
-              },
-              updated_at: function () {
-                return moment(this.getDataValue("updated_at")).format();
-              },
+      let tableName = get(module, "database.sql.tableName", "");
+      checkDatabaseOptions(moduleName, tableName);
+      let tableFields = convertFieldsIntoSequelizeFields(module.database.sql.fields);
+      let tableOptions = get(module, "database.sql.tableOptions", databaseDefaultOptions.sql.defaultTableOptions);
+      tables[moduleName] = connection.define(
+        tableName,
+        {
+          ...tableFields,
+          ...databaseDefaultOptions.sql.timestamps,
+        },
+        {
+          ...tableOptions,
+          getterMethods: {
+            created_at: function () {
+              return moment(this.getDataValue("created_at")).format();
             },
-          }
-        );
-        tables[moduleName].selectIgnoreFields = get(module,'database.selectIgnoreFields', [])
-      }
+            updated_at: function () {
+              return moment(this.getDataValue("updated_at")).format();
+            },
+          },
+        }
+      );
+      tables[moduleName].wertikModule = module;
+      tables[moduleName].selectIgnoreFields = get(module, "database.selectIgnoreFields", []);
     }
   };
   modules.forEach((element) => {
@@ -61,6 +60,7 @@ export default function (connection, configuration: IConfiguration) {
     } else if (element.constructor === Object) {
       module = element;
     }
+    
     processModule(module);
   });
 
@@ -76,7 +76,7 @@ export default function (connection, configuration: IConfiguration) {
     applyRelationshipSql(module, tables);
   });
 
-  Object.keys(tables).forEach( async table => {
+  Object.keys(tables).forEach(async (table) => {
     tables[table].stats = await stats(connection, tables[table]);
     tables[table].paginate = await paginate(tables[table]);
   });

@@ -1,9 +1,4 @@
-import {
-  dumpDatabase,
-  dumpDatabaseToDigitalOcean,
-  dumpDatabaseToDropbox,
-  loadAllLocalBackups,
-} from "./helpers";
+import { dumpDatabase, dumpDatabaseToDigitalOcean, dumpDatabaseToDropbox, loadAllLocalBackups, removeLocalBackups } from "./helpers";
 export default {
   name: "Backup",
   graphql: {
@@ -33,11 +28,15 @@ export default {
         backupLocal: BackupSuccessResponse
         backupDigitalOceanSpaces: BackupSuccessResponse
         backupDropbox: BackupSuccessResponse
+        removeLocalBackups: String
       `,
       resolvers: {
-        // fixme: continue progress
+        removeLocalBackups: async () => {
+          await removeLocalBackups();
+          return "remove local backups";
+        },
         backupLocal: async (_, args, context, info) => {
-          let op = await dumpDatabase({
+          let op: any = await dumpDatabase({
             database: context.wertik.configuration.database,
             models: context.wertik.models,
           });
@@ -59,8 +58,7 @@ export default {
           });
 
           return {
-            message:
-              "Backup to DigitalOcean and Local Drive has been completed.",
+            message: "Backup to DigitalOcean and Local Drive has been completed.",
             filename: opDigitalOcean.filename,
             backup: opDigitalOcean.backupInstance,
           };
