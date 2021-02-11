@@ -1,0 +1,1 @@
+{"version":3,"file":"mongoDBConfiguration.js","sourceRoot":"","sources":["../../../../src/framework/defaults/defaultConfigurations/mongoDBConfiguration.ts"],"names":[],"mappings":";;;;;AAAA,kFAA0D;AAE1D,IAAI,aAAa,qBAAQ,8BAAoB,CAAE,CAAC;AAEhD,aAAa,CAAC,QAAQ,GAAG;IACvB,SAAS,EAAE,SAAS;IACpB,UAAU,EAAE,4DAA4D;CACzE,CAAC;AAEF,kBAAe,aAAa,CAAC"}

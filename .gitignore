@@ -2,7 +2,6 @@ node_modules
 package-lock.json
 logs
 dist
-lib
 yarn.lock
 .idea
 

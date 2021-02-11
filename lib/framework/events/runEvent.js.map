@@ -1,0 +1,1 @@
+{"version":3,"file":"runEvent.js","sourceRoot":"","sources":["../../../src/framework/events/runEvent.ts"],"names":[],"mappings":";;AACA,mBAAyB,MAA4B;IAEnD,OAAO,UAAU,IAAY,EAAE,IAAS;QACtC,IAAI,MAAM,CAAC,cAAc,CAAC,IAAI,CAAC,EAAE;YAC/B,MAAM,CAAC,IAAI,CAAC,CAAC,IAAI,CAAC,CAAC;SACpB;IACH,CAAC,CAAA;AACH,CAAC;AAPD,4BAOC"}
