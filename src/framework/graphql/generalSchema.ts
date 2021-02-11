@@ -88,6 +88,7 @@ export default `
 		page: Int
 		nextPage: Int
 		previousPage: Int
+		hasMore: Boolean
 	}
 	input CacheOptionsInput {
 		name: String

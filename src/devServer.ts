@@ -9,9 +9,9 @@ connectDatabase(configuration.database)
   .then((databaseInstance) => {
     configuration.databaseInstance = databaseInstance;
     serve(configuration).then((wertikApp: any) => {
-      if (configuration.database.dbDialect.includes("sql")) {
-        wertikApp.database.sync();
-      }
+      wertikApp.database.sync();
+      // To run seeds you need code below. In Array you have Array<String>, where you can assign module name to create.
+      // wertikApp.seeds(['RolePermission'])
     });
   })
   .catch((e) => {

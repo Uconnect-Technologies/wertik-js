@@ -1,7 +1,6 @@
 export default {
   name: "Wertik",
-  builtinModules:
-    "user,auth,forgetPassword,permission,role,rolePermission,userPermission,userRole,me,storage,mail,backup",
+  builtinModules: "user,auth,forgetPassword,permission,role,rolePermission,userPermission,userRole,me,storage,mail,backup",
   database: {
     dbDialect: process.env.dbDialect,
     dbUsername: process.env.dbUsername,
@@ -96,11 +95,36 @@ export default {
       restApi: {
         endpoints: [
           {
-            path: "/apple/response",
+            path: "/relations",
             methodType: "get",
-            handler: function (req, res) {
+            handler: async function (req, res) {
+              const models = req.wertik.models;
+              const {UserPermission, User, Permission, UserRole, Role} = models;
+              const All = await User.findAll({
+                attributes: ['id','email'],
+                include: [
+                  {
+                    model: UserRole,
+                    as: 'user_roles',
+                    attributes: ['id','user_id','role_id'],
+                    include: [
+                      {
+                        model: Role,
+                        as: "role",
+                        attributes: ['id','name'],
+                      },
+                      {
+                        model: User,
+                        as: "user",
+                        attributes: ['id','email'],
+                      }
+                    ]
+                  }
+                ]
+              });
               res.json({
                 message: true,
+                data: All
               });
             },
           },
@@ -129,6 +153,11 @@ export default {
       console.log("beforeRestApiStart");
     },
     database: {
+      Role: {
+        beforeBulkCreate({ mode, params: { args, context } }) {
+          return args;
+        },
+      },
       User: {
         beforeBulkCreate() {
           throw new Error("Use signup mutation.");
@@ -137,6 +166,14 @@ export default {
     },
   },
   seeds: {
+    RolePermission: [
+      {
+        value: { role_id: 1, permission_id: 1 },
+        afterCreate(instance) {
+          console.log("Role permission created", instance.id);
+        },
+      },
+    ],
     Permission: [
       {
         value: { name: "ca", cant: "true", can: "true" },
@@ -150,9 +187,7 @@ export default {
     middlewares: [
       async ({ socket, next, context }) => {
         console.log("Message while running a socket middleware");
-        console.log(
-          "Validate your realtime user here. All context is available."
-        );
+        console.log("Validate your realtime user here. All context is available.");
         next();
       },
     ],

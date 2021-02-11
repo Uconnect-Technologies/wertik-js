@@ -29,12 +29,17 @@ export default async function (model) {
         if (mainObject.order.length == 0) {
           delete mainObject["order"];
         }
+
+        
+
         const list = await model.findAndCountAll({
           offset: offset,
           limit: limit,
           where: convertedFilters,
           ...mainObject,
         });
+
+        const totalPages = Math.ceil(list.count / limit)
 
         resolve({
           filters,
@@ -45,7 +50,8 @@ export default async function (model) {
             nextPage: page + 1,
             page: page,
             previousPage: page == 1 ? 1 : page - 1,
-            pages: Math.ceil(list.count / limit),
+            pages: totalPages,
+            hasMore: page < totalPages
           },
         });
       } catch (error) {
