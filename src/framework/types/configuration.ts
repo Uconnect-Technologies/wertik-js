@@ -123,7 +123,7 @@ export interface IDocServerConfiguration {
 export interface IConfigurationEvents {
   beforeRestApiStart?: Function;
   beforeGraphqlStart?: Function;
-  database?: {
+  graphql?: {
     [Key: string]: {
       // Cud
       beforeSoftDelete: Function;
