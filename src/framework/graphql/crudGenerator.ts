@@ -73,18 +73,18 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
   const overrideQueryList = get(configuration, `override.${module.name}.graphql.query.list`, null);
   const overrideQueryView = get(configuration, `override.${module.name}.graphql.query.view`, null);
 
-  const beforeBulkDelete = get(configuration, `events.database.${module.name}.beforeBulkDelete`, null);
-  const afterBulkDelete = get(configuration, `events.database.${module.name}.afterBulkDelete`, null);
-  const beforeBulkCreate = get(configuration, `events.database.${module.name}.beforeBulkCreate`, null);
-  const afterBulkCreate = get(configuration, `events.database.${module.name}.afterBulkCreate`, null);
-  const beforeBulkUpdate = get(configuration, `events.database.${module.name}.beforeBulkUpdate`, null);
-  const afterBulkUpdate = get(configuration, `events.database.${module.name}.afterBulkUpdate`, null);
+  const beforeBulkDelete = get(configuration, `events.graphql.${module.name}.beforeBulkDelete`, null);
+  const afterBulkDelete = get(configuration, `events.graphql.${module.name}.afterBulkDelete`, null);
+  const beforeBulkCreate = get(configuration, `events.graphql.${module.name}.beforeBulkCreate`, null);
+  const afterBulkCreate = get(configuration, `events.graphql.${module.name}.afterBulkCreate`, null);
+  const beforeBulkUpdate = get(configuration, `events.graphql.${module.name}.beforeBulkUpdate`, null);
+  const afterBulkUpdate = get(configuration, `events.graphql.${module.name}.afterBulkUpdate`, null);
   // R
-  const beforeList = get(configuration, `events.database.${module.name}.beforeList`, null);
-  const afterList = get(configuration, `events.database.${module.name}.afterList`, null);
+  const beforeList = get(configuration, `events.graphql.${module.name}.beforeList`, null);
+  const afterList = get(configuration, `events.graphql.${module.name}.afterList`, null);
 
-  const beforeView = get(configuration, `events.database.${module.name}.beforeView`, null);
-  const afterView = get(configuration, `events.database.${module.name}.afterView`, null);
+  const beforeView = get(configuration, `events.graphql.${module.name}.beforeView`, null);
+  const afterView = get(configuration, `events.graphql.${module.name}.afterView`, null);
 
   const { bulkCreatedModule, bulkUpdatedModule } = getSubscriptionConstants(module.name);
 
