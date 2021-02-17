@@ -79,6 +79,9 @@ export interface IConfigurationCustomModuleDatabaseRelationship {
   oneToMany: {
     [key: string]: IConfigurationCustomModuleDatabaseRelationshipOneToMany;
   };
+  belongsTo: {
+    [key: string]: IConfigurationCustomModuleDatabaseRelationshipOneToMany;
+  };
   // hasOne: {
   //   [key: string]: IConfigurationCustomModuleDatabaseRelationshipType;
   // },
