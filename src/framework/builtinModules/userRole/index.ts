@@ -37,6 +37,13 @@ export default {
   database: {
     selectIgnoreFields: ["user", "role", "created_by"],
     relationships: {
+      belongsTo: {
+        Role: {
+          relationColumn: "role_id",
+          graphqlName: "role",
+          foreignKey: "id",
+        },
+      },
       oneToOne: {
         User: [
           {
@@ -50,11 +57,7 @@ export default {
             foreignKey: "id",
           },
         ],
-        Role: {
-          relationColumn: "role_id",
-          graphqlName: "role",
-          foreignKey: "id",
-        },
+        
       },
     },
     sql: {

@@ -35,6 +35,13 @@ export default {
   database: {
     selectIgnoreFields: ["user", "permission", "created_by"],
     relationships: {
+      belongsTo: {
+        Permission: {
+          relationColumn: "permission_id",
+          graphqlName: "permission",
+          foreignKey: "id"
+        },
+      },
       oneToOne: {
         User: [
           {
@@ -48,11 +55,7 @@ export default {
             foreignKey: "id",
           },
         ],
-        Permission: {
-          relationColumn: "permission_id",
-          graphqlName: "permission",
-          foreignKey: "id"
-        },
+        
       },
     },
     sql: {

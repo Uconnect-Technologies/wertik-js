@@ -34,9 +34,9 @@ export default {
   },
   restApi: {},
   database: {
-    selectIgnoreFields: ["permission", "role","created_by"],
+    selectIgnoreFields: ["permission", "role", "created_by"],
     relationships: {
-      oneToOne: {
+      belongsTo: {
         Permission: {
           relationColumn: "permission_id",
           graphqlName: "permission",
@@ -47,6 +47,8 @@ export default {
           graphqlName: "role",
           foreignKey: "id",
         },
+      },
+      oneToOne: {
         User: {
           graphqlName: "created_by",
           foreignKey: "id",
