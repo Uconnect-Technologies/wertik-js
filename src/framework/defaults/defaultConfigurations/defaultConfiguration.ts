@@ -100,7 +100,10 @@ export default {
             handler: async function (req, res) {
               const models = req.wertik.models;
               const {UserPermission, User, Permission, UserRole, Role} = models;
-              const All = await User.findAll({
+              const All = await User.findOne({
+                where: {
+                  id: 1
+                },
                 attributes: ['id','email'],
                 include: [
                   {
@@ -119,12 +122,31 @@ export default {
                         attributes: ['id','email'],
                       }
                     ]
+                  },
+                  {
+                    model: UserPermission,
+                    as: "user_permissions",
+                    attributes: ['id','user_id','permission_id'],
+                    include: [
+                      {
+                        model: User,
+                        as: "user",
+                        attributes: ['id','email'],
+                      },
+                      {
+                        model: Permission,
+                        as: "permission",
+                        attributes: ['id','can','cant'],
+                      }
+                    ]
                   }
                 ]
               });
               res.json({
                 message: true,
-                data: All
+                data: {
+                  user: All
+                } 
               });
             },
           },
