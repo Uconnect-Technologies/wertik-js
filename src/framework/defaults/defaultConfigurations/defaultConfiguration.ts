@@ -152,7 +152,7 @@ export default {
     beforeRestApiStart: function () {
       console.log("beforeRestApiStart");
     },
-    database: {
+    graphql: {
       Role: {
         beforeBulkCreate({ mode, params: { args, context } }) {
           return args;
