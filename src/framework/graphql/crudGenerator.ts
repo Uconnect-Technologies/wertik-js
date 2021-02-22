@@ -138,33 +138,48 @@ export const generateCrudResolvers = (module: IConfigurationCustomModule, pubsub
         };
       },
       [`bulkUpdate${module.name}`]: async (_: any, args: any, context: any, info: any) => {
-        if (overrideMutationBulkUpdate && overrideMutationBulkUpdate.constructor == Function) {
-          let response = await overrideMutationBulkUpdate(_, args, context, info);
-          return response;
-        }
-        const finalArgs = isFunction(beforeBulkUpdate)
-          ? await beforeBulkUpdate({
-              mode: "graphql",
-              params: { _, args, context, info },
-            })
-          : args;
-        let model = context.wertik.models[module.name];
-        let result = await model.bulkCreate(finalArgs.input, {
-          updateOnDuplicate: ["id"],
-        });
-        pubsub.publish(bulkUpdatedModule, {
-          [bulkUpdatedModule]: result,
-        });
-        if (isFunction(afterBulkUpdate)) {
-          afterBulkUpdate({
-            mode: "graphql",
-            params: { _, args, context, info, instance: result },
+        try {
+          if (overrideMutationBulkUpdate && overrideMutationBulkUpdate.constructor == Function) {
+            let response = await overrideMutationBulkUpdate(_, args, context, info);
+            return response;
+          }
+          const finalArgs = isFunction(beforeBulkUpdate)
+            ? await beforeBulkUpdate({
+                mode: "graphql",
+                params: { _, args, context, info },
+              })
+            : args;
+          let model = context.wertik.models[module.name];
+          let result = [];
+          // fixme: Try to use knex here to avoid many queries.
+          for (const value of finalArgs.input) {
+            const find = await model.findOne({
+              where: {
+                id: value.id,
+              },
+            });
+
+            if (find) {
+              let a = await find.update(value);
+              result.push(a);
+            }
+          }
+          pubsub.publish(bulkUpdatedModule, {
+            [bulkUpdatedModule]: result,
           });
+          if (isFunction(afterBulkUpdate)) {
+            afterBulkUpdate({
+              mode: "graphql",
+              params: { _, args, context, info, instance: result },
+            });
+          }
+          return {
+            returning: result,
+            affectedRows: result.length,
+          };
+        } catch (e) {
+          console.log(e);
         }
-        return {
-          returning: result,
-          affectedRows: result.length,
-        };
       },
     },
     queries: {
