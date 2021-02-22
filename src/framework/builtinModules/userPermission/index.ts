@@ -37,21 +37,21 @@ export default {
     relationships: {
       belongsTo: {
         Permission: {
-          relationColumn: "permission_id",
-          graphqlName: "permission",
+          sourceKey: "permission_id",
+          as: "permission",
           foreignKey: "id"
         },
       },
       oneToOne: {
         User: [
           {
-            relationColumn: "created_by_id",
-            graphqlName: "created_by",
+            sourceKey: "created_by_id",
+            as: "created_by",
             foreignKey: "id",
           },
           {
-            relationColumn: "user_id",
-            graphqlName: "user",
+            sourceKey: "user_id",
+            as: "user",
             foreignKey: "id",
           },
         ],
