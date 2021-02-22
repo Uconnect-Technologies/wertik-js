@@ -47,16 +47,16 @@ export interface IConfigurationCustomModuleDatabaseSql {
   */
 
 export interface IConfigurationCustomModuleDatabaseRelationshipOneToOne {
-  relationColumn: string;
+  sourceKey: string;
   foreignKey: string;
-  graphqlName: string;
+  as: string;
   options: {
     [Key: string]: any;
   };
 }
 export interface IConfigurationCustomModuleDatabaseRelationshipOneToMany {
   foreignKey: string;
-  graphqlName: string;
+  as: string;
   options: {
     [Key: string]: any;
   };

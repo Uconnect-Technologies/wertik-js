@@ -20,17 +20,17 @@ export const applyRelationshipSql = (
       if (relationshipInfo.constructor === Array) {
         relationshipInfo.forEach((relationshipInfoItem) => {
           currentModel.belongsTo(foreignModel, {
-            as: relationshipInfoItem.graphqlName,
+            as: relationshipInfoItem.as,
             foreignKey: relationshipInfoItem.foreignKey,
-            sourceKey: relationshipInfoItem.relationColumn,
+            sourceKey: relationshipInfoItem.sourceKey,
             ...get(relationshipInfoItem, "options", {}),
           });
         });
       } else {
         currentModel.belongsTo(foreignModel, {
-          as: relationshipInfo.graphqlName,
+          as: relationshipInfo.as,
           foreignKey: relationshipInfo.foreignKey,
-          sourceKey: relationshipInfo.relationColumn,
+          sourceKey: relationshipInfo.sourceKey,
           ...get(relationshipInfo, "options", {}),
         });
       }
@@ -42,17 +42,17 @@ export const applyRelationshipSql = (
       if (relationshipInfo.constructor === Array) {
         relationshipInfo.forEach((relationshipInfoItem) => {
           currentModel.hasMany(foreignModel, {
-            as: relationshipInfoItem.graphqlName,
+            as: relationshipInfoItem.as,
             foreignKey: relationshipInfoItem.foreignKey,
-            sourceKey: relationshipInfoItem.relationColumn,
+            sourceKey: relationshipInfoItem.sourceKey,
             ...get(relationshipInfoItem, "options", {}),
           });
         });
       } else {
         currentModel.hasMany(foreignModel, {
-          as: relationshipInfo.graphqlName,
+          as: relationshipInfo.as,
           foreignKey: relationshipInfo.foreignKey,
-          sourceKey: relationshipInfo.relationColumn,
+          sourceKey: relationshipInfo.sourceKey,
           ...get(relationshipInfo, "options", {}),
         });
       }
@@ -64,17 +64,17 @@ export const applyRelationshipSql = (
       if (relationshipInfo.constructor === Array) {
         relationshipInfo.forEach((relationshipInfoItem) => {
           currentModel.hasOne(foreignModel, {
-            as: relationshipInfoItem.graphqlName,
+            as: relationshipInfoItem.as,
             foreignKey: relationshipInfoItem.foreignKey,
-            sourceKey: relationshipInfoItem.relationColumn,
+            sourceKey: relationshipInfoItem.sourceKey,
             ...get(relationshipInfoItem, "options", {}),
           });
         });
       } else {
         currentModel.hasOne(foreignModel, {
-          as: relationshipInfo.graphqlName,
+          as: relationshipInfo.as,
           foreignKey: relationshipInfo.foreignKey,
-          sourceKey: relationshipInfo.relationColumn,
+          sourceKey: relationshipInfo.sourceKey,
           ...get(relationshipInfo, "options", {}),
         });
       }
