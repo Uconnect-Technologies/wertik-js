@@ -58,11 +58,11 @@ export default {
     relationships: {
       oneToMany: {
         UserRole: {
-          graphqlName: "user_roles",
+          as: "user_roles",
           foreignKey: "user_id",
         },
         UserPermission: {
-          graphqlName: "user_permissions",
+          as: "user_permissions",
           foreignKey: "user_id",
         },
       },

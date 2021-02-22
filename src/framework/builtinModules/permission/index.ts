@@ -38,19 +38,19 @@ export default {
     relationships: {
       oneToMany: {
         UserPermission: {
-          graphqlName: "user_permissions",
+          as: "user_permissions",
           foreignKey: "permission_id",
         },
         RolePermission: {
-          graphqlName: "role_permissions",
+          as: "role_permissions",
           foreignKey: "permission_id"
         },
       },
       oneToOne: {
         User: {
-          graphqlName: "created_by",
+          as: "created_by",
           foreignKey: "id",
-          relationColumn: "created_by_id",
+          sourceKey: "created_by_id",
         },
       },
     },
