@@ -16,3 +16,4 @@ warning.log
 .env
 uploads
 storage
+backups

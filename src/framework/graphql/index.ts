@@ -1,11 +1,12 @@
 // let { ApolloServer } = require("apollo-server");
-import loadAllModules from "./loadAllModules"
+import loadAllModules from "./loadAllModules";
 import { IGraphQLInitialize } from "./../types/servers";
 import { get } from "lodash";
 import voyager from "./voyager/index";
 import { defaultApolloGraphqlOptions } from "../defaults/options/index";
+import GraphQLJSON, { GraphQLJSONObject } from "graphql-type-json";
 const { ApolloServer } = require("apollo-server-express");
-import * as auth from "./../helpers/auth"
+import * as auth from "./../helpers/auth";
 
 //expressApp,configuration,models,emailTemplates,sendEmail,database,WertikEventEmitter
 
@@ -13,7 +14,7 @@ export default async function (options: IGraphQLInitialize) {
   const { mailerInstance, configuration, models, sendEmail, emailTemplates, database, socketio, logger, cache } = options;
   const apolloGraphqlOptions = get(configuration, "graphql.apolloGraphqlServerOptions", defaultApolloGraphqlOptions);
   let initializeContext = get(configuration, "context.initializeContext", async function () {});
-  initializeContext = await initializeContext("graphql",{
+  initializeContext = await initializeContext("graphql", {
     models,
     database,
   });
@@ -21,7 +22,11 @@ export default async function (options: IGraphQLInitialize) {
   const graphqlVoyager = voyager(configuration);
   const apollo = new ApolloServer({
     typeDefs: modules.schema,
-    resolvers: modules.resolvers,
+    resolvers: {
+      ...modules.resolvers,
+      JSON: GraphQLJSON,
+      JSONObject: GraphQLJSONObject,
+    },
     context: async ({ req, res, connection }) => {
       let cxt = {
         wertik: {
@@ -39,8 +44,8 @@ export default async function (options: IGraphQLInitialize) {
           socketio,
           logger,
           initializeContext: initializeContext,
-          configuration: configuration
-        }
+          configuration: configuration,
+        },
       };
       let requestContext = await get(configuration.context, "requestContext", () => {})("graphql", cxt);
       cxt["requestContext"] = requestContext;

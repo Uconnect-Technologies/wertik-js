@@ -1,4 +1,7 @@
 export default `
+	scalar JSON
+	scalar JSONObject
+
 	input StringFilterInput {
 		_eq: String
 		_ne: String
