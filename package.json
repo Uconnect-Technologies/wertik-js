@@ -42,6 +42,7 @@
     "express": "^4.16.4",
     "graphql": "^14.1.1",
     "graphql-fields": "^2.0.3",
+    "graphql-type-json": "^0.3.2",
     "handlebars": "^4.5.3",
     "jsonwebtoken": "^8.4.0",
     "lodash": "^4.17.15",

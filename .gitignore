@@ -16,3 +16,4 @@ warning.log
 storage
 /backups
 .DS_STORE
+lib
