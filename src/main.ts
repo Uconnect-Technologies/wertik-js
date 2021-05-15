@@ -44,12 +44,25 @@ export const serve = function (configurationOriginal: IConfiguration) {
                       let cron = require("./framework/cron/index").default;
 
                       let models = require("./framework/database/loadTables").default(database, configuration);
+                      
+                      let emailTemplates = require("./framework/mailer/emailTemplates").default(configuration, __dirname);
+
+
                       let sendEmail =
                         get(configuration, "email.disable", false) === false
-                          ? require("./framework/mailer/index").sendEmail(configuration, mailerInstance)
+                          ? require("./framework/mailer/index").sendEmail({
+                              expressApp: expressApp,
+                              configuration: configuration,
+                              models: models,
+                              emailTemplates: emailTemplates,
+                              database: database,
+                              mailerInstance: mailerInstance,
+                              logger: logger,
+                              cache: cache,
+                            })
                           : null;
-                      let seeds = require("./framework/seeds/index").default(configuration, models);
-                      let emailTemplates = require("./framework/mailer/emailTemplates").default(configuration, __dirname);
+
+
                       /* Storage */
                       let storage = multer.diskStorage({
                         destination: configuration.storage.storageDirectory,
@@ -108,7 +121,6 @@ export const serve = function (configurationOriginal: IConfiguration) {
                         emailTemplates: emailTemplates,
                         sendEmail: sendEmail,
                         database: database,
-                        seeds: seeds,
                         logger: logger,
                         multerInstance: multerInstance,
                         mailerInstance: mailerInstance,
@@ -127,7 +139,6 @@ export const serve = function (configurationOriginal: IConfiguration) {
                         emailTemplates: emailTemplates,
                         sendEmail: sendEmail,
                         database: database,
-                        seeds: seeds,
                         logger: logger,
                         multerInstance: multerInstance,
                         mailerInstance: mailerInstance,
