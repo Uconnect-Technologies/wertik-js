@@ -20,7 +20,9 @@ export const defaultMailerInstance = async function(configuration: IConfiguratio
 };
 
 export const sendEmail = function ({ configuration, mailerInstance, models }) {
+  let databaseInstance;
   let userPassedSendEmail = get(configuration, "email.sendEmail", null);
+  const saveEmailInDatabase = get(configuration, "email.saveEmailInDatabase", true);
   if (userPassedSendEmail !== null) {
     return userPassedSendEmail;
   } else {
@@ -44,17 +46,19 @@ export const sendEmail = function ({ configuration, mailerInstance, models }) {
             nodemailer.getTestMessageUrl(emailInstance)
           );
         }
-        const databaseInstance = await models.Email.create({
-          cc: options.cc,
-          subject: options.subject,
-          name: options.name,
-          from_user_id: options.from_user_id,
-          bcc: options.bcc,
-          to: options.to,
-          variables: JSON.stringify(options.variables),
-          template: options.template,
-          message_id: emailInstance.messageId,
-        });
+        if (saveEmailInDatabase) {
+          databaseInstance = await models.Email.create({
+            cc: options.cc,
+            subject: options.subject,
+            name: options.name,
+            from_user_id: options.from_user_id,
+            bcc: options.bcc,
+            to: options.to,
+            variables: JSON.stringify(options.variables),
+            template: options.template,
+            message_id: emailInstance.messageId,
+          });
+        }
         return { emailInstance, databaseInstance };
       } catch (e) {
         console.log(`Failed sending email: ${e.message}`);

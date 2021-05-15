@@ -1,6 +1,7 @@
 export default {
   name: "Wertik",
-  builtinModules: "user,auth,forgetPassword,permission,role,rolePermission,userPermission,userRole,storage,email,backup",
+  builtinModules:
+    "user,auth,forgetPassword,permission,role,rolePermission,userPermission,userRole,storage,email,backup",
   database: {
     dbDialect: process.env.dbDialect,
     dbUsername: process.env.dbUsername,
@@ -27,6 +28,7 @@ export default {
   },
   email: {
     disable: false,
+    saveEmailInDatabase: true
   },
   graphql: {
     disable: false,
@@ -99,7 +101,8 @@ export default {
             methodType: "get",
             handler: async function (req, res) {
               const models = req.wertik.models;
-              const { UserPermission, User, Permission, UserRole, Role } = models;
+              const { UserPermission, User, Permission, UserRole, Role } =
+                models;
               const All = await User.findOne({
                 where: {
                   id: 1,
@@ -192,7 +195,9 @@ export default {
     middlewares: [
       async ({ socket, next, context }) => {
         console.log("Message while running a socket middleware");
-        console.log("Validate your realtime user here. All context is available.");
+        console.log(
+          "Validate your realtime user here. All context is available."
+        );
         next();
       },
     ],

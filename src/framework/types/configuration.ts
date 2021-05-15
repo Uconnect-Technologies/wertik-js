@@ -191,6 +191,7 @@ export interface IConfigurationEmail {
     [Key: string]: string;
   };
   sendEmailOnSignup: Boolean;
+  saveEmailInDatabase: Boolean;
 }
 
 export interface IConfigurationCron {
