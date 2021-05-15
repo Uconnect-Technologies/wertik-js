@@ -36,7 +36,7 @@ export default {
     `,
     mutation: {
       schema: `
-        twoFactorLogin(input: EmailInput): SuccessResponse
+        twoFactorLogin(input: EmailInputFP): SuccessResponse
         twoFactorLoginValidate(input: TwoFactorCodeInput): User
         loginWithAccessToken(input: AccessTokenInput): User
         activateAccount(input: ActivationTokenInput): SuccessResponse
