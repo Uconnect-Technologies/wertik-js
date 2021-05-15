@@ -164,10 +164,6 @@ For more please visit this page for configuration idea: https://github.com/Uconn
 For graphql: https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/framework/graphql/crudGenerator.ts#L112
 For rest api: https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/framework/restApi/versions/v1/loadAllModules.ts#L40
 
-#### seeds
-
-(We recommend to use some other seed helpers like knex seeds or sequelize seeds).
-
 #### sockets - beta
 
 **Type:** Object

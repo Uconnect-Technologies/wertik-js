@@ -187,23 +187,6 @@ export default {
       },
     },
   },
-  seeds: {
-    RolePermission: [
-      {
-        value: { role_id: 1, permission_id: 1 },
-        afterCreate(instance) {
-          console.log("Role permission created", instance.id);
-        },
-      },
-    ],
-    Permission: [
-      {
-        value: { name: "ca", cant: "true", can: "true" },
-      },
-      { value: { name: "ca1", cant: "true1", can: "true1" } },
-      { value: { name: "ca2", cant: "true2", can: "true2" } },
-    ],
-  },
   sockets: {
     disable: false,
     middlewares: [

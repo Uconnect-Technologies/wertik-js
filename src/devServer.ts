@@ -10,8 +10,6 @@ connectDatabase(configuration.database)
     configuration.databaseInstance = databaseInstance;
     serve(configuration).then((wertikApp: any) => {
       wertikApp.database.sync();
-      // To run seeds you need code below. In Array you have Array<String>, where you can assign module name to create.
-      // wertikApp.seeds(['RolePermission'])
     });
   })
   .catch((e) => {
