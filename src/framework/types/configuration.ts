@@ -256,7 +256,6 @@ export interface IConfiguration {
   graphql: IConfigurationGraphql;
   modules: Array<IConfigurationCustomModule>;
   events: IConfigurationEvents;
-  seeds: any;
   sockets: ISocketConfiguration;
   rbac: IConfigurationRbac;
   storage: IConfigurationStorage;
