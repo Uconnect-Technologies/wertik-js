@@ -54,7 +54,7 @@
     "mysqldump": "^3.2.0",
     "node-cache": "^5.1.2",
     "node-cron": "^2.0.3",
-    "nodemailer": "^5.0.0",
+    "nodemailer": ">=6.4.16",
     "pg": "^7.18.2",
     "pg-hstore": "^2.3.3",
     "request-ip": "^2.1.3",
