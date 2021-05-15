@@ -23,7 +23,7 @@ export default `
     response: Response
     [subscription__replace]
   }
-  input EmailInput {
+  input EmailInputFP {
     email: String!
   }
   input SignupInput {
