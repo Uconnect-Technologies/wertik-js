@@ -24,6 +24,7 @@ export default {
         name: String
         id: Int
         template: String!
+        from_user_id: Int
         variables: JSON
         cc: String
         subject: String!
@@ -39,31 +40,8 @@ export default {
         sendEmail: async (_: any, args: any, context: any, info: any) => {
           try {
             const sendEmail = context.wertik.sendEmail;
-            const template = args.input.template;
-            const variables = get(args, "input.variables", {});
-            const transportVariables = {
-              cc: args.input.cc,
-              subject: args.input.subject,
-              bcc: args.input.bcc,
-              to: args.input.to,
-            };
-            const send = await sendEmail(
-              template,
-              variables,
-              transportVariables
-            );
-            const res = await context.wertik.models.Email.create({
-              cc: args.input.cc,
-              subject: args.input.subject,
-              name: args.input.name,
-              from_user_id: args.input.from_user_id,
-              bcc: args.input.bcc,
-              to: args.input.to,
-              variables: JSON.stringify(args.input.variables),
-              template: args.input.template,
-              message_id: send.messageId,
-            });
-            return res;
+            const send = await sendEmail(args.input);
+            return send.databaseInstance;
           } catch (e) {
             throw new Error(e);
           }

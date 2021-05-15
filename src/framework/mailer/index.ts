@@ -19,29 +19,47 @@ export const defaultMailerInstance = async function(configuration: IConfiguratio
   return transporter;
 };
 
-export const sendEmail = function(configuration: IConfiguration, mailerInstance: any) {
+export const sendEmail = function ({ configuration, mailerInstance, models }) {
+  let databaseInstance;
   let userPassedSendEmail = get(configuration, "email.sendEmail", null);
+  const saveEmailInDatabase = get(configuration, "email.saveEmailInDatabase", true);
   if (userPassedSendEmail !== null) {
     return userPassedSendEmail;
   } else {
-    return async function(template: string, variables: any, credentials: any) {
+    return async function (options) {
       let transporter = mailerInstance;
-      let compiled = handlebars.compile(template);
-      let resultTemplate = compiled(variables);
+      let compiled = handlebars.compile(options.template);
+      let resultTemplate = compiled(options.variables);
       try {
-        let send = await transporter.sendMail({
-          from: credentials.from,
-          to: credentials.to,
+        let emailInstance = await transporter.sendMail({
+          from: options.from,
+          to: options.to,
           html: resultTemplate,
-          subject: credentials.subject
+          subject: options.subject,
         });
-        if (send && send.messageId) {
-          console.log("Message sent: %s", send.messageId);
+        if (emailInstance && emailInstance.messageId) {
+          console.log("Message sent: %s", emailInstance.messageId);
         }
         if (nodemailer && nodemailer.getTestMessageUrl) {
-          console.log("Preview URL: %s", nodemailer.getTestMessageUrl(send));
+          console.log(
+            "Preview URL: %s",
+            nodemailer.getTestMessageUrl(emailInstance)
+          );
         }
-        return send;
+        if (saveEmailInDatabase) {
+          databaseInstance = await models.Email.create({
+            cc: options.cc,
+            subject: options.subject,
+            name: options.name,
+            from_user_id: options.from_user_id,
+            bcc: options.bcc,
+            to: options.to,
+            variables: JSON.stringify(options.variables),
+            template: options.template,
+            message_id: emailInstance.messageId,
+          });
+        }
+        return { emailInstance, databaseInstance };
       } catch (e) {
         console.log(`Failed sending email: ${e.message}`);
       }
