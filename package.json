@@ -1,6 +1,6 @@
 {
   "name": "wertik-js",
-  "version": "2.0.70",
+  "version": "3.0.0-beta",
   "main": "lib/main.js",
   "repository": "https://github.com/Uconnect-Technologies/wertik-js.git",
   "keywords": [
@@ -25,6 +25,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "concurrently -n TS,DevServer  \"npm run watch-ts\"  \"nodemon lib/devServer.js\" ",
+    "dev-next": "concurrently -n TS,DevServer  \"npm run watch-ts\"  \"nodemon lib/next/devServer.js\" ",
     "dev-without-nodemon": "concurrently \"npm run watch-ts\"  \"node lib/devServer.js\" ",
     "build": "yarn tsc",
     "production": "node lib/devServer.js",
@@ -39,7 +40,7 @@
     "chalk": "^3.0.0",
     "cors": "^2.8.5",
     "dropbox": "^8.2.0",
-    "express": "^4.16.4",
+    "express": "^4.17.1",
     "graphql": "^14.1.1",
     "graphql-fields": "^2.0.3",
     "graphql-type-json": "^0.3.2",

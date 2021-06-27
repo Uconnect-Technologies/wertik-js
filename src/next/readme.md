@@ -51,6 +51,7 @@ wertik({
   port: 5050,
   modules: {
     users: useModule({
+      hasDatabase: true, // by default true
       database: "YOUR_DATABASE",
       table: "TABLE_NAME",
       on: function ({ useExpress, useGraphql }) {
