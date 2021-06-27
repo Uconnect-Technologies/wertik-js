@@ -2,13 +2,17 @@
 
 - [x] Setup Readme and Todo page
 
-- [ ] Setup latest project
+- [x] Setup latest project
 
-- [ ] Allow starting app while providing port
+- [x] Allow starting app while providing port
 
-- [ ] Allow using useDatabase
+- [x] Allow using useDatabase
+
+- [ ] Allow using custom graphql typeDefs and Resolvers
 
 - [ ] Allow using useModule
+
+- [ ] Generate CRUD for useModule if useDatabase passed.
 
 - [ ] Allow using useMailer
 

@@ -54,19 +54,17 @@ wertik({
       hasDatabase: true, // by default true
       database: "YOUR_DATABASE",
       table: "TABLE_NAME",
-      on: function ({ useExpress, useGraphql }) {
+      on: function ({ useExpress, useQuery, useMutation }) {
         useExpress((express) => {
           // express is the express instance
         });
-        useGraphql((query, mutation) => {
-          query({
-            query: ``,
-            resolver() {},
-          });
-          mutation({
-            query: ``,
-            resolver() {},
-          });
+        query({
+          query: ``,
+          resolver() {},
+        });
+        mutation({
+          query: ``,
+          resolver() {},
         });
       },
     }),
@@ -138,6 +136,25 @@ wertik({
       // context will contain your app
     });
   }),
+});
+```
+
+## Assigning GraphQL Queries and Mutations in root
+
+To assign graphql queries and mutations in root you have to assign like this:
+
+```javascript
+import wertik, { useCronJobs } from "wertik-js";
+
+wertik({
+  port: 5050,
+  graphql: {
+    typeDefs: ``,
+    resolvers: {
+      Query: {},
+      Mutation: {}
+    }
+  }
 });
 ```
 

@@ -5,6 +5,18 @@ import { useModule } from "./modules/modules";
 (async () => {
   wertik({
     port: 1200,
+    graphql: {
+      typeDefs: `
+        extend type Mutation {
+          name: String
+        }
+      `,
+      resolvers: {
+        Mutation: {
+          name: () => "my name is mechanic"
+        }
+      }
+    },
     database: {
       wapgee: await useDatabase({
         port: 1200,
@@ -23,8 +35,10 @@ import { useModule } from "./modules/modules";
     },
     modules: {
       users: useModule({
+        useDatabase: true,
         database: "wapgee",
         table: "users",
+        on: function ({ useQuery, useMutation, useExpress }) {},
       }),
     },
   });

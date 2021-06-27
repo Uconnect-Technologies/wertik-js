@@ -1,37 +1,32 @@
 import { get } from "lodash";
 import express from "express";
-const { ApolloServer } = require("apollo-server-express");
+import graphql from "./graphql/index";
+import store from "./store";
 
 export default async function (props: any) {
   const port = get(props, "port", 5050);
   const app = express();
+  props.express = app;
 
   Object.keys(props.modules).forEach(async (moduleName) => {
-    props.modules[moduleName] = await props.modules[moduleName](props);
+    props.modules[moduleName] = await props.modules[moduleName](props, store);
   });
 
   setTimeout(() => {
+    
+    store.graphql.typeDefs = store.graphql.typeDefs.concat(
+      get(props, "graphql.typeDefs", "")
+    );
+    store.graphql.resolvers.Query = {
+      ...store.graphql.resolvers.Query,
+      ...get(props, "graphql.resolvers.Query", {}),
+    };
+    store.graphql.resolvers.Mutation = {
+      ...store.graphql.resolvers.Mutation,
+      ...get(props, "graphql.resolvers.Mutation", {}),
+    };
 
-    const server = new ApolloServer({
-      typeDefs: `
-        type Book {
-            title: String
-            author: String
-        }
-        ${props.modules.users.schema}
-        type Query {
-            books: [Book]
-            users: users
-        }
-    `,
-      resolvers: {
-        Query: {
-          books: () => [],
-        },
-      },
-    });
-
-    server.applyMiddleware({ app });
+    graphql({app, store})
 
     app.get("/w/info", function (req, res) {
       res.json({
