@@ -1,5 +1,7 @@
 # Todo tasks for next version of Wertik-js
 
+- [x] Setup Readme and Todo page
+
 - [ ] Setup latest project
 
 - [ ] Allow starting app while providing port
