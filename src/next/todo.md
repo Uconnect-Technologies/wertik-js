@@ -8,9 +8,9 @@
 
 - [x] Allow using useDatabase
 
-- [ ] Allow using custom graphql typeDefs and Resolvers
+- [x] Allow using custom graphql typeDefs and Resolvers
 
-- [ ] Allow using useModule
+- [x] Allow using useModule
 
 - [ ] Generate CRUD for useModule if useDatabase passed.
 
