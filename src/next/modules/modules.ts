@@ -1,5 +1,6 @@
 import { get, isFunction } from "lodash";
 import { DataTypes } from "sequelize";
+import crud from "../crud";
 
 const generateDataTypeFromDescribeTableColumnType = (Type: string) => {
   let length = Type.match(/[0-9]/g)?.join("");
@@ -20,10 +21,31 @@ const generateDataTypeFromDescribeTableColumnType = (Type: string) => {
   return { length, type };
 };
 
+const generateGenerateGraphQLCrud = (props, schemaInformation, store) => {
+  const { graphql } = crud(props);
+  const resolvers = graphql.generateCrudResolvers();
+
+  console.log(schemaInformation.inputSchema.create,1);
+
+  store.graphql.typeDefs = store.graphql.typeDefs.concat(
+    `\n ${schemaInformation.schema} 
+    \n ${schemaInformation.inputSchema.filters}
+    \n ${schemaInformation.inputSchema.create}
+    \n ${schemaInformation.inputSchema.update}
+    `
+  );
+
+  store.graphql.typeDefs = store.graphql.typeDefs.concat(
+    `\n ${graphql.generateQueriesCrudSchema()}`
+  );
+  store.graphql.typeDefs = store.graphql.typeDefs.concat(
+    `\n ${graphql.generateMutationsCrudSchema()}`
+  );
+};
+
 export const useModule = (props: any) => {
   return async (wertik: any, store: any) => {
     let graphqlSchema = [];
-    let inputSchema = [];
     const useDatabase = get(props, "useDatabase", false);
     const useQuery = ({ query, resolver, name }) => {
       store.graphql.typeDefs = store.graphql.typeDefs.concat(`
@@ -61,6 +83,8 @@ export const useModule = (props: any) => {
     let listSchema = "";
     let filterSchema = [];
     if (useDatabase) {
+      var createSchema = [];
+      var updateSchema = [];
       const connection = wertik.database[props.database];
       const describe = await connection.instance.query(
         `describe ${props.table}`
@@ -76,15 +100,14 @@ export const useModule = (props: any) => {
         const { type, length } = generateDataTypeFromDescribeTableColumnType(
           element.Type
         );
-        // fields[element.Field] = {
-        //   type: {
-        //     type: element.Type,
-        //     null: element.Null === "YES" ? true : false
-        //   }
-        // }
-        console.log(type);
+        fields[element.Field] = {
+          type: {
+            type: type,
+            null: element.Null === "YES" ? true : false,
+          },
+        };
+        connection.instance.define(props.table, fields);
       });
-
 
       // graphql schema
       graphqlSchema = [`type ${props.table} {`];
@@ -96,17 +119,29 @@ export const useModule = (props: any) => {
       graphqlSchema.push("}");
       // graphql schema
 
-      inputSchema = [`input ${props.table}Input {`];
+      updateSchema = [`input update${props.table}input {`];
       tableInformation.forEach((element) => {
-        inputSchema.push(
+        updateSchema.push(
           `${element.Field}: ${getType(element.Type)}${
             element.Null.toLowerCase() === "no" ? "!" : ""
           }`
         );
       });
-      inputSchema.push("}");
+      updateSchema.push("}");
 
-      filterSchema = [`input ${props.table}Filters {`];
+      createSchema = [`input create${props.table}input {`];
+      tableInformation.forEach((element) => {
+        if (element.Field !== "id") {
+          createSchema.push(
+            `${element.Field}: ${getType(element.Type)}${
+              element.Null.toLowerCase() === "no" ? "!" : ""
+            }`
+          );
+        }
+      });
+      createSchema.push("}");
+
+      filterSchema = [`input ${props.table}FilterInput {`];
 
       tableInformation.forEach((element) => {
         if (element.Type.includes("varchar") || element.Type.includes("text")) {
@@ -129,17 +164,20 @@ export const useModule = (props: any) => {
         }
       `;
     }
-
     get(props, "on", () => {})({ useQuery, useMutation, useExpress });
 
-    return {
+    const schemaInformation = {
       schema: graphqlSchema.join(`\n`),
       inputSchema: {
-        create: inputSchema.join(`\n`).replace("id: Int!", ""),
-        update: inputSchema.join(`\n`),
+        create: createSchema.join("\n"),
+        update: updateSchema.join("\n"),
         list: listSchema,
         filters: filterSchema.join("\n"),
       },
     };
+
+    generateGenerateGraphQLCrud(props, schemaInformation, store);
+
+    return schemaInformation;
   };
 };

@@ -1,4 +1,8 @@
 export default `
+	type SuccessResponse {
+    message: String
+  }
+
 	scalar JSON
 	scalar JSONObject
 

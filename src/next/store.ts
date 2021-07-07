@@ -1,6 +1,10 @@
+import generalSchema from "../framework/graphql/generalSchema";
+
+
 export default {
   graphql: {
     typeDefs: `
+        ${generalSchema}
         type Response {
           message: String
           version: String
