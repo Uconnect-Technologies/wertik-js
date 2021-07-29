@@ -4,6 +4,7 @@ import crud from "../crud";
 
 export interface RelationParams {
   module: string;
+  graphqlKey: string;
   options: {
     [key: string]: string | number | null;
   };
@@ -122,9 +123,6 @@ export const useModule = (props: any) => {
         graphqlSchema.push(`${element.Field}: ${getType(element.Type)}`);
       });
 
-      graphqlSchema.push("}");
-      // graphql schema
-
       updateSchema = [`input update${props.name}input {`];
       tableInformation.forEach((element) => {
         updateSchema.push(
@@ -172,7 +170,8 @@ export const useModule = (props: any) => {
     }
 
     const hasOne = (params: RelationParams) => {
-      console.log(params, props.name);
+
+      graphqlSchema.push(`${params.graphqlKey}: ${params.module}`)
     };
     const BelongsTo = (params: RelationParams) => {};
     const belongsToMany = (params: RelationParams) => {};
@@ -187,6 +186,10 @@ export const useModule = (props: any) => {
       belongsToMany,
       hasMany,
     });
+
+    graphqlSchema.push('}')
+
+    console.log(graphqlSchema)
 
     const schemaInformation = {
       schema: graphqlSchema.join(`\n`),

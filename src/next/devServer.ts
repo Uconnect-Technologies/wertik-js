@@ -37,6 +37,7 @@ import { useModule } from "./modules/modules";
         table: "post",
         on: function ({ useQuery, useMutation, useExpress, hasOne }) {
           hasOne({
+            graphqlKey: "user",
             database: "wapgee",
             module: "User",
           });
