@@ -1,6 +1,5 @@
 import generalSchema from "../framework/graphql/generalSchema";
 
-
 export default {
   graphql: {
     typeDefs: `
@@ -28,5 +27,8 @@ export default {
         version: () => require("../../package.json").version,
       },
     },
+  },
+  database: {
+    relationships: [],
   },
 };

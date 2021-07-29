@@ -1,7 +1,6 @@
 const { ApolloServer } = require("apollo-server-express");
 
 export default function ({ app, store }) {
-
   const server = new ApolloServer({
     typeDefs: store.graphql.typeDefs,
     resolvers: {

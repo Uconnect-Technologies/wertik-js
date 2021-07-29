@@ -24,10 +24,23 @@ import { useModule } from "./modules/modules";
     },
     modules: {
       users: useModule({
+        name: "User",
         useDatabase: true,
         database: "wapgee",
         table: "users",
-        on: function ({ useQuery, useMutation, useExpress }) {},
+        on: function ({ useQuery, useMutation, useExpress, hasOne }) {},
+      }),
+      post: useModule({
+        name: "Post",
+        useDatabase: true,
+        database: "wapgee",
+        table: "post",
+        on: function ({ useQuery, useMutation, useExpress, hasOne }) {
+          hasOne({
+            database: "wapgee",
+            module: "User",
+          });
+        },
       }),
     },
   });

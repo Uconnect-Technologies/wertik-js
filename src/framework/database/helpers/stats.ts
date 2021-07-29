@@ -26,14 +26,14 @@ export default function (database, model) {
           total_created_this_year: null,
         };
         let count,
-            countLast7Days,
-            countToday,
-            countLastYear,
-            countThisYear,
-            countThisMonth,
-            countThisweek,
-            countLastMonth,
-            countLast90Days;
+          countLast7Days,
+          countToday,
+          countLastYear,
+          countThisYear,
+          countThisMonth,
+          countThisweek,
+          countLastMonth,
+          countLast90Days;
         let selectOptions = {
           type: database.QueryTypes.SELECT,
         };
@@ -136,9 +136,8 @@ export default function (database, model) {
 
         resolve(statsInfo);
       } catch (error) {
-        reject(error)
+        reject(error);
       }
-    })
-    
-  }
+    });
+  };
 }

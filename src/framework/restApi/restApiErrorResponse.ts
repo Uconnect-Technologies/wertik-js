@@ -1,4 +1,4 @@
-export default function(obj: any) {
+export default function (obj: any) {
   let { res, err, data, code } = obj;
   if (!code) {
     code = 500;
@@ -9,7 +9,7 @@ export default function(obj: any) {
       status: code,
       success: false,
       message: err.message,
-      data: data
-    }
+      data: data,
+    },
   });
 }

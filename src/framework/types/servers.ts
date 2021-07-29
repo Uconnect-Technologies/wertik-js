@@ -12,12 +12,10 @@ export interface IGraphQLInitialize {
   mailerInstance: any;
   socketio: any;
   logger: any;
-  cache: any;
 }
 
 export interface IRestApiInitialize {
   sendEmail: Function;
-  cache: any;
   configuration: IConfiguration;
   mailerInstance: any;
   expressApp: any;
@@ -36,6 +34,6 @@ export interface ISocketConfiguration {
   middlewares: Array<Function>;
   disable: Boolean;
   options: {
-    [key: string]: any
-  }
+    [key: string]: any;
+  };
 }

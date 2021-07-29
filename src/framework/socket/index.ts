@@ -12,7 +12,7 @@ export const defaultSocketInstance = (
   if (disable === true) {
     return null;
   }
-  const { httpServer, cache } = context;
+  const { httpServer } = context;
   const io = SocketIO(httpServer, options);
   middlewares &&
     middlewares.forEach((fn) => {

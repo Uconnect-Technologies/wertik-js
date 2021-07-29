@@ -38,7 +38,12 @@ export default {
         resetPassword(input: resetPasswordInput): SuccessResponse
       `,
       resolvers: {
-        requestPasswordReset: async (_: any, args: any, context: any, info: any) => {
+        requestPasswordReset: async (
+          _: any,
+          args: any,
+          context: any,
+          info: any
+        ) => {
           return await requestPasswordResetHandler({
             userModel: context.wertik.models.User,
             forgetPasswordModel: context.wertik.models.ForgetPassword,

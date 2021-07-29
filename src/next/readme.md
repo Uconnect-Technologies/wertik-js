@@ -152,9 +152,9 @@ wertik({
     typeDefs: ``,
     resolvers: {
       Query: {},
-      Mutation: {}
-    }
-  }
+      Mutation: {},
+    },
+  },
 });
 ```
 

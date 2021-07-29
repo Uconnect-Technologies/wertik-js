@@ -22,9 +22,13 @@ export const getQueryForLast7Days = function (tableName: String) {
     SELECT count(*) as total_created_last_7_days FROM ${tableName}
     WHERE DATE(created_at)
       BETWEEN
-        '${getYear(substractDays(7))}-${substractDays(7).month() + 1}-${substractDays(7).date()}'
+        '${getYear(substractDays(7))}-${
+    substractDays(7).month() + 1
+  }-${substractDays(7).date()}'
       AND
-        '${getYear(substractDays(7))}-${moment().month() + 1}-${moment().date()}'
+        '${getYear(substractDays(7))}-${
+    moment().month() + 1
+  }-${moment().date()}'
   `;
 };
 
@@ -66,9 +70,13 @@ export const getQueryForThisWeek = function (tableName: String) {
     SELECT count(*) as total_created_this_week FROM ${tableName}
     WHERE DATE(created_at)
     BETWEEN
-      '${getYear(moment().startOf("isoWeek"))}-${moment().startOf("isoWeek").month() + 1}-${moment().startOf("isoWeek").date()}'
+      '${getYear(moment().startOf("isoWeek"))}-${
+    moment().startOf("isoWeek").month() + 1
+  }-${moment().startOf("isoWeek").date()}'
     AND
-      '${getYear(moment().endOf("isoWeek"))}-${moment().endOf("isoWeek").month() + 1}-${moment().endOf("isoWeek").date()}'
+      '${getYear(moment().endOf("isoWeek"))}-${
+    moment().endOf("isoWeek").month() + 1
+  }-${moment().endOf("isoWeek").date()}'
   `;
 };
 
@@ -77,15 +85,13 @@ export const getQueryForLastMonth = function (tableName: String) {
     SELECT count(*) as total_created_last_month FROM ${tableName}
     WHERE DATE(created_at)
     BETWEEN
-      '${moment().subtract(1, "months").year()}-${moment().subtract(1, "months").month() + 1}-${moment()
-    .subtract(1, "months")
-    .startOf("month")
-    .date()}'
+      '${moment().subtract(1, "months").year()}-${
+    moment().subtract(1, "months").month() + 1
+  }-${moment().subtract(1, "months").startOf("month").date()}'
     AND
-      '${moment().subtract(1, "months").year()}-${moment().subtract(1, "months").month() + 1}-${moment()
-    .subtract(1, "months")
-    .endOf("month")
-    .date()}'
+      '${moment().subtract(1, "months").year()}-${
+    moment().subtract(1, "months").month() + 1
+  }-${moment().subtract(1, "months").endOf("month").date()}'
   `;
 };
 
@@ -94,12 +100,13 @@ export const getQueryForLast90Days = function (tableName: String) {
     SELECT count(*) as total_created_last_90_days FROM ${tableName}
     WHERE DATE(created_at)
     BETWEEN
-      '${moment().subtract(90, "days").year()}-${moment().subtract(90, "days").month() + 1}-${moment()
-    .subtract(90, "days")
-    .startOf("month")
-    .date()}'
+      '${moment().subtract(90, "days").year()}-${
+    moment().subtract(90, "days").month() + 1
+  }-${moment().subtract(90, "days").startOf("month").date()}'
     AND
-      '${moment().year()}-${moment().month() + 1}-${moment().endOf("month").date()}'
+      '${moment().year()}-${moment().month() + 1}-${moment()
+    .endOf("month")
+    .date()}'
   `;
 };
 

@@ -29,7 +29,8 @@
     "dev-without-nodemon": "concurrently \"npm run watch-ts\"  \"node lib/devServer.js\" ",
     "build": "yarn tsc",
     "production": "node lib/devServer.js",
-    "watch-ts": "tsc -w"
+    "watch-ts": "tsc -w",
+    "prettier": "prettier --write src"
   },
   "dependencies": {
     "apollo-server": "^2.8.2",
@@ -53,7 +54,6 @@
     "multer": "^1.4.2",
     "mysql2": "^1.6.4",
     "mysqldump": "^3.2.0",
-    "node-cache": "^5.1.2",
     "node-cron": "^2.0.3",
     "nodemailer": ">=6.4.16",
     "pg": "^7.18.2",
@@ -80,6 +80,7 @@
     "dotenv": "^6.2.0",
     "module-alias": "^2.1.0",
     "nodemon": "^1.18.9",
+    "prettier": "^2.3.2",
     "sequelize-cli": "^5.4.0",
     "tslint": "^5.17.0",
     "typescript": "^3.5.1"

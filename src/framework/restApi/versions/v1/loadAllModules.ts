@@ -1,7 +1,11 @@
 import { get, isFunction } from "lodash";
 import { IConfiguration } from "src/framework/types/configuration";
 
-export default async function (expressApp, configuration: IConfiguration, customApi) {
+export default async function (
+  expressApp,
+  configuration: IConfiguration,
+  customApi
+) {
   let modules = configuration.builtinModules.split(",");
   modules = modules.filter((c) => c);
   modules = [...modules, ...get(configuration, "modules", [])];
@@ -14,7 +18,11 @@ export default async function (expressApp, configuration: IConfiguration, custom
         customApi(expressApp, restApiEndpointsElement, module, configuration);
       });
 
-      const expressAccess = get(module,'restApi.expressAccess', function () {});
+      const expressAccess = get(
+        module,
+        "restApi.expressAccess",
+        function () {}
+      );
 
       expressAccess(expressApp);
     }

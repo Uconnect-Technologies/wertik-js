@@ -6,48 +6,48 @@ export default function (module) {
       generateQueriesCrudSchema() {
         return `
 
-        type ${module.table}List {
-            list: [${module.table}]
+        type ${module.name}List {
+            list: [${module.name}]
             pagination: Pagination
             filters: [Filter]
             sorting: Sorting
             paginationProperties: PaginationProperties
         }
-        type ${module.table}BulkMutationResponse {
-            returning: [${module.table}]
+        type ${module.name}BulkMutationResponse {
+            returning: [${module.name}]
             affectedRows: Int
         }
-        type Count${module.table} {
+        type Count${module.name} {
             count: Int
         }
         
 
         extend type Query {
-            view${module.table}(where: ${module.table}FilterInput): ${module.table}
-            list${module.table}(pagination: PaginationInput, where: ${module.table}FilterInput, sorting: [SortingInput]): ${module.table}List
-            count${module.table}(where: ${module.table}FilterInput):  Int
+            view${module.name}(where: ${module.name}FilterInput): ${module.name}
+            list${module.name}(pagination: PaginationInput, where: ${module.name}FilterInput, sorting: [SortingInput]): ${module.name}List
+            count${module.name}(where: ${module.name}FilterInput):  Int
         }`;
       },
       generateMutationsCrudSchema() {
         return `
             extend type Mutation {
-                bulkUpdate${module.table}(input: [update${module.table}input],where: ${module.table}FilterInput): ${module.table}BulkMutationResponse
-                bulkCreate${module.table}(input: [create${module.table}input]): ${module.table}BulkMutationResponse
-                bulkDelete${module.table}(where: ${module.table}FilterInput): SuccessResponse
+                bulkUpdate${module.name}(input: [update${module.name}input],where: ${module.name}FilterInput): ${module.name}BulkMutationResponse
+                bulkCreate${module.name}(input: [create${module.name}input]): ${module.name}BulkMutationResponse
+                bulkDelete${module.name}(where: ${module.name}FilterInput): SuccessResponse
             }
           `;
       },
       generateCrudResolvers() {
         return {
           Mutation: {
-            [`bulkUpdate${module.table}`]: () => {},
-            [`bulkDelete${module.table}`]: () => {},
-            [`bulkCreate${module.table}`]: () => {},
+            [`bulkUpdate${module.name}`]: () => {},
+            [`bulkDelete${module.name}`]: () => {},
+            [`bulkCreate${module.name}`]: () => {},
           },
           Query: {
-            [`view${module.table}`]: () => {},
-            [`list${module.table}`]: () => {},
-            [`count${module.table}`]: () => {},
+            [`view${module.name}`]: () => {},
+            [`list${module.name}`]: () => {},
+            [`count${module.name}`]: () => {},
           },
         };
       },

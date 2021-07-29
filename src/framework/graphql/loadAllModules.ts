@@ -122,17 +122,15 @@ export default async function (configuration: IConfiguration) {
           configuration
         );
 
-        const crudMutationSchema = generateMutationsCrudSchema(
-          currentModuleName
-        );
+        const crudMutationSchema =
+          generateMutationsCrudSchema(currentModuleName);
         const crudMutationResolvers = crudResolvers.mutations;
 
         const crudQuerySchema = generateQueriesCrudSchema(currentModuleName);
         const crudQueryResolvers = crudResolvers.queries;
 
-        const crudSubscriptionSchema = generateMutationsCrudSubscriptionSchema(
-          currentModuleName
-        );
+        const crudSubscriptionSchema =
+          generateMutationsCrudSubscriptionSchema(currentModuleName);
         const crudSubscriptionResolvers = generateSubscriptionsCrudResolvers(
           currentModuleName,
           pubsub

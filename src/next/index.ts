@@ -13,7 +13,6 @@ export default async function (props: any) {
   });
 
   setTimeout(() => {
-    
     store.graphql.typeDefs = store.graphql.typeDefs.concat(
       get(props, "graphql.typeDefs", "")
     );
@@ -26,7 +25,7 @@ export default async function (props: any) {
       ...get(props, "graphql.resolvers.Mutation", {}),
     };
 
-    graphql({app, store})
+    graphql({ app, store });
 
     app.get("/w/info", function (req, res) {
       res.json({

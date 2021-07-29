@@ -19,7 +19,9 @@ export const useDatabase = async function (obj: any) {
   });
   try {
     await sequelize.authenticate();
-    (sequelize as any).relationships = await sequelize.query(getAllRelationships(obj.name))
+    (sequelize as any).relationships = await sequelize.query(
+      getAllRelationships(obj.name)
+    );
     console.log(`[DB] Succcessfully connected to database ${obj.name}`);
   } catch (e) {
     throw new Error(`[DB] Error connecting to database ${obj.name}`);

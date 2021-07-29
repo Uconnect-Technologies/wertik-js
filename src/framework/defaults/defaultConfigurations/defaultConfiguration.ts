@@ -28,7 +28,7 @@ export default {
   },
   email: {
     disable: false,
-    saveEmailInDatabase: true
+    saveEmailInDatabase: true,
   },
   graphql: {
     disable: false,

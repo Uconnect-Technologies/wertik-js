@@ -2,7 +2,6 @@ import { ISocketConfiguration } from "./servers";
 import { IConfigurationOverride } from "./override";
 import { IConfigurationRbac } from "./rbac";
 
-
 export interface IConfigurationCustomModuleGraphqlMutation {
   schema: string;
   resolvers: Object;
@@ -211,7 +210,7 @@ export interface IConfigurationBackup {
     output_directory: String;
   };
   dropbox: {
-    key: String
+    key: String;
   };
   digitalOceanSpaces: {
     accessKeyId: String;
@@ -220,7 +219,7 @@ export interface IConfigurationBackup {
     uploadParams: {
       Bucket: String;
       ACL: String;
-    }
+    };
   };
 }
 

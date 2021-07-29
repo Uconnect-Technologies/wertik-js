@@ -2,6 +2,13 @@ import { get, isFunction } from "lodash";
 import { DataTypes } from "sequelize";
 import crud from "../crud";
 
+export interface RelationParams {
+  module: string;
+  options: {
+    [key: string]: string | number | null;
+  };
+}
+
 const generateDataTypeFromDescribeTableColumnType = (Type: string) => {
   let length = Type.match(/[0-9]/g)?.join("");
   let type = Type.replace(/[0-9]/g, "")
@@ -24,8 +31,6 @@ const generateDataTypeFromDescribeTableColumnType = (Type: string) => {
 const generateGenerateGraphQLCrud = (props, schemaInformation, store) => {
   const { graphql } = crud(props);
   const resolvers = graphql.generateCrudResolvers();
-
-  console.log(schemaInformation.inputSchema.create,1);
 
   store.graphql.typeDefs = store.graphql.typeDefs.concat(
     `\n ${schemaInformation.schema} 
@@ -63,6 +68,7 @@ export const useModule = (props: any) => {
       `);
       store.graphql.resolvers.Mutation[name] = resolver;
     };
+
     const useExpress = (fn = (express) => {}) => {
       fn(wertik.express);
     };
@@ -110,7 +116,7 @@ export const useModule = (props: any) => {
       });
 
       // graphql schema
-      graphqlSchema = [`type ${props.table} {`];
+      graphqlSchema = [`type ${props.name} {`];
 
       tableInformation.forEach((element) => {
         graphqlSchema.push(`${element.Field}: ${getType(element.Type)}`);
@@ -119,7 +125,7 @@ export const useModule = (props: any) => {
       graphqlSchema.push("}");
       // graphql schema
 
-      updateSchema = [`input update${props.table}input {`];
+      updateSchema = [`input update${props.name}input {`];
       tableInformation.forEach((element) => {
         updateSchema.push(
           `${element.Field}: ${getType(element.Type)}${
@@ -129,7 +135,7 @@ export const useModule = (props: any) => {
       });
       updateSchema.push("}");
 
-      createSchema = [`input create${props.table}input {`];
+      createSchema = [`input create${props.name}input {`];
       tableInformation.forEach((element) => {
         if (element.Field !== "id") {
           createSchema.push(
@@ -141,7 +147,7 @@ export const useModule = (props: any) => {
       });
       createSchema.push("}");
 
-      filterSchema = [`input ${props.table}FilterInput {`];
+      filterSchema = [`input ${props.name}FilterInput {`];
 
       tableInformation.forEach((element) => {
         if (element.Type.includes("varchar") || element.Type.includes("text")) {
@@ -157,14 +163,30 @@ export const useModule = (props: any) => {
       filterSchema.push("}");
 
       listSchema = `
-        query List${props.table} {
-          list: [${props.table}]
+        query List${props.name} {
+          list: [${props.name}]
           paginationProperties: PaginationProperties
-          filters: ${props.table}Filters
+          filters: ${props.name}Filters
         }
       `;
     }
-    get(props, "on", () => {})({ useQuery, useMutation, useExpress });
+
+    const hasOne = (params: RelationParams) => {
+      console.log(params, props.name);
+    };
+    const BelongsTo = (params: RelationParams) => {};
+    const belongsToMany = (params: RelationParams) => {};
+    const hasMany = (params: RelationParams) => {};
+
+    get(props, "on", () => {})({
+      useQuery,
+      useMutation,
+      useExpress,
+      hasOne,
+      BelongsTo,
+      belongsToMany,
+      hasMany,
+    });
 
     const schemaInformation = {
       schema: graphqlSchema.join(`\n`),
