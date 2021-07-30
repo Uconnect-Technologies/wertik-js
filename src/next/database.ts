@@ -1,4 +1,6 @@
 import { Sequelize } from "sequelize";
+import { databaseDefaultOptions } from "../framework/defaults/options";
+import { get } from "lodash";
 
 export const getAllRelationships = (dbName: String) => {
   return `
@@ -16,6 +18,8 @@ export const useDatabase = async function (obj: any) {
     host: obj.host,
     dialect: "mysql",
     logging: false,
+    ...get(obj, "options", {}),
+    ...(databaseDefaultOptions as any).sql.dbInitializeOptions,
   });
   try {
     await sequelize.authenticate();

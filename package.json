@@ -30,7 +30,7 @@
     "build": "yarn tsc",
     "production": "node lib/devServer.js",
     "watch-ts": "tsc -w",
-    "prettier": "prettier --write src package.json"
+    "prettier": "prettier --write src package.json index.js"
   },
   "pre-commit": [
     "prettier"

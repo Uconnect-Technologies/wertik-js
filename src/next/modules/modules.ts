@@ -1,6 +1,6 @@
 import { get, isFunction } from "lodash";
-import { DataTypes } from "sequelize";
 import crud from "../crud";
+import { databaseDefaultOptions } from "../../framework/defaults/options";
 
 export interface RelationParams {
   module: string;
@@ -31,7 +31,7 @@ const generateDataTypeFromDescribeTableColumnType = (Type: string) => {
 };
 
 const generateGenerateGraphQLCrud = (props, schemaInformation, store) => {
-  const { graphql } = crud(props);
+  const { graphql } = crud(props, schemaInformation, store);
   const resolvers = graphql.generateCrudResolvers();
 
   store.graphql.typeDefs = store.graphql.typeDefs.concat(
@@ -48,6 +48,17 @@ const generateGenerateGraphQLCrud = (props, schemaInformation, store) => {
   store.graphql.typeDefs = store.graphql.typeDefs.concat(
     `\n ${graphql.generateMutationsCrudSchema()}`
   );
+
+    store.graphql.resolvers.Query = {
+      ...store.graphql.resolvers.Query,
+      ...resolvers.Query
+    }
+
+  store.graphql.resolvers.Mutation = {
+    ...store.graphql.resolvers.Mutation,
+    ...resolvers.Mutation
+  }
+
 };
 
 export const useModule = (props: any) => {
@@ -115,7 +126,10 @@ export const useModule = (props: any) => {
             null: element.Null === "YES" ? true : false,
           },
         };
-        tableInstance = connection.instance.define(props.table, fields);
+        tableInstance = connection.instance.define(props.table, fields, {
+          ...get(props, "tableOptions", {}),
+          ...databaseDefaultOptions.sql.defaultTableOptions
+        });
       });
 
       // graphql schema
@@ -128,9 +142,7 @@ export const useModule = (props: any) => {
       updateSchema = [`input update${props.name}input {`];
       tableInformation.forEach((element) => {
         updateSchema.push(
-          `${element.Field}: ${getType(element.Type)}${
-            element.Null.toLowerCase() === "no" ? "!" : ""
-          }`
+          `${element.Field}: ${getType(element.Type)}`
         );
       });
       updateSchema.push("}");
