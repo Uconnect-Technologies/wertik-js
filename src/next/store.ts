@@ -1,6 +1,6 @@
 import generalSchema from "../framework/graphql/generalSchema";
 
-export default {
+const store = {
   graphql: {
     typeDefs: `
         ${generalSchema}
@@ -32,3 +32,5 @@ export default {
     relationships: [],
   },
 };
+
+export default store;

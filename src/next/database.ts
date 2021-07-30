@@ -30,3 +30,12 @@ export const useDatabase = async function (obj: any) {
     instance: sequelize,
   };
 };
+
+export const applyRelationshipsFromStoreToDatabase = (store, app) => {
+  store.database.relationships.forEach((element) => {
+    const currentTable = app.modules[element.currentModule].tableInstance;
+    const referencedTable = app.modules[element.referencedModule].tableInstance;
+    // element.type willbe hasOne, hasMany, belongsTo or belongsToMany
+    currentTable[element.type](referencedTable, element.options || {});
+  });
+};

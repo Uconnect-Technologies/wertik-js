@@ -5,6 +5,7 @@ import crud from "../crud";
 export interface RelationParams {
   module: string;
   graphqlKey: string;
+  database: string;
   options: {
     [key: string]: string | number | null;
   };
@@ -51,6 +52,7 @@ const generateGenerateGraphQLCrud = (props, schemaInformation, store) => {
 
 export const useModule = (props: any) => {
   return async (wertik: any, store: any) => {
+    let tableInstance;
     let graphqlSchema = [];
     const useDatabase = get(props, "useDatabase", false);
     const useQuery = ({ query, resolver, name }) => {
@@ -113,7 +115,7 @@ export const useModule = (props: any) => {
             null: element.Null === "YES" ? true : false,
           },
         };
-        connection.instance.define(props.table, fields);
+        tableInstance = connection.instance.define(props.table, fields);
       });
 
       // graphql schema
@@ -170,28 +172,64 @@ export const useModule = (props: any) => {
     }
 
     const hasOne = (params: RelationParams) => {
-
-      graphqlSchema.push(`${params.graphqlKey}: ${params.module}`)
+      graphqlSchema.push(`${params.graphqlKey}: ${params.module}`);
+      store.database.relationships.push({
+        currentModule: props.name,
+        currentModuleDatabase: props.database,
+        referencedModule: params.module,
+        referencedModuleDatabase: params.database,
+        options: params.options,
+        type: "hasOne",
+      });
     };
-    const BelongsTo = (params: RelationParams) => {};
-    const belongsToMany = (params: RelationParams) => {};
-    const hasMany = (params: RelationParams) => {};
+    const belongsTo = (params: RelationParams) => {
+      graphqlSchema.push(`${params.graphqlKey}: ${params.module}`);
+      store.database.relationships.push({
+        currentModule: props.name,
+        currentModuleDatabase: props.database,
+        referencedModule: params.module,
+        referencedModuleDatabase: params.database,
+        options: params.options,
+        type: "belongsTo",
+      });
+    };
+    const belongsToMany = (params: RelationParams) => {
+      graphqlSchema.push(`${params.graphqlKey}: ${params.module}List`);
+      store.database.relationships.push({
+        currentModule: props.name,
+        currentModuleDatabase: props.database,
+        referencedModule: params.module,
+        referencedModuleDatabase: params.database,
+        options: params.options,
+        type: "belongsToMany",
+      });
+    };
+    const hasMany = (params: RelationParams) => {
+      graphqlSchema.push(`${params.graphqlKey}: ${params.module}List`);
+      store.database.relationships.push({
+        currentModule: props.name,
+        currentModuleDatabase: props.database,
+        referencedModule: params.module,
+        referencedModuleDatabase: params.database,
+        options: params.options,
+        type: "hasMany",
+      });
+    };
 
     get(props, "on", () => {})({
       useQuery,
       useMutation,
       useExpress,
       hasOne,
-      BelongsTo,
+      belongsTo,
       belongsToMany,
       hasMany,
     });
 
-    graphqlSchema.push('}')
-
-    console.log(graphqlSchema)
+    graphqlSchema.push("}");
 
     const schemaInformation = {
+      tableInstance: tableInstance,
       schema: graphqlSchema.join(`\n`),
       inputSchema: {
         create: createSchema.join("\n"),

@@ -2,6 +2,7 @@ import { get } from "lodash";
 import express from "express";
 import graphql from "./graphql/index";
 import store from "./store";
+import { applyRelationshipsFromStoreToDatabase } from "./database";
 
 export default async function (props: any) {
   const port = get(props, "port", 5050);
@@ -33,6 +34,8 @@ export default async function (props: any) {
         version: require("./../../package.json").version,
       });
     });
+
+    applyRelationshipsFromStoreToDatabase(store, props);
 
     app.listen(port, () => {
       console.log(`Wertik JS app listening at http://localhost:${port}`);

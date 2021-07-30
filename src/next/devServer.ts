@@ -23,24 +23,34 @@ import { useModule } from "./modules/modules";
       }),
     },
     modules: {
-      users: useModule({
+      User: useModule({
         name: "User",
         useDatabase: true,
         database: "wapgee",
         table: "users",
-        on: function ({ useQuery, useMutation, useExpress, hasOne }) {},
+        on: function ({ useQuery, useMutation, useExpress, hasOne, hasMany }) {
+          hasMany({
+            graphqlKey: "posts",
+            database: "wapgee",
+            module: "Post",
+            options: {
+              as: "posts",
+              foreignKey: "created_by",
+            },
+          });
+        },
       }),
-      post: useModule({
+      Post: useModule({
         name: "Post",
         useDatabase: true,
         database: "wapgee",
         table: "post",
         on: function ({ useQuery, useMutation, useExpress, hasOne }) {
-          hasOne({
-            graphqlKey: "user",
-            database: "wapgee",
-            module: "User",
-          });
+          // hasOne({
+          //   graphqlKey: "user",
+          //   database: "wapgee",
+          //   module: "User",
+          // });
         },
       }),
     },
