@@ -49,16 +49,15 @@ const generateGenerateGraphQLCrud = (props, schemaInformation, store) => {
     `\n ${graphql.generateMutationsCrudSchema()}`
   );
 
-    store.graphql.resolvers.Query = {
-      ...store.graphql.resolvers.Query,
-      ...resolvers.Query
-    }
+  store.graphql.resolvers.Query = {
+    ...store.graphql.resolvers.Query,
+    ...resolvers.Query,
+  };
 
   store.graphql.resolvers.Mutation = {
     ...store.graphql.resolvers.Mutation,
-    ...resolvers.Mutation
-  }
-
+    ...resolvers.Mutation,
+  };
 };
 
 export const useModule = (props: any) => {
@@ -128,7 +127,7 @@ export const useModule = (props: any) => {
         };
         tableInstance = connection.instance.define(props.table, fields, {
           ...get(props, "tableOptions", {}),
-          ...databaseDefaultOptions.sql.defaultTableOptions
+          ...databaseDefaultOptions.sql.defaultTableOptions,
         });
       });
 
@@ -141,9 +140,7 @@ export const useModule = (props: any) => {
 
       updateSchema = [`input update${props.name}input {`];
       tableInformation.forEach((element) => {
-        updateSchema.push(
-          `${element.Field}: ${getType(element.Type)}`
-        );
+        updateSchema.push(`${element.Field}: ${getType(element.Type)}`);
       });
       updateSchema.push("}");
 
