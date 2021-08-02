@@ -19,14 +19,12 @@ export default async function (props: any) {
       props.express = app;
       props.email.sendEmail = emailSender(props);
 
-
-      
-      props.email.sendEmail('mail1', {
+      props.email.sendEmail("mail1", {
         template: "how are you",
         variables: {},
         to: "ilyas.datoo@gmail.com",
-        subject: "Hi how are you?"
-      })
+        subject: "Hi how are you?",
+      });
 
       for (const moduleName of Object.keys(props.modules)) {
         props.modules[moduleName] = await props.modules[moduleName](

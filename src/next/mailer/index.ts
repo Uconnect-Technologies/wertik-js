@@ -26,10 +26,10 @@ export const emailSender = (app) => {
 
         let transporter = app.email[mailer];
 
-        
-
         if (!transporter) {
-            throw new Error(`Email integration ${mailer} not found. Please check the typo.`)
+          throw new Error(
+            `Email integration ${mailer} not found. Please check the typo.`
+          );
         }
 
         let compiled = handlebars.compile(options.template);
