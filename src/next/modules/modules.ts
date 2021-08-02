@@ -75,17 +75,21 @@ const generateGenerateGraphQLCrud = (props, schemaInformation, store) => {
 };
 
 const getUpdateSchema = (props, tableInformation) => {
-  let updateSchema = [`input update${props.name}input {`];
+  const optionsUpdateSchema = get(props, "graphql.updateSchema", "");
+  if (optionsUpdateSchema) return optionsUpdateSchema;
+  let updateSchema = [`input update${props.name}Input {`];
   tableInformation.forEach((element) => {
     updateSchema.push(`${element.Field}: ${getType(element.Type)}`);
   });
   updateSchema.push("}");
 
-  return updateSchema;
+  return updateSchema.join("\n");
 };
 
 const getCreateSchema = (props, tableInformation) => {
-  let createSchema = [`input create${props.name}input {`];
+  const optionsCreateSchema = get(props, "graphql.createSchema", "");
+  if (optionsCreateSchema) return optionsCreateSchema;
+  let createSchema = [`input create${props.name}Input {`];
   tableInformation.forEach((element) => {
     if (element.Field !== "id") {
       createSchema.push(
@@ -97,7 +101,7 @@ const getCreateSchema = (props, tableInformation) => {
   });
   createSchema.push("}");
 
-  return createSchema;
+  return createSchema.join("\n");
 };
 
 export const useModule = (props: any) => {
@@ -161,7 +165,7 @@ export const useModule = (props: any) => {
       // graphql schema
       graphqlSchema = [`type ${props.name} {`];
 
-      tableInformation.forEach((element) => {
+      tableInformation.forEach((element, index) => {
         graphqlSchema.push(`${element.Field}: ${getType(element.Type)}`);
       });
 
@@ -171,7 +175,7 @@ export const useModule = (props: any) => {
 
       filterSchema = [`input ${props.name}FilterInput {`];
 
-      tableInformation.forEach((element) => {
+      tableInformation.forEach((element, index) => {
         if (element.Type.includes("varchar") || element.Type.includes("text")) {
           filterSchema.push(`${element.Field}: StringFilterInput`);
         } else if (
@@ -181,8 +185,6 @@ export const useModule = (props: any) => {
           filterSchema.push(`${element.Field}: IntFilterInput`);
         }
       });
-
-      filterSchema.push("}");
 
       listSchema = `
         query List${props.name} {
@@ -252,20 +254,25 @@ export const useModule = (props: any) => {
       hasMany,
     });
 
-    graphqlSchema.push("}");
+    if (useDatabase) {
+      graphqlSchema.push("}");
+      filterSchema.push("}");
+    }
 
     const schemaInformation = {
       tableInstance: tableInstance,
       schema: graphqlSchema.join(`\n`),
       inputSchema: {
-        create: createSchema.join("\n"),
-        update: updateSchema.join("\n"),
+        create: createSchema || "",
+        update: updateSchema || "",
         list: listSchema,
         filters: filterSchema.join("\n"),
       },
     };
 
-    generateGenerateGraphQLCrud(props, schemaInformation, store);
+    if (useDatabase) {
+      generateGenerateGraphQLCrud(props, schemaInformation, store);
+    }
 
     return schemaInformation;
   };

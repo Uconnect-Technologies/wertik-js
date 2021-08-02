@@ -12,7 +12,7 @@
 
 - [x] Allow using useModule
 
-- [ ] Generate CRUD for useModule if useDatabase passed.
+- [x] Generate CRUD for useModule if useDatabase passed.
 
 - [ ] Allow using useMailer
 

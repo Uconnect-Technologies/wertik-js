@@ -59,8 +59,8 @@ export default function (module, schemaInformation, store) {
       generateMutationsCrudSchema() {
         return `
             extend type Mutation {
-              bulkUpdate${module.name}(input: update${module.name}input,where: ${module.name}FilterInput!): ${module.name}BulkMutationResponse
-              bulkCreate${module.name}(input: [create${module.name}input]): ${module.name}BulkMutationResponse
+              bulkUpdate${module.name}(input: update${module.name}Input,where: ${module.name}FilterInput!): ${module.name}BulkMutationResponse
+              bulkCreate${module.name}(input: [create${module.name}Input]): ${module.name}BulkMutationResponse
               bulkDelete${module.name}(where: ${module.name}FilterInput!): SuccessResponse
             }
           `;
@@ -114,23 +114,6 @@ export default function (module, schemaInformation, store) {
             },
             [`list${module.name}`]: async (_, arg) => {
               return await paginate(arg, schemaInformation.tableInstance);
-              let page = get(arg, "pagination.page", 1);
-              let limit = get(arg, "pagination.limit", 500);
-              let sorting = get(arg, "sorting", []);
-              let offset = limit * (page - 1);
-              const where = await convertFiltersIntoSequalizeObject(arg.where);
-              const find =
-                await schemaInformation.tableInstance.findAndCountAll({
-                  where: where,
-                  offset: offset,
-                  limit: limit,
-                  order: sorting.map((c) => {
-                    return [c.column, c.type];
-                  }),
-                });
-              return {
-                list: find.rows,
-              };
             },
             [`count${module.name}`]: async (_, arg) => {
               const where = await convertFiltersIntoSequalizeObject(arg.where);

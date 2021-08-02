@@ -7,6 +7,7 @@ import {
   applyRelationshipsFromStoreToGraphql,
 } from "./database";
 import pause from "./../framework/helpers/pause";
+import { emailSender } from "./mailer/index";
 
 export default async function (props: any) {
   return new Promise(async (resolve, reject) => {
@@ -16,6 +17,16 @@ export default async function (props: any) {
       const app = get(props, "express", express());
 
       props.express = app;
+      props.email.sendEmail = emailSender(props);
+
+
+      
+      props.email.sendEmail('mail1', {
+        template: "how are you",
+        variables: {},
+        to: "ilyas.datoo@gmail.com",
+        subject: "Hi how are you?"
+      })
 
       for (const moduleName of Object.keys(props.modules)) {
         props.modules[moduleName] = await props.modules[moduleName](

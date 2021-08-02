@@ -2,6 +2,7 @@ import wertik from "./index";
 import { useDatabase } from "./database";
 import { useModule } from "./modules/modules";
 import { useGraphql } from "./graphql";
+import { useMailer } from "./mailer";
 
 (async () => {
   wertik({
@@ -12,6 +13,9 @@ import { useGraphql } from "./graphql";
         playground: true,
       },
     }),
+    email: {
+      mail1: await useMailer(),
+    },
     database: {
       wapgee: await useDatabase({
         port: 1200,
