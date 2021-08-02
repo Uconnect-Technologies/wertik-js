@@ -1,11 +1,17 @@
 import wertik from "./index";
 import { useDatabase } from "./database";
 import { useModule } from "./modules/modules";
+import { useGraphql } from "./graphql";
 
 (async () => {
   wertik({
     port: 1200,
-    graphql: {},
+    skip: false,
+    graphql: useGraphql({
+      options: {
+        playground: true,
+      },
+    }),
     database: {
       wapgee: await useDatabase({
         port: 1200,
@@ -46,11 +52,16 @@ import { useModule } from "./modules/modules";
         database: "wapgee",
         table: "post",
         on: function ({ useQuery, useMutation, useExpress, hasOne }) {
-          // hasOne({
-          //   graphqlKey: "user",
-          //   database: "wapgee",
-          //   module: "User",
-          // });
+          hasOne({
+            graphqlKey: "user",
+            database: "wapgee",
+            module: "User",
+            options: {
+              as: "posts",
+              foreignKey: "id",
+              sourceKey: "created_by",
+            },
+          });
         },
       }),
     },

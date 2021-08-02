@@ -1,6 +1,34 @@
 import { get } from "lodash";
 import convertFiltersIntoSequalizeObject from "./../../framework/database/helpers/convertFiltersIntoSequalizeObject";
 
+export const paginate = async (arg, tableInstance) => {
+  let page = get(arg, "pagination.page", 1);
+  let limit = get(arg, "pagination.limit", 500);
+  let sorting = get(arg, "sorting", []);
+  let offset = limit * (page - 1);
+  const where = await convertFiltersIntoSequalizeObject(arg.where);
+  const find = await tableInstance.findAndCountAll({
+    where: where,
+    offset: offset,
+    limit: limit,
+    order: sorting.map((c) => {
+      return [c.column, c.type];
+    }),
+  });
+  const totalPages = Math.ceil(find.count / limit);
+  return {
+    list: find.rows,
+    paginationProperties: {
+      total: find.count,
+      nextPage: page + 1,
+      page: page,
+      previousPage: page == 1 ? 1 : page - 1,
+      pages: totalPages,
+      hasMore: page < totalPages,
+    },
+  };
+};
+
 export default function (module, schemaInformation, store) {
   return {
     graphql: {
@@ -10,7 +38,6 @@ export default function (module, schemaInformation, store) {
         type ${module.name}List {
             list: [${module.name}]
             pagination: Pagination
-            filters: [Filter]
             sorting: Sorting
             paginationProperties: PaginationProperties
         }
@@ -86,6 +113,7 @@ export default function (module, schemaInformation, store) {
               return find;
             },
             [`list${module.name}`]: async (_, arg) => {
+              return await paginate(arg, schemaInformation.tableInstance);
               let page = get(arg, "pagination.page", 1);
               let limit = get(arg, "pagination.limit", 500);
               let sorting = get(arg, "sorting", []);

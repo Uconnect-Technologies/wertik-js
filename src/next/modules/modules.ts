@@ -11,6 +11,20 @@ export interface RelationParams {
   };
 }
 
+const getType = (type: string) => {
+  if (
+    type.includes("varchar") ||
+    type.includes("timestamp") ||
+    type.includes("text")
+  ) {
+    return `String`;
+  }
+
+  if (type.includes("int")) {
+    return `Int`;
+  }
+};
+
 const generateDataTypeFromDescribeTableColumnType = (Type: string) => {
   let length = Type.match(/[0-9]/g)?.join("");
   let type = Type.replace(/[0-9]/g, "")
@@ -60,6 +74,32 @@ const generateGenerateGraphQLCrud = (props, schemaInformation, store) => {
   };
 };
 
+const getUpdateSchema = (props, tableInformation) => {
+  let updateSchema = [`input update${props.name}input {`];
+  tableInformation.forEach((element) => {
+    updateSchema.push(`${element.Field}: ${getType(element.Type)}`);
+  });
+  updateSchema.push("}");
+
+  return updateSchema;
+};
+
+const getCreateSchema = (props, tableInformation) => {
+  let createSchema = [`input create${props.name}input {`];
+  tableInformation.forEach((element) => {
+    if (element.Field !== "id") {
+      createSchema.push(
+        `${element.Field}: ${getType(element.Type)}${
+          element.Null.toLowerCase() === "no" ? "!" : ""
+        }`
+      );
+    }
+  });
+  createSchema.push("}");
+
+  return createSchema;
+};
+
 export const useModule = (props: any) => {
   return async (wertik: any, store: any) => {
     let tableInstance;
@@ -86,19 +126,6 @@ export const useModule = (props: any) => {
       fn(wertik.express);
     };
 
-    const getType = (type: string) => {
-      if (
-        type.includes("varchar") ||
-        type.includes("timestamp") ||
-        type.includes("text")
-      ) {
-        return `String`;
-      }
-
-      if (type.includes("int")) {
-        return `Int`;
-      }
-    };
     let listSchema = "";
     let filterSchema = [];
     if (useDatabase) {
@@ -138,23 +165,9 @@ export const useModule = (props: any) => {
         graphqlSchema.push(`${element.Field}: ${getType(element.Type)}`);
       });
 
-      updateSchema = [`input update${props.name}input {`];
-      tableInformation.forEach((element) => {
-        updateSchema.push(`${element.Field}: ${getType(element.Type)}`);
-      });
-      updateSchema.push("}");
+      updateSchema = getUpdateSchema(props, tableInformation);
 
-      createSchema = [`input create${props.name}input {`];
-      tableInformation.forEach((element) => {
-        if (element.Field !== "id") {
-          createSchema.push(
-            `${element.Field}: ${getType(element.Type)}${
-              element.Null.toLowerCase() === "no" ? "!" : ""
-            }`
-          );
-        }
-      });
-      createSchema.push("}");
+      createSchema = getCreateSchema(props, tableInformation);
 
       filterSchema = [`input ${props.name}FilterInput {`];
 
@@ -185,6 +198,7 @@ export const useModule = (props: any) => {
       store.database.relationships.push({
         currentModule: props.name,
         currentModuleDatabase: props.database,
+        graphqlKey: params.graphqlKey,
         referencedModule: params.module,
         referencedModuleDatabase: params.database,
         options: params.options,
@@ -196,6 +210,7 @@ export const useModule = (props: any) => {
       store.database.relationships.push({
         currentModule: props.name,
         currentModuleDatabase: props.database,
+        graphqlKey: params.graphqlKey,
         referencedModule: params.module,
         referencedModuleDatabase: params.database,
         options: params.options,
@@ -207,6 +222,7 @@ export const useModule = (props: any) => {
       store.database.relationships.push({
         currentModule: props.name,
         currentModuleDatabase: props.database,
+        graphqlKey: params.graphqlKey,
         referencedModule: params.module,
         referencedModuleDatabase: params.database,
         options: params.options,
@@ -218,6 +234,7 @@ export const useModule = (props: any) => {
       store.database.relationships.push({
         currentModule: props.name,
         currentModuleDatabase: props.database,
+        graphqlKey: params.graphqlKey,
         referencedModule: params.module,
         referencedModuleDatabase: params.database,
         options: params.options,

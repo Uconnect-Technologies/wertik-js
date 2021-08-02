@@ -2,43 +2,63 @@ import { get } from "lodash";
 import express from "express";
 import graphql from "./graphql/index";
 import store from "./store";
-import { applyRelationshipsFromStoreToDatabase } from "./database";
+import {
+  applyRelationshipsFromStoreToDatabase,
+  applyRelationshipsFromStoreToGraphql,
+} from "./database";
+import pause from "./../framework/helpers/pause";
 
 export default async function (props: any) {
-  const port = get(props, "port", 5050);
-  const app = express();
-  props.express = app;
+  return new Promise(async (resolve, reject) => {
+    try {
+      const port = get(props, "port", 5050);
+      const skip = get(props, "skip", false);
+      const app = get(props, "express", express());
 
-  Object.keys(props.modules).forEach(async (moduleName) => {
-    props.modules[moduleName] = await props.modules[moduleName](props, store);
+      props.express = app;
+
+      for (const moduleName of Object.keys(props.modules)) {
+        props.modules[moduleName] = await props.modules[moduleName](
+          props,
+          store
+        );
+      }
+
+      applyRelationshipsFromStoreToDatabase(store, props);
+      applyRelationshipsFromStoreToGraphql(store, props);
+
+      setTimeout(async () => {
+        store.graphql.typeDefs = store.graphql.typeDefs.concat(
+          get(props, "graphql.typeDefs", "")
+        );
+        store.graphql.resolvers.Query = {
+          ...store.graphql.resolvers.Query,
+          ...get(props, "graphql.resolvers.Query", {}),
+        };
+        store.graphql.resolvers.Mutation = {
+          ...store.graphql.resolvers.Mutation,
+          ...get(props, "graphql.resolvers.Mutation", {}),
+        };
+
+        graphql({ app, store, props });
+
+        app.get("/w/info", function (req, res) {
+          res.json({
+            message: "You are running wertik-js",
+            version: require("./../../package.json").version,
+          });
+        });
+
+        if (skip === false) {
+          app.listen(port, () => {
+            console.log(`Wertik JS app listening at http://localhost:${port}`);
+          });
+        }
+        resolve(app);
+      }, 500);
+    } catch (e) {
+      console.error(e);
+      reject(e);
+    }
   });
-
-  setTimeout(() => {
-    store.graphql.typeDefs = store.graphql.typeDefs.concat(
-      get(props, "graphql.typeDefs", "")
-    );
-    store.graphql.resolvers.Query = {
-      ...store.graphql.resolvers.Query,
-      ...get(props, "graphql.resolvers.Query", {}),
-    };
-    store.graphql.resolvers.Mutation = {
-      ...store.graphql.resolvers.Mutation,
-      ...get(props, "graphql.resolvers.Mutation", {}),
-    };
-
-    graphql({ app, store });
-
-    app.get("/w/info", function (req, res) {
-      res.json({
-        message: "You are running wertik-js",
-        version: require("./../../package.json").version,
-      });
-    });
-
-    applyRelationshipsFromStoreToDatabase(store, props);
-
-    app.listen(port, () => {
-      console.log(`Wertik JS app listening at http://localhost:${port}`);
-    });
-  }, 500);
 }
