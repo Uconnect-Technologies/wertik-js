@@ -14,7 +14,7 @@
 
 - [x] Generate CRUD for useModule if useDatabase passed.
 
-- [ ] Allow using useMailer
+- [x] Allow using useMailer
 
 - [ ] Allow using useSockets
 
