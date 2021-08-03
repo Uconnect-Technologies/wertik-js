@@ -28,3 +28,4 @@
 - [ ] Allow taking backup, create folder called, helpers
 - [ ] Add event feature, rename to event hooks.
 - [ ] Add over writing features of modules. like create, update, read, view.
+- [ ] Allow changing module graphql schema for a module.
