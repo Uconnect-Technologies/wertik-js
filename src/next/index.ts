@@ -8,6 +8,7 @@ import {
 } from "./database";
 import pause from "./../framework/helpers/pause";
 import { emailSender } from "./mailer/index";
+import cronJobs from "./cronJobs";
 
 export default async function (props: any) {
   return new Promise(async (resolve, reject) => {
@@ -18,13 +19,6 @@ export default async function (props: any) {
 
       props.express = app;
       props.email.sendEmail = emailSender(props);
-
-      props.email.sendEmail("mail1", {
-        template: "how are you",
-        variables: {},
-        to: "ilyas.datoo@gmail.com",
-        subject: "Hi how are you?",
-      });
 
       for (const moduleName of Object.keys(props.modules)) {
         props.modules[moduleName] = await props.modules[moduleName](
@@ -57,6 +51,8 @@ export default async function (props: any) {
             version: require("./../../package.json").version,
           });
         });
+
+        cronJobs(props);
 
         if (skip === false) {
           app.listen(port, () => {

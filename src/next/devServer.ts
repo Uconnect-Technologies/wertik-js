@@ -3,6 +3,7 @@ import { useDatabase } from "./database";
 import { useModule } from "./modules/modules";
 import { useGraphql } from "./graphql";
 import { useMailer } from "./mailer";
+import { useCronJob } from "./cronJobs";
 
 (async () => {
   wertik({
@@ -13,6 +14,14 @@ import { useMailer } from "./mailer";
         playground: true,
       },
     }),
+    cronJobs: {
+      my1: useCronJob({
+        expression: "* * * * *",
+        handler(app) {
+          console.log(new Date().toLocaleTimeString());
+        }
+      })
+    },
     email: {
       mail1: await useMailer(),
     },
