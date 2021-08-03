@@ -54,6 +54,8 @@ export default async function (props: any) {
 
         cronJobs(props);
 
+        console.log(props.storage);
+
         if (skip === false) {
           app.listen(port, () => {
             console.log(`Wertik JS app listening at http://localhost:${port}`);

@@ -20,4 +20,4 @@
 
 - [ ] Allow using useStorage
 
-- [ ] Allow using useCronJobs
+- [x] Allow using useCronJobs

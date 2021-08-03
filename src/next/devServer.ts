@@ -4,6 +4,7 @@ import { useModule } from "./modules/modules";
 import { useGraphql } from "./graphql";
 import { useMailer } from "./mailer";
 import { useCronJob } from "./cronJobs";
+import { useStorage } from "./storage";
 
 (async () => {
   wertik({
@@ -24,6 +25,16 @@ import { useCronJob } from "./cronJobs";
     },
     email: {
       mail1: await useMailer(),
+    },
+    storage: {
+      digitalOcean: useStorage({
+        for: "digitalocean",
+        options: {}
+      }),
+      aws: useStorage({
+        for: "aws",
+        options: {}
+      })
     },
     database: {
       wapgee: await useDatabase({
