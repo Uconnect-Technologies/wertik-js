@@ -5,7 +5,7 @@ import { useGraphql } from "./graphql";
 import { useMailer } from "./mailer";
 import { useCronJob } from "./cronJobs";
 import { useStorage } from "./storage";
-import { useWebSockets} from "./sockets"
+import { useWebSockets, useSocketIO, useIndependentWebSocketsServer } from "./sockets";
 
 (async () => {
   wertik({
@@ -14,6 +14,9 @@ import { useWebSockets} from "./sockets"
     graphql: useGraphql({
       options: {
         playground: true,
+        context() {
+          return null
+        }
       },
     }),
     cronJobs: {
@@ -27,11 +30,15 @@ import { useWebSockets} from "./sockets"
     email: {
       mail1: await useMailer(),
     },
-    storage: {
-    },
+    storage: {},
     sockets: {
+      s2: useIndependentWebSocketsServer({
+        port: 1212
+      }),
       s1: useWebSockets({
-        port: 5151,
+      }),
+      socketio: useSocketIO({
+        path: "/wow"
       })
     },
     database: {

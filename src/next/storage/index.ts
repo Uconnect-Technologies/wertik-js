@@ -9,7 +9,7 @@ export default function (props) {
     if (storageItem.for === DIGITAL_OCEAN) {
       const digitalOceanSpacesDetails = storageItem.options;
 
-      console.log(digitalOceanSpacesDetails)
+      console.log(digitalOceanSpacesDetails);
 
       const aws = require("aws-sdk");
 

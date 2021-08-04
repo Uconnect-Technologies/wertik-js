@@ -10,6 +10,8 @@ import pause from "./../framework/helpers/pause";
 import { emailSender } from "./mailer/index";
 import cronJobs from "./cronJobs";
 import storage from "./storage";
+import sockets from "./sockets";
+const http = require('http');
 
 export default async function (props: any) {
   return new Promise(async (resolve, reject) => {
@@ -17,7 +19,10 @@ export default async function (props: any) {
       const port = get(props, "port", 5050);
       const skip = get(props, "skip", false);
       const app = get(props, "express", express());
+      const server = http.createServer(app);
 
+
+      props.server = server;
       props.express = app;
       props.email.sendEmail = emailSender(props);
 
@@ -56,8 +61,10 @@ export default async function (props: any) {
         cronJobs(props);
         storage(props);
 
+        sockets(props);
+
         if (skip === false) {
-          app.listen(port, () => {
+          server.listen(port, () => {
             console.log(`Wertik JS app listening at http://localhost:${port}`);
           });
         }

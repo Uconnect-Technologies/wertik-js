@@ -18,11 +18,13 @@
 
 - [x] Allow using useWebSockets
 
-- [ ] Allow using useSocketIO
+- [x] Allow using useSocketIO
 
 - [x] Allow using useStorage
 
 - [x] Allow using useCronJobs
+
+- [ ] Add 1 second delay to each feature to avoid errors on null properties.
 
 ## Copying features from old wertik to new
 
