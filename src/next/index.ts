@@ -54,12 +54,7 @@ export default async function (props: any) {
         });
 
         cronJobs(props);
-
         storage(props);
-
-        setTimeout(() => {
-          console.log(props.storage);
-        }, 1500);
 
         if (skip === false) {
           app.listen(port, () => {

@@ -16,7 +16,9 @@
 
 - [x] Allow using useMailer
 
-- [ ] Allow using useSockets
+- [x] Allow using useWebSockets
+
+- [ ] Allow using useSocketIO
 
 - [x] Allow using useStorage
 

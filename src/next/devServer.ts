@@ -5,6 +5,7 @@ import { useGraphql } from "./graphql";
 import { useMailer } from "./mailer";
 import { useCronJob } from "./cronJobs";
 import { useStorage } from "./storage";
+import { useWebSockets} from "./sockets"
 
 (async () => {
   wertik({
@@ -27,6 +28,11 @@ import { useStorage } from "./storage";
       mail1: await useMailer(),
     },
     storage: {
+    },
+    sockets: {
+      s1: useWebSockets({
+        port: 5151,
+      })
     },
     database: {
       wapgee: await useDatabase({
