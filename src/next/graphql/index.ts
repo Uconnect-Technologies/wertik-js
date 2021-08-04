@@ -5,7 +5,7 @@ const { ApolloServer } = require("apollo-server-express");
 export const useGraphql = (obj) => obj;
 
 export default function ({ app, store, props }) {
-  const options = {...get(props, "graphql.options", {})};
+  const options = { ...get(props, "graphql.options", {}) };
 
   const server = new ApolloServer({
     typeDefs: store.graphql.typeDefs,
@@ -15,10 +15,10 @@ export default function ({ app, store, props }) {
     ...defaultApolloGraphqlOptions,
     ...options,
     context: async () => {
-      let contextFromOptions = await get(options, 'context', function () { })();
+      let contextFromOptions = await get(options, "context", function () {})();
       return {
         wertik: props,
-        ...contextFromOptions
+        ...contextFromOptions,
       };
     },
   });

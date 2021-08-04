@@ -11,7 +11,7 @@ import { emailSender } from "./mailer/index";
 import cronJobs from "./cronJobs";
 import storage from "./storage";
 import sockets from "./sockets";
-const http = require('http');
+const http = require("http");
 
 export default async function (props: any) {
   return new Promise(async (resolve, reject) => {
@@ -20,7 +20,6 @@ export default async function (props: any) {
       const skip = get(props, "skip", false);
       const app = get(props, "express", express());
       const server = http.createServer(app);
-
 
       props.server = server;
       props.express = app;
