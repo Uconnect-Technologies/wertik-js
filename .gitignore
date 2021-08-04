@@ -13,7 +13,7 @@ notice.log
 info.log
 warning.log
 .env
-storage
+/storage
 /backups
 .DS_STORE
 lib
