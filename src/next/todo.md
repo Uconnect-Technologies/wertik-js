@@ -18,10 +18,9 @@
 
 - [ ] Allow using useSockets
 
-- [ ] Allow using useStorage
+- [x] Allow using useStorage
 
 - [x] Allow using useCronJobs
-
 
 ## Copying features from old wertik to new
 

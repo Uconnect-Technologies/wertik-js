@@ -20,21 +20,13 @@ import { useStorage } from "./storage";
         expression: "* * * * *",
         handler(app) {
           console.log(new Date().toLocaleTimeString());
-        }
-      })
+        },
+      }),
     },
     email: {
       mail1: await useMailer(),
     },
     storage: {
-      digitalOcean: useStorage({
-        for: "digitalocean",
-        options: {}
-      }),
-      aws: useStorage({
-        for: "aws",
-        options: {}
-      })
     },
     database: {
       wapgee: await useDatabase({

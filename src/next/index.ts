@@ -9,6 +9,7 @@ import {
 import pause from "./../framework/helpers/pause";
 import { emailSender } from "./mailer/index";
 import cronJobs from "./cronJobs";
+import storage from "./storage";
 
 export default async function (props: any) {
   return new Promise(async (resolve, reject) => {
@@ -54,7 +55,11 @@ export default async function (props: any) {
 
         cronJobs(props);
 
-        console.log(props.storage);
+        storage(props);
+
+        setTimeout(() => {
+          console.log(props.storage);
+        }, 1500);
 
         if (skip === false) {
           app.listen(port, () => {
