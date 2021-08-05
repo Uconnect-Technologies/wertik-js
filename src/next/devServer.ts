@@ -10,6 +10,7 @@ import {
   useSocketIO,
   useIndependentWebSocketsServer,
 } from "./sockets";
+import { useEventHooks } from "./eventHooks";
 
 (async () => {
   wertik({

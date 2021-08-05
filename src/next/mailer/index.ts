@@ -2,20 +2,27 @@ import nodemailer from "nodemailer";
 import handlebars from "handlebars";
 
 export const useMailer = async () => {
-  let testAccount = await nodemailer.createTestAccount();
-  const wertiknodemailerDefaultConfiguration = {
-    host: "smtp.ethereal.email",
-    port: 587,
-    secure: false,
-    auth: {
-      user: testAccount.user,
-      pass: testAccount.pass,
-    },
-  };
-  let transporter = nodemailer.createTransport(
-    wertiknodemailerDefaultConfiguration
-  );
-  return transporter;
+  return new Promise(async (resolve, reject) => {
+    try {
+      let testAccount = await nodemailer.createTestAccount();
+      const wertiknodemailerDefaultConfiguration = {
+        host: "smtp.ethereal.email",
+        port: 587,
+        secure: false,
+        auth: {
+          user: testAccount.user,
+          pass: testAccount.pass,
+        },
+      };
+      let transporter = nodemailer.createTransport(
+        wertiknodemailerDefaultConfiguration
+      );
+      resolve(transporter);
+    } catch (e) {
+      console.log(`Something went wrong while setting up email system: ${e.message}`)
+      reject(e)
+    }
+  })
 };
 
 export const emailSender = (app) => {

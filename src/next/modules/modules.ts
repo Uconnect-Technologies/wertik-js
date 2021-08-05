@@ -104,7 +104,7 @@ const getCreateSchema = (props, tableInformation) => {
   return createSchema.join("\n");
 };
 
-export const useModule = async (props: any) => {
+export const useModule = (props: any) => {
   return async (wertik: any, store: any) => {
     let tableInstance;
     let graphqlSchema = [];

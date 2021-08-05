@@ -7,7 +7,7 @@ export const useGraphql = (obj) => obj;
 export default function ({ app, store, props }) {
   const options = { ...get(props, "graphql.options", {}) };
 
-  const server = new ApolloServer({
+  const GraphqlApolloServer = new ApolloServer({
     typeDefs: store.graphql.typeDefs,
     resolvers: {
       ...store.graphql.resolvers,
@@ -23,5 +23,7 @@ export default function ({ app, store, props }) {
     },
   });
 
-  server.applyMiddleware({ app });
+  GraphqlApolloServer.applyMiddleware({ app });
+
+  return GraphqlApolloServer
 }

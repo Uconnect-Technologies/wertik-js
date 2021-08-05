@@ -24,11 +24,8 @@
 
 - [x] Allow using useCronJobs
 
-- [ ] Add 1 second delay to each feature to avoid errors on null properties.
-
 ## Copying features from old wertik to new
 
 - [ ] Allow taking backup, create folder called, helpers
-- [ ] Add event feature, rename to event hooks.
 - [ ] Add over writing features of modules. like create, update, read, view.
 - [ ] Allow changing module graphql schema for a module.

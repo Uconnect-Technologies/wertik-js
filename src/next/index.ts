@@ -48,7 +48,7 @@ export default async function (props: any) {
           ...get(props, "graphql.resolvers.Mutation", {}),
         };
 
-        graphql({ app, store, props });
+        props.graphql = graphql({ app, store, props });
 
         app.get("/w/info", function (req, res) {
           res.json({
