@@ -36,7 +36,7 @@ export const useDatabase = async function (obj: any) {
   };
 };
 
-export const applyRelationshipsFromStoreToDatabase = (store, app) => {
+export const applyRelationshipsFromStoreToDatabase = async (store, app) => {
   store.database.relationships.forEach((element) => {
     const currentTable = app.modules[element.currentModule].tableInstance;
     const referencedTable = app.modules[element.referencedModule].tableInstance;
@@ -45,7 +45,7 @@ export const applyRelationshipsFromStoreToDatabase = (store, app) => {
   });
 };
 
-export const applyRelationshipsFromStoreToGraphql = (store, app) => {
+export const applyRelationshipsFromStoreToGraphql = async (store, app) => {
   store.database.relationships.forEach((element) => {
     const oldResolvers = get(
       store,

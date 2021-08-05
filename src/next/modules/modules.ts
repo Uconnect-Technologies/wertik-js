@@ -104,11 +104,13 @@ const getCreateSchema = (props, tableInformation) => {
   return createSchema.join("\n");
 };
 
-export const useModule = (props: any) => {
+export const useModule = async (props: any) => {
   return async (wertik: any, store: any) => {
     let tableInstance;
     let graphqlSchema = [];
+
     const useDatabase = get(props, "useDatabase", false);
+
     const useQuery = ({ query, resolver, name }) => {
       store.graphql.typeDefs = store.graphql.typeDefs.concat(`
         extend type Query {
@@ -117,6 +119,7 @@ export const useModule = (props: any) => {
       `);
       store.graphql.resolvers.Query[name] = resolver;
     };
+
     const useMutation = ({ query, resolver, name }) => {
       store.graphql.typeDefs = store.graphql.typeDefs.concat(`
         extend type Mutation {
