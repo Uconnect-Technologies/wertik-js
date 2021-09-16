@@ -26,6 +26,8 @@
 
 ## Copying features from old wertik to new
 
-- [ ] Allow taking backup, create folder called, helpers
-- [ ] Add over writing features of modules. like create, update, read, view.
-- [ ] Allow changing module graphql schema for a module.
+- [x] Allow changing module graphql schema for a module.
+
+- [ ] Allow taking backup, create folder called helpers.
+
+- [x] Add over writing features of modules. like create, update, read, view.

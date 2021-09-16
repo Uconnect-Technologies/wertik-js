@@ -91,7 +91,7 @@ const getCreateSchema = (props, tableInformation) => {
   if (optionsCreateSchema) return optionsCreateSchema;
   let createSchema = [`input create${props.name}Input {`];
   tableInformation.forEach((element) => {
-    if (element.Field !== "id") {
+    if (element.Field !== "id" && element.Type !== "timestamp") {
       createSchema.push(
         `${element.Field}: ${getType(element.Type)}${
           element.Null.toLowerCase() === "no" ? "!" : ""
@@ -165,12 +165,16 @@ export const useModule = (props: any) => {
         });
       });
 
-      // graphql schema
-      graphqlSchema = [`type ${props.name} {`];
+      if (props?.graphql?.schema) {
+        graphqlSchema = props?.graphql?.schema.replace("}", "").split();
+      } else {
+        // graphql schema
+        graphqlSchema = [`type ${props.name} {`];
 
-      tableInformation.forEach((element, index) => {
-        graphqlSchema.push(`${element.Field}: ${getType(element.Type)}`);
-      });
+        tableInformation.forEach((element, index) => {
+          graphqlSchema.push(`${element.Field}: ${getType(element.Type)}`);
+        });
+      }
 
       updateSchema = getUpdateSchema(props, tableInformation);
 

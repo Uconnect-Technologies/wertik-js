@@ -10,7 +10,6 @@ import {
   useSocketIO,
   useIndependentWebSocketsServer,
 } from "./sockets";
-import { useEventHooks } from "./eventHooks";
 
 (async () => {
   wertik({
@@ -84,6 +83,26 @@ import { useEventHooks } from "./eventHooks";
         useDatabase: true,
         database: "wapgee",
         table: "post",
+        events: {
+          beforeView: () => {
+            console.log("beforeView");
+          },
+          beforeCount: () => {
+            console.log("beforeCount");
+          },
+          beforeList: () => {
+            console.log("beforeList");
+          },
+          beforeBulkCreate: () => {
+            console.log("beforebuilkdcreate");
+          },
+          beforeBulkDelete: () => {
+            console.log("beforebuilkdelete");
+          },
+          beforeBulkUpdate: () => {
+            console.log("beforebuilkdupdate");
+          },
+        },
         on: function ({ useQuery, useMutation, useExpress, hasOne }) {
           hasOne({
             graphqlKey: "user",
