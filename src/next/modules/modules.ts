@@ -111,6 +111,12 @@ export const useModule = (props: any) => {
 
     const useDatabase = get(props, "useDatabase", false);
 
+    const useSchema = (string: string) => {
+      store.graphql.typeDefs = store.graphql.typeDefs.concat(`
+        ${string}
+      `);
+    };
+
     const useQuery = ({ query, resolver, name }) => {
       store.graphql.typeDefs = store.graphql.typeDefs.concat(`
         extend type Query {
@@ -259,6 +265,7 @@ export const useModule = (props: any) => {
       belongsTo,
       belongsToMany,
       hasMany,
+      useSchema,
     });
 
     if (useDatabase) {

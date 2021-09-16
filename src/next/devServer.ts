@@ -5,6 +5,7 @@ import { useGraphql } from "./graphql";
 import { useMailer } from "./mailer";
 import { useCronJob } from "./cronJobs";
 import { useStorage } from "./storage";
+import Backup from "./helpers/modules/backup";
 import {
   useWebSockets,
   useSocketIO,
@@ -61,6 +62,7 @@ import {
       }),
     },
     modules: {
+      Backup: Backup,
       User: useModule({
         name: "User",
         useDatabase: true,

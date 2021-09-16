@@ -25,5 +25,5 @@ export default function ({ app, store, props }) {
 
   GraphqlApolloServer.applyMiddleware({ app });
 
-  return GraphqlApolloServer
+  return GraphqlApolloServer;
 }

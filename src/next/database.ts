@@ -32,6 +32,7 @@ export const useDatabase = async function (obj: any) {
     throw new Error(`[DB] Error connecting to database ${obj.name}`);
   }
   return {
+    credentials: obj,
     instance: sequelize,
   };
 };
