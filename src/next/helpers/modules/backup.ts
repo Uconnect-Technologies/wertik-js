@@ -1,5 +1,9 @@
 import { useModule } from "../../modules/modules";
 
+const dumpDatabase = () => {};
+const uploadDumpToDigitalOceanSpaces = () => {};
+const uploadDumpToDropbox = () => {};
+
 export default useModule({
   name: "Backup",
   useDatabase: true,
