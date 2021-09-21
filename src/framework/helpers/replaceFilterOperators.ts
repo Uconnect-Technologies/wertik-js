@@ -26,9 +26,10 @@ const iterate = (obj) => {
     });
     return obj;
   } else {
-    obj.forEach((element) => {
-      iterate(element);
-    });
+    obj.forEach &&
+      obj.forEach((element) => {
+        iterate(element);
+      });
   }
 };
 

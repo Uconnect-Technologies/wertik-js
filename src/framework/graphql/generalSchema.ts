@@ -22,6 +22,8 @@ export default `
 		_notIRegexp: String
 		_or: StringFilterInput
 		_and: StringFilterInput
+		_between: [String]
+		_notBetween: [String]
 	}
 	input IntFilterInput {
 		_eq: Int

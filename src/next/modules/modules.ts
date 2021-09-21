@@ -188,8 +188,12 @@ export const useModule = (props: any) => {
 
       filterSchema = [`input ${props.name}FilterInput {`];
 
-      tableInformation.forEach((element, index) => {
-        if (element.Type.includes("varchar") || element.Type.includes("text")) {
+      tableInformation.forEach((element, _index) => {
+        if (
+          element.Type.includes("timestamp") ||
+          element.Type.includes("varchar") ||
+          element.Type.includes("text")
+        ) {
           filterSchema.push(`${element.Field}: StringFilterInput`);
         } else if (
           element.Type.includes("int") ||
