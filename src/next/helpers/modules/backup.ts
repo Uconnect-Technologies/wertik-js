@@ -1,6 +1,32 @@
+import moment from "moment";
 import { useModule } from "../../modules/modules";
+import mysqldump from "mysqldump";
 
-const dumpDatabase = () => {};
+const dumpDatabase = async (dbName: string, model: any, credentials: any) => {
+  const filename = `backups/${moment().format(
+    "MMMM-DD-YYYY-h-mm-ss-a"
+  )}-database-${dbName}.sql`.toLowerCase();
+
+  const backupInstance = await model.create({
+    uploaded_filename: filename,
+    uploaded_to: "local",
+  });
+
+  await mysqldump({
+    connection: {
+      host: credentials.host,
+      user: credentials.username,
+      password: credentials.password,
+      database: credentials.name,
+    },
+    dumpToFile: filename,
+  });
+
+  return {
+    filename,
+    backupInstance,
+  };
+};
 const uploadDumpToDigitalOceanSpaces = () => {};
 const uploadDumpToDropbox = () => {};
 
@@ -26,9 +52,19 @@ export default useModule({
     `);
     useMutation({
       name: "backupLocal",
-      query: "backupLocal(database: [String]): BackupSuccessResponse",
-      resolver(_, args, context) {
-        // const { database } = args;
+      query: "backupLocal(database: [String]): [BackupSuccessResponse]",
+      async resolver(_, args, context) {
+        const push = [];
+        for (const dbName of args.database) {
+          push.push(
+            await dumpDatabase(
+              dbName,
+              context.wertik.database.wapgee.instance.models.Backup,
+              context.wertik.database.wapgee.credentials
+            )
+          );
+        }
+        return push;
       },
     });
     useMutation({
