@@ -1,6 +1,6 @@
 export const useStorage = (obj) => obj;
 
-const DIGITAL_OCEAN = "digitalOcean";
+const DIGITAL_OCEAN = "digitalocean";
 const DROPBOX = "dropbox";
 
 export default function (props) {

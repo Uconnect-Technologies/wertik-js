@@ -28,7 +28,25 @@ const dumpDatabase = async (dbName: string, model: any, credentials: any) => {
     backup: backupInstance,
   };
 };
-const uploadDumpToDigitalOceanSpaces = () => {};
+const uploadDumpToDigitalOceanSpaces = async (
+  filename,
+  digitaloceanInstance,
+  Bucket,
+  ACL
+) => {
+  const data = await fs.readFileSync(filename);
+
+  const params = {
+    Bucket: Bucket,
+    Key: `${filename}`,
+    Body: data,
+    ACL: ACL,
+  };
+
+  const response = await digitaloceanInstance.s3.upload(params).promise();
+
+  return response;
+};
 const uploadDumpToDropbox = async (filename, dropboxInstance) => {
   const data: Buffer = await fs.readFileSync(filename);
   const response = await dropboxInstance.filesUpload({
@@ -79,18 +97,10 @@ export default useModule({
     useMutation({
       name: "backupDigitalOceanSpaces",
       query:
-        "backupDigitalOceanSpaces(database: [String]): [BackupSuccessResponse]",
-      async resolver(_, args, context) {
-        console.log(context.wertik);
-      },
-    });
-    useMutation({
-      name: "backupDropbox",
-      query:
-        "backupDropbox(storage: String!, database: [String]): [BackupSuccessResponse]",
+        "backupDigitalOceanSpaces(ACL: String!, Bucket: String!, storage: String!, database: [String]): [BackupSuccessResponse]",
       async resolver(_, args, context) {
         const push = [];
-        const storage = context.wertik.storage.dropbox[args.storage];
+        const storage = context.wertik.storage[args.storage];
         if (!storage) {
           throw new Error("No such storage found: " + args.storage);
         }
@@ -102,26 +112,59 @@ export default useModule({
             context.wertik.database.wapgee.credentials
           );
           push.push(dump);
-          const uploadToDropbox = await uploadDumpToDropbox(
+
+          const uploadToDigitalOcean = await uploadDumpToDigitalOceanSpaces(
             dump.filename,
-            storage
+            storage,
+            args.Bucket,
+            args.ACL
           );
           await dump.backup.update({
             uploaded_to: "digitalocean",
-            uploaded_filename: uploadToDropbox.result.path_lower,
+            uploaded_filename: uploadToDigitalOcean.Tag,
           });
           dump.backup.uploaded_to = "digitalocean";
-          dump.backup.uploaded_filename = uploadToDropbox.result.path_lower;
+          dump.backup.uploaded_filename = uploadToDigitalOcean.key;
         }
 
         return push;
       },
     });
     useMutation({
-      name: "removeLocalBackups",
-      query: "removeLocalBackups: String",
-      resolver() {
-        console.log(1);
+      name: "backupDropbox",
+      query:
+        "backupDropbox(storage: String!, database: [String]): [BackupSuccessResponse]",
+      async resolver(_, args, context) {
+        try {
+          const push = [];
+          const storage = context.wertik.storage[args.storage];
+          if (!storage) {
+            throw new Error("No such storage found: " + args.storage);
+          }
+
+          for (const dbName of args.database) {
+            const dump = await dumpDatabase(
+              dbName,
+              context.wertik.database.wapgee.instance.models.Backup,
+              context.wertik.database.wapgee.credentials
+            );
+            push.push(dump);
+            const uploadToDropbox = await uploadDumpToDropbox(
+              dump.filename,
+              storage
+            );
+            await dump.backup.update({
+              uploaded_to: "dropbox",
+              uploaded_filename: uploadToDropbox.result.path_lower,
+            });
+            dump.backup.uploaded_to = "dropbox";
+            dump.backup.uploaded_filename = uploadToDropbox.result.path_lower;
+          }
+
+          return push;
+        } catch (e) {
+          throw new Error(e);
+        }
       },
     });
   },
