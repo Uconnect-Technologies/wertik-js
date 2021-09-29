@@ -99,35 +99,39 @@ export default useModule({
       query:
         "backupDigitalOceanSpaces(ACL: String!, Bucket: String!, storage: String!, database: [String]): [BackupSuccessResponse]",
       async resolver(_, args, context) {
-        const push = [];
-        const storage = context.wertik.storage[args.storage];
-        if (!storage) {
-          throw new Error("No such storage found: " + args.storage);
+        try {
+          const push = [];
+          const storage = context.wertik.storage[args.storage];
+          if (!storage) {
+            throw new Error("No such storage found: " + args.storage);
+          }
+
+          for (const dbName of args.database) {
+            const dump = await dumpDatabase(
+              dbName,
+              context.wertik.database.wapgee.instance.models.Backup,
+              context.wertik.database.wapgee.credentials
+            );
+            push.push(dump);
+
+            const uploadToDigitalOcean = await uploadDumpToDigitalOceanSpaces(
+              dump.filename,
+              storage,
+              args.Bucket,
+              args.ACL
+            );
+            await dump.backup.update({
+              uploaded_to: "digitalocean",
+              uploaded_filename: uploadToDigitalOcean.Tag,
+            });
+            dump.backup.uploaded_to = "digitalocean";
+            dump.backup.uploaded_filename = uploadToDigitalOcean.key;
+          }
+
+          return push;
+        } catch (e) {
+          throw new Error(e);
         }
-
-        for (const dbName of args.database) {
-          const dump = await dumpDatabase(
-            dbName,
-            context.wertik.database.wapgee.instance.models.Backup,
-            context.wertik.database.wapgee.credentials
-          );
-          push.push(dump);
-
-          const uploadToDigitalOcean = await uploadDumpToDigitalOceanSpaces(
-            dump.filename,
-            storage,
-            args.Bucket,
-            args.ACL
-          );
-          await dump.backup.update({
-            uploaded_to: "digitalocean",
-            uploaded_filename: uploadToDigitalOcean.Tag,
-          });
-          dump.backup.uploaded_to = "digitalocean";
-          dump.backup.uploaded_filename = uploadToDigitalOcean.key;
-        }
-
-        return push;
       },
     });
     useMutation({
