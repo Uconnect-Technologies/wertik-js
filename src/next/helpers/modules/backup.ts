@@ -1,6 +1,7 @@
 import moment from "moment";
 import { useModule } from "../../modules/modules";
 import mysqldump from "mysqldump";
+import fs from "fs";
 
 const dumpDatabase = async (dbName: string, model: any, credentials: any) => {
   const filename = `backups/${moment().format(
@@ -24,11 +25,19 @@ const dumpDatabase = async (dbName: string, model: any, credentials: any) => {
 
   return {
     filename,
-    backupInstance,
+    backup: backupInstance,
   };
 };
 const uploadDumpToDigitalOceanSpaces = () => {};
-const uploadDumpToDropbox = () => {};
+const uploadDumpToDropbox = async (filename, dropboxInstance) => {
+  const data: Buffer = await fs.readFileSync(filename);
+  const response = await dropboxInstance.filesUpload({
+    strict_conflict: false,
+    path: `/${filename}`,
+    contents: data,
+  });
+  return response;
+};
 
 export default useModule({
   name: "Backup",
@@ -69,16 +78,43 @@ export default useModule({
     });
     useMutation({
       name: "backupDigitalOceanSpaces",
-      query: "backupDigitalOceanSpaces: BackupSuccessResponse",
-      resolver() {
-        console.log(1);
+      query:
+        "backupDigitalOceanSpaces(database: [String]): [BackupSuccessResponse]",
+      async resolver(_, args, context) {
+        console.log(context.wertik);
       },
     });
     useMutation({
       name: "backupDropbox",
-      query: "backupDropbox: BackupSuccessResponse",
-      resolver() {
-        console.log(1);
+      query:
+        "backupDropbox(storage: String!, database: [String]): [BackupSuccessResponse]",
+      async resolver(_, args, context) {
+        const push = [];
+        const storage = context.wertik.storage.dropbox[args.storage];
+        if (!storage) {
+          throw new Error("No such storage found: " + args.storage);
+        }
+
+        for (const dbName of args.database) {
+          const dump = await dumpDatabase(
+            dbName,
+            context.wertik.database.wapgee.instance.models.Backup,
+            context.wertik.database.wapgee.credentials
+          );
+          push.push(dump);
+          const uploadToDropbox = await uploadDumpToDropbox(
+            dump.filename,
+            storage
+          );
+          await dump.backup.update({
+            uploaded_to: "digitalocean",
+            uploaded_filename: uploadToDropbox.result.path_lower,
+          });
+          dump.backup.uploaded_to = "digitalocean";
+          dump.backup.uploaded_filename = uploadToDropbox.result.path_lower;
+        }
+
+        return push;
       },
     });
     useMutation({
@@ -88,12 +124,5 @@ export default useModule({
         console.log(1);
       },
     });
-    // useMutation({
-    //   name: "one",
-    //   query: "one: String",
-    //   resolver: () => {
-    //     return "wow";
-    //   },
-    // });
   },
 });

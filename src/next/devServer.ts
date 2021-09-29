@@ -35,7 +35,16 @@ import {
     email: {
       mail1: await useMailer(),
     },
-    storage: {},
+    storage: {
+      dropbox: useStorage({
+        for: "dropbox",
+        options: {
+          a: "adthr2is7q97oqa",
+          accessToken:
+            "6vnpib1yTXsAAAAAAAAAAXWvEMjTRegGDTH_jVJk5ca002rBKyqKqu6gnCxRq3PL",
+        },
+      }),
+    },
     sockets: {
       s2: useIndependentWebSocketsServer({
         port: 1212,
