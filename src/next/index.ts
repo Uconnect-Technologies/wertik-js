@@ -6,7 +6,6 @@ import {
   applyRelationshipsFromStoreToDatabase,
   applyRelationshipsFromStoreToGraphql,
 } from "./database";
-import pause from "./../framework/helpers/pause";
 import { emailSender } from "./mailer/index";
 import cronJobs from "./cronJobs";
 import storage from "./storage";

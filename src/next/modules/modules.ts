@@ -1,15 +1,7 @@
 import { get, isFunction } from "lodash";
 import crud from "../crud";
 import { databaseDefaultOptions } from "../../framework/defaults/options";
-
-export interface RelationParams {
-  module: string;
-  graphqlKey: string;
-  database: string;
-  options: {
-    [key: string]: string | number | null;
-  };
-}
+import { RelationParams } from "../types/types";
 
 const getType = (type: string) => {
   if (
