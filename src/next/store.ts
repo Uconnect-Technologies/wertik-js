@@ -1,4 +1,4 @@
-import generalSchema from "../framework/graphql/generalSchema";
+import generalSchema from "./graphql/generalSchema";
 
 const store = {
   graphql: {

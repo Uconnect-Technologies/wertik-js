@@ -11,7 +11,7 @@ connectDatabase(configuration.database)
   .then((databaseInstance) => {
     configuration.databaseInstance = databaseInstance;
     serve(configuration).then((wertikApp: any) => {
-      wertikApp.database.sync();
+      // wertikApp.database.sync();
     });
   })
   .catch((e) => {

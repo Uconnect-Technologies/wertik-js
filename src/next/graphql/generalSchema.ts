@@ -1,4 +1,8 @@
 export default `
+	type SuccessResponse {
+    message: String
+  }
+
 	scalar JSON
 	scalar JSONObject
 
@@ -18,6 +22,8 @@ export default `
 		_notIRegexp: String
 		_or: StringFilterInput
 		_and: StringFilterInput
+		_between: [String]
+		_notBetween: [String]
 	}
 	input IntFilterInput {
 		_eq: Int
@@ -46,18 +52,6 @@ export default `
 	input BooleanFilterInput {
 		_eq: Boolean
 		_ne: Boolean
-	}
-
-	type ModuleStats {
-		total_count: Int
-		total_created_this_month: Int
-		total_created_this_week: Int
-		total_created_last_7_days: Int
-		total_created_today: Int
-		total_created_last_month: Int
-		total_created_last_90_days: Int
-		total_created_last_year: Int
-		total_created_this_year: Int
 	}
 	type Sorting {
 		column: String
@@ -92,9 +86,5 @@ export default `
 		nextPage: Int
 		previousPage: Int
 		hasMore: Boolean
-	}
-	input CacheOptionsInput {
-		name: String
-		expiry: Int
 	}
 `;
