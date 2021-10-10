@@ -41,14 +41,15 @@ export interface useSocketIOProps {}
 export interface useDatabaseProps {}
 
 export interface useModuleProps {
+  name: string;
   useDatabase: boolean;
-  table: string;
-  database: string;
-  tableOptions: any;
-  graphql: {
-    schema: string;
+  table?: string;
+  database?: string;
+  tableOptions?: any;
+  graphql?: {
+    schema?: string;
   };
-  on: (obj: {
+  on?: (obj: {
     useQuery: (props: useQueryProps) => {} | void;
     useMutation: (props: useMutationProps) => {} | void;
     useExpress: (props: useExpressProps) => {} | void;
@@ -58,6 +59,14 @@ export interface useModuleProps {
     hasMany: (props: RelationParams) => {} | void;
     useSchema: (props: useSchemaProps) => {} | void;
   }) => void;
+  events?: {
+    beforeView: Function;
+    beforeCount: Function;
+    beforeList: Function;
+    beforeBulkCreate: Function;
+    beforeBulkDelete: Function;
+    beforeBulkUpdate: Function;
+  };
 }
 export interface useQueryProps {
   query: string;

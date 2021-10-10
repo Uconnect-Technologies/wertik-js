@@ -62,12 +62,25 @@ import {
       }),
     },
     modules: {
+      Migrations: useModule({
+        name: "Migrations",
+        useDatabase: true,
+        table: "migrations",
+        database: "wapgee",
+      }),
       Backup: Backup,
       User: useModule({
         name: "User",
         useDatabase: true,
         database: "wapgee",
         table: "users",
+        graphql: {
+          schema: `
+            type User {
+              id: Int
+            }
+          `,
+        },
         on: function ({ useQuery, useMutation, useExpress, hasOne, hasMany }) {
           hasMany({
             graphqlKey: "posts",

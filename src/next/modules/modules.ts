@@ -1,7 +1,7 @@
 import { get, isFunction } from "lodash";
 import crud from "../crud";
 import { databaseDefaultOptions } from "../../framework/defaults/options";
-import { RelationParams } from "../types/types";
+import { RelationParams, useModuleProps } from "../types/types";
 
 const getType = (type: string) => {
   if (
@@ -96,7 +96,7 @@ const getCreateSchema = (props, tableInformation) => {
   return createSchema.join("\n");
 };
 
-export const useModule = (props: any) => {
+export const useModule = (props: useModuleProps) => {
   return async (wertik: any, store: any) => {
     let tableInstance;
     let graphqlSchema = [];
@@ -164,7 +164,7 @@ export const useModule = (props: any) => {
       });
 
       if (props?.graphql?.schema) {
-        graphqlSchema = props?.graphql?.schema.replace("}", "").split();
+        graphqlSchema = props.graphql.schema.replace("}", "").split("\n");
       } else {
         // graphql schema
         graphqlSchema = [`type ${props.name} {`];
