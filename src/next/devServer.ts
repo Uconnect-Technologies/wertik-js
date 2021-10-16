@@ -74,13 +74,6 @@ import {
         useDatabase: true,
         database: "wapgee",
         table: "users",
-        graphql: {
-          schema: `
-            type User {
-              id: Int
-            }
-          `,
-        },
         on: function ({ useQuery, useMutation, useExpress, hasOne, hasMany }) {
           hasMany({
             graphqlKey: "posts",

@@ -7,15 +7,18 @@ export const useCronJob = (obj) => {
 
 const fn = function () {};
 
-export default function (app) {
+export default function (app, wertikApp) {
   Object.keys(app.cronJobs).forEach((element) => {
     const cron = app.cronJobs[element];
     if (cron) {
-      app.cronJobs[element] = nodeCron.schedule(cron.expression, () => {
-        get(cron, "beforeRun", fn)(app);
-        cron.handler(app);
-        get(cron, "afterRun", fn)(app);
-      });
+      app.cronJobs[element] = wertikApp.cronJobs[element] = nodeCron.schedule(
+        cron.expression,
+        () => {
+          get(cron, "beforeRun", fn)(app);
+          cron.handler(app);
+          get(cron, "afterRun", fn)(app);
+        }
+      );
     }
   });
 }

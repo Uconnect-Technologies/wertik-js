@@ -3,7 +3,7 @@ export const useStorage = (obj) => obj;
 const DIGITAL_OCEAN = "digitalocean";
 const DROPBOX = "dropbox";
 
-export default function (props) {
+export default function (props, wertikApp) {
   Object.keys(props.storage).forEach((element) => {
     const storageItem = props.storage[element];
     if (storageItem.for === DIGITAL_OCEAN) {
@@ -26,7 +26,7 @@ export default function (props) {
         endpoint: spacesEndpoint,
       });
 
-      props.storage[element] = {
+      props.storage[element] = wertikApp.storage[element] = {
         spacesEndpoint,
         s3,
       };
@@ -37,7 +37,7 @@ export default function (props) {
         accessToken: dropdboxDetails.accessToken,
       });
 
-      props.storage[element] = {
+      props.storage[element] = wertikApp.storage[element] = {
         dropbox: dropboxInstance,
       };
     }
