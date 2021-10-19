@@ -9,8 +9,6 @@ export default function (props, wertikApp) {
     if (storageItem.for === DIGITAL_OCEAN) {
       const digitalOceanSpacesDetails = storageItem.options;
 
-      console.log(digitalOceanSpacesDetails);
-
       const aws = require("aws-sdk");
 
       aws.config.update({
