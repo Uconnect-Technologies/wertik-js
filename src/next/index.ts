@@ -12,7 +12,7 @@ import storage from "./storage";
 import sockets from "./sockets";
 const http = require("http");
 
-export default async function (props: any) {
+export default async function (configuration: any) {
   return new Promise(async (resolve, reject) => {
     try {
       const wertikApp: { [key: string]: any } = {
@@ -24,21 +24,22 @@ export default async function (props: any) {
         storage: {},
       };
 
-      const port = get(props, "port", 5050);
-      const skip = get(props, "skip", false);
-      const app = get(props, "express", express());
+      const port = get(configuration, "port", 5050);
+      const skip = get(configuration, "skip", false);
+      const app = get(configuration, "express", express());
       const server = http.createServer(app);
 
-      props.server = server;
       wertikApp.server = server;
-      props.express = app;
       wertikApp.express = app;
-      props.email.sendEmail = emailSender(props);
-      wertikApp.email.sendEmail = emailSender(props);
+      wertikApp.email.sendEmail = emailSender(configuration);
 
-      for (const moduleName of Object.keys(props.modules)) {
-        props.modules[moduleName] = wertikApp.modules[moduleName] =
-          await props.modules[moduleName](props, store, wertikApp);
+      for (const moduleName of Object.keys(configuration.modules)) {
+        configuration.modules[moduleName] = wertikApp.modules[moduleName] =
+          await configuration.modules[moduleName](
+            configuration,
+            store,
+            wertikApp
+          );
       }
 
       applyRelationshipsFromStoreToDatabase(store, wertikApp);
@@ -46,18 +47,22 @@ export default async function (props: any) {
 
       setTimeout(async () => {
         store.graphql.typeDefs = store.graphql.typeDefs.concat(
-          get(props, "graphql.typeDefs", "")
+          get(configuration, "graphql.typeDefs", "")
         );
         store.graphql.resolvers.Query = {
           ...store.graphql.resolvers.Query,
-          ...get(props, "graphql.resolvers.Query", {}),
+          ...get(configuration, "graphql.resolvers.Query", {}),
         };
         store.graphql.resolvers.Mutation = {
           ...store.graphql.resolvers.Mutation,
-          ...get(props, "graphql.resolvers.Mutation", {}),
+          ...get(configuration, "graphql.resolvers.Mutation", {}),
         };
 
-        props.graphql = wertikApp.graphql = graphql({ app, store, props });
+        configuration.graphql = wertikApp.graphql = graphql({
+          app,
+          store,
+          configuration,
+        });
 
         app.get("/w/info", function (req, res) {
           res.json({
@@ -66,10 +71,10 @@ export default async function (props: any) {
           });
         });
 
-        cronJobs(props, wertikApp);
-        storage(props, wertikApp);
+        cronJobs(configuration, wertikApp);
+        storage(configuration, wertikApp);
 
-        sockets(props);
+        sockets(configuration, wertikApp);
 
         if (skip === false) {
           server.listen(port, () => {
@@ -77,8 +82,6 @@ export default async function (props: any) {
           });
         }
         resolve(app);
-
-        console.log(wertikApp);
       }, 500);
     } catch (e) {
       console.error(e);
