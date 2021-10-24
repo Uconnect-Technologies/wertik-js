@@ -1,4 +1,4 @@
-import { get } from "lodash";
+import { get, omit } from "lodash";
 import { defaultApolloGraphqlOptions } from "../../framework/defaults/options";
 const { ApolloServer } = require("apollo-server-express");
 
@@ -13,7 +13,7 @@ export default function ({ wertikApp, app, store, configuration }) {
       ...store.graphql.resolvers,
     },
     ...defaultApolloGraphqlOptions,
-    ...options,
+    ...omit(options, ["context"]),
     context: async () => {
       let contextFromOptions = await get(options, "context", function () {})();
       return {
