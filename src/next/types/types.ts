@@ -60,12 +60,12 @@ export interface useModuleProps {
     useSchema: (props: useSchemaProps) => {} | void;
   }) => void;
   events?: {
-    beforeView: Function;
-    beforeCount: Function;
-    beforeList: Function;
-    beforeBulkCreate: Function;
-    beforeBulkDelete: Function;
-    beforeBulkUpdate: Function;
+    beforeView?: Function;
+    beforeCount?: Function;
+    beforeList?: Function;
+    beforeCreate?: Function;
+    beforeDelete?: Function;
+    beforeUpdate?: Function;
   };
 }
 export interface useQueryProps {

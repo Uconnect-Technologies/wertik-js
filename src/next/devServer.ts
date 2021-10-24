@@ -68,6 +68,41 @@ import {
         table: "migrations",
         database: "wapgee",
       }),
+      Series: useModule({
+        name: "Series",
+        useDatabase: true,
+        table: "series",
+        database: "wapgee",
+        on: function ({ hasMany }) {
+          hasMany({
+            graphqlKey: "posts",
+            database: "wapgee",
+            module: "SeriesPost",
+            options: {
+              as: "posts",
+              foreignKey: "series_id",
+            },
+          });
+        },
+      }),
+      SeriesPost: useModule({
+        name: "SeriesPost",
+        useDatabase: true,
+        table: "series_post",
+        database: "wapgee",
+        on({ hasOne }) {
+          hasOne({
+            graphqlKey: "series",
+            database: "wapgee",
+            module: "Series",
+            options: {
+              as: "series",
+              foreignKey: "id",
+              sourceKey: "series_id",
+            },
+          });
+        },
+      }),
       Backup: Backup,
       User: useModule({
         name: "User",
@@ -101,13 +136,13 @@ import {
           beforeList: () => {
             console.log("beforeList");
           },
-          beforeBulkCreate: () => {
+          beforeCreate: () => {
             console.log("beforebuilkdcreate");
           },
-          beforeBulkDelete: () => {
+          beforeDelete: () => {
             console.log("beforebuilkdelete");
           },
-          beforeBulkUpdate: () => {
+          beforeUpdate: () => {
             console.log("beforebuilkdupdate");
           },
         },

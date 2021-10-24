@@ -72,12 +72,12 @@ export default function (module, schemaInformation, store) {
               module,
               "graphql.mutations.update",
               async (_, args, context, info) => {
-                await get(module, "events.beforeUpdate", function () {})(
-                  _,
-                  args,
-                  context,
-                  info
-                );
+                const argsFromEvent = await get(
+                  module,
+                  "events.beforeUpdate",
+                  function () {}
+                )(_, args, context, info);
+                args = argsFromEvent ? argsFromEvent : args;
                 const where = await convertFiltersIntoSequalizeObject(
                   args.where
                 );
@@ -100,12 +100,12 @@ export default function (module, schemaInformation, store) {
               module,
               "graphql.mutations.delete",
               async (_, args, context, info) => {
-                await get(module, "events.beforeDelete", function () {})(
-                  _,
-                  args,
-                  context,
-                  info
-                );
+                const argsFromEvent = await get(
+                  module,
+                  "events.beforeDelete",
+                  function () {}
+                )(_, args, context, info);
+                args = argsFromEvent ? argsFromEvent : args;
                 const where = await convertFiltersIntoSequalizeObject(
                   args.where
                 );
@@ -119,12 +119,12 @@ export default function (module, schemaInformation, store) {
               module,
               "graphql.mutations.create",
               async (_, args, context, info) => {
-                await get(module, "events.beforeCreate", function () {})(
-                  _,
-                  args,
-                  context,
-                  info
-                );
+                const argsFromEvent = await get(
+                  module,
+                  "events.beforeCreate",
+                  function () {}
+                )(_, args, context, info);
+                args = argsFromEvent ? argsFromEvent : args;
                 const response = [];
                 for (const input of args.input) {
                   response.push(
@@ -143,12 +143,12 @@ export default function (module, schemaInformation, store) {
               module,
               "graphql.queries.view",
               async (_, args, context, info) => {
-                await get(module, "events.beforeView", function () {})(
-                  _,
-                  args,
-                  context,
-                  info
-                );
+                const argsFromEvent = await get(
+                  module,
+                  "events.beforeView",
+                  function () {}
+                )(_, args, context, info);
+                args = argsFromEvent ? argsFromEvent : args;
                 const where = await convertFiltersIntoSequalizeObject(
                   args.where
                 );
@@ -162,12 +162,12 @@ export default function (module, schemaInformation, store) {
               module,
               "graphql.queries.list",
               async (_, args, context, info) => {
-                await get(module, "events.beforeList", function () {})(
-                  _,
-                  args,
-                  context,
-                  info
-                );
+                const argsFromEvent = await get(
+                  module,
+                  "events.beforeList",
+                  function () {}
+                )(_, args, context, info);
+                args = argsFromEvent ? argsFromEvent : args;
                 return await paginate(args, schemaInformation.tableInstance);
               }
             ),
@@ -175,12 +175,12 @@ export default function (module, schemaInformation, store) {
               module,
               "graphql.queries.count",
               async (_, args, context, info) => {
-                await get(module, "events.beforeCount", function () {})(
-                  _,
-                  args,
-                  context,
-                  info
-                );
+                const argsFromEvent = await get(
+                  module,
+                  "events.beforeCount",
+                  function () {}
+                )(_, args, context, info);
+                args = argsFromEvent ? argsFromEvent : args;
                 const where = await convertFiltersIntoSequalizeObject(
                   args.where
                 );
