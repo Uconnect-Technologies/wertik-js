@@ -19,18 +19,18 @@ export const useMailer = async () => {
       );
       resolve(transporter);
     } catch (e) {
-      console.log(`Something went wrong while setting up email system: ${e.message}`)
-      reject(e)
+      console.log(
+        `Something went wrong while setting up email system: ${e.message}`
+      );
+      reject(e);
     }
-  })
+  });
 };
 
 export const emailSender = (app) => {
   return (mailer, options) => {
     return new Promise(async (resolve, reject) => {
       try {
-        resolve(true);
-
         let transporter = app.email[mailer];
 
         if (!transporter) {
@@ -56,6 +56,7 @@ export const emailSender = (app) => {
             nodemailer.getTestMessageUrl(emailInstance)
           );
         }
+        resolve(true);
       } catch (e) {
         console.error(e);
         reject(e);

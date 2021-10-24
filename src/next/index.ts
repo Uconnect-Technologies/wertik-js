@@ -31,7 +31,10 @@ export default async function (configuration: any) {
 
       wertikApp.server = server;
       wertikApp.express = app;
-      wertikApp.email.sendEmail = emailSender(configuration);
+      wertikApp.email = {
+        sendEmail: emailSender(configuration),
+        ...get(configuration, "email", {}),
+      };
 
       for (const moduleName of Object.keys(configuration.modules)) {
         configuration.modules[moduleName] = wertikApp.modules[moduleName] =
@@ -59,6 +62,7 @@ export default async function (configuration: any) {
         };
 
         configuration.graphql = wertikApp.graphql = graphql({
+          wertikApp,
           app,
           store,
           configuration,

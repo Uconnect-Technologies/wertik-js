@@ -33,7 +33,7 @@ import {
       }),
     },
     email: {
-      mail1: await useMailer(),
+      myEmail: await useMailer(),
     },
     storage: {},
     sockets: {
@@ -73,7 +73,20 @@ import {
         useDatabase: true,
         table: "series",
         database: "wapgee",
-        on: function ({ hasMany }) {
+        on: function ({ hasMany, useMutation }) {
+          useMutation({
+            query: "sendEmailWah: String",
+            resolver: async (_, args, context) => {
+              await context.wertik.email.sendEmail("myEmail", {
+                template: "Wow",
+                variables: {},
+                to: "ilyas.datoo@gmail.com",
+                from: "someone@gmail.com",
+              });
+              return "Wow";
+            },
+            name: "sendEmailWah",
+          });
           hasMany({
             graphqlKey: "posts",
             database: "wapgee",
