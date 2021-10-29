@@ -13,7 +13,10 @@ export const getDirectoriesInFolder = (path: string) => {
   });
 };
 
-export const randomString = (len, charSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789") => {
+export const randomString = (
+  len,
+  charSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+) => {
   charSet = charSet;
   var randomString = "";
   for (var i = 0; i < len; i++) {
@@ -90,7 +93,10 @@ export const identityColumn = () => {
 
 export const loadModulesFromConfiguration = (configuration: IConfiguration) => {
   let list = [];
-  let modules = [...configuration.builtinModules.split(","), ...get(configuration, "modules", [])];
+  let modules = [
+    ...configuration.builtinModules.split(","),
+    ...get(configuration, "modules", []),
+  ];
   modules = modules.filter((c) => c);
   modules.forEach(async (element) => {
     let module;
@@ -108,7 +114,10 @@ export const loadModulesFromConfiguration = (configuration: IConfiguration) => {
   return list;
 };
 
-export const removeColumnsFromAccordingToSelectIgnoreFields = (requestedFields, ignoreFields) => {
+export const removeColumnsFromAccordingToSelectIgnoreFields = (
+  requestedFields,
+  ignoreFields
+) => {
   const arr = [];
   requestedFields.forEach((element) => {
     if (!ignoreFields.includes(element)) {

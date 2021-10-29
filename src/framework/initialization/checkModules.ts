@@ -1,10 +1,10 @@
 import { IConfiguration } from "../types/configuration";
 
-export default function(configuration: IConfiguration) {
+export default function (configuration: IConfiguration) {
   const { modules } = configuration;
   return new Promise((resolve, reject) => {
     if (modules.length == 0) {
-      console.log("[Wertik-js] Starting with no custom modules.")
+      console.log("[Wertik-js] Starting with no custom modules.");
       resolve(true);
     }
     modules.forEach((element, index) => {

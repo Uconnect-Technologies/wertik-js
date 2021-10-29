@@ -1,7 +1,7 @@
 import { ISocketConfiguration } from "../types/servers";
 import { get } from "lodash";
 import { IConfiguration } from "../types/configuration";
-import SocketIO from "socket.io";
+import SocketIO, { Socket, Server as SocketIOServer } from "socket.io";
 
 export const defaultSocketInstance = (
   sockets: ISocketConfiguration,
@@ -12,8 +12,8 @@ export const defaultSocketInstance = (
   if (disable === true) {
     return null;
   }
-  const { httpServer, cache } = context;
-  const io = SocketIO(httpServer, options);
+  const { httpServer } = context;
+  const io = new SocketIOServer(httpServer, options);
   middlewares &&
     middlewares.forEach((fn) => {
       io.use((socket, next) => {

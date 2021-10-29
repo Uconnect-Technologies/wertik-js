@@ -1,5 +1,9 @@
-import replaceFilterOperators from "../../helpers/replaceFilterOperators"
+import replaceFilterOperators from "../../helpers/replaceFilterOperators";
 export default async function (filters: any) {
-  let output = replaceFilterOperators(filters);
-  return output;
+  if (filters) {
+    let output = replaceFilterOperators(filters);
+    return output;
+  } else {
+    return {};
+  }
 }

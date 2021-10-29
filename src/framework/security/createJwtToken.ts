@@ -8,5 +8,5 @@ export default async function createJwtToken(data: any) {
   }
   let firstArgument = data;
   let secret = process.env.jwtSecret || "asdasdasd";
-  return await jwt.sign(firstArgument, secret, {expiresIn: data.expiresIn });
+  return await jwt.sign(firstArgument, secret, { expiresIn: data.expiresIn });
 }

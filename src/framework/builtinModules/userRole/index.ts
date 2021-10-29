@@ -57,7 +57,6 @@ export default {
             foreignKey: "id",
           },
         ],
-        
       },
     },
     sql: {

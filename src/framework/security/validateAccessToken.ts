@@ -1,6 +1,6 @@
 import getUserWithAccessToken from "./getUserWithAccessToken";
 
-export default async function(userModel, accessToken) {
+export default async function (userModel, accessToken) {
   const token = accessToken.replace("bearer ", "");
   const user = await getUserWithAccessToken(userModel, token);
   if (user) {

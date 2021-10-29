@@ -4,12 +4,13 @@ import { randomString } from "./../../../helpers/index";
 import moment from "moment";
 import { generateHashPassword } from "../../../helpers/auth";
 
-export const requestPasswordResetHandler = async function(obj) {
-  const { userModel, forgetPasswordModel, data, emailTemplates, sendEmail } = obj;
+export const requestPasswordResetHandler = async function (obj) {
+  const { userModel, forgetPasswordModel, data, emailTemplates, sendEmail } =
+    obj;
   let user = await userModel.findOne({
     where: {
-      email: data.email
-    }
+      email: data.email,
+    },
   });
   if (!user.instance) throw new ApolloError("No User found with such email.");
   let forgetPassword = await forgetPasswordModel.findOne({
@@ -25,33 +26,29 @@ export const requestPasswordResetHandler = async function(obj) {
     token: token,
     email: user.instance.email,
     user: user.instance.id,
-    expiresIn: moment()
-      .add(30, "m")
-      .unix()
+    expiresIn: moment().add(30, "m").unix(),
   });
   await sendEmail(
     emailTemplates.requestPasswordReset,
     {
       email: user.instance.email,
-      nextMinutes: moment()
-        .add(30, "m")
-        .format("LLLL"),
+      nextMinutes: moment().add(30, "m").format("LLLL"),
       token: token,
       siteName: process.env.name,
-      frontendAppPasswordResetUrl: process.env.frontendAppPasswordResetUrl
+      frontendAppPasswordResetUrl: process.env.frontendAppPasswordResetUrl,
     },
     {
       from: process.env.mailerServiceUsername,
       to: user.instance.email,
-      subject: `Reset Password`
+      subject: `Reset Password`,
     }
   );
   return {
-    message: "Please check your email"
+    message: "Please check your email",
   };
 };
 
-export const resetPasswordHandler = async function(obj) {
+export const resetPasswordHandler = async function (obj) {
   const { userModel, forgetPasswordModel, data } = obj;
   const { token, password, confirmPassword } = data;
   let forgetPassword = await forgetPasswordModel.findOne({
@@ -59,7 +56,8 @@ export const resetPasswordHandler = async function(obj) {
       token: token,
     },
   });
-  if (!forgetPassword.instance) throw new ApolloError("Token mismatch or already used.");
+  if (!forgetPassword.instance)
+    throw new ApolloError("Token mismatch or already used.");
   let user = await userModel.findOne({
     where: {
       email: forgetPassword.instance.email,
@@ -68,10 +66,10 @@ export const resetPasswordHandler = async function(obj) {
   if (!user.instance) throw new ApolloError("User not found");
   const hash = generateHashPassword(password);
   await user.update({
-    password: hash
+    password: hash,
   });
   await forgetPassword.delete();
   return {
-    message: "Password changed"
+    message: "Password changed",
   };
 };

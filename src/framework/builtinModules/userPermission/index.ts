@@ -39,7 +39,7 @@ export default {
         Permission: {
           sourceKey: "permission_id",
           as: "permission",
-          foreignKey: "id"
+          foreignKey: "id",
         },
       },
       oneToOne: {
@@ -55,7 +55,6 @@ export default {
             foreignKey: "id",
           },
         ],
-        
       },
     },
     sql: {

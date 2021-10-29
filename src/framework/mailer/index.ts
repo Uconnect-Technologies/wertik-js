@@ -3,7 +3,9 @@ import nodemailer from "nodemailer";
 import { IConfiguration } from "../types/configuration";
 import { get } from "lodash";
 
-export const defaultMailerInstance = async function(configuration: IConfiguration) {
+export const defaultMailerInstance = async function (
+  configuration: IConfiguration
+) {
   let testAccount = await nodemailer.createTestAccount();
   const wertiknodemailerDefaultConfiguration = {
     host: "smtp.ethereal.email",
@@ -11,10 +13,14 @@ export const defaultMailerInstance = async function(configuration: IConfiguratio
     secure: false,
     auth: {
       user: testAccount.user,
-      pass: testAccount.pass
-    }
+      pass: testAccount.pass,
+    },
   };
-  let transporterConfiguration = get(configuration, "email.configuration", wertiknodemailerDefaultConfiguration);
+  let transporterConfiguration = get(
+    configuration,
+    "email.configuration",
+    wertiknodemailerDefaultConfiguration
+  );
   let transporter = nodemailer.createTransport(transporterConfiguration);
   return transporter;
 };
@@ -22,7 +28,11 @@ export const defaultMailerInstance = async function(configuration: IConfiguratio
 export const sendEmail = function ({ configuration, mailerInstance, models }) {
   let databaseInstance;
   let userPassedSendEmail = get(configuration, "email.sendEmail", null);
-  const saveEmailInDatabase = get(configuration, "email.saveEmailInDatabase", true);
+  const saveEmailInDatabase = get(
+    configuration,
+    "email.saveEmailInDatabase",
+    true
+  );
   if (userPassedSendEmail !== null) {
     return userPassedSendEmail;
   } else {
@@ -68,11 +78,15 @@ export const sendEmail = function ({ configuration, mailerInstance, models }) {
 };
 
 export default async function mailerInstance(configuration: IConfiguration) {
-  let isDisabled = get(configuration,'email.disable', false);
+  let isDisabled = get(configuration, "email.disable", false);
   if (isDisabled === true) {
     return null;
   }
-  let userPassedInstance = get(configuration, "email.defaultMailerInstance", null);
+  let userPassedInstance = get(
+    configuration,
+    "email.defaultMailerInstance",
+    null
+  );
   if (userPassedInstance !== null) {
     return userPassedInstance;
   } else {

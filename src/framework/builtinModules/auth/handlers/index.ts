@@ -1,19 +1,26 @@
 import moment from "moment";
 import createJwtToken from "./../../../../framework/security/createJwtToken";
 import { ApolloError } from "apollo-server";
-import { verifyPassword, generateHashPassword } from "./../../../../framework/helpers/auth";
+import {
+  verifyPassword,
+  generateHashPassword,
+} from "./../../../../framework/helpers/auth";
 import { get } from "lodash";
 
-export const signup = async function(obj) {
-  
+export const signup = async function (obj) {
   const { userModel, data, emailTemplates, sendEmail, configuration } = obj;
-  const {sendEmailOnSignup} = get(configuration,'email.sendEmailOnSignup',true)
+  const { sendEmailOnSignup } = get(
+    configuration,
+    "email.sendEmailOnSignup",
+    true
+  );
   let { email, password, confirmPassword, ...restData } = data;
-  if (password !== confirmPassword) throw new ApolloError("Passwords doesn't match.");
+  if (password !== confirmPassword)
+    throw new ApolloError("Passwords doesn't match.");
   let user = await userModel.findOne({
     where: {
-      email: email
-    }
+      email: email,
+    },
   });
   if (user) throw new ApolloError("Email is already used");
   var hash = generateHashPassword(password);
@@ -25,34 +32,24 @@ export const signup = async function(obj) {
     accessToken: await createJwtToken({
       email: email,
       for: "authentication",
-      expiresIn: moment()
-        .add(5, "days")
-        .unix()
+      expiresIn: moment().add(5, "days").unix(),
     }),
     refreshToken: await createJwtToken({
       email: email,
       for: "refreshToken",
-      expiresIn: moment()
-        .add(5, "days")
-        .unix()
+      expiresIn: moment().add(5, "days").unix(),
     }),
     isActivated: false,
     isSuperUser: get(data, "isSuperUser", false),
     activationToken:
-      Math.random()
-        .toString(36)
-        .substring(2) +
-      Math.random()
-        .toString(36)
-        .substring(2) +
-      Math.random()
-        .toString(36)
-        .substring(2),
+      Math.random().toString(36).substring(2) +
+      Math.random().toString(36).substring(2) +
+      Math.random().toString(36).substring(2),
     password: hash,
-    ...restData
+    ...restData,
   });
   let userInstance = newUser;
-  if (sendEmailOnSignup){
+  if (sendEmailOnSignup) {
     await sendEmail(
       emailTemplates.welcome,
       {
@@ -72,10 +69,13 @@ export const signup = async function(obj) {
   }
   return {
     message: "Signup Completed",
-    returning: userInstance
+    returning: userInstance,
   };
 };
-export const login = async function(obj, NoUserFoundMessage: string = '"No User found with such email"') {
+export const login = async function (
+  obj,
+  NoUserFoundMessage: string = '"No User found with such email"'
+) {
   const { userModel, data } = obj;
   const { email, password } = data;
   const restArgs = get(data, "restArgs", {});
@@ -95,19 +95,17 @@ export const login = async function(obj, NoUserFoundMessage: string = '"No User 
   let token = await createJwtToken({
     email: email,
     for: "authentication",
-    expiresIn: moment()
-      .add(5, "days")
-      .unix()
+    expiresIn: moment().add(5, "days").unix(),
   });
   user = await user.update({
-    accessToken: token
+    accessToken: token,
   });
   return {
     message: "Login Completed",
-    returning: user
+    returning: user,
   };
 };
-export const twoFactorLogin = async function(obj) {
+export const twoFactorLogin = async function (obj) {
   const { userModel, emailTemplates, sendEmail, data } = obj;
   const { email } = data;
   let user = await userModel.findOne({
@@ -120,7 +118,7 @@ export const twoFactorLogin = async function(obj) {
   }
   const twoFactorCode = `Code-` + Math.floor(Math.random() * 60000 + 5000);
   user = await user.update({
-    twoFactorCode: twoFactorCode
+    twoFactorCode: twoFactorCode,
   });
   let userInstance = user;
   await sendEmail(
@@ -128,24 +126,26 @@ export const twoFactorLogin = async function(obj) {
     {
       username: user.email,
       siteName: process.env.name,
-      twoFactorCode: twoFactorCode
+      twoFactorCode: twoFactorCode,
     },
     {
       from: process.env.mailerServiceUsername,
       to: user.email,
-      subject: `${twoFactorCode} is your authentication number - ${process.env.name}`
+      subject: `${twoFactorCode} is your authentication number - ${process.env.name}`,
     }
   );
   return {
-    message: `A code has been sent to your email which is ${userInstance.email}`
+    message: `A code has been sent to your email which is ${userInstance.email}`,
   };
 };
-export const twoFactorLoginValidate = async function(obj) {
+export const twoFactorLoginValidate = async function (obj) {
   const { userModel, data } = obj;
   const { twoFactorCode } = data;
-  let user = await userModel.findOne({ where: {
-    twoFactorCode: twoFactorCode
-  } });
+  let user = await userModel.findOne({
+    where: {
+      twoFactorCode: twoFactorCode,
+    },
+  });
   if (!user) {
     throw new ApolloError("Incorrect twoFactorCode or already used.");
   }
@@ -153,37 +153,39 @@ export const twoFactorLoginValidate = async function(obj) {
     twoFactorCode: "",
     accessToken: await createJwtToken({
       email: user.email,
-      for: "authentication"
+      for: "authentication",
     }),
     refreshToken: await createJwtToken({
       email: user.email,
-      for: "authentication"
-    })
+      for: "authentication",
+    }),
   });
   return user;
 };
-export const loginWithAccessToken = async function(obj) {
+export const loginWithAccessToken = async function (obj) {
   const { userModel, data } = obj;
   const { accessToken } = data;
-  let user = await userModel.findOne({ where: {
-    accessToken: accessToken
-  } });
+  let user = await userModel.findOne({
+    where: {
+      accessToken: accessToken,
+    },
+  });
   if (!user) {
     throw new ApolloError("Access token is missing.");
   }
   user = await user.update({
     accessToken: await createJwtToken({
       email: user.email,
-      for: "authentication"
+      for: "authentication",
     }),
     refreshToken: await createJwtToken({
       email: user.email,
-      for: "authentication"
-    })
+      for: "authentication",
+    }),
   });
   return user;
 };
-export const activateAccount = async function(obj) {
+export const activateAccount = async function (obj) {
   const { userModel, emailTemplates, sendEmail, data } = obj;
   const { activationToken } = data;
   let user = await userModel.findOne({
@@ -196,7 +198,7 @@ export const activateAccount = async function(obj) {
   }
   user = await user.update({
     is_activated: true,
-    activation_token: ""
+    activation_token: "",
   });
   let userInstance = user;
   (await sendEmail) &&
@@ -216,7 +218,7 @@ export const activateAccount = async function(obj) {
     message: "Account activated",
   };
 };
-export const refreshTokenHandler = async function(obj) {
+export const refreshTokenHandler = async function (obj) {
   const { userModel, data } = obj;
   const { refreshToken } = data;
   let user = await userModel.findOne({
@@ -230,12 +232,12 @@ export const refreshTokenHandler = async function(obj) {
   user = await user.update({
     accessToken: await createJwtToken({
       email: user.email,
-      for: "authentication"
+      for: "authentication",
     }),
     refreshToken: await createJwtToken({
       email: user.email,
-      for: "authentication"
-    })
+      for: "authentication",
+    }),
   });
   return user;
 };

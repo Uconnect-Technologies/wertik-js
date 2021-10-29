@@ -8,13 +8,15 @@ export const requiredFields = {
   db_password: "required",
   db_name: "required",
   db_host: "required",
-  db_port: "required"
+  db_port: "required",
 };
 
-export default function(configuration) {
+export default function (configuration) {
   return new Promise(async (resolve, reject) => {
     try {
-      let responseCheckInstalledPackages = await checkInstalledPackages(configuration);
+      let responseCheckInstalledPackages = await checkInstalledPackages(
+        configuration
+      );
       let responseCheckModules = await checkModules(configuration);
       resolve();
     } catch (errr) {

@@ -1,6 +1,9 @@
 import { IConfigurationCustomModule } from "../types/configuration";
 import { get } from "lodash";
-import { identityColumn, removeColumnsFromAccordingToSelectIgnoreFields } from "../helpers/index";
+import {
+  identityColumn,
+  removeColumnsFromAccordingToSelectIgnoreFields,
+} from "../helpers/index";
 import getRequestedFieldsFromResolverInfo from "./../helpers/getRequestedFieldsFromResolverInfo";
 
 const processManyToManyRelationship = (relationshipInfo, key) => {
@@ -36,13 +39,18 @@ const processOneToOneRelationship = (relationshipInfo, key) => {
       where: {
         [relationshipInfo.foreignKey]: parentRowValue,
       },
-      attributes: removeColumnsFromAccordingToSelectIgnoreFields(Object.keys(requestedFields), model.selectIgnoreFields),
+      attributes: removeColumnsFromAccordingToSelectIgnoreFields(
+        Object.keys(requestedFields),
+        model.selectIgnoreFields
+      ),
     });
     return a;
   };
 };
 
-export const GraphQLModuleRelationMapper = (module: IConfigurationCustomModule) => {
+export const GraphQLModuleRelationMapper = (
+  module: IConfigurationCustomModule
+) => {
   let returnObject = {};
 
   let relationships = get(module, "database.relationships", null);
@@ -56,20 +64,32 @@ export const GraphQLModuleRelationMapper = (module: IConfigurationCustomModule) 
       const relationshipInfo = oneToMany[key];
       if (relationshipInfo.constructor === Array) {
         relationshipInfo.forEach((relationshipInfoItem) => {
-          returnObject[relationshipInfoItem.as] = processManyToManyRelationship(relationshipInfoItem, key);
+          returnObject[relationshipInfoItem.as] = processManyToManyRelationship(
+            relationshipInfoItem,
+            key
+          );
         });
       } else {
-        returnObject[relationshipInfo.as] = processManyToManyRelationship(relationshipInfo, key);
+        returnObject[relationshipInfo.as] = processManyToManyRelationship(
+          relationshipInfo,
+          key
+        );
       }
     });
     Object.keys(oneToOne).forEach((key) => {
       const relationshipInfo = oneToOne[key];
       if (relationshipInfo.constructor === Array) {
         relationshipInfo.forEach((relationshipInfoItem) => {
-          returnObject[relationshipInfoItem.as] = processOneToOneRelationship(relationshipInfoItem, key);
+          returnObject[relationshipInfoItem.as] = processOneToOneRelationship(
+            relationshipInfoItem,
+            key
+          );
         });
       } else {
-        returnObject[relationshipInfo.as] = processOneToOneRelationship(relationshipInfo, key);
+        returnObject[relationshipInfo.as] = processOneToOneRelationship(
+          relationshipInfo,
+          key
+        );
       }
     });
   }

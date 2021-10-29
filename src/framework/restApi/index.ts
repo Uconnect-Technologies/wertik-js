@@ -13,7 +13,6 @@ export default async function (options: IRestApiInitialize) {
     models,
     sendEmail,
     emailTemplates,
-    cache,
     expressApp,
     database,
     multerInstance,
@@ -21,7 +20,11 @@ export default async function (options: IRestApiInitialize) {
     socketio,
     logger,
   } = options;
-  let initializeContext = get(configuration, "context.initializeContext", async function () {});
+  let initializeContext = get(
+    configuration,
+    "context.initializeContext",
+    async function () {}
+  );
   const useCors = get(configuration, "restApi.useCors", true);
   const useBodyParser = get(configuration, "restApi.useBodyParser", true);
   const useMorgan = get(configuration, "restApi.useMorgan", true);
@@ -54,7 +57,6 @@ export default async function (options: IRestApiInitialize) {
       mailerInstance: mailerInstance,
       models: models,
       socketio: socketio,
-      cache: cache,
       sendEmail: sendEmail,
       emailTemplates: emailTemplates,
       multerInstance: multerInstance,
@@ -64,14 +66,22 @@ export default async function (options: IRestApiInitialize) {
       configuration: configuration,
     };
 
-    let requestContext = await get(configuration.context, "requestContext", () => {})("restApi", req);
+    let requestContext = await get(
+      configuration.context,
+      "requestContext",
+      () => {}
+    )("restApi", req);
 
     req.wertik.requestContext = requestContext;
 
     next();
   });
 
-  require("./versions/v1/loadAllModules").default(expressApp, configuration, customApi);
+  require("./versions/v1/loadAllModules").default(
+    expressApp,
+    configuration,
+    customApi
+  );
 
   expressApp.get("/w/info", (req, res) => {
     res.status(200).json({
