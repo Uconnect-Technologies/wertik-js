@@ -5,9 +5,27 @@ import restApiSuccessResponse from "./restApiSuccessResponse";
 export default (expressApp, restApiEndpointsElement, module, configuration) => {
   const type = get(restApiEndpointsElement, "methodType", "get");
   const handler = get(restApiEndpointsElement, "handler", null);
-  const onCustomApiFailure = get(configuration, "restApi.onCustomApiFailure", null);
+  const onCustomApiFailure = get(
+    configuration,
+    "restApi.onCustomApiFailure",
+    null
+  );
   const path = get(restApiEndpointsElement, "path", "");
-  const types = ["get", "post", "put", "delete", "copy", "head", "options", "link", "unlink", "purge", "lock", "unlock", "view"];
+  const types = [
+    "get",
+    "post",
+    "put",
+    "delete",
+    "copy",
+    "head",
+    "options",
+    "link",
+    "unlink",
+    "purge",
+    "lock",
+    "unlock",
+    "view",
+  ];
 
   if (types.indexOf(type) > -1 && path.length > 0) {
     let apiPath = `${path}`;
@@ -38,6 +56,8 @@ export default (expressApp, restApiEndpointsElement, module, configuration) => {
       }
     });
   } else {
-    console.warn(`On module ${module.name}, Api endpoint ${path}, has undefined method type ${type}`);
+    console.warn(
+      `On module ${module.name}, Api endpoint ${path}, has undefined method type ${type}`
+    );
   }
 };

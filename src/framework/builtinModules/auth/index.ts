@@ -5,7 +5,7 @@ import {
   activateAccount,
   refreshTokenHandler,
   twoFactorLogin,
-  twoFactorLoginValidate
+  twoFactorLoginValidate,
 } from "./handlers/index";
 
 export default {

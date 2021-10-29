@@ -4,14 +4,19 @@ import moment from "moment";
 import { convertFieldsIntoSequelizeFields } from "./helpers/index";
 import { errorMessage } from "../logger/consoleMessages";
 import { databaseDefaultOptions } from "../defaults/options/index";
-import { IConfigurationCustomModule, IConfiguration } from "../types/configuration";
+import {
+  IConfigurationCustomModule,
+  IConfiguration,
+} from "../types/configuration";
 import { applyRelationshipSql } from "../moduleRelationships/database";
 import stats from "./helpers/stats";
 import paginate from "./helpers/paginate";
 
 const checkDatabaseOptions = (moduleName, tableName) => {
   if (moduleName && !tableName) {
-    errorMessage(`Module ${moduleName} didn't provided table name. Exiting process.`);
+    errorMessage(
+      `Module ${moduleName} didn't provided table name. Exiting process.`
+    );
     process.exit();
   }
 };
@@ -29,8 +34,14 @@ export default function (connection, configuration: IConfiguration) {
     if (useDatabase) {
       let tableName = get(module, "database.sql.tableName", "");
       checkDatabaseOptions(moduleName, tableName);
-      let tableFields = convertFieldsIntoSequelizeFields(module.database.sql.fields);
-      let tableOptions = get(module, "database.sql.tableOptions", databaseDefaultOptions.sql.defaultTableOptions);
+      let tableFields = convertFieldsIntoSequelizeFields(
+        module.database.sql.fields
+      );
+      let tableOptions = get(
+        module,
+        "database.sql.tableOptions",
+        databaseDefaultOptions.sql.defaultTableOptions
+      );
       tables[moduleName] = connection.define(
         tableName,
         {
@@ -50,7 +61,11 @@ export default function (connection, configuration: IConfiguration) {
         }
       );
       tables[moduleName].wertikModule = module;
-      tables[moduleName].selectIgnoreFields = get(module, "database.selectIgnoreFields", []);
+      tables[moduleName].selectIgnoreFields = get(
+        module,
+        "database.selectIgnoreFields",
+        []
+      );
     }
   };
   modules.forEach((element) => {
@@ -60,7 +75,7 @@ export default function (connection, configuration: IConfiguration) {
     } else if (element.constructor === Object) {
       module = element;
     }
-    
+
     processModule(module);
   });
 

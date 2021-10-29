@@ -4,7 +4,7 @@ export const databaseDefaultOptions = {
     dbInitializeOptions: {
       logging: false,
       operatorsAliases: "0",
-      native: true
+      native: true,
     },
   },
   sql: {

@@ -1,4 +1,10 @@
-import { dumpDatabase, dumpDatabaseToDigitalOcean, dumpDatabaseToDropbox, loadAllLocalBackups, removeLocalBackups } from "./helpers";
+import {
+  dumpDatabase,
+  dumpDatabaseToDigitalOcean,
+  dumpDatabaseToDropbox,
+  loadAllLocalBackups,
+  removeLocalBackups,
+} from "./helpers";
 export default {
   name: "Backup",
   graphql: {
@@ -58,7 +64,8 @@ export default {
           });
 
           return {
-            message: "Backup to DigitalOcean and Local Drive has been completed.",
+            message:
+              "Backup to DigitalOcean and Local Drive has been completed.",
             filename: opDigitalOcean.filename,
             backup: opDigitalOcean.backupInstance,
           };

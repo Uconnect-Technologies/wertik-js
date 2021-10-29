@@ -2,10 +2,10 @@ import { get } from "lodash";
 import fs from "fs";
 import { join } from "path";
 import { filesInAFolder } from "./../helpers/index";
-export default function(configuration, rootPath) {
+export default function (configuration, rootPath) {
   let allEmailTemplates = filesInAFolder(`${__dirname}/email-templates`);
   let templatesObject = {};
-  allEmailTemplates.forEach(element => {
+  allEmailTemplates.forEach((element) => {
     let name = element.split(".")[0];
     let template = require(`./email-templates/${name}`).default;
     templatesObject[name] = template;
@@ -13,6 +13,6 @@ export default function(configuration, rootPath) {
 
   return {
     ...templatesObject,
-    ...get(configuration, "email.templates", {})
+    ...get(configuration, "email.templates", {}),
   };
 }

@@ -15,7 +15,10 @@ export default async function (model) {
         let offset = limit * (page - 1);
         let convertedFilters = await convertFiltersIntoSequalizeObject(filters);
 
-        requestedFields = removeColumnsFromAccordingToSelectIgnoreFields(requestedFields, model.selectIgnoreFields);
+        requestedFields = removeColumnsFromAccordingToSelectIgnoreFields(
+          requestedFields,
+          model.selectIgnoreFields
+        );
 
         let mainObject = {
           order: sorting.map((c) => {
@@ -30,8 +33,6 @@ export default async function (model) {
           delete mainObject["order"];
         }
 
-        
-
         const list = await model.findAndCountAll({
           offset: offset,
           limit: limit,
@@ -39,7 +40,7 @@ export default async function (model) {
           ...mainObject,
         });
 
-        const totalPages = Math.ceil(list.count / limit)
+        const totalPages = Math.ceil(list.count / limit);
 
         resolve({
           filters,
@@ -51,7 +52,7 @@ export default async function (model) {
             page: page,
             previousPage: page == 1 ? 1 : page - 1,
             pages: totalPages,
-            hasMore: page < totalPages
+            hasMore: page < totalPages,
           },
         });
       } catch (error) {

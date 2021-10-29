@@ -9,7 +9,9 @@ import { Dropbox, Error, files } from "dropbox"; // eslint-disable-line no-unuse
 export const dumpDatabase = async ({ database, models }) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const filename = `backups/${moment().format("MMMM-DD-YYYY-h-mm-ss-a")}-database-${database.dbName}.sql`;
+      const filename = `backups/${moment().format(
+        "MMMM-DD-YYYY-h-mm-ss-a"
+      )}-database-${database.dbName}.sql`;
 
       const backupInstance = await models.Backup.create({
         uploaded_filename: filename,
@@ -39,10 +41,17 @@ export const dumpDatabase = async ({ database, models }) => {
   });
 };
 
-export const dumpDatabaseToDigitalOcean = async ({ localDump, configuration }) => {
+export const dumpDatabaseToDigitalOcean = async ({
+  localDump,
+  configuration,
+}) => {
   try {
     const filename = localDump.filename;
-    const digitalOceanSpacesDetails = get(configuration, "backup.digitalOceanSpaces", null);
+    const digitalOceanSpacesDetails = get(
+      configuration,
+      "backup.digitalOceanSpaces",
+      null
+    );
 
     if (
       digitalOceanSpacesDetails &&
@@ -56,7 +65,9 @@ export const dumpDatabaseToDigitalOcean = async ({ localDump, configuration }) =
         secretAccessKey: digitalOceanSpacesDetails.secretAccessKey,
       });
 
-      const spacesEndpoint: any = new aws.Endpoint(digitalOceanSpacesDetails.spacesEndpoint);
+      const spacesEndpoint: any = new aws.Endpoint(
+        digitalOceanSpacesDetails.spacesEndpoint
+      );
 
       const s3 = new aws.S3({
         endpoint: spacesEndpoint,
@@ -77,7 +88,9 @@ export const dumpDatabaseToDigitalOcean = async ({ localDump, configuration }) =
         uploaded_to: localDump.backupInstance.uploaded_to + ", digital_ocean",
       });
     } else {
-      throw new Error("Please provide your digital ocean details to backup database.");
+      throw new Error(
+        "Please provide your digital ocean details to backup database."
+      );
     }
   } catch (e) {
     throw new Error(e);
@@ -96,7 +109,11 @@ export const dumpDatabaseToDropbox = async ({ localDump, configuration }) => {
 
       const data: Buffer = await fs.readFileSync(filename);
 
-      await dbx.filesUpload({ strict_conflict: false, path: `/${filename}`, contents: data });
+      await dbx.filesUpload({
+        strict_conflict: false,
+        path: `/${filename}`,
+        contents: data,
+      });
 
       localDump.backupInstance = await localDump.backupInstance.update({
         uploaded_to: localDump.backupInstance.uploaded_to + ", dropbox",
@@ -104,7 +121,9 @@ export const dumpDatabaseToDropbox = async ({ localDump, configuration }) => {
 
       return localDump;
     } else {
-      throw new Error("Please provide your dropbox details to backup database.");
+      throw new Error(
+        "Please provide your dropbox details to backup database."
+      );
     }
   } catch (e) {
     console.log(e);

@@ -11,9 +11,26 @@ import * as auth from "./../helpers/auth";
 //expressApp,configuration,models,emailTemplates,sendEmail,database,WertikEventEmitter
 
 export default async function (options: IGraphQLInitialize) {
-  const { mailerInstance, configuration, models, sendEmail, emailTemplates, database, socketio, logger, cache } = options;
-  const apolloGraphqlOptions = get(configuration, "graphql.apolloGraphqlServerOptions", defaultApolloGraphqlOptions);
-  let initializeContext = get(configuration, "context.initializeContext", async function () {});
+  const {
+    mailerInstance,
+    configuration,
+    models,
+    sendEmail,
+    emailTemplates,
+    database,
+    socketio,
+    logger,
+  } = options;
+  const apolloGraphqlOptions = get(
+    configuration,
+    "graphql.apolloGraphqlServerOptions",
+    defaultApolloGraphqlOptions
+  );
+  let initializeContext = get(
+    configuration,
+    "context.initializeContext",
+    async function () {}
+  );
   initializeContext = await initializeContext("graphql", {
     models,
     database,
@@ -38,7 +55,6 @@ export default async function (options: IGraphQLInitialize) {
           sendEmail: sendEmail,
           emailTemplates: emailTemplates,
           mailerInstance: mailerInstance,
-          cache,
           req,
           res,
           socketio,
@@ -47,7 +63,11 @@ export default async function (options: IGraphQLInitialize) {
           configuration: configuration,
         },
       };
-      let requestContext = await get(configuration.context, "requestContext", () => {})("graphql", cxt);
+      let requestContext = await get(
+        configuration.context,
+        "requestContext",
+        () => {}
+      )("graphql", cxt);
       cxt["requestContext"] = requestContext;
       return cxt;
     },

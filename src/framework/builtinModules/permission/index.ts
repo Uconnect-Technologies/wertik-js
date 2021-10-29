@@ -43,7 +43,7 @@ export default {
         },
         RolePermission: {
           as: "role_permissions",
-          foreignKey: "permission_id"
+          foreignKey: "permission_id",
         },
       },
       oneToOne: {

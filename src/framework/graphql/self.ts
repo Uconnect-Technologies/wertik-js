@@ -11,14 +11,8 @@ export default {
   `,
   mutations: {
     schema: `
-        deleteCache(name: [String]!): String
     `,
-    resolvers: {
-      deleteCache(_: any, args: any, context: any) {
-        context.wertik.cache.del(args.name);
-        return `Cache Removed for ${args.name && args.name.join(" ")}`;
-      },
-    },
+    resolvers: {},
   },
   queries: {
     schema: `
@@ -41,7 +35,7 @@ export default {
           return {
             name: c,
             totalConnectedClients: rooms[c].length,
-            connectedClients: Object.keys(rooms[c].sockets)
+            connectedClients: Object.keys(rooms[c].sockets),
           };
         });
         return arr;

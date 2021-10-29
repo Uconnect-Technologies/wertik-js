@@ -57,7 +57,7 @@ export const applyRelationshipSql = (
         });
       }
     });
-    
+
     Object.keys(oneToOne).forEach((key) => {
       const foreignModel = tables[key];
       const relationshipInfo = oneToOne[key];

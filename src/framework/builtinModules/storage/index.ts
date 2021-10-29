@@ -39,7 +39,12 @@ export default {
       {
         path: "/upload",
         methodType: "post",
-        handler: async function (req, res, restApiSuccessResponse, restApiErrorResponse) {
+        handler: async function (
+          req,
+          res,
+          restApiSuccessResponse,
+          restApiErrorResponse
+        ) {
           const upload = req.multerInstance.single("file");
           upload(req, res, async function (err) {
             if (err) {
@@ -63,7 +68,11 @@ export default {
               data: {
                 storageInstance: response,
                 info: {
-                  sizeUploaded: `${new String(req.file.size / 1024 / 1024)}`.substring(0, 6) + `MB`,
+                  sizeUploaded:
+                    `${new String(req.file.size / 1024 / 1024)}`.substring(
+                      0,
+                      6
+                    ) + `MB`,
                   disk: "default",
                 },
                 directory: req.file.path,
