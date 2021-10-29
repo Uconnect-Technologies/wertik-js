@@ -1,6 +1,6 @@
 import { get, omit } from "lodash";
 import { defaultApolloGraphqlOptions } from "../../framework/defaults/options";
-const { ApolloServer } = require("apollo-server-express");
+import { ApolloServer } from "apollo-server-express";
 
 export const useGraphql = (obj) => obj;
 
