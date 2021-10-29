@@ -10,7 +10,7 @@ import { emailSender } from "./mailer/index";
 import cronJobs from "./cronJobs";
 import storage from "./storage";
 import sockets from "./sockets";
-const http = require("http");
+import http from "http";
 
 export default async function (configuration: any) {
   return new Promise(async (resolve, reject) => {

@@ -1,6 +1,5 @@
 import { Express } from "express";
 import { Http2Server } from "http2";
-import { type } from "os";
 import { Sequelize } from "sequelize/types";
 
 export interface WertikApp {
