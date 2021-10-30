@@ -6,6 +6,7 @@ const DROPBOX = "dropbox";
 export default function (props, wertikApp) {
   Object.keys(props.storage).forEach((element) => {
     const storageItem = props.storage[element];
+
     if (storageItem.for === DIGITAL_OCEAN) {
       const digitalOceanSpacesDetails = storageItem.options;
 

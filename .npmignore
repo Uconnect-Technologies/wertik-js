@@ -15,5 +15,4 @@ info.log
 warning.log
 .env
 uploads
-storage
 backups
