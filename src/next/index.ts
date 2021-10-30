@@ -8,11 +8,20 @@ import {
 } from "./database";
 import { emailSender } from "./mailer/index";
 import cronJobs from "./cronJobs";
-import storage from "./storage";
+import storage from "./storage/index";
 import sockets from "./sockets";
 import http from "http";
 
-export default async function (configuration: any) {
+export * from "./database";
+export * from "./modules/modules";
+export * from "./graphql";
+export * from "./mailer";
+export * from "./cronJobs";
+export * from "./storage";
+export * from "./helpers/modules/backup";
+export * from "./sockets";
+
+export default async function (configuration: any = {}) {
   return new Promise(async (resolve, reject) => {
     try {
       const wertikApp: { [key: string]: any } = {
@@ -36,37 +45,29 @@ export default async function (configuration: any) {
         ...get(configuration, "email", {}),
       };
 
-      for (const moduleName of Object.keys(configuration.modules)) {
-        configuration.modules[moduleName] = wertikApp.modules[moduleName] =
-          await configuration.modules[moduleName](
-            configuration,
-            store,
-            wertikApp
-          );
+      if (configuration.modules) {
+        for (const moduleName of Object.keys(configuration.modules)) {
+          configuration.modules[moduleName] = wertikApp.modules[moduleName] =
+            await configuration.modules[moduleName](
+              configuration,
+              store,
+              wertikApp
+            );
+        }
       }
 
       applyRelationshipsFromStoreToDatabase(store, wertikApp);
       applyRelationshipsFromStoreToGraphql(store, wertikApp);
 
       setTimeout(async () => {
-        store.graphql.typeDefs = store.graphql.typeDefs.concat(
-          get(configuration, "graphql.typeDefs", "")
-        );
-        store.graphql.resolvers.Query = {
-          ...store.graphql.resolvers.Query,
-          ...get(configuration, "graphql.resolvers.Query", {}),
-        };
-        store.graphql.resolvers.Mutation = {
-          ...store.graphql.resolvers.Mutation,
-          ...get(configuration, "graphql.resolvers.Mutation", {}),
-        };
-
-        configuration.graphql = wertikApp.graphql = graphql({
-          wertikApp,
-          app,
-          store,
-          configuration,
-        });
+        if (configuration.graphql) {
+          configuration.graphql = wertikApp.graphql = graphql({
+            wertikApp,
+            app,
+            store,
+            configuration,
+          });
+        }
 
         app.get("/w/info", function (req, res) {
           res.json({
@@ -75,10 +76,9 @@ export default async function (configuration: any) {
           });
         });
 
-        cronJobs(configuration, wertikApp);
-        storage(configuration, wertikApp);
-
-        sockets(configuration, wertikApp);
+        configuration.cronJobs && cronJobs(configuration, wertikApp);
+        configuration.storage && storage(configuration, wertikApp);
+        configuration.sockets && sockets(configuration, wertikApp);
 
         if (skip === false) {
           server.listen(port, () => {
