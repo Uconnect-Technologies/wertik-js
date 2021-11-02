@@ -31,6 +31,7 @@ export default async function (configuration: any = {}) {
         modules: {},
         cronJobs: {},
         storage: {},
+        database: {},
       };
 
       const port = get(configuration, "port", 5050);
@@ -44,6 +45,18 @@ export default async function (configuration: any = {}) {
         sendEmail: emailSender(configuration),
         ...get(configuration, "email", {}),
       };
+
+      if (configuration.database) {
+        for (const databaseName of Object.keys(configuration.database)) {
+          try {
+            configuration.database[databaseName] = wertikApp.database[
+              databaseName
+            ] = await configuration.database[databaseName]();
+          } catch (e) {
+            throw new Error(e);
+          }
+        }
+      }
 
       if (configuration.modules) {
         for (const moduleName of Object.keys(configuration.modules)) {
