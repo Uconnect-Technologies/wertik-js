@@ -5,7 +5,6 @@ import wertik, { useModule } from "./index";
 (async () => {
   wertik({
     port: 1200,
-    skip: false,
     graphql: useGraphql(),
     cronJobs: {},
     email: {},
