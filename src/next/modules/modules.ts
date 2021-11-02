@@ -4,6 +4,11 @@ import { databaseDefaultOptions } from "../../framework/defaults/options";
 import { RelationParams, useModuleProps } from "../types/types";
 
 const getType = (type: string) => {
+  if (typeof type === "string") {
+    type = type.toLowerCase();
+  } else {
+    return;
+  }
   if (
     type.includes("varchar") ||
     type.includes("timestamp") ||
@@ -11,6 +16,10 @@ const getType = (type: string) => {
     type.includes("text")
   ) {
     return `String`;
+  }
+
+  if (type.includes("json")) {
+    return "JSON";
   }
 
   if (type.includes("int")) {
