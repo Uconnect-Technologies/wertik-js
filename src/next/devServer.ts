@@ -11,20 +11,7 @@ import wertik, { useModule } from "./index";
     email: {},
     storage: {},
     sockets: {},
-    database: {
-      default: await useDatabase({
-        password: "pass",
-        username: "root",
-        name: "jscontainer",
-      }),
-    },
-    modules: {
-      Users: useModule({
-        useDatabase: true,
-        table: "users",
-        database: "default",
-        name: "Users",
-      }),
-    },
+    database: {},
+    modules: {},
   });
 })();
