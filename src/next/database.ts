@@ -15,26 +15,29 @@ export const getAllRelationships = (dbName: String) => {
 };
 
 export const useDatabase = async function (obj: any) {
-  let sequelize = new Sequelize(obj.name, obj.username, obj.password, {
-    host: obj.host,
-    dialect: "mysql",
-    logging: false,
-    ...get(obj, "options", {}),
-    ...(databaseDefaultOptions as any).sql.dbInitializeOptions,
-  });
-  try {
-    await sequelize.authenticate();
-    (sequelize as any).relationships = await sequelize.query(
-      getAllRelationships(obj.name)
-    );
-    console.log(`[DB] Succcessfully connected to database ${obj.name}`);
-  } catch (e) {
-    throw new Error(`[DB] Error connecting to database ${obj.name}`);
-  }
-  return {
-    credentials: obj,
-    instance: sequelize,
-  };
+  return () =>
+    new Promise(async (resolve, reject) => {
+      let sequelize = new Sequelize(obj.name, obj.username, obj.password, {
+        host: obj.host,
+        dialect: "mysql",
+        logging: false,
+        ...get(obj, "options", {}),
+        ...(databaseDefaultOptions as any).sql.dbInitializeOptions,
+      });
+      try {
+        await sequelize.authenticate();
+        (sequelize as any).relationships = await sequelize.query(
+          getAllRelationships(obj.name)
+        );
+        console.log(`[DB] Succcessfully connected to database ${obj.name}`);
+        resolve({
+          credentials: obj,
+          instance: sequelize,
+        });
+      } catch (e) {
+        reject(`[DB] Error connecting to database ${obj.name}`);
+      }
+    });
 };
 
 export const applyRelationshipsFromStoreToDatabase = async (store, app) => {

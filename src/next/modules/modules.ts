@@ -7,6 +7,7 @@ const getType = (type: string) => {
   if (
     type.includes("varchar") ||
     type.includes("timestamp") ||
+    type.includes("datetime") ||
     type.includes("text")
   ) {
     return `String`;

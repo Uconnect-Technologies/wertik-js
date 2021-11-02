@@ -1,5 +1,6 @@
+import { useDatabase } from "./database";
 import { useGraphql } from "./graphql";
-import wertik from "./index";
+import wertik, { useModule } from "./index";
 
 (async () => {
   wertik({
@@ -10,7 +11,20 @@ import wertik from "./index";
     email: {},
     storage: {},
     sockets: {},
-    database: {},
-    modules: {},
+    database: {
+      default: await useDatabase({
+        password: "pass",
+        username: "root",
+        name: "jscontainer",
+      }),
+    },
+    modules: {
+      Users: useModule({
+        useDatabase: true,
+        table: "users",
+        database: "default",
+        name: "Users",
+      }),
+    },
   });
 })();
