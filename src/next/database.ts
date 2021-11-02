@@ -14,7 +14,7 @@ export const getAllRelationships = (dbName: String) => {
   `;
 };
 
-export const useDatabase = async function (obj: any) {
+export const useDatabase = function (obj: any) {
   return () =>
     new Promise(async (resolve, reject) => {
       let sequelize = new Sequelize(obj.name, obj.username, obj.password, {
@@ -35,7 +35,7 @@ export const useDatabase = async function (obj: any) {
           instance: sequelize,
         });
       } catch (e) {
-        reject(`[DB] Error connecting to database ${obj.name}`);
+        reject(`${e.message} \n [DB] Error connecting to database ${obj.name}`);
       }
     });
 };

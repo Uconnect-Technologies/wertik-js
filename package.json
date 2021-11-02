@@ -1,6 +1,6 @@
 {
   "name": "wertik-js",
-  "version": "3.0.3-beta",
+  "version": "3.0.4-beta",
   "main": "lib/main.js",
   "repository": "https://github.com/Uconnect-Technologies/wertik-js.git",
   "keywords": [
