@@ -107,7 +107,7 @@ const getCreateSchema = (props, tableInformation) => {
 };
 
 export const useModule = (props: useModuleProps) => {
-  return async (wertik: any, store: any) => {
+  return async (wertik: any, store: any, wertikApp: any) => {
     let tableInstance;
     let graphqlSchema = [];
 
@@ -138,7 +138,7 @@ export const useModule = (props: useModuleProps) => {
     };
 
     const useExpress = (fn = (express) => {}) => {
-      fn(wertik.express);
+      fn(wertikApp.express);
     };
 
     let listSchema = "";
