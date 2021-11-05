@@ -93,6 +93,11 @@ export default async function (configuration: any = {}) {
         configuration.storage && storage(configuration, wertikApp);
         configuration.sockets && sockets(configuration, wertikApp);
 
+        app.use((req, _res, next) => {
+          req.wertik = wertikApp;
+          next();
+        });
+
         if (skip === false) {
           server.listen(port, () => {
             console.log(`Wertik JS app listening at http://localhost:${port}`);
