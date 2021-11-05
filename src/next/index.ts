@@ -72,32 +72,32 @@ export default async function (configuration: any = {}) {
       applyRelationshipsFromStoreToDatabase(store, wertikApp);
       applyRelationshipsFromStoreToGraphql(store, wertikApp);
 
+      app.get("/w/info", function (req, res) {
+        res.json({
+          message: "You are running wertik-js",
+          version: require("./../../package.json").version,
+        });
+      });
+
+      configuration.cronJobs && cronJobs(configuration, wertikApp);
+      configuration.storage && storage(configuration, wertikApp);
+      configuration.sockets && sockets(configuration, wertikApp);
+
+      if (configuration.graphql) {
+        configuration.graphql = wertikApp.graphql = graphql({
+          wertikApp,
+          app,
+          store,
+          configuration,
+        });
+      }
+
+      app.use(async function (req, res, next) {
+        req.wertik = wertikApp;
+        next();
+      });
+
       setTimeout(async () => {
-        if (configuration.graphql) {
-          configuration.graphql = wertikApp.graphql = graphql({
-            wertikApp,
-            app,
-            store,
-            configuration,
-          });
-        }
-
-        app.get("/w/info", function (req, res) {
-          res.json({
-            message: "You are running wertik-js",
-            version: require("./../../package.json").version,
-          });
-        });
-
-        configuration.cronJobs && cronJobs(configuration, wertikApp);
-        configuration.storage && storage(configuration, wertikApp);
-        configuration.sockets && sockets(configuration, wertikApp);
-
-        app.use((req, _res, next) => {
-          req.wertik = wertikApp;
-          next();
-        });
-
         if (skip === false) {
           server.listen(port, () => {
             console.log(`Wertik JS app listening at http://localhost:${port}`);

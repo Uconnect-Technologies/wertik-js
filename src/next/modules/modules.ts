@@ -138,7 +138,9 @@ export const useModule = (props: useModuleProps) => {
     };
 
     const useExpress = (fn = (express) => {}) => {
-      fn(wertikApp.express);
+      setTimeout(() => {
+        fn(wertikApp.express);
+      }, 2500);
     };
 
     let listSchema = "";
