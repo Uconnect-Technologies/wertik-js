@@ -56,8 +56,6 @@ export const defaultSocketOptions = {
   },
 };
 
-export const defaultApolloGraphqlOptions = {
-  tracing: true,
-};
+export const defaultApolloGraphqlOptions = {};
 
 export const defaultPort = 7000;
