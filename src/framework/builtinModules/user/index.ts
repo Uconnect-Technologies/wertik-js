@@ -18,8 +18,6 @@ export default {
         referer: String
         created_at: String
         updated_at: String
-        user_roles: UserRoleList
-        user_permissions: UserPermissionList
       }
       input UserInput {
         id: Int
@@ -54,18 +52,9 @@ export default {
   },
   restApi: {},
   database: {
-    selectIgnoreFields: ["user_permissions", "user_roles"],
+    selectIgnoreFields: [],
     relationships: {
-      oneToMany: {
-        UserRole: {
-          as: "user_roles",
-          foreignKey: "user_id",
-        },
-        UserPermission: {
-          as: "user_permissions",
-          foreignKey: "user_id",
-        },
-      },
+      oneToMany: {},
     },
     sql: {
       tableName: "user",

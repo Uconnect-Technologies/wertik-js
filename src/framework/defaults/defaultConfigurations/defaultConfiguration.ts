@@ -95,65 +95,7 @@ export default {
         },
       },
       restApi: {
-        endpoints: [
-          {
-            path: "/relations",
-            methodType: "get",
-            handler: async function (req, res) {
-              const models = req.wertik.models;
-              const { UserPermission, User, Permission, UserRole, Role } =
-                models;
-              const All = await User.findOne({
-                where: {
-                  id: 1,
-                },
-                attributes: ["id", "email"],
-                include: [
-                  {
-                    model: UserRole,
-                    as: "user_roles",
-                    attributes: ["id", "user_id", "role_id"],
-                    include: [
-                      {
-                        model: Role,
-                        as: "role",
-                        attributes: ["id", "name"],
-                      },
-                      {
-                        model: User,
-                        as: "user",
-                        attributes: ["id", "email"],
-                      },
-                    ],
-                  },
-                  {
-                    model: UserPermission,
-                    as: "user_permissions",
-                    attributes: ["id", "user_id", "permission_id"],
-                    include: [
-                      {
-                        model: User,
-                        as: "user",
-                        attributes: ["id", "email"],
-                      },
-                      {
-                        model: Permission,
-                        as: "permission",
-                        attributes: ["id", "can", "cant"],
-                      },
-                    ],
-                  },
-                ],
-              });
-              res.json({
-                message: true,
-                data: {
-                  user: All,
-                },
-              });
-            },
-          },
-        ],
+        endpoints: [],
       },
       database: {
         sql: {
