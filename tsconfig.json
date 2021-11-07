@@ -1,19 +1,16 @@
 {
-	"compilerOptions": {
-		"module": "commonjs",
-		"esModuleInterop": true,
-		"target": "es2015",
-		"noImplicitAny": false,
-		"moduleResolution": "node",
-		"sourceMap": true,
-		"outDir": "lib",
-		"baseUrl": "./",
-		"lib": ["es6", "esnext.asynciterable"],
-		"types": [
-			"node"
-		]
-	},
-	"include": [
-		"src/**/*"
-	]
+  "compilerOptions": {
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "target": "es2015",
+    "noImplicitAny": false,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "lib",
+    "baseUrl": "./",
+    "lib": ["es6", "esnext.asynciterable"],
+    "types": ["node"],
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*"]
 }
