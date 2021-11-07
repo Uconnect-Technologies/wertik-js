@@ -49,21 +49,8 @@ export interface IBuiltinModuleOverrideAuth {
     refreshToken: Function;
   };
 }
-export interface IBuiltinModuleOverrideForgetPassword {
-  graphql: {
-    mutation: {
-      requestPasswordReset: Function;
-      resetPassword: Function;
-    };
-  };
-  restApi: {
-    requestPasswordReset: Function;
-    resetPassword: Function;
-  };
-}
 
 export interface IConfigurationOverride {
-  ForgetPassword: IBuiltinModuleOverrideForgetPassword;
   Role: IBuiltinModuleOverride;
   UserPermission: IBuiltinModuleOverride;
   Permission: IBuiltinModuleOverride;

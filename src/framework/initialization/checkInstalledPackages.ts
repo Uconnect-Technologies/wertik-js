@@ -33,7 +33,7 @@ export default function (configuration: IConfiguration) {
         check("pg-hstore");
         check("pg-native");
       }
-      resolve();
+      resolve(true);
     } catch (e) {
       reject(e);
     }

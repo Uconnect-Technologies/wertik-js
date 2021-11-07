@@ -93,8 +93,4 @@ export default `
 		previousPage: Int
 		hasMore: Boolean
 	}
-	input CacheOptionsInput {
-		name: String
-		expiry: Int
-	}
 `;

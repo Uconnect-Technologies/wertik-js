@@ -65,16 +65,16 @@ export default function (configuration: IConfiguration, servers: any) {
       restApi.get("*", restApi404Handler);
     }
     httpServer.listen(expressAppPort, () => {
+      successMessage(
+        `Express Server Started`,
+        `http://localhost:${expressAppPort}`
+      );
       if (disableSockets === false) {
         successMessage(
           `Socket.IO server running at`,
           `http://localhost:${expressAppPort}`
         );
       }
-      successMessage(
-        `Rest API server started at`,
-        `http://localhost:${expressAppPort}`
-      );
       if (disableGraphqlVoyager === false) {
         successMessage(
           `GraphQL Voyager running at`,
@@ -85,10 +85,6 @@ export default function (configuration: IConfiguration, servers: any) {
         successMessage(
           "GraphQL Server started at",
           `http://localhost:${expressAppPort}${graphql.graphqlPath}`
-        );
-        successMessage(
-          "GraphQL Subscriptions are running at",
-          `ws://localhost:${expressAppPort}${graphql.subscriptionsPath}`
         );
       }
     });
