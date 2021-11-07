@@ -57,13 +57,7 @@ export const defaultSocketOptions = {
 };
 
 export const defaultApolloGraphqlOptions = {
-  cacheControl: {
-    defaultMaxAge: 0,
-  },
   tracing: true,
-  subscriptions: {
-    path: "/subscriptions",
-  },
 };
 
 export const defaultPort = 7000;

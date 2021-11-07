@@ -48,17 +48,6 @@ export default `
 		_ne: Boolean
 	}
 
-	type ModuleStats {
-		total_count: Int
-		total_created_this_month: Int
-		total_created_this_week: Int
-		total_created_last_7_days: Int
-		total_created_today: Int
-		total_created_last_month: Int
-		total_created_last_90_days: Int
-		total_created_last_year: Int
-		total_created_this_year: Int
-	}
 	type Sorting {
 		column: String
 		type: String

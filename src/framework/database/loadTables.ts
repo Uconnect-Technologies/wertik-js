@@ -9,7 +9,6 @@ import {
   IConfiguration,
 } from "../types/configuration";
 import { applyRelationshipSql } from "../moduleRelationships/database";
-import stats from "./helpers/stats";
 import paginate from "./helpers/paginate";
 
 const checkDatabaseOptions = (moduleName, tableName) => {
@@ -92,7 +91,6 @@ export default function (connection, configuration: IConfiguration) {
   });
 
   Object.keys(tables).forEach(async (table) => {
-    tables[table].stats = await stats(connection, tables[table]);
     tables[table].paginate = await paginate(tables[table]);
   });
 

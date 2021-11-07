@@ -5,7 +5,7 @@ import { get } from "lodash";
 import voyager from "./voyager/index";
 import { defaultApolloGraphqlOptions } from "../defaults/options/index";
 import GraphQLJSON, { GraphQLJSONObject } from "graphql-type-json";
-const { ApolloServer } = require("apollo-server-express");
+import { ApolloServer } from "apollo-server-express";
 import * as auth from "./../helpers/auth";
 
 //expressApp,configuration,models,emailTemplates,sendEmail,database,WertikEventEmitter
