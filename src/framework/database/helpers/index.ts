@@ -12,11 +12,3 @@ export const convertFieldsIntoSequelizeFields = (fields) => {
   });
   return fields;
 };
-
-export const deleteModel = () => {};
-
-export const paginateModel = () => {};
-
-export const updateModel = () => {};
-
-export const viewModel = () => {};

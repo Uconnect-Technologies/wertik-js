@@ -1,4 +1,3 @@
-// let { ApolloServer } = require("apollo-server");
 import loadAllModules from "./loadAllModules";
 import { IGraphQLInitialize } from "./../types/servers";
 import { get } from "lodash";
