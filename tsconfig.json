@@ -10,7 +10,8 @@
     "baseUrl": "./",
     "lib": ["es6", "esnext.asynciterable"],
     "types": ["node"],
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "declaration": true
   },
   "include": ["src/**/*"]
 }

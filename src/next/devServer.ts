@@ -1,6 +1,7 @@
 import { useDatabase } from "./database";
 import { useGraphql } from "./graphql";
-import wertik, { useModule } from "./index";
+import wertik, { useModule, useWebSockets } from "./index";
+import { useIndependentWebSocketsServer, useSocketIO } from "./sockets";
 
 (async () => {
   wertik({
@@ -9,7 +10,13 @@ import wertik, { useModule } from "./index";
     cronJobs: {},
     email: {},
     storage: {},
-    sockets: {},
+    sockets: {
+      ws: useWebSockets({}),
+      wsi: useIndependentWebSocketsServer({
+        port: 1300,
+      }),
+      sio: useSocketIO({}),
+    },
     database: {},
     modules: {},
   });

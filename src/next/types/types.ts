@@ -2,6 +2,28 @@ import { Express } from "express";
 import { Http2Server } from "http2";
 import { Sequelize } from "sequelize/types";
 
+export interface NextConfigurationProps {
+  port: number;
+  skip: any;
+  express: any;
+  database: {
+    [key: string]: {
+      name: string;
+      username: string;
+      password: string;
+      host: number;
+      options: {
+        [key: string]: any;
+      };
+    };
+  };
+  modules: any;
+  cronJobs: any;
+  sockets: any;
+  graphql: any;
+  [Key: string]: any;
+}
+
 export interface WertikApp {
   express?: Express;
   server?: Http2Server;
@@ -30,7 +52,6 @@ export interface WertikDatabaseCredentials {
   name: string;
 }
 export interface WertikStorage {}
-
 export interface useGraphqlProps {}
 export interface useCronJobsProps {}
 export interface useMailerProps {}
