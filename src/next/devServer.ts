@@ -10,13 +10,7 @@ import { useIndependentWebSocketsServer, useSocketIO } from "./sockets";
     cronJobs: {},
     email: {},
     storage: {},
-    sockets: {
-      ws: useWebSockets({}),
-      wsi: useIndependentWebSocketsServer({
-        port: 1300,
-      }),
-      sio: useSocketIO({}),
-    },
+    sockets: {},
     database: {},
     modules: {},
   });

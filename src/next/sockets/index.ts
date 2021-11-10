@@ -1,5 +1,5 @@
 import { isFunction } from "lodash";
-import { Server } from "socket.io";
+import { Server as SocketIOServer } from "socket.io";
 import {
   Server as WebSocketServer,
   ServerOptions as WebSocketServerOptions,
@@ -7,6 +7,12 @@ import {
 
 export const useWebSockets = (configuration: WebSocketServerOptions = {}) => {
   return (props, app) => {
+    if (!configuration.path) {
+      throw new Error("Path must be passed for useWebSockets");
+    }
+    console.log(
+      `Web Sockets server starting at ws://localhost:${props.port}${configuration.path}`
+    );
     return new WebSocketServer({
       server: app.server,
       ...configuration,
@@ -19,7 +25,7 @@ export const useIndependentWebSocketsServer = (
 ) => {
   return (props, app) => {
     console.log(
-      `[Wertik JS] Web Sockets server starting at ws://localhost:${configuration.port}`
+      `Web Sockets server starting at ws://localhost:${configuration.port}${configuration.path}`
     );
     return new WebSocketServer({
       ...configuration,
@@ -27,11 +33,14 @@ export const useIndependentWebSocketsServer = (
   };
 };
 
-export const useSocketIO = (configuration = {}) => {
-  return (props) => {
-    return new Server(props.server, {
-      ...configuration,
-    });
+export const useSocketIO = (configuration: any = {}) => {
+  return (props, app) => {
+    console.log(
+      `Socket.IO server starting at http://localhost:${props.port}${
+        configuration.path ?? "/socket.io"
+      }`
+    );
+    return new SocketIOServer(app.server, configuration);
   };
 };
 
