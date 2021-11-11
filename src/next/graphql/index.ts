@@ -1,11 +1,20 @@
 import { get, omit } from "lodash";
 import { defaultApolloGraphqlOptions } from "../../framework/defaults/options";
 import { ApolloServer } from "apollo-server-express";
-import { useGraphqlProps, WertikConfiguration } from "../types/types.v2";
+import {
+  GraphqlInitializeProps,
+  iObject,
+  useGraphqlProps,
+} from "../types/types.v2";
 
-export const useGraphql = (obj) => ApolloServer;
+export const useGraphql = (obj?) => obj;
 
-export default function ({ wertikApp, app, store, configuration }) {
+export default function ({
+  wertikApp,
+  expressApp,
+  store,
+  configuration,
+}: GraphqlInitializeProps) {
   store.graphql.typeDefs = store.graphql.typeDefs.concat(
     get(configuration, "graphql.typeDefs", "")
   );
@@ -39,7 +48,7 @@ export default function ({ wertikApp, app, store, configuration }) {
     },
   });
 
-  GraphqlApolloServer.applyMiddleware({ app });
+  GraphqlApolloServer.applyMiddleware({ app: expressApp });
 
   return GraphqlApolloServer;
 }

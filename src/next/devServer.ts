@@ -1,12 +1,12 @@
 import { useDatabase } from "./database";
 import { useGraphql } from "./graphql";
-import wertik, { useModule, useWebSockets } from "./index";
-import { useMailer } from "./mailer";
-import { useIndependentWebSocketsServer, useSocketIO } from "./sockets";
+import wertik from "./index";
+import { useMailer, useModule, useWebSockets } from "./index";
 
 (async () => {
   wertik({
     port: 1200,
+    graphql: useGraphql(),
     database: {
       jscontainer: useDatabase({
         name: "jscontainer",
@@ -27,12 +27,5 @@ import { useIndependentWebSocketsServer, useSocketIO } from "./sockets";
         useDatabase: true,
       }),
     },
-    // graphql: useGraphql(),
-    // cronJobs: {},
-    // email: {},
-    // storage: {},
-    // sockets: {},
-    // database: {},
-    // modules: {},
   });
 })();

@@ -78,20 +78,20 @@ export default async function (configuration: WertikConfiguration) {
       configuration.storage && storage(configuration, wertikApp);
       configuration.sockets && sockets(configuration, wertikApp);
 
-      if (configuration.graphql) {
-        wertikApp.graphql = graphql({
-          wertikApp,
-          app,
-          store,
-          configuration,
-        });
-      }
-
       for (const mailName of Object.keys(configuration.mailer)) {
         wertikApp.mailer[mailName] = configuration.mailer[mailName];
       }
 
       wertikApp.sendEmail = emailSender(wertikApp);
+
+      if (configuration.graphql) {
+        wertikApp.graphql = graphql({
+          wertikApp,
+          expressApp: app,
+          store,
+          configuration,
+        });
+      }
 
       app.use(async function (req, res, next) {
         req.wertik = wertikApp;

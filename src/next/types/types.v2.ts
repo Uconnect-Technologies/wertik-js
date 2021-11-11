@@ -131,3 +131,10 @@ export interface WertikApp {
   ) => ({ mailer: string, options: emailSendProps }) => iObject;
   [key: string]: any;
 }
+
+export interface GraphqlInitializeProps {
+  wertikApp: WertikApp;
+  store: Store;
+  configuration: WertikConfiguration;
+  expressApp: any;
+}
