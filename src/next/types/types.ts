@@ -3,31 +3,30 @@ import { Http2Server } from "http2";
 import { Sequelize } from "sequelize/types";
 
 export interface NextConfigurationProps {
-  port: number;
-  skip: any;
-  express: any;
-  database: {
-    [key: string]: {
-      name: string;
-      username: string;
-      password: string;
-      host: number;
-      options: {
-        [key: string]: any;
-      };
-    };
+  port?: number;
+  skip?: any;
+  express?: any;
+  database?: {
+    [key: string]: (props: useDatabaseProps) => Function;
   };
-  modules: any;
-  cronJobs: any;
-  sockets: any;
-  graphql: any;
-  [Key: string]: any;
+  modules?: {
+    [key: string]: (props: useModuleProps) => Function;
+  };
+  cronJobs?: any;
+  sockets?: {
+    [key: string]: (props: any) => Function;
+  };
+  graphql?: (props: useGraphqlProps) => { [key: string]: any };
+  email?: {
+    [key: string]: (props: useMailerProps) => Function;
+  };
+  storage?: any;
 }
 
 export interface WertikApp {
   express?: Express;
   server?: Http2Server;
-  port: number | string;
+  port?: number | string;
   skip: boolean;
   email: {};
   database: {
@@ -52,13 +51,30 @@ export interface WertikDatabaseCredentials {
   name: string;
 }
 export interface WertikStorage {}
-export interface useGraphqlProps {}
+export interface useGraphqlProps {
+  options?: {
+    [key: string]: any;
+  };
+  resolvers?: {
+    Mutation: {};
+    Query: {};
+  };
+  typeDefs?: string;
+}
 export interface useCronJobsProps {}
 export interface useMailerProps {}
 export interface useIndependentWebSocketsServerProps {}
 export interface useWebSocketsProps {}
 export interface useSocketIOProps {}
-export interface useDatabaseProps {}
+export interface useDatabaseProps {
+  name: string;
+  username: string;
+  password: string;
+  host: number;
+  options: {
+    [key: string]: any;
+  };
+}
 
 export interface useModuleProps {
   name: string;

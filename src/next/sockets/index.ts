@@ -14,7 +14,7 @@ export const useWebSockets = (configuration: WebSocketServerOptions = {}) => {
       `Web Sockets server starting at ws://localhost:${props.port}${configuration.path}`
     );
     return new WebSocketServer({
-      server: app.server,
+      server: app.httpServer,
       ...configuration,
     });
   };
@@ -40,7 +40,7 @@ export const useSocketIO = (configuration: any = {}) => {
         configuration.path ?? "/socket.io"
       }`
     );
-    return new SocketIOServer(app.server, configuration);
+    return new SocketIOServer(app.httpServer, configuration);
   };
 };
 

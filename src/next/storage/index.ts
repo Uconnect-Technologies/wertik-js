@@ -1,14 +1,14 @@
-export const useStorage = (obj) => obj;
-
 const DIGITAL_OCEAN = "digitalocean";
 const DROPBOX = "dropbox";
+
+export const useStorage = (obj) => obj;
 
 export default function (props, wertikApp) {
   Object.keys(props.storage).forEach((element) => {
     const storageItem = props.storage[element];
 
     if (storageItem.for === DIGITAL_OCEAN) {
-      const digitalOceanSpacesDetails = storageItem.options;
+      const digitalOceanSpacesDetails = storageItem.digitalOceanOptions;
 
       const aws = require("aws-sdk");
 
@@ -30,7 +30,7 @@ export default function (props, wertikApp) {
         s3,
       };
     } else if (storageItem.for === DROPBOX) {
-      const dropdboxDetails = storageItem.options;
+      const dropdboxDetails = storageItem.dropboxOptions;
       const { Dropbox } = require("dropbox");
       const dropboxInstance = new Dropbox({
         accessToken: dropdboxDetails.accessToken,

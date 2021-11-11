@@ -11,6 +11,8 @@ import cronJobs from "./cronJobs";
 import storage from "./storage/index";
 import sockets from "./sockets";
 import http from "http";
+import { WertikConfiguration } from "./types/types.v2";
+import { WertikApp } from "./types/types.v2";
 
 export * from "./database";
 export * from "./modules/modules";
@@ -21,37 +23,29 @@ export * from "./storage";
 export * from "./helpers/modules/backup";
 export * from "./sockets";
 
-export default async function (configuration: any = {}) {
+export default async function (configuration: WertikConfiguration) {
   return new Promise(async (resolve, reject) => {
     try {
-      const wertikApp: { [key: string]: any } = {
-        email: {
-          sendEmail: () => {},
-        },
+      const wertikApp: WertikApp = {
         modules: {},
-        cronJobs: {},
-        storage: {},
         database: {},
+        mailer: {},
       };
 
       const port = get(configuration, "port", 5050);
       const skip = get(configuration, "skip", false);
       const app = get(configuration, "express", express());
-      const server = http.createServer(app);
+      const httpServer = http.createServer(app);
 
-      wertikApp.server = server;
+      wertikApp.httpServer = httpServer;
       wertikApp.express = app;
-      wertikApp.email = {
-        sendEmail: emailSender(configuration),
-        ...get(configuration, "email", {}),
-      };
 
       if (configuration.database) {
         for (const databaseName of Object.keys(configuration.database)) {
           try {
-            configuration.database[databaseName] = wertikApp.database[
+            wertikApp.database[databaseName] = await configuration.database[
               databaseName
-            ] = await configuration.database[databaseName]();
+            ]();
           } catch (e) {
             throw new Error(e);
           }
@@ -60,12 +54,13 @@ export default async function (configuration: any = {}) {
 
       if (configuration.modules) {
         for (const moduleName of Object.keys(configuration.modules)) {
-          configuration.modules[moduleName] = wertikApp.modules[moduleName] =
-            await configuration.modules[moduleName](
-              configuration,
-              store,
-              wertikApp
-            );
+          wertikApp.modules[moduleName] = await configuration.modules[
+            moduleName
+          ]({
+            store: store,
+            configuration: configuration,
+            app: wertikApp,
+          });
         }
       }
 
@@ -84,13 +79,19 @@ export default async function (configuration: any = {}) {
       configuration.sockets && sockets(configuration, wertikApp);
 
       if (configuration.graphql) {
-        configuration.graphql = wertikApp.graphql = graphql({
+        wertikApp.graphql = graphql({
           wertikApp,
           app,
           store,
           configuration,
         });
       }
+
+      for (const mailName of Object.keys(configuration.mailer)) {
+        wertikApp.mailer[mailName] = configuration.mailer[mailName];
+      }
+
+      wertikApp.sendEmail = emailSender(wertikApp);
 
       app.use(async function (req, res, next) {
         req.wertik = wertikApp;
@@ -99,11 +100,11 @@ export default async function (configuration: any = {}) {
 
       setTimeout(async () => {
         if (skip === false) {
-          server.listen(port, () => {
+          httpServer.listen(port, () => {
             console.log(`Wertik JS app listening at http://localhost:${port}`);
           });
         }
-        resolve(app);
+        resolve(wertikApp);
       }, 500);
     } catch (e) {
       console.error(e);

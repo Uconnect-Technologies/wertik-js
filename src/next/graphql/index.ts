@@ -1,8 +1,9 @@
 import { get, omit } from "lodash";
 import { defaultApolloGraphqlOptions } from "../../framework/defaults/options";
 import { ApolloServer } from "apollo-server-express";
+import { useGraphqlProps, WertikConfiguration } from "../types/types.v2";
 
-export const useGraphql = (obj = {}) => obj;
+export const useGraphql = (obj) => ApolloServer;
 
 export default function ({ wertikApp, app, store, configuration }) {
   store.graphql.typeDefs = store.graphql.typeDefs.concat(
