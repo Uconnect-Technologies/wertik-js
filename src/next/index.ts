@@ -1,6 +1,5 @@
 import { get } from "lodash";
 import express from "express";
-import graphql from "./graphql/index";
 import store from "./store";
 import {
   applyRelationshipsFromStoreToDatabase,
@@ -30,6 +29,7 @@ export default async function (configuration: WertikConfiguration) {
         modules: {},
         database: {},
         mailer: {},
+        graphql: {},
       };
 
       const port = get(configuration, "port", 5050);
@@ -85,11 +85,15 @@ export default async function (configuration: WertikConfiguration) {
       wertikApp.sendEmail = emailSender(wertikApp);
 
       if (configuration.graphql) {
-        wertikApp.graphql = graphql({
-          wertikApp,
-          expressApp: app,
-          store,
-          configuration,
+        Object.keys(configuration.graphql).forEach((graphqlName, index) => {
+          wertikApp.graphql[graphqlName] = configuration.graphql[graphqlName]({
+            app: wertikApp,
+            store: store,
+            configuration: configuration,
+            expressApp: app,
+            graphqlName: graphqlName,
+            isDefaultServer: index === 0,
+          });
         });
       }
 

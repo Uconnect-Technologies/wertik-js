@@ -6,7 +6,11 @@ import { useMailer, useModule, useWebSockets } from "./index";
 (async () => {
   wertik({
     port: 1200,
-    graphql: useGraphql(),
+    graphql: useGraphql({
+      applyMiddlewareOptions: {
+        path: "/graphl123",
+      },
+    }),
     database: {
       jscontainer: useDatabase({
         name: "jscontainer",

@@ -1,6 +1,10 @@
-import { ApolloServer } from "apollo-server-express";
+import { ApolloServer, GetMiddlewareOptions } from "apollo-server-express";
 import { Sequelize } from "sequelize/types";
 import { useDatabaseProps, WertikDatabase } from "./types";
+
+export interface GetMiddlewareOptionsGraphql extends GetMiddlewareOptions {
+  path: string;
+}
 
 export type iObject = { [key: string]: any };
 
@@ -88,8 +92,9 @@ export interface WertikConfiguration {
   };
   graphql?: ({
     store: Store,
-    wertikApp: WertikApp,
     configuration: WertikConfiguration,
+    wertikApp: WertikApp,
+    expressApp: any,
   }) => iObject;
   cronJobs?: (prop: useCronJobsProps) => () => iObject;
 }
@@ -116,6 +121,7 @@ export interface useGraphqlProps {
   options?: {
     [key: string]: any;
   };
+  applyMiddlewareOptions?: GetMiddlewareOptionsGraphql;
   resolvers?: {
     Mutation: {};
     Query: {};
