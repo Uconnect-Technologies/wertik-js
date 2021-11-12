@@ -40,6 +40,14 @@ export default async function (configuration: WertikConfiguration) {
       wertikApp.httpServer = httpServer;
       wertikApp.express = app;
 
+      for (const mailName of Object.keys(configuration.mailer)) {
+        wertikApp.mailer[mailName] = configuration.mailer[mailName];
+      }
+
+      configuration.cronJobs && cronJobs(configuration, wertikApp);
+      configuration.storage && storage(configuration, wertikApp);
+      configuration.sockets && sockets(configuration, wertikApp);
+
       if (configuration.database) {
         for (const databaseName of Object.keys(configuration.database)) {
           try {
@@ -51,6 +59,9 @@ export default async function (configuration: WertikConfiguration) {
           }
         }
       }
+
+      applyRelationshipsFromStoreToDatabase(store, wertikApp);
+      applyRelationshipsFromStoreToGraphql(store, wertikApp);
 
       if (configuration.modules) {
         for (const moduleName of Object.keys(configuration.modules)) {
@@ -64,23 +75,12 @@ export default async function (configuration: WertikConfiguration) {
         }
       }
 
-      applyRelationshipsFromStoreToDatabase(store, wertikApp);
-      applyRelationshipsFromStoreToGraphql(store, wertikApp);
-
       app.get("/w/info", function (req, res) {
         res.json({
           message: "You are running wertik-js",
           version: require("./../../package.json").version,
         });
       });
-
-      configuration.cronJobs && cronJobs(configuration, wertikApp);
-      configuration.storage && storage(configuration, wertikApp);
-      configuration.sockets && sockets(configuration, wertikApp);
-
-      for (const mailName of Object.keys(configuration.mailer)) {
-        wertikApp.mailer[mailName] = configuration.mailer[mailName];
-      }
 
       wertikApp.sendEmail = emailSender(wertikApp);
 
