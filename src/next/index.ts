@@ -6,7 +6,6 @@ import {
   applyRelationshipsFromStoreToGraphql,
 } from "./database";
 import { emailSender } from "./mailer/index";
-import storage from "./storage/index";
 import http from "http";
 import { WertikConfiguration } from "./types/types.v2";
 import { WertikApp } from "./types/types.v2";
@@ -20,7 +19,7 @@ export * from "./storage";
 export * from "./helpers/modules/backup";
 export * from "./sockets";
 
-export default async function (configuration: WertikConfiguration) {
+const Wertik = (configuration: WertikConfiguration) {
   return new Promise(async (resolve, reject) => {
     try {
       const wertikApp: WertikApp = {
@@ -122,8 +121,6 @@ export default async function (configuration: WertikConfiguration) {
         next();
       });
 
-      console.log(wertikApp.storage);
-
       setTimeout(async () => {
         if (skip === false) {
           httpServer.listen(port, () => {
@@ -138,3 +135,5 @@ export default async function (configuration: WertikConfiguration) {
     }
   });
 }
+
+export default Wertik
