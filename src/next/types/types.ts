@@ -1,5 +1,6 @@
+import { httpstatus } from "aws-sdk/clients/glacier";
 import { Express } from "express";
-import { Http2Server } from "http2";
+import { Server } from "http";
 import { Sequelize } from "sequelize/types";
 
 export interface NextConfigurationProps {
@@ -25,7 +26,7 @@ export interface NextConfigurationProps {
 
 export interface WertikApp {
   express?: Express;
-  server?: Http2Server;
+  httpServer?: Server;
   port?: number | string;
   skip: boolean;
   email: {};

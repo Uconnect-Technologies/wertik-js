@@ -1,12 +1,17 @@
+import { WertikApp } from "../types/types";
+import { useStorageProps, WertikConfiguration } from "../types/types.v2";
+
 const DIGITAL_OCEAN = "digitalocean";
 const DROPBOX = "dropbox";
 
-export const useStorage = (obj) => obj;
-
-export default function (props, wertikApp) {
-  Object.keys(props.storage).forEach((element) => {
-    const storageItem = props.storage[element];
-
+export const useStorage = (storageItem: useStorageProps) => {
+  return ({
+    configuration,
+    wertikApp,
+  }: {
+    configuration: WertikConfiguration;
+    wertikApp: WertikApp;
+  }) => {
     if (storageItem.for === DIGITAL_OCEAN) {
       const digitalOceanSpacesDetails = storageItem.digitalOceanOptions;
 
@@ -25,7 +30,7 @@ export default function (props, wertikApp) {
         endpoint: spacesEndpoint,
       });
 
-      props.storage[element] = wertikApp.storage[element] = {
+      return {
         spacesEndpoint,
         s3,
       };
@@ -36,9 +41,13 @@ export default function (props, wertikApp) {
         accessToken: dropdboxDetails.accessToken,
       });
 
-      props.storage[element] = wertikApp.storage[element] = {
+      return {
         dropbox: dropboxInstance,
       };
     }
-  });
+  };
+};
+
+export default function (props, wertikApp) {
+  Object.keys(props.storage).forEach((element) => {});
 }

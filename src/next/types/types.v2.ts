@@ -72,9 +72,9 @@ export interface WertikConfiguration {
     }) => iObject;
   };
   storage?: {
-    [key: string]: (props: useStorageProps) => ({
+    [key: string]: ({
       configuration: WertikConfiguration,
-      app: WertikApp,
+      wertikApp: WertikApp,
     }) => {
       spacesEndpoint?: iObject;
       s3?: iObject;
@@ -85,9 +85,9 @@ export interface WertikConfiguration {
     [key: string]: () => Promise<unknown>;
   };
   sockets?: {
-    [key: string]: () => ({
+    [key: string]: ({
       configuration: WertikConfiguration,
-      app: WertikApp,
+      wertikApp: WertikApp,
     }) => iObject;
   };
   graphql?: ({
@@ -96,13 +96,18 @@ export interface WertikConfiguration {
     wertikApp: WertikApp,
     expressApp: any,
   }) => iObject;
-  cronJobs?: (prop: useCronJobsProps) => () => iObject;
+  cronJobs?: {
+    [key: string]: ({
+      configuration: WertikConfiguration,
+      wertikApp: WertikApp,
+    }) => iObject;
+  };
 }
 
 export interface useCronJobsProps {
   expression: string;
-  beforeRun: (app: WertikApp) => void | any;
-  afterRun: (app: WertikApp) => void | any;
+  beforeRun?: (app: WertikApp) => void | any;
+  afterRun?: (app: WertikApp) => void | any;
   handler: (app: WertikApp) => void | any;
 }
 

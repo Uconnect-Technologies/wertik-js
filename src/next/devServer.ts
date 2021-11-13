@@ -1,7 +1,9 @@
+import { useCronJob } from "./cronJobs";
 import { useDatabase } from "./database";
 import { useGraphql } from "./graphql";
 import wertik from "./index";
 import { useMailer, useModule, useWebSockets } from "./index";
+import { useStorage } from "./storage";
 
 (async () => {
   wertik({
@@ -18,6 +20,25 @@ import { useMailer, useModule, useWebSockets } from "./index";
         host: "localhost",
         port: 3306,
         username: "root",
+      }),
+    },
+    sockets: {
+      mySockets: useWebSockets({
+        path: "/sockets.wo",
+      }),
+    },
+    storage: {
+      dropbox: useStorage({
+        for: "dropbox",
+        dropboxOptions: {
+          accessToken: "asda",
+        },
+      }),
+    },
+    cronJobs: {
+      aCronJobName: useCronJob({
+        handler: () => console.log(1),
+        expression: "*/10 * * * * *",
       }),
     },
     mailer: {
