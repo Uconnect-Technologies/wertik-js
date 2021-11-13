@@ -8,7 +8,7 @@ import { useMailer, useModule, useWebSockets } from "./index";
     port: 1200,
     graphql: useGraphql({
       applyMiddlewareOptions: {
-        path: "/graphl123",
+        path: "/graphql",
       },
     }),
     database: {

@@ -85,15 +85,11 @@ export default async function (configuration: WertikConfiguration) {
       wertikApp.sendEmail = emailSender(wertikApp);
 
       if (configuration.graphql) {
-        Object.keys(configuration.graphql).forEach((graphqlName, index) => {
-          wertikApp.graphql[graphqlName] = configuration.graphql[graphqlName]({
-            app: wertikApp,
-            store: store,
-            configuration: configuration,
-            expressApp: app,
-            graphqlName: graphqlName,
-            isDefaultServer: index === 0,
-          });
+        wertikApp.graphql = configuration.graphql({
+          wertikApp: wertikApp,
+          store: store,
+          configuration: configuration,
+          expressApp: app,
         });
       }
 
