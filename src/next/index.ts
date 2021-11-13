@@ -19,7 +19,7 @@ export * from "./storage";
 export * from "./helpers/modules/backup";
 export * from "./sockets";
 
-const Wertik = (configuration: WertikConfiguration) {
+const Wertik = (configuration: WertikConfiguration) => {
   return new Promise(async (resolve, reject) => {
     try {
       const wertikApp: WertikApp = {
@@ -134,6 +134,6 @@ const Wertik = (configuration: WertikConfiguration) {
       reject(e);
     }
   });
-}
+};
 
-export default Wertik
+export default Wertik;
