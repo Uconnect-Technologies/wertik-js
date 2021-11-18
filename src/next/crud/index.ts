@@ -1,4 +1,3 @@
-import { ApolloError } from "apollo-server-express";
 import { get } from "lodash";
 import convertFiltersIntoSequalizeObject from "./../../framework/database/helpers/convertFiltersIntoSequalizeObject";
 
