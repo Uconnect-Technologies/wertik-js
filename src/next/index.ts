@@ -34,11 +34,11 @@ const Wertik = (configuration: WertikConfiguration) => {
 
       const port = get(configuration, "port", 5050);
       const skip = get(configuration, "skip", false);
-      const app = get(configuration, "express", express());
-      const httpServer = http.createServer(app);
+      const expressApp = get(configuration, "express", express());
+      const httpServer = http.createServer(expressApp);
 
       wertikApp.httpServer = httpServer;
-      wertikApp.express = app;
+      wertikApp.express = expressApp;
 
       for (const mailName of Object.keys(configuration.mailer)) {
         wertikApp.mailer[mailName] = await configuration.mailer[mailName]();
@@ -98,7 +98,7 @@ const Wertik = (configuration: WertikConfiguration) => {
         }
       }
 
-      app.get("/w/info", function (req, res) {
+      expressApp.get("/w/info", function (req, res) {
         res.json({
           message: "You are running wertik-js",
           version: require("./../../package.json").version,
@@ -112,11 +112,11 @@ const Wertik = (configuration: WertikConfiguration) => {
           wertikApp: wertikApp,
           store: store,
           configuration: configuration,
-          expressApp: app,
+          expressApp: expressApp,
         });
       }
 
-      app.use(async function (req, res, next) {
+      expressApp.use(async function (req, res, next) {
         req.wertik = wertikApp;
         next();
       });
