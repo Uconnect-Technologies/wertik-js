@@ -4,18 +4,14 @@
 import { get, isFunction } from "lodash";
 import generalSchema from "./generalSchema";
 import {
-  generateSubscriptionsCrudResolvers,
   generateQueriesCrudSchema,
   generateListTypeForModule,
-  generateMutationsCrudSubscriptionSchema,
   generateMutationsCrudSchema,
   generateCrudResolvers,
 } from "./crudGenerator";
-import { PubSub } from "apollo-server";
 import { IConfiguration } from "../types/configuration";
 import { GraphQLModuleRelationMapper } from "../moduleRelationships/graphql";
 import self from "./self";
-const pubsub = new PubSub();
 
 export default async function (configuration: IConfiguration) {
   let modulesSchema = `
@@ -118,7 +114,6 @@ export default async function (configuration: IConfiguration) {
 
         const crudResolvers = generateCrudResolvers(
           currentModule,
-          pubsub,
           configuration
         );
 
@@ -128,13 +123,6 @@ export default async function (configuration: IConfiguration) {
 
         const crudQuerySchema = generateQueriesCrudSchema(currentModuleName);
         const crudQueryResolvers = crudResolvers.queries;
-
-        const crudSubscriptionSchema =
-          generateMutationsCrudSubscriptionSchema(currentModuleName);
-        const crudSubscriptionResolvers = generateSubscriptionsCrudResolvers(
-          currentModuleName,
-          pubsub
-        );
 
         modulesQuerySchema = `${modulesQuerySchema}
         ${crudQuerySchema}
@@ -153,12 +141,8 @@ export default async function (configuration: IConfiguration) {
           ...crudMutationResolvers,
         };
 
-        modulesSubscriptionSchema =
-          modulesSubscriptionSchema + crudSubscriptionSchema;
-
         appSubscriptions = {
           ...appSubscriptions,
-          ...crudSubscriptionResolvers,
         };
       }
 

@@ -26,14 +26,6 @@ export interface IUser {
   referer: String;
 }
 
-export interface IForgetPassword {
-  id: Number;
-  name: String;
-  email: String;
-  user: any;
-  token: String;
-}
-
 export interface IRolePermission {
   id: Number;
   role: any;

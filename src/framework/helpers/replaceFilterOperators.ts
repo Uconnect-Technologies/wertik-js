@@ -11,11 +11,11 @@ const iterate = (obj) => {
   const isArray = Array.isArray(obj);
   if (isObject) {
     const keys = Object.keys(obj);
-    keys.forEach((element) => {
+    keys.forEach((element: string) => {
       const value = obj[element];
       const isArray = Array.isArray(value);
       const isObject = isPlainObject(value);
-      if (element.indexOf("_") === 0) {
+      if (element.startsWith("_")) {
         const newWrapValue = wrap(element);
         obj[newWrapValue] = obj[element];
         delete obj[element];

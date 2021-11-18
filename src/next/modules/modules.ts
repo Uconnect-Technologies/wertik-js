@@ -107,7 +107,7 @@ const getCreateSchema = (props, tableInformation) => {
 };
 
 export const useModule = (props: useModuleProps) => {
-  return async (wertik: any, store: any, wertikApp: any) => {
+  return async ({ store, configuration, app }: any) => {
     let tableInstance;
     let graphqlSchema = [];
 
@@ -139,7 +139,7 @@ export const useModule = (props: useModuleProps) => {
 
     const useExpress = (fn = (express) => {}) => {
       setTimeout(() => {
-        fn(wertikApp.express);
+        fn(app.express);
       }, 2500);
     };
 
@@ -148,7 +148,7 @@ export const useModule = (props: useModuleProps) => {
     if (useDatabase) {
       var createSchema = [];
       var updateSchema = [];
-      const connection = wertik.database[props.database];
+      const connection = app.database[props.database];
       const describe = await connection.instance.query(
         `describe ${props.table}`
       );

@@ -14,11 +14,9 @@ export const requiredFields = {
 export default function (configuration) {
   return new Promise(async (resolve, reject) => {
     try {
-      let responseCheckInstalledPackages = await checkInstalledPackages(
-        configuration
-      );
-      let responseCheckModules = await checkModules(configuration);
-      resolve();
+      await checkInstalledPackages(configuration);
+      await checkModules(configuration);
+      resolve(true);
     } catch (errr) {
       reject(errr);
       console.log(errr);

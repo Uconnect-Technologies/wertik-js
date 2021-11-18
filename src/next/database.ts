@@ -2,6 +2,8 @@ import { Sequelize } from "sequelize";
 import { databaseDefaultOptions } from "../framework/defaults/options";
 import { get } from "lodash";
 import { paginate } from "./crud/index";
+import { Store, UseDatabaseProps } from "./types/types.v2";
+import { WertikApp } from "./types/types.v2";
 
 export const getAllRelationships = (dbName: String) => {
   return `
@@ -14,33 +16,33 @@ export const getAllRelationships = (dbName: String) => {
   `;
 };
 
-export const useDatabase = function (obj: any) {
-  return () =>
-    new Promise(async (resolve, reject) => {
-      let sequelize = new Sequelize(obj.name, obj.username, obj.password, {
-        host: obj.host,
-        dialect: "mysql",
-        logging: false,
-        ...get(obj, "options", {}),
-        ...(databaseDefaultOptions as any).sql.dbInitializeOptions,
-      });
-      try {
-        await sequelize.authenticate();
-        (sequelize as any).relationships = await sequelize.query(
-          getAllRelationships(obj.name)
-        );
-        console.log(`[DB] Succcessfully connected to database ${obj.name}`);
-        resolve({
-          credentials: obj,
-          instance: sequelize,
-        });
-      } catch (e) {
-        reject(`${e.message} \n [DB] Error connecting to database ${obj.name}`);
-      }
+export const useDatabase = function (obj: UseDatabaseProps) {
+  return async () => {
+    let sequelize = new Sequelize(obj.name, obj.username, obj.password, {
+      host: obj.host,
+      dialect: "mysql",
+      logging: false,
+      ...get(obj, "options", {}),
+      ...(databaseDefaultOptions as any).sql.dbInitializeOptions,
     });
+    await sequelize.authenticate().catch((err) => {
+      throw new Error(err);
+    });
+    (sequelize as any).relationships = await sequelize.query(
+      getAllRelationships(obj.name)
+    );
+    console.log(`[DB] Succcessfully connected to database ${obj.name}`);
+    return {
+      credentials: obj,
+      instance: sequelize,
+    };
+  };
 };
 
-export const applyRelationshipsFromStoreToDatabase = async (store, app) => {
+export const applyRelationshipsFromStoreToDatabase = async (
+  store: Store,
+  app: WertikApp
+) => {
   store.database.relationships.forEach((element) => {
     const currentTable = app.modules[element.currentModule].tableInstance;
     const referencedTable = app.modules[element.referencedModule].tableInstance;
@@ -49,7 +51,10 @@ export const applyRelationshipsFromStoreToDatabase = async (store, app) => {
   });
 };
 
-export const applyRelationshipsFromStoreToGraphql = async (store, app) => {
+export const applyRelationshipsFromStoreToGraphql = async (
+  store: Store,
+  _app: WertikApp
+) => {
   store.database.relationships.forEach((element) => {
     const oldResolvers = get(
       store,
