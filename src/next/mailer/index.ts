@@ -4,7 +4,7 @@ import { emailSendProps, iObject, WertikApp } from "../types/types.v2";
 
 export const useMailer = (props?: iObject) => {
   return async () => {
-    let testAccount = await nodemailer.createTestAccount();
+    let testAccount = props ? null : await nodemailer.createTestAccount();
 
     const wertiknodemailerDefaultConfiguration = props
       ? props
@@ -13,16 +13,12 @@ export const useMailer = (props?: iObject) => {
           port: 587,
           secure: false,
           auth: {
-            user: testAccount.user,
-            pass: testAccount.pass,
+            user: testAccount?.user,
+            pass: testAccount?.pass,
           },
         };
 
-    let transporter = nodemailer.createTransport(
-      wertiknodemailerDefaultConfiguration
-    );
-
-    return transporter;
+    return nodemailer.createTransport(wertiknodemailerDefaultConfiguration);
   };
 };
 

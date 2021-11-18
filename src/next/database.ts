@@ -2,7 +2,8 @@ import { Sequelize } from "sequelize";
 import { databaseDefaultOptions } from "../framework/defaults/options";
 import { get } from "lodash";
 import { paginate } from "./crud/index";
-import { UseDatabaseProps } from "./types/types.v2";
+import { Store, UseDatabaseProps } from "./types/types.v2";
+import { WertikApp } from "./types/types.v2";
 
 export const getAllRelationships = (dbName: String) => {
   return `
@@ -38,7 +39,10 @@ export const useDatabase = function (obj: UseDatabaseProps) {
   };
 };
 
-export const applyRelationshipsFromStoreToDatabase = async (store, app) => {
+export const applyRelationshipsFromStoreToDatabase = async (
+  store: Store,
+  app: WertikApp
+) => {
   store.database.relationships.forEach((element) => {
     const currentTable = app.modules[element.currentModule].tableInstance;
     const referencedTable = app.modules[element.referencedModule].tableInstance;
@@ -47,7 +51,10 @@ export const applyRelationshipsFromStoreToDatabase = async (store, app) => {
   });
 };
 
-export const applyRelationshipsFromStoreToGraphql = async (store, app) => {
+export const applyRelationshipsFromStoreToGraphql = async (
+  store: Store,
+  _app: WertikApp
+) => {
   store.database.relationships.forEach((element) => {
     const oldResolvers = get(
       store,

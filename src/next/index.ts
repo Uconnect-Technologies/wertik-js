@@ -41,7 +41,7 @@ const Wertik = (configuration: WertikConfiguration) => {
       wertikApp.express = app;
 
       for (const mailName of Object.keys(configuration.mailer)) {
-        wertikApp.mailer[mailName] = configuration.mailer[mailName];
+        wertikApp.mailer[mailName] = await configuration.mailer[mailName]();
       }
 
       if (configuration.storage) {

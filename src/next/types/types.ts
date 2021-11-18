@@ -1,7 +1,7 @@
 import { httpstatus } from "aws-sdk/clients/glacier";
 import { Express } from "express";
 import { Server } from "http";
-import { Sequelize } from "sequelize/types";
+import { Model, Sequelize } from "sequelize/types";
 
 export interface NextConfigurationProps {
   port?: number;
@@ -43,7 +43,9 @@ export interface WertikDatabase {
   credentials: WertikDatabaseCredentials;
   instance: Sequelize;
 }
-export interface WertikModule {}
+export interface WertikModule {
+  tableInstance: Model;
+}
 export interface WertikDatabaseCredentials {
   port: number;
   password: string;
