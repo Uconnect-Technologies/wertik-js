@@ -1,3 +1,4 @@
+import { ApolloError } from "apollo-server-express";
 import { get } from "lodash";
 import convertFiltersIntoSequalizeObject from "./../../framework/database/helpers/convertFiltersIntoSequalizeObject";
 
@@ -62,12 +63,50 @@ export default function (module, schemaInformation, store) {
               update${module.name}(input: update${module.name}Input,where: ${module.name}FilterInput!): ${module.name}BulkMutationResponse
               create${module.name}(input: [create${module.name}Input]): ${module.name}BulkMutationResponse
               delete${module.name}(where: ${module.name}FilterInput!): SuccessResponse
+              createOrUpdate${module.name}(id: Int, input: create${module.name}Input): ${module.name}
             }
           `;
       },
       generateCrudResolvers() {
         return {
           Mutation: {
+            [`createOrUpdate${module.name}`]: get(
+              module,
+              "graphql.mutations.createOrUpdate",
+              async (_, args, context, info) => {
+                const argsFromEvent = await get(
+                  module,
+                  "events.beforeCreateOrUpdate",
+                  function () {}
+                )(_, args, context, info);
+                args = argsFromEvent ? argsFromEvent : args;
+                const id = args.id;
+                let ___find: any;
+                if (id) {
+                  ___find = await schemaInformation.tableInstance.findOne({
+                    where: {
+                      id: id,
+                    },
+                  });
+
+                  if (!___find) {
+                    throw new Error(`${module.name} Not found`);
+                  }
+
+                  await schemaInformation.tableInstance.update(args.input, {
+                    where: { id: id },
+                  });
+
+                  return await schemaInformation.tableInstance.findOne({
+                    where: { id: id },
+                  });
+                } else {
+                  return await schemaInformation.tableInstance.create(
+                    args.input
+                  );
+                }
+              }
+            ),
             [`update${module.name}`]: get(
               module,
               "graphql.mutations.update",

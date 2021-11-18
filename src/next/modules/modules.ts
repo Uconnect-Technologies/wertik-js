@@ -1,4 +1,4 @@
-import { get, isFunction } from "lodash";
+import { get } from "lodash";
 import crud from "../crud";
 import { databaseDefaultOptions } from "../../framework/defaults/options";
 import { RelationParams, useModuleProps } from "../types/types";

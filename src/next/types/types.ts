@@ -2,6 +2,7 @@ import { httpstatus } from "aws-sdk/clients/glacier";
 import { Express } from "express";
 import { Server } from "http";
 import { Model, Sequelize } from "sequelize/types";
+import { iObject } from "./types.v2";
 
 export interface NextConfigurationProps {
   port?: number;
@@ -84,9 +85,17 @@ export interface useModuleProps {
   useDatabase: boolean;
   table?: string;
   database?: string;
-  tableOptions?: any;
+  tableOptions?: iObject;
   graphql?: {
     schema?: string;
+    updateSchema?: string;
+    createSchema: string;
+    mutations?: {
+      update?: Function;
+      delete?: Function;
+      create?: Function;
+      createOrUpdate?: Function;
+    };
   };
   on?: (obj: {
     useQuery: (props: useQueryProps) => {} | void;
@@ -105,6 +114,7 @@ export interface useModuleProps {
     beforeCreate?: Function;
     beforeDelete?: Function;
     beforeUpdate?: Function;
+    beforeCreateOrUpdate?: Function;
   };
 }
 export interface useQueryProps {
