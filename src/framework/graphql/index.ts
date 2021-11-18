@@ -7,8 +7,6 @@ import GraphQLJSON, { GraphQLJSONObject } from "graphql-type-json";
 import { ApolloServer } from "apollo-server-express";
 import * as auth from "./../helpers/auth";
 
-//expressApp,configuration,models,emailTemplates,sendEmail,database,WertikEventEmitter
-
 export default async function (options: IGraphQLInitialize) {
   const {
     mailerInstance,

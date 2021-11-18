@@ -19,7 +19,9 @@ export * from "./storage";
 export * from "./helpers/modules/backup";
 export * from "./sockets";
 
-const Wertik = (configuration: WertikConfiguration) => {
+const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
+  configuration: WertikConfiguration
+) => {
   return new Promise(async (resolve, reject) => {
     try {
       const wertikApp: WertikApp = {
@@ -116,7 +118,7 @@ const Wertik = (configuration: WertikConfiguration) => {
         });
       }
 
-      expressApp.use(async function (req, res, next) {
+      expressApp.use(async function (req, _res, next) {
         req.wertik = wertikApp;
         next();
       });

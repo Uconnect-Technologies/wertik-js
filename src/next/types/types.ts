@@ -91,7 +91,7 @@ export interface useModuleProps {
   on?: (obj: {
     useQuery: (props: useQueryProps) => {} | void;
     useMutation: (props: useMutationProps) => {} | void;
-    useExpress: (props: useExpressProps) => {} | void;
+    useExpress: (express: any) => void;
     hasOne: (props: RelationParams) => {} | void;
     belongsTo: (props: RelationParams) => {} | void;
     belongsToMany: (props: RelationParams) => {} | void;
