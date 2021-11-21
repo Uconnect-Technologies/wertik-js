@@ -42,12 +42,12 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
       wertikApp.httpServer = httpServer;
       wertikApp.express = expressApp;
 
-      for (const mailName of Object.keys(configuration.mailer)) {
+      for (const mailName of Object.keys(configuration.mailer || {})) {
         wertikApp.mailer[mailName] = await configuration.mailer[mailName]();
       }
 
       if (configuration.storage) {
-        for (const storageName of Object.keys(configuration.storage)) {
+        for (const storageName of Object.keys(configuration.storage || {})) {
           wertikApp.storage[storageName] = configuration.storage[storageName]({
             configuration: configuration,
             wertikApp: wertikApp,
@@ -56,7 +56,7 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
       }
 
       if (configuration.cronJobs) {
-        for (const cronName of Object.keys(configuration.cronJobs)) {
+        for (const cronName of Object.keys(configuration.cronJobs || {})) {
           wertikApp.cronJobs[cronName] = configuration.cronJobs[cronName]({
             configuration: configuration,
             wertikApp: wertikApp,
@@ -65,7 +65,7 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
       }
 
       if (configuration.sockets) {
-        for (const socketName of Object.keys(configuration.sockets)) {
+        for (const socketName of Object.keys(configuration.sockets || {})) {
           wertikApp.sockets[socketName] = configuration.sockets[socketName]({
             configuration: configuration,
             wertikApp: wertikApp,
@@ -74,7 +74,7 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
       }
 
       if (configuration.database) {
-        for (const databaseName of Object.keys(configuration.database)) {
+        for (const databaseName of Object.keys(configuration.database || {})) {
           try {
             wertikApp.database[databaseName] = await configuration.database[
               databaseName
@@ -89,7 +89,7 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
       applyRelationshipsFromStoreToGraphql(store, wertikApp);
 
       if (configuration.modules) {
-        for (const moduleName of Object.keys(configuration.modules)) {
+        for (const moduleName of Object.keys(configuration.modules || {})) {
           wertikApp.modules[moduleName] = await configuration.modules[
             moduleName
           ]({

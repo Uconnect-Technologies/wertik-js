@@ -195,6 +195,7 @@ export const useModule = (props: useModuleProps) => {
       tableInformation.forEach((element, _index) => {
         if (
           element.Type.includes("timestamp") ||
+          element.Type.includes("datetime") ||
           element.Type.includes("varchar") ||
           element.Type.includes("text")
         ) {

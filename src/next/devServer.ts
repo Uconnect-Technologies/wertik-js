@@ -2,7 +2,8 @@ import { useCronJob } from "./cronJobs";
 import { useDatabase } from "./database";
 import { useGraphql } from "./graphql";
 import wertik from "./index";
-import { useMailer, useModule, useWebSockets } from "./index";
+import { useModule, useWebSockets } from "./index";
+import { useMailer } from "./mailer";
 import { useStorage } from "./storage";
 
 (async () => {
@@ -37,6 +38,7 @@ import { useStorage } from "./storage";
     },
     cronJobs: {
       aCronJobName: useCronJob({
+        name: "Send emails to people every 1 minute",
         handler: () => console.log(1),
         expression: "*/10 * * * * *",
       }),
