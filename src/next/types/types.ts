@@ -1,11 +1,34 @@
+import { httpstatus } from "aws-sdk/clients/glacier";
 import { Express } from "express";
-import { Http2Server } from "http2";
-import { Sequelize } from "sequelize/types";
+import { Server } from "http";
+import { Model, Sequelize } from "sequelize/types";
+import { iObject } from "./types.v2";
+
+export interface NextConfigurationProps {
+  port?: number;
+  skip?: any;
+  express?: any;
+  database?: {
+    [key: string]: (props: useDatabaseProps) => Function;
+  };
+  modules?: {
+    [key: string]: (props: useModuleProps) => Function;
+  };
+  cronJobs?: any;
+  sockets?: {
+    [key: string]: (props: any) => Function;
+  };
+  graphql?: (props: useGraphqlProps) => { [key: string]: any };
+  email?: {
+    [key: string]: (props: useMailerProps) => Function;
+  };
+  storage?: any;
+}
 
 export interface WertikApp {
   express?: Express;
-  server?: Http2Server;
-  port: number | string;
+  httpServer?: Server;
+  port?: number | string;
   skip: boolean;
   email: {};
   database: {
@@ -21,7 +44,9 @@ export interface WertikDatabase {
   credentials: WertikDatabaseCredentials;
   instance: Sequelize;
 }
-export interface WertikModule {}
+export interface WertikModule {
+  tableInstance: Model;
+}
 export interface WertikDatabaseCredentials {
   port: number;
   password: string;
@@ -30,28 +55,52 @@ export interface WertikDatabaseCredentials {
   name: string;
 }
 export interface WertikStorage {}
-
-export interface useGraphqlProps {}
+export interface useGraphqlProps {
+  options?: {
+    [key: string]: any;
+  };
+  resolvers?: {
+    Mutation: {};
+    Query: {};
+  };
+  typeDefs?: string;
+}
 export interface useCronJobsProps {}
 export interface useMailerProps {}
 export interface useIndependentWebSocketsServerProps {}
 export interface useWebSocketsProps {}
 export interface useSocketIOProps {}
-export interface useDatabaseProps {}
+export interface useDatabaseProps {
+  name: string;
+  username: string;
+  password: string;
+  host: number;
+  options: {
+    [key: string]: any;
+  };
+}
 
 export interface useModuleProps {
   name: string;
   useDatabase: boolean;
   table?: string;
   database?: string;
-  tableOptions?: any;
+  tableOptions?: iObject;
   graphql?: {
     schema?: string;
+    updateSchema?: string;
+    createSchema: string;
+    mutations?: {
+      update?: Function;
+      delete?: Function;
+      create?: Function;
+      createOrUpdate?: Function;
+    };
   };
   on?: (obj: {
     useQuery: (props: useQueryProps) => {} | void;
     useMutation: (props: useMutationProps) => {} | void;
-    useExpress: (props: useExpressProps) => {} | void;
+    useExpress: (express: any) => void;
     hasOne: (props: RelationParams) => {} | void;
     belongsTo: (props: RelationParams) => {} | void;
     belongsToMany: (props: RelationParams) => {} | void;
@@ -65,6 +114,7 @@ export interface useModuleProps {
     beforeCreate?: Function;
     beforeDelete?: Function;
     beforeUpdate?: Function;
+    beforeCreateOrUpdate?: Function;
   };
 }
 export interface useQueryProps {

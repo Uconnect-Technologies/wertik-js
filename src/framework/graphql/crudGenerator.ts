@@ -19,7 +19,7 @@ export const generateQueriesCrudSchema = (moduleName: String) => {
     moduleName
   )}(filters: [FilterInput]): ${moduleName}`;
   const viewString = `view${moduleName}(${identityColumn}: ${identityColumnGraphQLType}): ${moduleName}`;
-  const listString = `list${moduleName}(cache: CacheOptionsInput, pagination: PaginationInput, filters: ${moduleName}FilterInput, sorting: [SortingInput]): ${moduleName}List`;
+  const listString = `list${moduleName}(pagination: PaginationInput, filters: ${moduleName}FilterInput, sorting: [SortingInput]): ${moduleName}List`;
   const countString = `count${moduleName}(filters: ${moduleName}FilterInput):  Int`;
   string = `
     ${viewString}
@@ -28,42 +28,6 @@ export const generateQueriesCrudSchema = (moduleName: String) => {
   `;
   string = string + " " + " " + byFilter;
   return string;
-};
-
-export const generateMutationsCrudSubscriptionSchema = (moduleName: String) => {
-  return `
-    ${moduleName}Deleted: SuccessResponse
-    ${moduleName}BulkCreated: [${moduleName}]
-    ${moduleName}BulkUpdated: [${moduleName}]
-  `;
-};
-
-export const getSubscriptionConstants = (moduleName: String) => {
-  return {
-    deletedModule: `${moduleName}Deleted`,
-    bulkCreatedModule: `${moduleName}BulkCreated`,
-    bulkUpdatedModule: `${moduleName}BulkUpdated`,
-  };
-};
-
-export const generateSubscriptionsCrudResolvers = (
-  moduleName: String,
-  pubsub: any
-) => {
-  const { deletedModule, bulkCreatedModule, bulkUpdatedModule } =
-    getSubscriptionConstants(moduleName);
-  let object = {
-    [deletedModule]: {
-      subscribe: () => pubsub.asyncIterator([deletedModule]),
-    },
-    [bulkCreatedModule]: {
-      subscribe: () => pubsub.asyncIterator([bulkCreatedModule]),
-    },
-    [bulkUpdatedModule]: {
-      subscribe: () => pubsub.asyncIterator([bulkUpdatedModule]),
-    },
-  };
-  return object;
 };
 
 export const generateMutationsCrudSchema = (moduleName: String) => {
@@ -79,7 +43,6 @@ export const generateMutationsCrudSchema = (moduleName: String) => {
 
 export const generateCrudResolvers = (
   module: IConfigurationCustomModule,
-  pubsub,
   configuration: IConfiguration
 ) => {
   const overrideMutationBulkCreate = get(
@@ -162,10 +125,6 @@ export const generateCrudResolvers = (
     null
   );
 
-  const { bulkCreatedModule, bulkUpdatedModule } = getSubscriptionConstants(
-    module.name
-  );
-
   let object = {
     mutations: {
       [`bulkDelete${module.name}`]: async (
@@ -228,9 +187,6 @@ export const generateCrudResolvers = (
           : args;
         let model = context.wertik.models[module.name];
         let result = await model.bulkCreate(finalArgs.input);
-        pubsub.publish(bulkCreatedModule, {
-          [bulkCreatedModule]: result,
-        });
         if (isFunction(afterBulkCreate)) {
           afterBulkCreate({
             mode: "graphql",
@@ -281,9 +237,6 @@ export const generateCrudResolvers = (
               result.push(a);
             }
           }
-          pubsub.publish(bulkUpdatedModule, {
-            [bulkUpdatedModule]: result,
-          });
           if (isFunction(afterBulkUpdate)) {
             afterBulkUpdate({
               mode: "graphql",
@@ -360,31 +313,19 @@ export const generateCrudResolvers = (
               params: { _, args, context, info },
             })
           : args;
-        const cacheWith = (args.cache && args.cache.name) || "";
-        const cacheValue = context.wertik.cache.get(cacheWith);
 
-        if (cacheWith && cacheValue) {
-          response = cacheValue;
-        } else {
-          let model = context.wertik.models[module.name];
-          let requestedFields = getRequestedFieldsFromResolverInfo(info);
-          response = await model.paginate(
-            finalArgs,
-            Object.keys(requestedFields.list)
-          );
-        }
+        let model = context.wertik.models[module.name];
+        let requestedFields = getRequestedFieldsFromResolverInfo(info);
+        response = await model.paginate(
+          finalArgs,
+          Object.keys(requestedFields.list)
+        );
+
         if (isFunction(afterList)) {
           afterList({
             mode: "graphql",
             params: { _, args, context, info, instance: response },
           });
-        }
-        if (cacheWith) {
-          context.wertik.cache.set(
-            cacheWith,
-            response,
-            (args.cache && args.cache.expiry) || 0
-          );
         }
         return response;
       },

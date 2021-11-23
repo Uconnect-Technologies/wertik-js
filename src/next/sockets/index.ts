@@ -1,35 +1,64 @@
-import { isFunction } from "lodash";
-import { Server } from "socket.io";
-import { Server as WebSocketServer } from "ws";
+import { Server as SocketIOServer } from "socket.io";
+import {
+  Server as WebSocketServer,
+  ServerOptions as WebSocketServerOptions,
+} from "ws";
+import { WertikApp } from "../types/types";
+import { WertikConfiguration } from "../types/types.v2";
 
-export const useWebSockets = (configuration) => {
-  return (props, app) => {
+export const useWebSockets = (props: WebSocketServerOptions = {}) => {
+  return ({
+    configuration,
+    wertikApp,
+  }: {
+    configuration: WertikConfiguration;
+    wertikApp: WertikApp;
+  }) => {
+    if (!props.path) {
+      throw new Error("Path must be passed for useWebSockets");
+    }
+    console.log(
+      `Web Sockets server starting at ws://localhost:${configuration.port}${props.path}`
+    );
     return new WebSocketServer({
-      server: app.server,
-      ...configuration,
+      server: wertikApp.httpServer,
+      ...props,
     });
   };
 };
 
-export const useIndependentWebSocketsServer = (configuration) => {
-  return (props, app) => {
+export const useIndependentWebSocketsServer = (
+  props: WebSocketServerOptions = {}
+) => {
+  return ({
+    configuration,
+    wertikApp,
+  }: {
+    configuration: WertikConfiguration;
+    wertikApp: WertikApp;
+  }) => {
+    console.log(
+      `Web Sockets server starting at ws://localhost:${configuration.port}${props.path}`
+    );
     return new WebSocketServer({
-      ...configuration,
+      ...props,
     });
   };
 };
 
-export const useSocketIO = (configuration) => {
-  return (props) => {
-    return new Server(props.server, {
-      ...configuration,
-    });
+export const useSocketIO = (props: any = {}) => {
+  return ({
+    configuration,
+    wertikApp,
+  }: {
+    configuration: WertikConfiguration;
+    wertikApp: WertikApp;
+  }) => {
+    console.log(
+      `Socket.IO server starting at http://localhost:${configuration.port}${
+        props.path ?? "/socket.io"
+      }`
+    );
+    return new SocketIOServer(wertikApp.httpServer, props);
   };
 };
-
-export default function (props, app) {
-  Object.keys(props.sockets).forEach((element) => {
-    const socket = props.sockets[element];
-    if (isFunction(socket)) socket(props, app);
-  });
-}

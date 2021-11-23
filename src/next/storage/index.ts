@@ -1,14 +1,19 @@
-export const useStorage = (obj) => obj;
+import { WertikApp } from "../types/types";
+import { useStorageProps, WertikConfiguration } from "../types/types.v2";
 
 const DIGITAL_OCEAN = "digitalocean";
 const DROPBOX = "dropbox";
 
-export default function (props, wertikApp) {
-  Object.keys(props.storage).forEach((element) => {
-    const storageItem = props.storage[element];
-
+export const useStorage = (storageItem: useStorageProps) => {
+  return ({
+    configuration,
+    wertikApp,
+  }: {
+    configuration: WertikConfiguration;
+    wertikApp: WertikApp;
+  }) => {
     if (storageItem.for === DIGITAL_OCEAN) {
-      const digitalOceanSpacesDetails = storageItem.options;
+      const digitalOceanSpacesDetails = storageItem.digitalOceanOptions;
 
       const aws = require("aws-sdk");
 
@@ -25,20 +30,24 @@ export default function (props, wertikApp) {
         endpoint: spacesEndpoint,
       });
 
-      props.storage[element] = wertikApp.storage[element] = {
+      return {
         spacesEndpoint,
         s3,
       };
     } else if (storageItem.for === DROPBOX) {
-      const dropdboxDetails = storageItem.options;
+      const dropdboxDetails = storageItem.dropboxOptions;
       const { Dropbox } = require("dropbox");
       const dropboxInstance = new Dropbox({
         accessToken: dropdboxDetails.accessToken,
       });
 
-      props.storage[element] = wertikApp.storage[element] = {
+      return {
         dropbox: dropboxInstance,
       };
     }
-  });
+  };
+};
+
+export default function (props, wertikApp) {
+  Object.keys(props.storage).forEach((element) => {});
 }
