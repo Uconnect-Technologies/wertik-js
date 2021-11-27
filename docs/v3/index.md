@@ -1,6 +1,15 @@
-#### Wertik-JS V3
+# Wertik-JS V3
 
-Wertik is a tiny Node JS framework that helps you setting up servers with support for GraphQL, Rest Api, Emailing, Storage, Sockets and Cron Jobs feature.
+Wertik is a tiny Node JS framework that helps you setting up servers with support for
+
+- MySQL Database
+- Emailing
+- GraphQL
+- Modules
+- Rest Api
+- Storage
+- Sockets
+- Cron Jobs
 
 ### Installation
 
@@ -22,9 +31,8 @@ npm install wertik-js
 
 To start wertik-js server you need to import wertik and start it:
 
-```javascript
+```js
 import wertik from "wertik-js/lib";
-
 weritk({
   port: 1200,
 });
@@ -42,4 +50,13 @@ If you visit http://localhost:1200 you will see response like this:
 Cannot GET /
 ```
 
-This is because wertik-js has started the server for you and there's nothing in it right now. Let's make it interactive now.
+🚀 You have successfully started wertik server. Right now there is nothing in wertik app right now. Let's make it interactive by adding:
+
+- MySQL Database
+- Emailing
+- GraphQL
+- Modules
+- Rest Api
+- Storage
+- Sockets
+- Cron Jobs

@@ -7,7 +7,7 @@ import {
   useGraphqlProps,
 } from "../types/types.v2";
 
-export const useGraphql = (props: useGraphqlProps) => {
+export const useGraphql = (props?: useGraphqlProps) => {
   return ({
     wertikApp,
     expressApp,
