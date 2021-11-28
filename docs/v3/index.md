@@ -60,3 +60,19 @@ Cannot GET /
 - Storage
 - Sockets
 - Cron Jobs
+
+### Motivation
+
+to be written
+
+### Why you should use Wertik JS
+
+to be written
+
+### How Wertik JS works internally
+
+to be written
+
+### Using wertik app instance inside Graphql Resolver or Express Handler.
+
+to be written
