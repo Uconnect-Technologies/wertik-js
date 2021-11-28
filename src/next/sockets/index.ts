@@ -1,11 +1,18 @@
-import { Server as SocketIOServer } from "socket.io";
+import {
+  Server as SocketIOServer,
+  ServerOptions as SocketIOServerOptions,
+} from "socket.io";
 import {
   Server as WebSocketServer,
   ServerOptions as WebSocketServerOptions,
 } from "ws";
-import { WertikApp } from "../types/types";
-import { WertikConfiguration } from "../types/types.v2";
+import { WertikApp, WertikConfiguration } from "../types";
 
+/**
+ * Creates WS instance attaches to http server.
+ * @param props see interface WebSocketServerOptions
+ * @returns WebSocketServer instance
+ */
 export const useWebSockets = (props: WebSocketServerOptions = {}) => {
   return ({
     configuration,
@@ -27,6 +34,11 @@ export const useWebSockets = (props: WebSocketServerOptions = {}) => {
   };
 };
 
+/**
+ * Create independent web sockets server that runs on different port.
+ * @param props see interface WebSocketServerOptions
+ * @returns WebSocketServer instance
+ */
 export const useIndependentWebSocketsServer = (
   props: WebSocketServerOptions = {}
 ) => {
@@ -46,7 +58,12 @@ export const useIndependentWebSocketsServer = (
   };
 };
 
-export const useSocketIO = (props: any = {}) => {
+/**
+ * Creates sockets io server on current http server.
+ * @param props see interface SocketIOServerOptions from socket.io
+ * @returns SocketIOServer
+ */
+export const useSocketIO = (props?: SocketIOServerOptions) => {
   return ({
     configuration,
     wertikApp,
@@ -59,6 +76,6 @@ export const useSocketIO = (props: any = {}) => {
         props.path ?? "/socket.io"
       }`
     );
-    return new SocketIOServer(wertikApp.httpServer, props);
+    return new SocketIOServer(wertikApp.httpServer, props ?? {});
   };
 };

@@ -7,8 +7,8 @@ import {
 } from "./database";
 import { emailSender } from "./mailer/index";
 import http from "http";
-import { WertikConfiguration } from "./types/types.v2";
-import { WertikApp } from "./types/types.v2";
+import { WertikConfiguration } from "./types";
+import { WertikApp } from "./types";
 
 export * from "./database";
 export * from "./modules/modules";

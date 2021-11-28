@@ -1,6 +1,7 @@
 import nodemailer from "nodemailer";
 import handlebars from "handlebars";
-import { emailSendProps, iObject, WertikApp } from "../types/types.v2";
+import { iObject, WertikApp } from "../types";
+import { emailSendProps } from "../types/mailer";
 
 export const useMailer = (props?: iObject) => {
   return async () => {

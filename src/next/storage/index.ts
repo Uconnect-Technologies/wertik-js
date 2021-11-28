@@ -1,5 +1,5 @@
-import { WertikApp } from "../types/types";
-import { useStorageProps, WertikConfiguration } from "../types/types.v2";
+import { WertikApp, WertikConfiguration } from "../types";
+import { useStorageProps } from "../types/storage";
 
 const DIGITAL_OCEAN = "digitalocean";
 const DROPBOX = "dropbox";

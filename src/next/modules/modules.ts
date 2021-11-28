@@ -1,7 +1,7 @@
 import { get } from "lodash";
 import crud from "../crud";
 import { databaseDefaultOptions } from "../../framework/defaults/options";
-import { RelationParams, useModuleProps } from "../types/types";
+import { RelationParams, useModuleProps } from "../types/modules";
 
 const getType = (type: string) => {
   if (typeof type === "string") {
@@ -106,6 +106,10 @@ const getCreateSchema = (props, tableInformation) => {
   return createSchema.join("\n");
 };
 
+/**
+ * Wertik js module
+ * @param props see interface useModuleProps
+ */
 export const useModule = (props: useModuleProps) => {
   return async ({ store, configuration, app }: any) => {
     let tableInstance;
