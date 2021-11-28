@@ -27,7 +27,7 @@ weritk({
 
 ### Sending Emails
 
-Once you setup atleast one mail. In context, wertik will pass `sendEmail(mailer: string, options: emailSendProps)` method that will send email using different email. Send Email API: `sendEmail(mailer: string, options: emailSendProps)`. The mailer will be `default` here. And the options include:
+Once you set up at least one mail. In context, wertik will pass `sendEmail(mailer: string, options: emailSendProps)` method that will send email using a different email. Send Email API: `sendEmail(mailer: string, options: emailSendProps)`. The mailer will be `default` here. And the options include:
 
 ```typescript
 export interface emailSendProps {
@@ -41,4 +41,4 @@ export interface emailSendProps {
 }
 ```
 
-If you want dynamic data you can pass a template as handlebars template. And variables will be an object.
+If you want dynamic data you can pass a template as a handlebars template. And variables will be an object.
