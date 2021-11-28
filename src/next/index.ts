@@ -25,6 +25,7 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
   return new Promise(async (resolve, reject) => {
     try {
       const wertikApp: WertikApp = {
+        port: 1200,
         modules: {},
         database: {},
         mailer: {},
@@ -41,6 +42,7 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
 
       wertikApp.httpServer = httpServer;
       wertikApp.express = expressApp;
+      wertikApp.port = configuration.port;
 
       for (const mailName of Object.keys(configuration.mailer || {})) {
         wertikApp.mailer[mailName] = await configuration.mailer[mailName]();

@@ -105,8 +105,14 @@ export interface WertikConfiguration {
 }
 
 export interface WertikApp {
-  sendEmail?: (
-    app: WertikApp
-  ) => ({ mailer: string, options: emailSendProps }) => iObject;
+  sendEmail?: ({ mailer: string, options: emailSendProps }) => iObject;
+  port: number;
+  modules: iObject;
+  database: iObject;
+  mailer: iObject;
+  graphql: iObject;
+  sockets: iObject;
+  cronJobs: iObject;
+  storage: iObject;
   [key: string]: any;
 }
