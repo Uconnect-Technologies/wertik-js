@@ -61,18 +61,40 @@ Cannot GET /
 - Sockets
 - Cron Jobs
 
-### Motivation
+### Accessing Wertik Inside GraphQL Resolver and Express Handler
 
-to be written
+You can access Wertik instance inside GraphQL and Express handler through:
+
+- Express
+
+```javascript
+app.get("/somepath", (req, res) => {
+  console.log(req.wertik); // Wertik App
+  res.send("Some Info");
+});
+```
+
+For more please see: https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/next/index.ts#:~:text=req.wertik%20%3D%20wertikApp%3B.
+
+- GraphQL Resolver
+
+```javascript
+function Resolver(_, args, context, info) => {
+  console.log(context.wertik); // Wertik App
+  return "Some Info"
+}
+```
+
+For more please see: https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/next/graphql/index.ts#:~:text=context%3A%20async%20()%20%3D%3E%20%7B
+
+With keyword wertik you can access everything that lies inside wertik from database, modules, sockets, mailer, cron jobs to everything in wertik app.
 
 ### Why you should use Wertik JS
 
-to be written
+If you have a small project that requires backend as well. Wertik-js perfect for it because recipe is ready you have to just use it. If you have a small blog you just have to create database and add connection to the database and then you are all set. Wertik JS will automatically create CRUD operations for you and using events you can secure those operations based on user roles. You can easily add relationships between modules which makes your powerful.
 
 ### How Wertik JS works internally
 
-to be written
+Wertik JS v3 is setup in a clean way and easy way. Here is the main file which initializes Wertik JS: https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/next/index.ts.
 
-### Using wertik app instance inside Graphql Resolver or Express Handler.
-
-to be written
+You can check the code and if you find something that needs to be changed, you can create a new Issue here: https://github.com/Uconnect-Technologies/wertik-js/issues/new.
