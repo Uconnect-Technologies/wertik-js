@@ -1,6 +1,6 @@
 # Sockets
 
-Wertik JS allows using both Socket.IO and WebSockets on same http server as well as creating an independent Web Sockets server. To create socket servers Wertik-js provides these functions: `useWebSockets`, `useIndependentWebSocketsServer`, and `useSocketIO`.
+Wertik JS allows using both Socket.IO and WebSockets on the same HTTP server as well as creating an independent Web Sockets server. To create socket servers Wertik-js provides these functions: `useWebSockets`, `useIndependentWebSocketsServer`, and `useSocketIO`.
 
 ### useWebSockets
 
