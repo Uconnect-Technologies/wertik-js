@@ -45,7 +45,7 @@ export interface useModuleProps {
    */
   name: string;
   /**
-   * Are you using database connection? If true you will need to provide database and table.
+   * Are you using a database connection to this module? If yes, you will need to provide a database and table.
    */
   useDatabase: boolean;
   /**
@@ -66,32 +66,32 @@ export interface useModuleProps {
    */
   graphql?: {
     /**
-     * Wertik-js creates schema by default from database table. Once you defined this Wertik-js will ignore taking schema from database.
+     * Wertik-js creates schema by default from the database table. Once you defined this Wertik-js will ignore taking schema from the database.
      */
     schema?: string;
     /**
-     * Wertik-js creates update schema from database table. Once defined this, Wertik JS will ignore creating update schema from table information.
+     * Wertik-js creates an update schema from the database table. Once defined, Wertik JS will ignore creating an update schema from table information.
      */
     updateSchema?: string;
     /**
-     * Wertik-js creates create schema from database table. Once defined this, Wertik JS will ignore creating create schema from table information.
+     * Wertik-js creates create a schema from the database table. Once defined this, Wertik JS will ignore creating create a schema from the table information.
      */
     createSchema: string;
     mutations?: {
       /**
-       * Overrides default behavior of updating a record from database table.
+       * Overrides default behavior of updating a record from the database table.
        */
       update?: Function;
       /**
-       * Overrides default behavior of deleting a record from database table.
+       * Overrides default behavior of deleting a record from the database table.
        */
       delete?: Function;
       /**
-       * Overrides default behavior of create a record from database table.
+       * Overrides default behavior of create a record from the database table.
        */
       create?: Function;
       /**
-       * Overrides default behavior of creating or updating a record from database table.
+       * Overrides default behavior of creating or updating a record from the database table.
        */
       createOrUpdate?: Function;
     };
@@ -113,7 +113,7 @@ export interface useModuleProps {
      */
     useExpress: (express: any) => void;
     /**
-     * This method adds one to one relationship to a module.
+     * This method adds a one-to-one relationship to a module.
      */
     hasOne: (props: RelationParams) => {} | void;
     /**
