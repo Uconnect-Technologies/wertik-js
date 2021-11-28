@@ -1,6 +1,6 @@
 # Database
 
-As of today 28 November 2021, Wertik-js only supports MySQL database. Wertik JS provides a function called `useDatabase` you can use it to connect to a database.
+As of today 28 November 2021, Wertik-js only supports MySQL database. Wertik JS provides a function called `useDatabase` you can use to connect to a database.
 
 ```js
 import wertik, { useDatabase } from "wertik-js/lib";
