@@ -1,6 +1,6 @@
 # Modules
 
-Wertik-js allows extending your app with more features using `modules` term. To use a module Wertik JS provides a method called `useModule` which allows you to create a new module. Let's create a module.
+Wertik-js allows extending your app with more features using the `modules` term. To use a module Wertik JS provides a method called `useModule` which allows you to create a new module. Let's create a module.
 
 ```js
 import wertik, {
