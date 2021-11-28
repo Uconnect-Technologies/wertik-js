@@ -50,7 +50,9 @@ export const useIndependentWebSocketsServer = (
     wertikApp: WertikApp;
   }) => {
     console.log(
-      `Web Sockets server starting at ws://localhost:${configuration.port}${props.path}`
+      `Web Sockets server starting at ws://localhost:${props.port}/${
+        props.path ?? ""
+      }`
     );
     return new WebSocketServer({
       ...props,
@@ -63,7 +65,7 @@ export const useIndependentWebSocketsServer = (
  * @param props see interface SocketIOServerOptions from socket.io
  * @returns SocketIOServer
  */
-export const useSocketIO = (props?: SocketIOServerOptions) => {
+export const useSocketIO = (props: any = {}) => {
   return ({
     configuration,
     wertikApp,

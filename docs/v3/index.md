@@ -40,13 +40,13 @@ weritk({
 
 In your console you will see something like this:
 
-```
+```log
 Wertik JS app listening at http://localhost:1200
 ```
 
 If you visit http://localhost:1200 you will see response like this:
 
-```
+```log
 Cannot GET /
 ```
 

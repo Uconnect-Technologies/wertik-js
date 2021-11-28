@@ -4,6 +4,7 @@ import { useGraphql } from "./graphql";
 import wertik from "./index";
 import { useModule, useWebSockets } from "./index";
 import { useMailer } from "./mailer";
+import { useIndependentWebSocketsServer, useSocketIO } from "./sockets";
 import { useStorage } from "./storage";
 
 (async () => {
@@ -25,7 +26,13 @@ import { useStorage } from "./storage";
     },
     sockets: {
       mySockets: useWebSockets({
-        path: "/sockets.wo",
+        path: "/websockets",
+      }),
+      mySockets2: useIndependentWebSocketsServer({
+        port: 1500,
+      }),
+      socketio: useSocketIO({
+        path: "/mysocketioserver",
       }),
     },
     storage: {
@@ -39,7 +46,7 @@ import { useStorage } from "./storage";
     cronJobs: {
       aCronJobName: useCronJob({
         name: "Send emails to people every 1 minute",
-        handler: () => console.log(1),
+        handler: () => console.log(new Date().toLocaleDateString()),
         expression: "*/10 * * * * *",
       }),
     },
