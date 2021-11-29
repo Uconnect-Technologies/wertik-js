@@ -44,7 +44,7 @@ In your console you will see something like this:
 Wertik JS app listening at http://localhost:1200
 ```
 
-If you visit http://localhost:1200 you will see response like this:
+If you visit http://localhost:1200, you will see a response like this:
 
 ```log
 Cannot GET /
@@ -87,7 +87,7 @@ function Resolver(_, args, context, info) => {
 
 For more please see: https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/next/graphql/index.ts#:~:text=context%3A%20async%20()%20%3D%3E%20%7B
 
-With keyword wertik you can access everything that lies inside wertik from database, modules, sockets, mailer, cron jobs to everything in wertik app.
+With keyword Wertik you can access everything that lies inside wertik from database, modules, sockets, mailer, cron jobs to everything in Wertik app.
 
 ### Why you should use Wertik JS
 
@@ -98,3 +98,20 @@ If you have a small project that requires a backend as well. Wertik-js is perfec
 Wertik JS v3 is setup in a clean way and easy way. Here is the main file which initializes Wertik JS: https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/next/index.ts.
 
 You can check the code and if you find something that needs to be changed, you can create a new Issue here: https://github.com/Uconnect-Technologies/wertik-js/issues/new.
+
+### Did you find a grammar mistake in the documentation?
+
+If you came across a grammar mistake please create a new issue with more details in the description: https://github.com/Uconnect-Technologies/wertik-js/issues/new?title=I%20have%20found%20a%20grammar%20mistake.
+
+### Contribute & Support
+
+Pull requests are welcome. If you have discovered a bug or have a feature suggestion, feel free to create an issue on GitHub.
+
+If you'd like to make some changes yourself, see the following:
+
+- Fork this repository to your own GitHub account and then clone it to your local device
+- Make sure yarn is globally installed (npm install -g yarn)
+- Run yarn to download required packages.
+- Build and start the application: yarn `dev-next`
+- If you contributed something new, run yarn contrib:add <your GitHub username> <contribution type> to add yourself to the contributors list
+- Finally, submit a pull request with your changes!
