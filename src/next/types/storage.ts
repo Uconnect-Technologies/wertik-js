@@ -1,5 +1,6 @@
 export interface useStorageProps {
   for: "dropbox" | "digitalocean";
+  name: string;
   dropboxOptions?: {
     accessToken: string;
   };

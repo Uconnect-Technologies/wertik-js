@@ -30,16 +30,22 @@ export const useStorage = (storageItem: useStorageProps) => {
         endpoint: spacesEndpoint,
       });
 
+      console.log(
+        `[Storage] Initialized Digital Ocean instance ${storageItem.name}`
+      );
+
       return {
         spacesEndpoint,
         s3,
       };
     } else if (storageItem.for === DROPBOX) {
-      const dropdboxDetails = storageItem.dropboxOptions;
+      const dropboxOptions = storageItem.dropboxOptions;
       const { Dropbox } = require("dropbox");
       const dropboxInstance = new Dropbox({
-        accessToken: dropdboxDetails.accessToken,
+        accessToken: dropboxOptions.accessToken,
       });
+
+      console.log(`[Storage] Initialized Dropbox instance ${storageItem.name}`);
 
       return {
         dropbox: dropboxInstance,

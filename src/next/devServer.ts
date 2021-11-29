@@ -1,11 +1,14 @@
-import { useCronJob } from "./cronJobs";
-import { useDatabase } from "./database";
-import { useGraphql } from "./graphql";
-import wertik from "./index";
-import { useModule, useWebSockets } from "./index";
-import { useMailer } from "./mailer";
-import { useIndependentWebSocketsServer, useSocketIO } from "./sockets";
-import { useStorage } from "./storage";
+import wertik, {
+  useMailer,
+  useGraphql,
+  useDatabase,
+  useCronJob,
+  useSocketIO,
+  useModule,
+  WertikBackupModule,
+  useIndependentWebSocketsServer,
+  useWebSockets,
+} from "./index";
 
 (async () => {
   wertik({
@@ -35,14 +38,7 @@ import { useStorage } from "./storage";
         path: "/mysocketioserver",
       }),
     },
-    storage: {
-      dropbox: useStorage({
-        for: "dropbox",
-        dropboxOptions: {
-          accessToken: "asda",
-        },
-      }),
-    },
+    storage: {},
     cronJobs: {
       aCronJobName: useCronJob({
         name: "Send emails to people every 1 minute",
@@ -54,6 +50,7 @@ import { useStorage } from "./storage";
       mail: useMailer(),
     },
     modules: {
+      backup: WertikBackupModule("jscontainer", "Backup"),
       containers: useModule({
         table: "containers",
         database: "jscontainer",
