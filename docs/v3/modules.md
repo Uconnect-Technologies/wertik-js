@@ -219,6 +219,8 @@ When events are running you get access to Apollo GraphQL Resolver arguments wher
 Example:
 
 ```js
+import wertik, { useDatabase, useModule } from "wertik-js/lib/next";
+
 wertik({
   port: 1200,
   database: {
