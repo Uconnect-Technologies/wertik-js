@@ -40,7 +40,7 @@ Please check this interface file for what type of options does `useModule` funct
 
 # Modules GraphQL Schema and Database operations
 
-When you provide `useDatabase: true`, `table` and `database`, Wertik JS automatically generates GraphQL schema, `updateInput` and `createInput`. For example let's you have a table called `Games` with following fields:
+When you provide `useDatabase: true`, `table` and `database`, Wertik JS automatically generates GraphQL schema, `updateInput` and `createInput`. For example let's say you have a table called `Games` with following fields:
 
 - name: varchar
 - publisher: varchar
