@@ -55,6 +55,11 @@ import wertik, {
         name: "Games",
         table: "games",
         database: "jscontainer",
+        events: {
+          beforeCreate() {
+            console.log("This will run before creating a game");
+          },
+        },
       }),
       backup: WertikBackupModule("jscontainer", "Backup"),
       containers: useModule({

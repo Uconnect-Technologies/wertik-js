@@ -216,6 +216,36 @@ When events are running you get access to Apollo GraphQL Resolver arguments wher
 
 **Note: ** When you return something from event it will be considered as args, For more please see https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/next/crud/index.ts#:~:text=args%2C%20context%2C%20info)%3B-,args%20%3D%20argsFromEvent%20%3F%20argsFromEvent%20%3A%20args%3B,-const%20id%20%3D%20args
 
+Example:
+
+```js
+wertik({
+  port: 1200,
+  database: {
+    default: useDatabase({
+      name: "default",
+      password: "pass",
+      host: "localhost",
+      port: 3306,
+      username: "root",
+    }),
+  },
+  modules: {
+    games: useModule({
+      useDatabase: true,
+      name: "Games",
+      table: "games",
+      database: "jscontainer",
+      events: {
+        beforeCreate() {
+          console.log("This will run before creating a game");
+        },
+      },
+    }),
+  },
+});
+```
+
 # Using useModule on method to add more features to your module
 
 to be continued
