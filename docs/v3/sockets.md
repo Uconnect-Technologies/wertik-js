@@ -72,6 +72,6 @@ wertik({
 Now run your code you will see something like this in your console:
 
 ```log
-[DevServer] Socket.IO server starting at http://localhost:1200/mysocketioserver
-[DevServer] Wertik JS app listening at http://localhost:1200
+Socket.IO server starting at http://localhost:1200/mysocketioserver
+Wertik JS app listening at http://localhost:1200
 ```

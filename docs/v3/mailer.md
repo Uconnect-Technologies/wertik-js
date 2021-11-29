@@ -41,4 +41,4 @@ export interface emailSendProps {
 }
 ```
 
-If you want dynamic data you can pass a template as a handlebars template. And variables will be an object.
+If you want dynamic generated HTML for sending. The `template` can be a handlebars template. And variables property will be the variables that will be passed to the handlebars template.

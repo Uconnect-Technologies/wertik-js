@@ -54,7 +54,7 @@ Cannot GET /
 🚀 You have successfully started wertik server. Right now there is nothing in wertik app right now. Let's make it interactive by adding:
 
 - MySQL Database
-- Emailing
+- Mailer
 - GraphQL
 - Modules
 - Rest Api
