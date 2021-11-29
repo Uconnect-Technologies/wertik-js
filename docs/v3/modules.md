@@ -250,4 +250,54 @@ wertik({
 
 # Using useModule on method to add more features to your module
 
-to be continued
+When using Wertik JS modules. `useModule` has a function called `on` which can be used to extend more features like:
+
+- Adding a Mutation.
+- Adding a Query.
+- Adding a database relationship to other module.
+- Adding a Graphql schema
+- Accesing Express instance
+
+Example:
+
+```js
+import wertik, { useModule } from "wertik-js/lib/next";
+wertik({
+  port: 1200,
+  modules: {
+    games: useModule({
+      useDatabase: true,
+      name: "Games",
+      table: "games",
+      database: "jscontainer",
+      on({ useExpress, useQuery, useMutation, useSchema }) {
+        useExpress((express) => {
+          express.get("/404", (req, res) => res.status(404).send("404"));
+        });
+        useQuery({
+          name: "getGames",
+          query: "getGames: [Games]",
+          resolver() {
+            return [];
+          },
+        });
+        useMutation({
+          name: "updateAllGames",
+          query: "updateAllGames: [Games]",
+          resolver() {
+            return [];
+          },
+        });
+        useSchema(`
+            type MyType {
+              id: Int
+              name: String
+            }
+          `);
+      },
+    }),
+  },
+});
+```
+
+To see `on` method interface please check this type file: https://github.com/Uconnect-Technologies/wertik-js/blob/next/src/next/types/modules.ts#L102

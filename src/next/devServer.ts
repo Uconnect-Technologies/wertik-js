@@ -60,6 +60,31 @@ import wertik, {
             console.log("This will run before creating a game");
           },
         },
+        on({ useExpress, useQuery, useMutation, useSchema }) {
+          useExpress((express) => {
+            express.get("/404", (req, res) => res.status(404).send("404"));
+          });
+          useQuery({
+            name: "getGames",
+            query: "getGames: [Games]",
+            resolver() {
+              return [];
+            },
+          });
+          useMutation({
+            name: "updateAllGames",
+            query: "updateAllGames: [Games]",
+            resolver() {
+              return [];
+            },
+          });
+          useSchema(`
+            type MyType {
+              id: Int
+              name: String
+            }
+          `);
+        },
       }),
       backup: WertikBackupModule("jscontainer", "Backup"),
       containers: useModule({
