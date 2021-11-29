@@ -1,98 +1,118 @@
-## Wertik JS
+# Wertik-JS V3
 
+Wertik is a tiny Node JS framework that helps you setting up servers with support for
 
-Wertik is a **💪 GraphQL + Rest API** framework to build servers that gives you support for GraphQL, Rest Api, Emailing, Storage, Sockets and Cron Jobs feature.
+- MySQL Database
+- Emailing
+- GraphQL
+- Modules
+- Rest Api
+- Storage
+- Sockets
+- Cron Jobs
 
+## Installation
 
-<div>
-	<img  style="float: left;margin: 10px 0;"  src="https://img.shields.io/github/downloads/ilyaskarim/wertik-js/total?style=flat-square">
-	<img  style="float: left;margin: 10px 0;"  src="https://img.shields.io/npm/dw/wertik-js?style=flat-square">
-	<img  style="float: left;margin: 10px 0;"  src="https://img.shields.io/github/issues-raw/ilyaskarim/wertik-js?style=flat-square">
-</div>
+You can install wertik-js by using yarn or npm:
 
-### Installation
-
-To install you can use npm or yarn, To install with npm:
-
-```
-
-npm install --save wertik-js
-
-```
-
-Install with yarn
+Yarn
 
 ```
-
-yarn add wertik-js --dev
-
+yarn add wertik-js
 ```
 
-### Setting up server
+Npm
 
-Lets setup an app:
+```
+npm install wertik-js
+```
+
+## Setting up server
+
+To start wertik-js server you need to import wertik and start it:
+
+```js
+import wertik from "wertik-js/lib/next";
+
+weritk({
+  port: 1200,
+});
+```
+
+In your console you will see something like this:
+
+```log
+Wertik JS app listening at http://localhost:1200
+```
+
+If you visit http://localhost:1200, you will see a response like this:
+
+```log
+Cannot GET /
+```
+
+🚀 You have successfully started wertik server. Right now there is nothing in wertik app right now. Let's make it interactive by adding:
+
+- MySQL Database
+- Mailer
+- GraphQL
+- Modules
+- Rest Api
+- Storage
+- Sockets
+- Cron Jobs
+
+## Accessing Wertik Inside GraphQL Resolver and Express Handler
+
+You can access Wertik instance inside GraphQL and Express handler through:
+
+- Express
 
 ```javascript
-import { connectDatabase, serve } from "wertik-js";
-
-import configuration from "./path/to/your/configuration";
-
-connectDatabase(configuration.database)
-  .then((databaseInstance) => {
-    configuration.databaseInstance = databaseInstance;
-    serve(configuration).then((wertikApp: any) => {
-      wertikApp.database.sync();
-    });
-  })
-  .catch((e) => {
-    console.log(`Error connecting with database`);
-    console.log(e);
-  });
+app.get("/somepath", (req, res) => {
+  console.log(req.wertik); // Wertik App
+  res.send("Some Info");
+});
 ```
 
-If everything goes fine, you will see:
+For more please see: https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/next/index.ts#:~:text=req.wertik%20%3D%20wertikApp%3B.
 
+- GraphQL Resolver
+
+```javascript
+function Resolver(_, args, context, info) => {
+  console.log(context.wertik); // Wertik App
+  return "Some Info"
+}
 ```
-✔ [Wertik-js]: Socket.IO server running at http://localhost:5000
-✔ [Wertik-js]: Rest API server started at http://localhost:5000
-✔ [Wertik-js]: GraphQL Voyager running at http://localhost:5000/graphql-voyager
-✔ [Wertik-js]: GraphQL Server started at http://localhost:5000/graphql
-✔ [Wertik-js]: GraphQL Subscriptions are running at ws://localhost:5000/subscriptions
-✔ [Wertik-js]: Database: Successfully Connected!
-```
 
-**Note: 5000 is the default port**
+For more please see: https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/next/graphql/index.ts#:~:text=context%3A%20async%20()%20%3D%3E%20%7B
 
-The above code example is taken from: [Dev Server Example](https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/devServer.ts)
+With keyword Wertik you can access everything that lies inside wertik from database, modules, sockets, mailer, cron jobs to everything in Wertik app.
 
-### Further Steps
+## Why you should use Wertik JS
 
-Now you have installed weritk-js in your app, now next step is to get familiar with the configuration to use. Let's go with the documentation flow:
+If you have a small project that requires a backend as well. Wertik-js is perfect for it because the recipe is ready you have to just use it. If you have a small blog you just have to create a database and add a connection to the database and then you are all set. Wertik JS will automatically create CRUD operations for you and using events you can secure those operations based on user roles. You can easily add relationships between modules which makes you powerful.
 
-1. Configuration
-2. Database
-3. Rest Api
-4. GraphQL
-5. Mailer
-6. Sockets
-7. Storage
-8. Custom Modules
-9. Cron Jobs
+## How Wertik JS works internally
 
-The documentation is hosted at [http://wapgee.com/wertik-js](http://wapgee.com/wertik-js).
+Wertik JS v3 is setup in a clean way and easy way. Here is the main file which initializes Wertik JS: https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/next/index.ts.
 
-### Versioning
+You can check the code and if you find something that needs to be changed, you can create a new Issue here: https://github.com/Uconnect-Technologies/wertik-js/issues/new.
 
-Wertik-js follows semantic versioning (semver) principles. The version can be look like this, X.Y.Z,
+## Did you find a grammar mistake in the documentation?
 
-- **Z** When fixing bug we relase with chaning Z. For example: 1.2.1 to 1.2.2
-- **Y** When adding feature we release with changing Y, For example: 1.2.1 to 1.3.1
-- **Z** When adding breaking changes we made this release. For example: 1.2.1 to 2.2.1
+If you came across a grammar mistake please create a new issue with more details in the description: https://github.com/Uconnect-Technologies/wertik-js/issues/new?title=I%20have%20found%20a%20grammar%20mistake.
 
-### Contributing
+## Contribute & Support
 
-Pull Requests are welcome. If you think something is missing or needs to changed. Please open a pull request or new issue.
+Pull requests are welcome. If you have discovered a bug or have a feature suggestion, feel free to create an issue on GitHub.
 
-## License
+If you'd like to make some changes yourself, see the following:
 
-[MIT](https://choosealicense.com/licenses/mit/)
+- Fork this repository to your own GitHub account and then clone it to your local device
+- Make sure yarn is globally installed (npm install -g yarn)
+- Run yarn to download required packages.
+- Build and start the application: yarn `dev-next`
+- If you contributed something new, run yarn contrib:add <your GitHub username> <contribution type> to add yourself to the contributors list
+- Finally, submit a pull request with your changes!
