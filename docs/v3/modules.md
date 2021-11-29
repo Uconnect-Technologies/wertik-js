@@ -9,6 +9,7 @@ import wertik, {
   useModule,
   useGraphql,
 } from "wertik-js/lib";
+
 weritk({
   port: 1200,
   database: {
@@ -103,7 +104,7 @@ input GamesFilterInput {
 }
 ```
 
-To explore more about StringFilterInput and other filter input please visit GraphQL Playground to get more familiar with it.
+To explore more about `StringFilterInput` and other filter input please visit GraphQL Playground to get more familiar with it.
 
 ## This will generate
 
