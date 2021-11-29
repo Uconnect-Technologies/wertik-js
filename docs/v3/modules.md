@@ -239,7 +239,7 @@ wertik({
       table: "games",
       database: "jscontainer",
       events: {
-        beforeCreate() {
+        beforeCreate(_, args, context, info) {
           console.log("This will run before creating a game");
         },
       },
@@ -247,6 +247,16 @@ wertik({
   },
 });
 ```
+
+List of available events:
+
+- beforeView
+- beforeCount
+- beforeList
+- beforeCreate
+- beforeDelete
+- beforeUpdate
+- beforeCreateOrUpdate
 
 # Using useModule on method to add more features to your module
 
