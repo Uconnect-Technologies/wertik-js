@@ -11,7 +11,7 @@ Wertik is a tiny Node JS framework that helps you setting up servers with suppor
 - Sockets
 - Cron Jobs
 
-### Installation
+## Installation
 
 You can install wertik-js by using yarn or npm:
 
@@ -27,7 +27,7 @@ Npm
 npm install wertik-js
 ```
 
-### Setting up server
+## Setting up server
 
 To start wertik-js server you need to import wertik and start it:
 
@@ -61,7 +61,7 @@ Cannot GET /
 - Sockets
 - Cron Jobs
 
-### Accessing Wertik Inside GraphQL Resolver and Express Handler
+## Accessing Wertik Inside GraphQL Resolver and Express Handler
 
 You can access Wertik instance inside GraphQL and Express handler through:
 
@@ -89,21 +89,21 @@ For more please see: https://github.com/Uconnect-Technologies/wertik-js/blob/mas
 
 With keyword Wertik you can access everything that lies inside wertik from database, modules, sockets, mailer, cron jobs to everything in Wertik app.
 
-### Why you should use Wertik JS
+## Why you should use Wertik JS
 
 If you have a small project that requires a backend as well. Wertik-js is perfect for it because the recipe is ready you have to just use it. If you have a small blog you just have to create a database and add a connection to the database and then you are all set. Wertik JS will automatically create CRUD operations for you and using events you can secure those operations based on user roles. You can easily add relationships between modules which makes you powerful.
 
-### How Wertik JS works internally
+## How Wertik JS works internally
 
 Wertik JS v3 is setup in a clean way and easy way. Here is the main file which initializes Wertik JS: https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/next/index.ts.
 
 You can check the code and if you find something that needs to be changed, you can create a new Issue here: https://github.com/Uconnect-Technologies/wertik-js/issues/new.
 
-### Did you find a grammar mistake in the documentation?
+## Did you find a grammar mistake in the documentation?
 
 If you came across a grammar mistake please create a new issue with more details in the description: https://github.com/Uconnect-Technologies/wertik-js/issues/new?title=I%20have%20found%20a%20grammar%20mistake.
 
-### Contribute & Support
+## Contribute & Support
 
 Pull requests are welcome. If you have discovered a bug or have a feature suggestion, feel free to create an issue on GitHub.
 
