@@ -52,6 +52,12 @@ export const useGraphql = (props?: useGraphqlProps) => {
       ...(props?.applyMiddlewareOptions ?? {}),
     });
 
+    console.log(
+      `GraphQL server starting at http://localhost:${
+        configuration.port ?? 1200
+      }/${props.applyMiddlewareOptions.path ?? "graphql"}`
+    );
+
     return GraphqlApolloServer;
   };
 };

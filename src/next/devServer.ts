@@ -47,7 +47,7 @@ import wertik, {
       }),
     },
     mailer: {
-      mail: useMailer(),
+      // mail: useMailer(),
     },
     modules: {
       games: useModule({
