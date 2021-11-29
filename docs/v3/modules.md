@@ -94,7 +94,7 @@ input updateGamesInput {
 }
 ```
 
-For filtering data from `games` table it Wertik JS will also create an input for filtering:
+For filtering data from `games` table, Wertik JS will also create an input for filtering:
 
 ```graphql
 input GamesFilterInput {
@@ -102,6 +102,8 @@ input GamesFilterInput {
   publisher: StringFilterInput
 }
 ```
+
+To explore more about StringFilterInput and other filter input please visit GraphQL Playground to get more familiar with it.
 
 ## This will generate
 
@@ -123,8 +125,6 @@ type Query {
   countGames(where: GamesFilterInput): Int
 }
 ```
-
-To explore more about StringFilterInput and other filter input please visit GraphQL Playground to get more familiar with it.
 
 ### Mutations:
 
