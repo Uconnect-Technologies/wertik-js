@@ -8,7 +8,7 @@ import wertik, {
   useMailer,
   useModule,
   useGraphql,
-} from "wertik-js/lib";
+} from "wertik-js/lib/next";
 
 weritk({
   port: 1200,

@@ -3,7 +3,7 @@
 For GraphQL, Wertik JS uses Apollo GraphQL under the hood. We choose Apollo GraphQL because it is well managed and bug-free. To set up Graphql Wertik JS provides a function called `useGraphql` to use Graphql in your app.
 
 ```javascript
-import wertik, { useGraphql } from "wertik-js/lib/inex";
+import wertik, { useGraphql } from "wertik-js/lib/next";
 wertik({
   port: 1200,
   graphql: useGraphql(useGraphqlProps),
