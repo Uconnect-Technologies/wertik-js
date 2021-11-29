@@ -150,16 +150,16 @@ type Mutation {
 You can try these `Mutations` and `Queries` in your GraphQL playground. If you find any issues please create a new issue at:
 https://github.com/Uconnect-Technologies/wertik-js/issues/new.
 
-# More on filtering Data from a table
+# More on filtering rows from a table
 
-When you provide useDatabase: true for a module called Games. Wertik JS will create a query as:
+When you provide `useDatabase: true` for a module called Games. Wertik JS will create a query as:
 
 ```graphql
 listGames(
-    pagination: PaginationInput
-    where: GamesFilterInput
-    sorting: [SortingInput]
-  ): GamesList
+  pagination: PaginationInput
+  where: GamesFilterInput
+  sorting: [SortingInput]
+): GamesList
 ```
 
 Where `PaginationInput` is
@@ -171,7 +171,7 @@ input PaginationInput {
 }
 ```
 
-And `GamesFilterInput` is same as Sequelize search object but main keywords such as like, eq starts with `_`, For example:
+And `GamesFilterInput` is same as Sequelize search object but main keywords such as like, `eq` or `like` starts with `_`, For example:
 
 ```graphql
 query GamesList {
@@ -192,7 +192,7 @@ input SortingInput {
 }
 ```
 
-### Example:
+Sorting Example:
 
 ```graphql
 query GamesList {
@@ -204,6 +204,6 @@ query GamesList {
 }
 ```
 
-To get more familiar with Schema please open your schema from Apollo Playground running at `http://localhost:1200/graphql` where 1200 is the default port of Wertik JS.
+To get more familiar with Schema please open your schema from Apollo Playground running at `http://localhost:1200/graphql` where `1200` is the default port of Wertik JS.
 
 If you find any issues with Filtering, Sorting or Paginating Data you can open a new issue at https://github.com/Uconnect-Technologies/wertik-js/issues/new.
