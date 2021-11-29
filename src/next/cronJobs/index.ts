@@ -1,11 +1,7 @@
 import { get } from "lodash";
 import nodeCron from "node-cron";
-import { WertikApp } from "../types/types";
-import {
-  iObject,
-  useCronJobsProps,
-  WertikConfiguration,
-} from "../types/types.v2";
+import { useCronJobsProps } from "../types/cronJobs";
+import { iObject, WertikApp, WertikConfiguration } from "../types";
 
 export const useCronJob = (cron: useCronJobsProps) => {
   return ({

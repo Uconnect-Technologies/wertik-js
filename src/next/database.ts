@@ -2,8 +2,9 @@ import { Sequelize } from "sequelize";
 import { databaseDefaultOptions } from "../framework/defaults/options";
 import { get } from "lodash";
 import { paginate } from "./crud/index";
-import { Store, UseDatabaseProps } from "./types/types.v2";
-import { WertikApp } from "./types/types.v2";
+import { Store } from "./types";
+import { WertikApp } from "./types";
+import { useDatabaseProps } from "./types/database";
 
 export const getAllRelationships = (dbName: String) => {
   return `
@@ -16,7 +17,7 @@ export const getAllRelationships = (dbName: String) => {
   `;
 };
 
-export const useDatabase = function (obj: UseDatabaseProps) {
+export const useDatabase = function (obj: useDatabaseProps) {
   return async () => {
     let sequelize = new Sequelize(obj.name, obj.username, obj.password, {
       host: obj.host,

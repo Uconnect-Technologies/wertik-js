@@ -1,10 +1,14 @@
-import { useCronJob } from "./cronJobs";
-import { useDatabase } from "./database";
-import { useGraphql } from "./graphql";
-import wertik from "./index";
-import { useModule, useWebSockets } from "./index";
-import { useMailer } from "./mailer";
-import { useStorage } from "./storage";
+import wertik, {
+  useMailer,
+  useGraphql,
+  useDatabase,
+  useCronJob,
+  useSocketIO,
+  useModule,
+  WertikBackupModule,
+  useIndependentWebSocketsServer,
+  useWebSockets,
+} from "./index";
 
 (async () => {
   wertik({
@@ -25,21 +29,20 @@ import { useStorage } from "./storage";
     },
     sockets: {
       mySockets: useWebSockets({
-        path: "/sockets.wo",
+        path: "/websockets",
+      }),
+      mySockets2: useIndependentWebSocketsServer({
+        port: 1500,
+      }),
+      socketio: useSocketIO({
+        path: "/mysocketioserver",
       }),
     },
-    storage: {
-      dropbox: useStorage({
-        for: "dropbox",
-        dropboxOptions: {
-          accessToken: "asda",
-        },
-      }),
-    },
+    storage: {},
     cronJobs: {
       aCronJobName: useCronJob({
         name: "Send emails to people every 1 minute",
-        handler: () => console.log(1),
+        handler: () => console.log(new Date().toLocaleDateString()),
         expression: "*/10 * * * * *",
       }),
     },
@@ -47,6 +50,43 @@ import { useStorage } from "./storage";
       mail: useMailer(),
     },
     modules: {
+      games: useModule({
+        useDatabase: true,
+        name: "Games",
+        table: "games",
+        database: "jscontainer",
+        events: {
+          beforeCreate() {
+            console.log("This will run before creating a game");
+          },
+        },
+        on({ useExpress, useQuery, useMutation, useSchema }) {
+          useExpress((express) => {
+            express.get("/404", (req, res) => res.status(404).send("404"));
+          });
+          useQuery({
+            name: "getGames",
+            query: "getGames: [Games]",
+            resolver() {
+              return [];
+            },
+          });
+          useMutation({
+            name: "updateAllGames",
+            query: "updateAllGames: [Games]",
+            resolver() {
+              return [];
+            },
+          });
+          useSchema(`
+            type MyType {
+              id: Int
+              name: String
+            }
+          `);
+        },
+      }),
+      backup: WertikBackupModule("jscontainer", "Backup"),
       containers: useModule({
         table: "containers",
         database: "jscontainer",

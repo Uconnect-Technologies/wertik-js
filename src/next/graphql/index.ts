@@ -1,13 +1,9 @@
 import { get, omit } from "lodash";
 import { defaultApolloGraphqlOptions } from "../../framework/defaults/options";
 import { ApolloServer } from "apollo-server-express";
-import {
-  GraphqlInitializeProps,
-  iObject,
-  useGraphqlProps,
-} from "../types/types.v2";
+import { useGraphqlProps, GraphqlInitializeProps } from "../types/graphql";
 
-export const useGraphql = (props: useGraphqlProps) => {
+export const useGraphql = (props?: useGraphqlProps) => {
   return ({
     wertikApp,
     expressApp,
@@ -55,6 +51,12 @@ export const useGraphql = (props: useGraphqlProps) => {
       app: expressApp,
       ...(props?.applyMiddlewareOptions ?? {}),
     });
+
+    console.log(
+      `GraphQL server starting at http://localhost:${
+        configuration.port ?? 1200
+      }/${props.applyMiddlewareOptions.path ?? "graphql"}`
+    );
 
     return GraphqlApolloServer;
   };
