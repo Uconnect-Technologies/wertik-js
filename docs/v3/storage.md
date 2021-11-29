@@ -44,7 +44,7 @@ import wertik, { WertikBackupModule } from "wertik-js/lib/next";
 wertik({
   port: 1200,
   modules: {
-    // Database name and table to insert backup information.
+    // Database name and table to insert backup information. Make sure you have a database connection.
     backup: WertikBackupModule("databasename", "tablename"),
   },
 });

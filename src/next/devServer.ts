@@ -50,6 +50,12 @@ import wertik, {
       mail: useMailer(),
     },
     modules: {
+      games: useModule({
+        useDatabase: true,
+        name: "Games",
+        table: "games",
+        database: "jscontainer",
+      }),
       backup: WertikBackupModule("jscontainer", "Backup"),
       containers: useModule({
         table: "containers",

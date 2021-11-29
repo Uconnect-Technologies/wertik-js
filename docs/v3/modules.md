@@ -36,3 +36,115 @@ weritk({
 ```
 
 Please check this interface file for what type of options does `useModule` function requires: https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/next/types/types.ts#:~:text=export%20interface%20useModuleProps%20%7B
+
+# Modules GraphQL Schema and Database operations
+
+When you provide `useDatabase: true`, `table` and `database`, Wertik JS automatically generates GraphQL schema, `updateInput` and `createInput`. For example let's you have a table called `Games` with following fields:
+
+- name: varchar
+- publisher: varchar
+
+You have to initialize its module in this way:
+
+```js
+import wertik, { useModule, useDatabase, useGraphql } from "wertik-js/lib/next";
+wertik({
+  port: 1200,
+  graphql: useGraphql(),
+  database: {
+    default: useDatabase({
+      name: "dbname",
+      password: "pass",
+      host: "localhost",
+      port: 3306,
+      username: "root",
+    }),
+  },
+  modules: {
+    games: useModule({
+      useDatabase: true,
+      name: "Games",
+      table: "games",
+      database: "default",
+    }),
+  },
+});
+```
+
+Wertik JS will create a type called `Games`:
+
+```graphql
+type Games {
+  name: String
+  publisher: String
+}
+```
+
+And for Update and Create inputs it will create inputs like this:
+
+```graphql
+input createGamesInput {
+  name: String
+  publisher: String
+}
+
+input updateGamesInput {
+  name: String
+  publisher: String
+}
+```
+
+For filtering data from `games` table it Wertik JS will also create an input for filtering:
+
+```graphql
+input GamesFilterInput {
+  name: StringFilterInput
+  publisher: StringFilterInput
+}
+```
+
+## This will generate
+
+### Queries:
+
+- view
+- list
+- count
+
+```graphql
+type Query {
+  version: String
+  viewGames(where: GamesFilterInput): Games
+  listGames(
+    pagination: PaginationInput
+    where: GamesFilterInput
+    sorting: [SortingInput]
+  ): GamesList
+  countGames(where: GamesFilterInput): Int
+}
+```
+
+To explore more about StringFilterInput and other filter input please visit GraphQL Playground to get more familiar with it.
+
+### Mutations:
+
+- update
+- create
+- delete
+- createOrUpdate
+
+```graphql
+type Mutation {
+  version: String
+  updateGames(
+    input: updateGamesInput
+    where: GamesFilterInput!
+  ): GamesBulkMutationResponse
+  createGames(input: [createGamesInput]): GamesBulkMutationResponse
+  deleteGames(where: GamesFilterInput!): SuccessResponse
+  createOrUpdateGames(id: Int, input: createGamesInput): Games
+}
+```
+
+You can try these `Mutations` and `Queries` in your GraphQL playground. If you find any issues please create a new task at:
+https://github.com/Uconnect-Technologies/wertik-js/issues/new.
