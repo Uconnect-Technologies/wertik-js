@@ -45,7 +45,7 @@ In your console you will see something like this:
 Wertik JS app listening at http://localhost:1200
 ```
 
-If you visit http://localhost:1200, you will see a response like this:
+If you visit [http://localhost:1200](http://localhost:1200), you will see a response like this:
 
 ```log
 Cannot GET /
@@ -75,7 +75,7 @@ app.get("/somepath", (req, res) => {
 });
 ```
 
-For more please see: https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/next/index.ts#:~:text=req.wertik%20%3D%20wertikApp%3B.
+For more please see [This line](https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/next/index.ts#:~:text=req.wertik%20%3D%20wertikApp%3B).
 
 - GraphQL Resolver
 
@@ -86,7 +86,7 @@ function Resolver(_, args, context, info) => {
 }
 ```
 
-For more please see: https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/next/graphql/index.ts#:~:text=context%3A%20async%20()%20%3D%3E%20%7B
+For more please see: [This line](<https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/next/graphql/index.ts#:~:text=context%3A%20async%20()%20%3D%3E%20%7B>)
 
 With keyword Wertik you can access everything that lies inside wertik from database, modules, sockets, mailer, cron jobs to everything in Wertik app.
 
@@ -96,13 +96,13 @@ If you have a small project that requires a backend as well. Wertik-js is perfec
 
 ## How Wertik JS works internally
 
-Wertik JS v3 is setup in a clean way and easy way. Here is the main file which initializes Wertik JS: https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/next/index.ts.
+Wertik JS v3 is setup in a clean way and easy way. Here is the main file which initializes Wertik JS: [Show File](https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/next/index.ts).
 
-You can check the code and if you find something that needs to be changed, you can create a new Issue here: https://github.com/Uconnect-Technologies/wertik-js/issues/new.
+You can check the code and if you find something that needs to be changed, you can create a new Issue [here](https://github.com/Uconnect-Technologies/wertik-js/issues/new).
 
 ## Did you find a grammar mistake in the documentation?
 
-If you came across a grammar mistake please create a new issue with more details in the description: https://github.com/Uconnect-Technologies/wertik-js/issues/new?title=I%20have%20found%20a%20grammar%20mistake.
+If you came across a grammar mistake please create a new issue with more details in the description: [here](https://github.com/Uconnect-Technologies/wertik-js/issues/new?title=I%20have%20found%20a%20grammar%20mistake).
 
 ## Contribute & Support
 

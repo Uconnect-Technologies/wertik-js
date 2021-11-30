@@ -36,7 +36,7 @@ weritk({
 });
 ```
 
-Please check this interface file for what type of options does `useModule` function requires: https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/next/types/types.ts#:~:text=export%20interface%20useModuleProps%20%7B
+Please check this [interface](https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/next/types/modules.ts#:~:text=export%20interface%20useModuleProps%20%7B) file for what type of options does `useModule` function requires.
 
 # Modules GraphQL Schema and Database operations
 
@@ -147,8 +147,7 @@ type Mutation {
 }
 ```
 
-You can try these `Mutations` and `Queries` in your GraphQL playground. If you find any issues please create a new issue at:
-https://github.com/Uconnect-Technologies/wertik-js/issues/new.
+You can try these `Mutations` and `Queries` in your GraphQL playground. If you find any issues please create a new issue [Here](https://github.com/Uconnect-Technologies/wertik-js/issues/new).
 
 # More on filtering rows from a table
 
@@ -212,9 +211,9 @@ If you find any issues with `Filtering`, `Sorting` or `Paginating` rows. You can
 
 When you run a Query or Mutation on a module(Please check [Mutations and Queries](#this-will-generate)) Wertik JS fires an event, Please check Typescript interface called `useModuleProps.events`. Those are the list of events that you can use. To explore more about types you can click `Go to Type Definition` of method `useModule`.
 
-When events are running you get access to Apollo GraphQL Resolver arguments where you can access Request params as well. For more please see https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/next/crud/index.ts#L76-L80
+When events are running you get access to Apollo GraphQL Resolver arguments where you can access Request params as well. For more please see about [Crud](https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/next/crud/index.ts#L76-L80)
 
-**Note: ** When you return something from event it will be considered as args, For more please see https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/next/crud/index.ts#:~:text=args%2C%20context%2C%20info)%3B-,args%20%3D%20argsFromEvent%20%3F%20argsFromEvent%20%3A%20args%3B,-const%20id%20%3D%20args
+**Note:** When you return something from event it will be considered as args, For more please see [This file](https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/next/crud/index.ts#:~:text=args%2C%20context%2C%20info)%3B-,args%20%3D%20argsFromEvent%20%3F%20argsFromEvent%20%3A%20args%3B,-const%20id%20%3D%20args)
 
 Example:
 
@@ -310,4 +309,4 @@ wertik({
 });
 ```
 
-To see `on` method interface please check this type file: https://github.com/Uconnect-Technologies/wertik-js/blob/next/src/next/types/modules.ts#L102
+To see `on` method interface please check this [Interface File](https://github.com/Uconnect-Technologies/wertik-js/blob/next/src/next/types/modules.ts#L102)
