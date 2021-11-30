@@ -31,8 +31,8 @@ wertik({
 This will print in console:
 
 ```log
-`[Storage] Initialized Digital Ocean instance digitalocean
-`[Storage] Initialized Dropbox instance dropbox
+[Storage] Initialized Digital Ocean instance digitalocean
+[Storage] Initialized Dropbox instance dropbox
 ```
 
 - For digitalocean wertik-js uses `aws-sdk` package for uploading files.

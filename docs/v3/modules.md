@@ -205,7 +205,7 @@ query GamesList {
 
 To get more familiar with Schema please open your schema from Apollo Playground running at `http://localhost:1200/graphql` where `1200` is the default port of Wertik JS.
 
-If you find any issues with `Filtering`, `Sorting` or `Paginating` rows. You can open a new issue at https://github.com/Uconnect-Technologies/wertik-js/issues/new.
+If you find any issues with `Filtering`, `Sorting` or `Paginating` rows. You can open a new issue [Here](https://github.com/Uconnect-Technologies/wertik-js/issues/new).
 
 # Using events with GraphQL CRUD operations
 
@@ -213,7 +213,7 @@ When you run a Query or Mutation on a module(Please check [Mutations and Queries
 
 When events are running you get access to Apollo GraphQL Resolver arguments where you can access Request params as well. For more please see about [Crud](https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/next/crud/index.ts#L76-L80)
 
-**Note:** When you return something from event it will be considered as args, For more please see [This file](https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/next/crud/index.ts#:~:text=args%2C%20context%2C%20info)%3B-,args%20%3D%20argsFromEvent%20%3F%20argsFromEvent%20%3A%20args%3B,-const%20id%20%3D%20args)
+**Note:** When you return something from event it will be considered as args, For more please see [This file](https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/next/crud/index.ts#L81)
 
 Example:
 
