@@ -92,7 +92,7 @@ With keyword Wertik you can access everything that lies inside wertik from datab
 
 ## Why you should use Wertik JS
 
-If you have a small project that requires a backend as well. Wertik-js is perfect for it because the recipe is ready you have to just use it. If you have a small blog you just have to create a database and add a connection to the database and then you are all set. Wertik JS will automatically create CRUD operations for you and using events you can secure those operations based on user roles. You can easily add relationships between modules which makes you powerful.
+If you have a small project that requires a backend as well. Wertik-js is perfect for it because the recipe is ready you have to just use it. If you have a small blog you just have to create a database and add a connection to the database and then you are all set. Wertik JS will automatically create CRUD operations for you and using events you can secure those operations based on user roles. You can easily add relationships between modules.
 
 ## How Wertik JS works internally
 
