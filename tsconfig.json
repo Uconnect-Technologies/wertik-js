@@ -13,5 +13,6 @@
     "skipLibCheck": true,
     "declaration": true
   },
+  "exclude": ["node_modules/**/*"],
   "include": ["src/**/*"]
 }
