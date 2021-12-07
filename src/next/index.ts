@@ -9,6 +9,7 @@ import { emailSender } from "./mailer/index";
 import http from "http";
 import { WertikConfiguration } from "./types";
 import { WertikApp } from "./types";
+import { Queue } from "./queue";
 
 export * from "./database";
 export * from "./modules/modules";
@@ -33,6 +34,7 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
         sockets: {},
         cronJobs: {},
         storage: {},
+        queue: {},
       };
 
       const port = get(configuration, "port", 5050);
@@ -111,6 +113,7 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
 
       wertikApp.sendEmail = emailSender(wertikApp);
 
+      wertikApp.queue = Queue();
       if (configuration.graphql) {
         wertikApp.graphql = configuration.graphql({
           wertikApp: wertikApp,

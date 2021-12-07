@@ -102,6 +102,12 @@ export interface WertikConfiguration {
       wertikApp: WertikApp,
     }) => iObject;
   };
+
+  /**
+   * Queue....will add more here
+   */
+
+  queue?: any;
 }
 
 export interface WertikApp {
@@ -115,4 +121,5 @@ export interface WertikApp {
   cronJobs: iObject;
   storage: iObject;
   [key: string]: any;
+  queue: any;
 }
