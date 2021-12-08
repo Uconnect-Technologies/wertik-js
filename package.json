@@ -26,8 +26,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "concurrently -n TS,DevServer  \"npm run watch-ts\"  \"nodemon lib/devServer.js\" ",
-    "dev-next": "concurrently -n TS,DevServer  \"npm run watch-ts\"  \"nodemon lib/next/devServer.js\" ",
-    "dev-without-nodemon": "concurrently \"npm run watch-ts\"  \"node lib/devServer.js\" ",
+    "dev-hakeem": "cross-env contributor=hakeem concurrently -n TS,DevServer  \"npm run watch-ts\"  \"nodemon lib/next/devServer.js\" ",
     "build": "yarn tsc",
     "production": "node lib/devServer.js",
     "watch-ts": "tsc -w",
@@ -44,6 +43,7 @@
     "body-parser": "^1.18.3",
     "chalk": "^3.0.0",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "dropbox": "^8.2.0",
     "express": "^4.17.1",
     "graphql": "^15.7.2",
