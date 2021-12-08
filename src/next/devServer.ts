@@ -9,89 +9,56 @@ import wertik, {
   useIndependentWebSocketsServer,
   useWebSockets,
 } from "./index";
+import { useQueue } from "./queue";
 
 (async () => {
   wertik({
     port: 1200,
-    graphql: useGraphql({
-      applyMiddlewareOptions: {
-        path: "/graphql",
-      },
-    }),
-    database: {
-      jscontainer: useDatabase({
-        name: "jscontainer",
-        password: "pass",
-        host: "localhost",
-        port: 3306,
-        username: "root",
-      }),
-    },
-    sockets: {
-      mySockets: useWebSockets({
-        path: "/websockets",
-      }),
-      mySockets2: useIndependentWebSocketsServer({
-        port: 1500,
-      }),
-      socketio: useSocketIO({
-        path: "/mysocketioserver",
-      }),
-    },
-    storage: {},
-    cronJobs: {
-      aCronJobName: useCronJob({
-        name: "Send emails to people every 1 minute",
-        handler: () => console.log(new Date().toLocaleDateString()),
-        expression: "*/10 * * * * *",
-      }),
-    },
-    mailer: {
-      mail: useMailer(),
-    },
-    modules: {
-      games: useModule({
-        useDatabase: true,
-        name: "Games",
-        table: "games",
-        database: "jscontainer",
-        events: {
-          beforeCreate() {
-            console.log("This will run before creating a game");
+    queue: {
+      sendEmails: useQueue({
+        queueName: "sendEmails",
+        url: "redis://127.0.0.1:6379",
+        options: {
+          limiter: {
+            max: 12,
+            duration: 32,
+            bounceBack: true,
           },
         },
-        on({ useExpress, useQuery, useMutation, useSchema }) {
-          useExpress((express) => {
-            express.get("/404", (req, res) => res.status(404).send("404"));
-          });
-          useQuery({
-            name: "getGames",
-            query: "getGames: [Games]",
-            resolver() {
-              return [];
-            },
-          });
-          useMutation({
-            name: "updateAllGames",
-            query: "updateAllGames: [Games]",
-            resolver() {
-              return [];
-            },
-          });
-          useSchema(`
-            type MyType {
-              id: Int
-              name: String
-            }
-          `);
+      }),
+      sendPushNotification: useQueue({
+        queueName: "sendPushNotification",
+        options: {
+          redis: { port: 6379, host: "127.0.0.1", password: "somepass" },
+          limiter: {
+            max: 12,
+            duration: 32,
+            bounceBack: true,
+          },
         },
       }),
-      backup: WertikBackupModule("jscontainer", "Backup"),
-      containers: useModule({
-        table: "containers",
-        database: "jscontainer",
-        name: "containers",
-        useDatabase: true,
+    },
+    // cronJobs: {
+    //   getCustomersEvery1Minute: useCronJob({
+    //     name: "getCustomersEvery1Minute",
+    //     expression: "* * * * *",
+    //     handler(wertikApp) {
+    //       console.log(wertikApp.queue);
+    //     },
+    //   }),
+    // },
+    modules: {
+      customers: useModule({
+        useDatabase: false,
+        name: "customers",
+        on({ useExpress }) {
+          useExpress((expInstance) => {
+            expInstance.get("/wow", (req, res) => {
+              console.log(req.wertik.queue);
+              res.send("send something back");
+            });
+          });
+        },
       }),
     },
   });

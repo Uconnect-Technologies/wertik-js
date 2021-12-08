@@ -1,5 +1,5 @@
-import bullQueue from "bull";
-import { QueueOptions } from "../types/queue";
+import Queue from "bull";
+import { useQueueProps } from "../types/queue";
 
 /**
  * @param queueName
@@ -8,10 +8,6 @@ import { QueueOptions } from "../types/queue";
  * @returns
  */
 
-export const Queue = (
-  queueName?: string,
-  url?: string,
-  opts?: QueueOptions
-) => {
-  return (async) => new bullQueue(queueName, url, opts);
+export const useQueue = (props: useQueueProps) => {
+  return (async) => new Queue(props.queueName, props.url, props.options);
 };

@@ -9,7 +9,6 @@ import { emailSender } from "./mailer/index";
 import http from "http";
 import { WertikConfiguration } from "./types";
 import { WertikApp } from "./types";
-import { Queue } from "./queue";
 
 export * from "./database";
 export * from "./modules/modules";
@@ -104,6 +103,12 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
         }
       }
 
+      if (configuration.queue) {
+        for (const queueName of Object.keys(configuration.queue || {})) {
+          wertikApp.queue[queueName] = configuration.queue[queueName]();
+        }
+      }
+
       expressApp.get("/w/info", function (req, res) {
         res.json({
           message: "You are running wertik-js v3",
@@ -113,7 +118,6 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
 
       wertikApp.sendEmail = emailSender(wertikApp);
 
-      wertikApp.queue = Queue();
       if (configuration.graphql) {
         wertikApp.graphql = configuration.graphql({
           wertikApp: wertikApp,
