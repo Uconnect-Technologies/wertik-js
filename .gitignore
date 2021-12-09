@@ -12,6 +12,7 @@ error.log
 notice.log
 info.log
 warning.log
+*.log
 .env
 /backups
 .DS_STORE
