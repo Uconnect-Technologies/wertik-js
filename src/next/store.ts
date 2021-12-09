@@ -1,4 +1,4 @@
-import generalSchema from "./graphql/generalSchema";
+import generalSchema from "./graphql/generalSchema"
 
 const store = {
   graphql: {
@@ -31,6 +31,6 @@ const store = {
   database: {
     relationships: [],
   },
-};
+}
 
-export default store;
+export default store

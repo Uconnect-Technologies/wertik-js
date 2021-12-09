@@ -1,23 +1,24 @@
-import { get } from "lodash";
-import express from "express";
-import store from "./store";
+import { get } from "lodash"
+import express from "express"
+import store from "./store"
 import {
   applyRelationshipsFromStoreToDatabase,
   applyRelationshipsFromStoreToGraphql,
-} from "./database";
-import { emailSender } from "./mailer/index";
-import http from "http";
-import { WertikConfiguration } from "./types";
-import { WertikApp } from "./types";
+} from "./database"
+import { emailSender } from "./mailer/index"
+import http from "http"
+import { WertikConfiguration } from "./types"
+import { WertikApp } from "./types"
 
-export * from "./database";
-export * from "./modules/modules";
-export * from "./graphql";
-export * from "./mailer";
-export * from "./cronJobs";
-export * from "./storage";
-export * from "./helpers/modules/backup";
-export * from "./sockets";
+export * from "./database"
+export * from "./modules/modules"
+export * from "./graphql"
+export * from "./mailer"
+export * from "./cronJobs"
+export * from "./storage"
+export * from "./helpers/modules/backup"
+export * from "./sockets"
+export * from "./queue"
 
 const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
   configuration: WertikConfiguration
@@ -34,19 +35,19 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
         cronJobs: {},
         storage: {},
         queue: {},
-      };
+      }
 
-      const port = get(configuration, "port", 5050);
-      const skip = get(configuration, "skip", false);
-      const expressApp = get(configuration, "express", express());
-      const httpServer = http.createServer(expressApp);
+      const port = get(configuration, "port", 5050)
+      const skip = get(configuration, "skip", false)
+      const expressApp = get(configuration, "express", express())
+      const httpServer = http.createServer(expressApp)
 
-      wertikApp.httpServer = httpServer;
-      wertikApp.express = expressApp;
-      wertikApp.port = configuration.port;
+      wertikApp.httpServer = httpServer
+      wertikApp.express = expressApp
+      wertikApp.port = configuration.port
 
       for (const mailName of Object.keys(configuration.mailer || {})) {
-        wertikApp.mailer[mailName] = await configuration.mailer[mailName]();
+        wertikApp.mailer[mailName] = await configuration.mailer[mailName]()
       }
 
       if (configuration.storage) {
@@ -54,7 +55,7 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
           wertikApp.storage[storageName] = configuration.storage[storageName]({
             configuration: configuration,
             wertikApp: wertikApp,
-          });
+          })
         }
       }
 
@@ -63,7 +64,7 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
           wertikApp.cronJobs[cronName] = configuration.cronJobs[cronName]({
             configuration: configuration,
             wertikApp: wertikApp,
-          });
+          })
         }
       }
 
@@ -72,7 +73,7 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
           wertikApp.sockets[socketName] = configuration.sockets[socketName]({
             configuration: configuration,
             wertikApp: wertikApp,
-          });
+          })
         }
       }
 
@@ -81,15 +82,15 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
           try {
             wertikApp.database[databaseName] = await configuration.database[
               databaseName
-            ]();
+            ]()
           } catch (e) {
-            throw new Error(e);
+            throw new Error(e)
           }
         }
       }
 
-      applyRelationshipsFromStoreToDatabase(store, wertikApp);
-      applyRelationshipsFromStoreToGraphql(store, wertikApp);
+      applyRelationshipsFromStoreToDatabase(store, wertikApp)
+      applyRelationshipsFromStoreToGraphql(store, wertikApp)
 
       if (configuration.modules) {
         for (const moduleName of Object.keys(configuration.modules || {})) {
@@ -99,13 +100,13 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
             store: store,
             configuration: configuration,
             app: wertikApp,
-          });
+          })
         }
       }
 
       if (configuration.queue) {
         for (const queueName of Object.keys(configuration.queue || {})) {
-          wertikApp.queue[queueName] = configuration.queue[queueName]();
+          wertikApp.queue[queueName] = configuration.queue[queueName]()
         }
       }
 
@@ -113,10 +114,10 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
         res.json({
           message: "You are running wertik-js v3",
           version: require("./../../package.json").version,
-        });
-      });
+        })
+      })
 
-      wertikApp.sendEmail = emailSender(wertikApp);
+      wertikApp.sendEmail = emailSender(wertikApp)
 
       if (configuration.graphql) {
         wertikApp.graphql = configuration.graphql({
@@ -124,27 +125,27 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
           store: store,
           configuration: configuration,
           expressApp: expressApp,
-        });
+        })
       }
 
       expressApp.use(async function (req, _res, next) {
-        req.wertik = wertikApp;
-        next();
-      });
+        req.wertik = wertikApp
+        next()
+      })
 
       setTimeout(async () => {
         if (skip === false) {
           httpServer.listen(port, () => {
-            console.log(`Wertik JS app listening at http://localhost:${port}`);
-          });
+            console.log(`Wertik JS app listening at http://localhost:${port}`)
+          })
         }
-        resolve(wertikApp);
-      }, 500);
+        resolve(wertikApp)
+      }, 500)
     } catch (e) {
-      console.error(e);
-      reject(e);
+      console.error(e)
+      reject(e)
     }
-  });
-};
+  })
+}
 
-export default Wertik;
+export default Wertik

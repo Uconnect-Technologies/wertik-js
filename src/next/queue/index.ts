@@ -1,5 +1,5 @@
-import Queue from "bull";
-import { useQueueProps } from "../types/queue";
+import Queue from "bull"
+import { useQueueProps } from "../types/queue"
 
 /**
  * @param queueName
@@ -9,5 +9,5 @@ import { useQueueProps } from "../types/queue";
  */
 
 export const useQueue = (props: useQueueProps) => {
-  return (async) => new Queue(props.queueName, props.url, props.options);
-};
+  return () => new Queue(props.queueName, props.url, props.options)
+}

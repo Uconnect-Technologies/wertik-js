@@ -4,7 +4,7 @@ import {
   dumpDatabaseToDropbox,
   loadAllLocalBackups,
   removeLocalBackups,
-} from "./helpers";
+} from "./helpers"
 export default {
   name: "Backup",
   graphql: {
@@ -38,52 +38,52 @@ export default {
       `,
       resolvers: {
         removeLocalBackups: async () => {
-          await removeLocalBackups();
-          return "remove local backups";
+          await removeLocalBackups()
+          return "remove local backups"
         },
         backupLocal: async (_, args, context, info) => {
           let op: any = await dumpDatabase({
             database: context.wertik.configuration.database,
             models: context.wertik.models,
-          });
+          })
           return {
             message: "Backup to Local Drive has been completed.",
             filename: op.filename,
             backup: op.backupInstance,
-          };
+          }
         },
         backupDigitalOceanSpaces: async (_, args, context, info) => {
           let op = await dumpDatabase({
             database: context.wertik.configuration.database,
             models: context.wertik.models,
-          });
+          })
 
           let opDigitalOcean = await dumpDatabaseToDigitalOcean({
             localDump: op,
             configuration: context.wertik.configuration,
-          });
+          })
 
           return {
             message:
               "Backup to DigitalOcean and Local Drive has been completed.",
             filename: opDigitalOcean.filename,
             backup: opDigitalOcean.backupInstance,
-          };
+          }
         },
         backupDropbox: async (_, args, context, info) => {
           let op = await dumpDatabase({
             database: context.wertik.configuration.database,
             models: context.wertik.models,
-          });
+          })
           let opDropbox = await dumpDatabaseToDropbox({
             localDump: op,
             configuration: context.wertik.configuration,
-          });
+          })
           return {
             message: "Backup to Dropbox has been completed.",
             filename: opDropbox.filename,
             backup: opDropbox.backupInstance,
-          };
+          }
         },
       },
     },
@@ -93,8 +93,8 @@ export default {
       `,
       resolvers: {
         localBackupsList: async () => {
-          const list = await loadAllLocalBackups();
-          return list;
+          const list = await loadAllLocalBackups()
+          return list
         },
       },
     },
@@ -119,4 +119,4 @@ export default {
       },
     },
   },
-};
+}

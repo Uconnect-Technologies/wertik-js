@@ -1,10 +1,10 @@
-import { Sequelize } from "sequelize";
-import { databaseDefaultOptions } from "../framework/defaults/options";
-import { get } from "lodash";
-import { paginate } from "./crud/index";
-import { Store } from "./types";
-import { WertikApp } from "./types";
-import { useDatabaseProps } from "./types/database";
+import { Sequelize } from "sequelize"
+import { databaseDefaultOptions } from "../framework/defaults/options"
+import { get } from "lodash"
+import { paginate } from "./crud/index"
+import { Store } from "./types"
+import { WertikApp } from "./types"
+import { useDatabaseProps } from "./types/database"
 
 export const getAllRelationships = (dbName: String) => {
   return `
@@ -14,8 +14,8 @@ export const getAllRelationships = (dbName: String) => {
       AND REFERENCED_TABLE_SCHEMA IS NOT NULL
       AND REFERENCED_TABLE_NAME IS NOT NULL
       AND REFERENCED_COLUMN_NAME IS NOT NULL
-  `;
-};
+  `
+}
 
 export const useDatabase = function (obj: useDatabaseProps) {
   return async () => {
@@ -25,32 +25,32 @@ export const useDatabase = function (obj: useDatabaseProps) {
       logging: false,
       ...get(obj, "options", {}),
       ...(databaseDefaultOptions as any).sql.dbInitializeOptions,
-    });
+    })
     await sequelize.authenticate().catch((err) => {
-      throw new Error(err);
-    });
-    (sequelize as any).relationships = await sequelize.query(
+      throw new Error(err)
+    })
+    ;(sequelize as any).relationships = await sequelize.query(
       getAllRelationships(obj.name)
-    );
-    console.log(`[DB] Succcessfully connected to database ${obj.name}`);
+    )
+    console.log(`[DB] Succcessfully connected to database ${obj.name}`)
     return {
       credentials: obj,
       instance: sequelize,
-    };
-  };
-};
+    }
+  }
+}
 
 export const applyRelationshipsFromStoreToDatabase = async (
   store: Store,
   app: WertikApp
 ) => {
   store.database.relationships.forEach((element) => {
-    const currentTable = app.modules[element.currentModule].tableInstance;
-    const referencedTable = app.modules[element.referencedModule].tableInstance;
+    const currentTable = app.modules[element.currentModule].tableInstance
+    const referencedTable = app.modules[element.referencedModule].tableInstance
     // element.type willbe hasOne, hasMany, belongsTo or belongsToMany
-    currentTable[element.type](referencedTable, element.options || {});
-  });
-};
+    currentTable[element.type](referencedTable, element.options || {})
+  })
+}
 
 export const applyRelationshipsFromStoreToGraphql = async (
   store: Store,
@@ -61,19 +61,19 @@ export const applyRelationshipsFromStoreToGraphql = async (
       store,
       `graphql.resolvers.${element.currentModule}`,
       {}
-    );
+    )
 
     store.graphql.resolvers[element.currentModule] = {
       ...oldResolvers,
       [element.graphqlKey]: async (parent, args, context) => {
         const tableInstance =
-          context.wertik.modules[element.referencedModule].tableInstance;
+          context.wertik.modules[element.referencedModule].tableInstance
         let referencedModuleKey =
-          element.options.sourceKey || element.options.targetKey;
-        let currentModuleKey = element.options.foreignKey || "id";
+          element.options.sourceKey || element.options.targetKey
+        let currentModuleKey = element.options.foreignKey || "id"
 
         if (!referencedModuleKey) {
-          referencedModuleKey = "id";
+          referencedModuleKey = "id"
         }
 
         if (["hasOne", "belongsTo"].includes(element.type)) {
@@ -81,7 +81,7 @@ export const applyRelationshipsFromStoreToGraphql = async (
             where: {
               [currentModuleKey]: parent[referencedModuleKey],
             },
-          });
+          })
         } else if (["hasMany", "belongsToMany"]) {
           return await paginate(
             {
@@ -90,9 +90,9 @@ export const applyRelationshipsFromStoreToGraphql = async (
               },
             },
             tableInstance
-          );
+          )
         }
       },
-    };
-  });
-};
+    }
+  })
+}

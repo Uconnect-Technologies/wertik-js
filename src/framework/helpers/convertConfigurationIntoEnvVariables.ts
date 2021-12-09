@@ -1,23 +1,23 @@
-declare var process: any;
-import { IConfiguration } from "./../types/configuration";
+declare var process: any
+import { IConfiguration } from "./../types/configuration"
 
 export default function (configuration: IConfiguration) {
   return new Promise((resolve, reject) => {
     try {
-      let keys = Object.keys(configuration);
+      let keys = Object.keys(configuration)
       // Important ones
-      process.env.dbDialect = configuration.database.dbDialect;
+      process.env.dbDialect = configuration.database.dbDialect
       // Important ones
       keys.forEach((key, index) => {
-        let value = configuration[key];
+        let value = configuration[key]
 
-        process.env[key] = value;
+        process.env[key] = value
         if (index + 1 == keys.length) {
-          resolve("Added to env.");
+          resolve("Added to env.")
         }
-      });
+      })
     } catch (e) {
-      reject(e.message);
+      reject(e.message)
     }
-  });
+  })
 }

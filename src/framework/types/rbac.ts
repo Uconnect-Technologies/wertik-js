@@ -1,4 +1,4 @@
-import { IPermission, IRole } from "./models";
+import { IPermission, IRole } from "./models"
 
 export interface IConfigurationRbacAccessControl {}
 

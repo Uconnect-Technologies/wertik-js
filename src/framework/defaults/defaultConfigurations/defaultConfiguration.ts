@@ -18,12 +18,12 @@ export default {
     initializeContext: function (mode, context) {
       return {
         someKey: "somekeyvalue",
-      };
+      }
     },
     requestContext: async function (mode, context) {
       return {
         value: "Value 1",
-      };
+      }
     },
   },
   email: {
@@ -39,7 +39,7 @@ export default {
     useMorgan: true,
     showWertik404Page: true,
     onCustomApiFailure: function ({ path, res, err }) {
-      res.send("failed at " + path);
+      res.send("failed at " + path)
     },
     // Below function for custom 404 page or response.
     // restApi404Handler: function () {}
@@ -114,20 +114,20 @@ export default {
   ],
   events: {
     beforeGraphqlStart: function () {
-      console.log("beforeGraphqlStart");
+      console.log("beforeGraphqlStart")
     },
     beforeRestApiStart: function () {
-      console.log("beforeRestApiStart");
+      console.log("beforeRestApiStart")
     },
     graphql: {
       Role: {
         beforeBulkCreate({ mode, params: { args, context } }) {
-          return args;
+          return args
         },
       },
       User: {
         beforeBulkCreate() {
-          throw new Error("Use signup mutation.");
+          throw new Error("Use signup mutation.")
         },
       },
     },
@@ -136,26 +136,26 @@ export default {
     disable: false,
     middlewares: [
       async ({ socket, next, context }) => {
-        console.log("Message while running a socket middleware");
+        console.log("Message while running a socket middleware")
         console.log(
           "Validate your realtime user here. All context is available."
-        );
-        next();
+        )
+        next()
       },
     ],
     onClientConnected: function ({ socket, context }) {
-      console.log("client is connected");
+      console.log("client is connected")
       /*
 
       This runs when a user is connected to realtime server, Use middlewares to secure your socket server.
 
       */
       socket.on("message", (val) => {
-        console.log(`message`, val);
-      });
+        console.log(`message`, val)
+      })
       socket.on("disconnect", () => {
-        console.log(`disconnect`);
-      });
+        console.log(`disconnect`)
+      })
     },
   },
   storage: {
@@ -175,4 +175,4 @@ export default {
       },
     ],
   },
-};
+}

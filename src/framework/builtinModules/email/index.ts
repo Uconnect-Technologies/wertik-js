@@ -1,4 +1,4 @@
-import { get } from "lodash";
+import { get } from "lodash"
 export default {
   name: "Email",
   graphql: {
@@ -39,11 +39,11 @@ export default {
       resolvers: {
         sendEmail: async (_: any, args: any, context: any, info: any) => {
           try {
-            const sendEmail = context.wertik.sendEmail;
-            const send = await sendEmail(args.input);
-            return send.databaseInstance;
+            const sendEmail = context.wertik.sendEmail
+            const send = await sendEmail(args.input)
+            return send.databaseInstance
           } catch (e) {
-            throw new Error(e);
+            throw new Error(e)
           }
         },
       },
@@ -90,4 +90,4 @@ export default {
       },
     },
   },
-};
+}

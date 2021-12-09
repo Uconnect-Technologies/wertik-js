@@ -1,36 +1,36 @@
-import { get } from "lodash";
-import convertFiltersIntoSequalizeObject from "./convertFiltersIntoSequalizeObject";
-import { removeColumnsFromAccordingToSelectIgnoreFields } from "../../helpers/index";
+import { get } from "lodash"
+import convertFiltersIntoSequalizeObject from "./convertFiltersIntoSequalizeObject"
+import { removeColumnsFromAccordingToSelectIgnoreFields } from "../../helpers/index"
 export default async function (model) {
   return function (args, requestedFields: any = []) {
     return new Promise(async (resolve, reject) => {
       try {
         if (!Array.isArray(requestedFields)) {
-          throw new Error("Requested fields must be an array");
+          throw new Error("Requested fields must be an array")
         }
-        let page = get(args, "pagination.page", 1);
-        let limit = get(args, "pagination.limit", 500);
-        let filters = get(args, "filters", {});
-        let sorting = get(args, "sorting", []);
-        let offset = limit * (page - 1);
-        let convertedFilters = await convertFiltersIntoSequalizeObject(filters);
+        let page = get(args, "pagination.page", 1)
+        let limit = get(args, "pagination.limit", 500)
+        let filters = get(args, "filters", {})
+        let sorting = get(args, "sorting", [])
+        let offset = limit * (page - 1)
+        let convertedFilters = await convertFiltersIntoSequalizeObject(filters)
 
         requestedFields = removeColumnsFromAccordingToSelectIgnoreFields(
           requestedFields,
           model.selectIgnoreFields
-        );
+        )
 
         let mainObject = {
           order: sorting.map((c) => {
-            return [c.column, c.type];
+            return [c.column, c.type]
           }),
           attributes: requestedFields,
-        };
+        }
         if (mainObject.attributes.length === 0) {
-          delete mainObject["attributes"];
+          delete mainObject["attributes"]
         }
         if (mainObject.order.length == 0) {
-          delete mainObject["order"];
+          delete mainObject["order"]
         }
 
         const list = await model.findAndCountAll({
@@ -38,9 +38,9 @@ export default async function (model) {
           limit: limit,
           where: convertedFilters,
           ...mainObject,
-        });
+        })
 
-        const totalPages = Math.ceil(list.count / limit);
+        const totalPages = Math.ceil(list.count / limit)
 
         resolve({
           filters,
@@ -54,10 +54,10 @@ export default async function (model) {
             pages: totalPages,
             hasMore: page < totalPages,
           },
-        });
+        })
       } catch (error) {
-        reject(error);
+        reject(error)
       }
-    });
-  };
+    })
+  }
 }
