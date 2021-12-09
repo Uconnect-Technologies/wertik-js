@@ -1,9 +1,9 @@
 export default function (obj: any) {
-  let { res, err, data, code } = obj;
+  let { res, err, data, code } = obj
   if (!code) {
-    code = 500;
+    code = 500
   }
-  res.status(code);
+  res.status(code)
   res.send({
     result: {
       status: code,
@@ -11,5 +11,5 @@ export default function (obj: any) {
       message: err.message,
       data: data,
     },
-  });
+  })
 }

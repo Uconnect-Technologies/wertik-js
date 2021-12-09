@@ -36,4 +36,4 @@ export default `
     mutation: Mutation
     subscription: Subscription
   }
-`;
+`

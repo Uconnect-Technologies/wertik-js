@@ -269,4 +269,4 @@ export default {
     number: 305,
     value: "Use Proxy",
   },
-};
+}

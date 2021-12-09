@@ -1,5 +1,5 @@
-import checkInstalledPackages from "../initialization/checkInstalledPackages";
-import checkModules from "../initialization/checkModules";
+import checkInstalledPackages from "../initialization/checkInstalledPackages"
+import checkModules from "../initialization/checkModules"
 
 export const requiredFields = {
   name: "required",
@@ -9,17 +9,17 @@ export const requiredFields = {
   db_name: "required",
   db_host: "required",
   db_port: "required",
-};
+}
 
 export default function (configuration) {
   return new Promise(async (resolve, reject) => {
     try {
-      await checkInstalledPackages(configuration);
-      await checkModules(configuration);
-      resolve(true);
+      await checkInstalledPackages(configuration)
+      await checkModules(configuration)
+      resolve(true)
     } catch (errr) {
-      reject(errr);
-      console.log(errr);
+      reject(errr)
+      console.log(errr)
     }
-  });
+  })
 }

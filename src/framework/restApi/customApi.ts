@@ -1,16 +1,16 @@
-import { get, kebabCase } from "lodash";
-import restApiErrorResponse from "./restApiErrorResponse";
-import restApiSuccessResponse from "./restApiSuccessResponse";
+import { get, kebabCase } from "lodash"
+import restApiErrorResponse from "./restApiErrorResponse"
+import restApiSuccessResponse from "./restApiSuccessResponse"
 
 export default (expressApp, restApiEndpointsElement, module, configuration) => {
-  const type = get(restApiEndpointsElement, "methodType", "get");
-  const handler = get(restApiEndpointsElement, "handler", null);
+  const type = get(restApiEndpointsElement, "methodType", "get")
+  const handler = get(restApiEndpointsElement, "handler", null)
   const onCustomApiFailure = get(
     configuration,
     "restApi.onCustomApiFailure",
     null
-  );
-  const path = get(restApiEndpointsElement, "path", "");
+  )
+  const path = get(restApiEndpointsElement, "path", "")
   const types = [
     "get",
     "post",
@@ -25,16 +25,16 @@ export default (expressApp, restApiEndpointsElement, module, configuration) => {
     "lock",
     "unlock",
     "view",
-  ];
+  ]
 
   if (types.indexOf(type) > -1 && path.length > 0) {
-    let apiPath = `${path}`;
-    let find = "//";
-    let re = new RegExp(find, "g");
-    apiPath = apiPath.replace(re, "/");
+    let apiPath = `${path}`
+    let find = "//"
+    let re = new RegExp(find, "g")
+    apiPath = apiPath.replace(re, "/")
     expressApp[type](apiPath, async function (req, res) {
       try {
-        await handler(req, res, restApiSuccessResponse, restApiErrorResponse);
+        await handler(req, res, restApiSuccessResponse, restApiErrorResponse)
       } catch (e) {
         if (onCustomApiFailure) {
           onCustomApiFailure({
@@ -43,7 +43,7 @@ export default (expressApp, restApiEndpointsElement, module, configuration) => {
             err: e,
             res: res,
             data: {},
-          });
+          })
         } else {
           restApiErrorResponse({
             path: apiPath,
@@ -51,13 +51,13 @@ export default (expressApp, restApiEndpointsElement, module, configuration) => {
             err: e,
             res: res,
             data: {},
-          });
+          })
         }
       }
-    });
+    })
   } else {
     console.warn(
       `On module ${module.name}, Api endpoint ${path}, has undefined method type ${type}`
-    );
+    )
   }
-};
+}

@@ -1,4 +1,4 @@
-let { ApolloError } = require("apollo-server");
+let { ApolloError } = require("apollo-server")
 export default function (e: any, code = 500) {
-  return new ApolloError(e.message, code, {});
+  return new ApolloError(e.message, code, {})
 }

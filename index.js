@@ -1,2 +1,2 @@
-let wertik = require("./lib/main.js");
-module.exports = wertik;
+let wertik = require("./lib/main.js")
+module.exports = wertik

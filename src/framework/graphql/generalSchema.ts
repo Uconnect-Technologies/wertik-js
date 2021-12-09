@@ -82,4 +82,4 @@ export default `
 		previousPage: Int
 		hasMore: Boolean
 	}
-`;
+`

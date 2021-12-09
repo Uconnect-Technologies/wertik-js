@@ -1,6 +1,6 @@
 export default function (obj: any) {
-  let { res, err, message, data } = obj;
-  res.status(200);
+  let { res, err, message, data } = obj
+  res.status(200)
   res.send({
     result: {
       status: 200,
@@ -8,5 +8,5 @@ export default function (obj: any) {
       message: message || "Ok",
       data: data,
     },
-  });
+  })
 }

@@ -1,4 +1,4 @@
-import Sequelize from "sequelize";
+import Sequelize from "sequelize"
 export const databaseDefaultOptions = {
   postgres: {
     dbInitializeOptions: {
@@ -33,7 +33,7 @@ export const databaseDefaultOptions = {
       },
     },
   },
-};
+}
 
 export const defaultSocketOptions = {
   perMessageDeflate: {
@@ -54,8 +54,8 @@ export const defaultSocketOptions = {
     concurrencyLimit: 10, // Limits zlib concurrency for perf.
     threshold: 1024, // Size (in bytes) below which messages
   },
-};
+}
 
-export const defaultApolloGraphqlOptions = {};
+export const defaultApolloGraphqlOptions = {}
 
-export const defaultPort = 7000;
+export const defaultPort = 7000
