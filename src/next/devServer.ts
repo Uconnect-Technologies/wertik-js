@@ -1,25 +1,25 @@
-import devHakeem from "./devServers/dev-hakeem";
-import devNaveed from "./devServers/dev-naveed";
-import devZeeshan from "./devServers/dev-naveed";
-import devIlyas from "./devServers/dev-ilyas";
-const contributor = process.env.contributor;
+import devHakeem from "./devServers/dev-hakeem"
+import devNaveed from "./devServers/dev-naveed"
+import devZeeshan from "./devServers/dev-naveed"
+import devIlyas from "./devServers/dev-ilyas"
+const contributor = process.env.contributor
 
 switch (contributor) {
   case "hakeem":
-    devHakeem();
-    break;
+    devHakeem()
+    break
   case "ilyas":
-    devIlyas();
-    break;
+    devIlyas()
+    break
 
   case "naveed":
-    devNaveed();
-    break;
+    devNaveed()
+    break
 
   case "zeeshan":
-    devZeeshan();
-    break;
+    devZeeshan()
+    break
 
   default:
-    break;
+    break
 }

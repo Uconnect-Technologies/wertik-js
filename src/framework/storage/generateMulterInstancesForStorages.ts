@@ -1,5 +1,5 @@
-import { IConfiguration } from "src/framework/types/configuration";
+import { IConfiguration } from "src/framework/types/configuration"
 
 export default async (configuration: IConfiguration) => {
-  let storages = configuration.storage.storageDirectory;
-};
+  let storages = configuration.storage.storageDirectory
+}

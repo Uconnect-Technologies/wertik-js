@@ -1,10 +1,10 @@
-import { get } from "lodash";
-import { defaultPort } from "../../defaults/options/index";
-import { IConfiguration } from "src/framework/types/configuration";
-import { successMessage } from "./../../logger/consoleMessages";
+import { get } from "lodash"
+import { defaultPort } from "../../defaults/options/index"
+import { IConfiguration } from "src/framework/types/configuration"
+import { successMessage } from "./../../logger/consoleMessages"
 
 export default function (configuration: IConfiguration) {
-  const port = get(configuration, "port", defaultPort);
+  const port = get(configuration, "port", defaultPort)
   let html = `
     <!DOCTYPE html>
     <html>
@@ -34,6 +34,6 @@ export default function (configuration: IConfiguration) {
         </script>
       </body>
     </html>
-  `;
-  return html;
+  `
+  return html
 }

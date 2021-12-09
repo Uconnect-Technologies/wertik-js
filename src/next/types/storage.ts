@@ -1,12 +1,12 @@
 export interface useStorageProps {
-  for: "dropbox" | "digitalocean";
-  name: string;
+  for: "dropbox" | "digitalocean"
+  name: string
   dropboxOptions?: {
-    accessToken: string;
-  };
+    accessToken: string
+  }
   digitalOceanOptions?: {
-    accessKeyId: string;
-    secretAccessKey: string;
-    spacesEndpoint: string;
-  };
+    accessKeyId: string
+    secretAccessKey: string
+    spacesEndpoint: string
+  }
 }

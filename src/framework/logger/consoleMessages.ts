@@ -1,6 +1,6 @@
-import logSymbols from "log-symbols";
-import chalk from "chalk";
-const log = console.log;
+import logSymbols from "log-symbols"
+import chalk from "chalk"
+const log = console.log
 
 export const successMessage = function (message, secondMessage?: string) {
   log(
@@ -8,13 +8,13 @@ export const successMessage = function (message, secondMessage?: string) {
     ` [Wertik-js]: `,
     chalk.green(message),
     secondMessage ? chalk.blue.underline.bold(secondMessage) : ""
-  );
-};
+  )
+}
 
 export const errorMessage = function (message) {
-  log(logSymbols.error, ` [Wertik-js]:`, chalk.red(message));
-};
+  log(logSymbols.error, ` [Wertik-js]:`, chalk.red(message))
+}
 
-export const warningMessage = function () {};
+export const warningMessage = function () {}
 
-export const infoMessage = function () {};
+export const infoMessage = function () {}

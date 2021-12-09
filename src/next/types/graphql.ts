@@ -1,25 +1,25 @@
-import { GetMiddlewareOptions } from "apollo-server-express";
-import { Store, WertikApp, WertikConfiguration } from ".";
+import { GetMiddlewareOptions } from "apollo-server-express"
+import { Store, WertikApp, WertikConfiguration } from "."
 
 export interface GetMiddlewareOptionsGraphql extends GetMiddlewareOptions {
-  path: string;
+  path: string
 }
 
 export interface useGraphqlProps {
   options?: {
-    [key: string]: any;
-  };
-  applyMiddlewareOptions?: GetMiddlewareOptionsGraphql;
+    [key: string]: any
+  }
+  applyMiddlewareOptions?: GetMiddlewareOptionsGraphql
   resolvers?: {
-    Mutation: {};
-    Query: {};
-  };
-  typeDefs?: string;
+    Mutation: {}
+    Query: {}
+  }
+  typeDefs?: string
 }
 
 export interface GraphqlInitializeProps {
-  wertikApp: WertikApp;
-  store: Store;
-  configuration: WertikConfiguration;
-  expressApp: any;
+  wertikApp: WertikApp
+  store: Store
+  configuration: WertikConfiguration
+  expressApp: any
 }

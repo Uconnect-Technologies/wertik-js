@@ -1,6 +1,6 @@
-import defaultConfiguration from "./defaultConfiguration";
+import defaultConfiguration from "./defaultConfiguration"
 
-let configuration = { ...defaultConfiguration };
+let configuration = { ...defaultConfiguration }
 
 configuration.database = {
   dbDialect: "postgres",
@@ -10,6 +10,6 @@ configuration.database = {
   dbName: "d5rsarnju68s4f",
   dbHost: "ec2-54-246-89-234.eu-west-1.compute.amazonaws.com",
   dbPort: "5432",
-};
+}
 
-export default configuration;
+export default configuration

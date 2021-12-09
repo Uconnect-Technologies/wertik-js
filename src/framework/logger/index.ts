@@ -1,17 +1,17 @@
-import moment from "moment";
+import moment from "moment"
 
 export default function () {
   return new Promise((resolve, reject) => {
-    const { createLogger, format, transports } = require("winston");
-    const { printf } = format;
+    const { createLogger, format, transports } = require("winston")
+    const { printf } = format
 
     const myFormat = printf((obj) => {
       return JSON.stringify({
         timestamp: moment().format(),
         formattedTimeStamp: moment().format("MMMM Do YYYY, h:mm:ss a"),
         ...obj,
-      });
-    });
+      })
+    })
 
     const logger = createLogger({
       format: myFormat,
@@ -30,8 +30,8 @@ export default function () {
           level: "warning",
         }),
       ],
-    });
+    })
 
-    resolve(logger);
-  });
+    resolve(logger)
+  })
 }

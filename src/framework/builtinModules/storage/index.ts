@@ -45,24 +45,24 @@ export default {
           restApiSuccessResponse,
           restApiErrorResponse
         ) {
-          const upload = req.multerInstance.single("file");
+          const upload = req.multerInstance.single("file")
           upload(req, res, async function (err) {
             if (err) {
               restApiErrorResponse({
                 err: err,
                 res: res,
                 data: {},
-              });
-              return;
+              })
+              return
             }
             let object = {
               filename: req.file.filename,
               ...req.body,
               size: req.file.size,
               type: req.file.mimetype,
-            };
-            let response = await req.wertik.models.Storage.create(object);
-            response = response.instance;
+            }
+            let response = await req.wertik.models.Storage.create(object)
+            response = response.instance
             restApiSuccessResponse({
               res: res,
               data: {
@@ -78,8 +78,8 @@ export default {
                 directory: req.file.path,
               },
               message: `File successfully uploaded`,
-            });
-          });
+            })
+          })
         },
       },
     ],
@@ -123,4 +123,4 @@ export default {
       },
     },
   },
-};
+}

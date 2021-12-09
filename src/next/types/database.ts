@@ -1,28 +1,28 @@
-import { iObject } from ".";
+import { iObject } from "."
 
 export interface useDatabaseProps {
   /**
    * Database name
    */
-  name: string;
+  name: string
   /**
    * Database user name
    */
-  username: string;
+  username: string
   /**
    * Database user password
    */
-  password: string;
+  password: string
   /**
    * Database host
    */
-  host: string;
+  host: string
   /**
    * Database port
    */
-  port: number;
+  port: number
   /**
    * Sequelize Database options.
    */
-  options?: iObject;
+  options?: iObject
 }

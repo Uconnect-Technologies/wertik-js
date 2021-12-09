@@ -1,66 +1,66 @@
-import { iObject } from ".";
+import { iObject } from "."
 
 export interface useQueryProps {
   /**
    * Schema for this query, for example: getUsers: [Users]
    */
-  query: string;
+  query: string
   /**
    * Resolver method for this query.
    */
-  resolver: Function;
+  resolver: Function
   /**
    * Add a name to your query for example: getUsers
    */
-  name: string;
+  name: string
 }
 export interface useMutationProps {
   /**
    * Schema for this query, for example: deleteUsers: Boolean
    */
-  query: string;
+  query: string
   /**
    * Resolver method for this mutation.
    */
-  resolver: Function;
+  resolver: Function
   /**
    * Add a name to your mutation for example: deleteUsers
    */
-  name: string;
+  name: string
 }
-export type useExpressProps = Function;
+export type useExpressProps = Function
 export interface RelationParams {
-  module: string;
-  graphqlKey: string;
-  database: string;
+  module: string
+  graphqlKey: string
+  database: string
   options: {
-    [key: string]: string | number | null;
-  };
+    [key: string]: string | number | null
+  }
 }
-export type useSchemaProps = string;
+export type useSchemaProps = string
 
 export interface useModuleProps {
   /**
    * Your module name.
    */
-  name: string;
+  name: string
   /**
    * Are you using a database connection to this module? If yes, you will need to provide a database and table.
    */
-  useDatabase: boolean;
+  useDatabase: boolean
   /**
    * Database table name.
    */
-  table?: string;
+  table?: string
   /**
    * Database name.
    */
-  database?: string;
+  database?: string
 
   /**
    * Sequelize Table Options
    */
-  tableOptions?: iObject;
+  tableOptions?: iObject
   /**
    * Graphql options for this module.
    */
@@ -68,34 +68,34 @@ export interface useModuleProps {
     /**
      * Wertik-js creates schema by default from the database table. Once you defined this Wertik-js will ignore taking schema from the database.
      */
-    schema?: string;
+    schema?: string
     /**
      * Wertik-js creates an update schema from the database table. Once defined, Wertik JS will ignore creating an update schema from table information.
      */
-    updateSchema?: string;
+    updateSchema?: string
     /**
      * Wertik-js creates create a schema from the database table. Once defined this, Wertik JS will ignore creating create a schema from the table information.
      */
-    createSchema: string;
+    createSchema: string
     mutations?: {
       /**
        * Overrides default behavior of updating a record from the database table.
        */
-      update?: Function;
+      update?: Function
       /**
        * Overrides default behavior of deleting a record from the database table.
        */
-      delete?: Function;
+      delete?: Function
       /**
        * Overrides default behavior of create a record from the database table.
        */
-      create?: Function;
+      create?: Function
       /**
        * Overrides default behavior of creating or updating a record from the database table.
        */
-      createOrUpdate?: Function;
-    };
-  };
+      createOrUpdate?: Function
+    }
+  }
   /**
    * on method helps you add functionality to your module, Like adding relationships, queries, mutations, adding schema.
    */
@@ -103,36 +103,36 @@ export interface useModuleProps {
     /**
      * This Method allows you adding graphql query to your module.
      */
-    useQuery: (props: useQueryProps) => {} | void;
+    useQuery: (props: useQueryProps) => {} | void
     /**
      * This Method allows you adding graphql mutation to your module.
      */
-    useMutation: (props: useMutationProps) => {} | void;
+    useMutation: (props: useMutationProps) => {} | void
     /**
      * This method gives you access to express app instance.
      */
-    useExpress: (express: any) => void;
+    useExpress: (express: any) => void
     /**
      * This method adds a one-to-one relationship to a module.
      */
-    hasOne: (props: RelationParams) => {} | void;
+    hasOne: (props: RelationParams) => {} | void
     /**
      * This method adds belongs to relationship to a module.
      */
-    belongsTo: (props: RelationParams) => {} | void;
+    belongsTo: (props: RelationParams) => {} | void
     /**
      * This method adds one to many relationship to a module.
      */
-    belongsToMany: (props: RelationParams) => {} | void;
+    belongsToMany: (props: RelationParams) => {} | void
     /**
      * This method adds belogs to many relationship to a module.
      */
-    hasMany: (props: RelationParams) => {} | void;
+    hasMany: (props: RelationParams) => {} | void
     /**
      * This method adds has many relationship to a module.
      */
-    useSchema: (props: useSchemaProps) => {} | void;
-  }) => void;
+    useSchema: (props: useSchemaProps) => {} | void
+  }) => void
   /**
    * Graphql events when a CRUD opreation happens.
    */
@@ -140,30 +140,30 @@ export interface useModuleProps {
     /**
      * This events runs before beforeView query.
      */
-    beforeView?: Function;
+    beforeView?: Function
     /**
      * This events runs before beforeCount query.
      */
-    beforeCount?: Function;
+    beforeCount?: Function
     /**
      * This events runs before beforeList query.
      */
-    beforeList?: Function;
+    beforeList?: Function
     /**
      * This events runs before beforeCreate mutation.
      */
-    beforeCreate?: Function;
+    beforeCreate?: Function
     /**
      * This events runs before beforeDelete mutation.
      */
-    beforeDelete?: Function;
+    beforeDelete?: Function
     /**
      * This events runs before beforeUpdate mutation.
      */
-    beforeUpdate?: Function;
+    beforeUpdate?: Function
     /**
      * This events runs before beforeCreateOrUpdate mutation.
      */
-    beforeCreateOrUpdate?: Function;
-  };
+    beforeCreateOrUpdate?: Function
+  }
 }

@@ -1,13 +1,13 @@
-import { get } from "lodash";
-import crud from "../crud";
-import { databaseDefaultOptions } from "../../framework/defaults/options";
-import { RelationParams, useModuleProps } from "../types/modules";
+import { get } from "lodash"
+import crud from "../crud"
+import { databaseDefaultOptions } from "../../framework/defaults/options"
+import { RelationParams, useModuleProps } from "../types/modules"
 
 const getType = (type: string) => {
   if (typeof type === "string") {
-    type = type.toLowerCase();
+    type = type.toLowerCase()
   } else {
-    return;
+    return
   }
   if (
     type.includes("varchar") ||
@@ -15,40 +15,40 @@ const getType = (type: string) => {
     type.includes("datetime") ||
     type.includes("text")
   ) {
-    return `String`;
+    return `String`
   }
 
   if (type.includes("json")) {
-    return "JSON";
+    return "JSON"
   }
 
   if (type.includes("int")) {
-    return `Int`;
+    return `Int`
   }
-};
+}
 
 const generateDataTypeFromDescribeTableColumnType = (Type: string) => {
-  let length = Type.match(/[0-9]/g)?.join("");
+  let length = Type.match(/[0-9]/g)?.join("")
   let type = Type.replace(/[0-9]/g, "")
     .replace("(", "")
     .replace(")", "")
     .split(" ")[0]
-    .toUpperCase();
+    .toUpperCase()
 
   if (type.toLowerCase().includes("varchar")) {
-    type = "STRING";
+    type = "STRING"
   }
 
   if (type.toLowerCase() === "int") {
-    type = "INTEGER";
+    type = "INTEGER"
   }
 
-  return { length, type };
-};
+  return { length, type }
+}
 
 const generateGenerateGraphQLCrud = (props, schemaInformation, store) => {
-  const { graphql } = crud(props, schemaInformation, store);
-  const resolvers = graphql.generateCrudResolvers();
+  const { graphql } = crud(props, schemaInformation, store)
+  const resolvers = graphql.generateCrudResolvers()
 
   store.graphql.typeDefs = store.graphql.typeDefs.concat(
     `\n ${schemaInformation.schema} 
@@ -56,55 +56,55 @@ const generateGenerateGraphQLCrud = (props, schemaInformation, store) => {
     \n ${schemaInformation.inputSchema.create}
     \n ${schemaInformation.inputSchema.update}
     `
-  );
+  )
 
   store.graphql.typeDefs = store.graphql.typeDefs.concat(
     `\n ${graphql.generateQueriesCrudSchema()}`
-  );
+  )
   store.graphql.typeDefs = store.graphql.typeDefs.concat(
     `\n ${graphql.generateMutationsCrudSchema()}`
-  );
+  )
 
   store.graphql.resolvers.Query = {
     ...store.graphql.resolvers.Query,
     ...resolvers.Query,
-  };
+  }
 
   store.graphql.resolvers.Mutation = {
     ...store.graphql.resolvers.Mutation,
     ...resolvers.Mutation,
-  };
-};
+  }
+}
 
 const getUpdateSchema = (props, tableInformation) => {
-  const optionsUpdateSchema = get(props, "graphql.updateSchema", "");
-  if (optionsUpdateSchema) return optionsUpdateSchema;
-  let updateSchema = [`input update${props.name}Input {`];
+  const optionsUpdateSchema = get(props, "graphql.updateSchema", "")
+  if (optionsUpdateSchema) return optionsUpdateSchema
+  let updateSchema = [`input update${props.name}Input {`]
   tableInformation.forEach((element) => {
-    updateSchema.push(`${element.Field}: ${getType(element.Type)}`);
-  });
-  updateSchema.push("}");
+    updateSchema.push(`${element.Field}: ${getType(element.Type)}`)
+  })
+  updateSchema.push("}")
 
-  return updateSchema.join("\n");
-};
+  return updateSchema.join("\n")
+}
 
 const getCreateSchema = (props, tableInformation) => {
-  const optionsCreateSchema = get(props, "graphql.createSchema", "");
-  if (optionsCreateSchema) return optionsCreateSchema;
-  let createSchema = [`input create${props.name}Input {`];
+  const optionsCreateSchema = get(props, "graphql.createSchema", "")
+  if (optionsCreateSchema) return optionsCreateSchema
+  let createSchema = [`input create${props.name}Input {`]
   tableInformation.forEach((element) => {
     if (element.Field !== "id" && element.Type !== "timestamp") {
       createSchema.push(
         `${element.Field}: ${getType(element.Type)}${
           element.Null.toLowerCase() === "no" ? "!" : ""
         }`
-      );
+      )
     }
-  });
-  createSchema.push("}");
+  })
+  createSchema.push("}")
 
-  return createSchema.join("\n");
-};
+  return createSchema.join("\n")
+}
 
 /**
  * Wertik js module
@@ -112,89 +112,89 @@ const getCreateSchema = (props, tableInformation) => {
  */
 export const useModule = (props: useModuleProps) => {
   return async ({ store, configuration, app }: any) => {
-    let tableInstance;
-    let graphqlSchema = [];
+    let tableInstance
+    let graphqlSchema = []
 
-    const useDatabase = get(props, "useDatabase", false);
+    const useDatabase = get(props, "useDatabase", false)
 
     const useSchema = (string: string) => {
       store.graphql.typeDefs = store.graphql.typeDefs.concat(`
         ${string}
-      `);
-    };
+      `)
+    }
 
     const useQuery = ({ query, resolver, name }) => {
       store.graphql.typeDefs = store.graphql.typeDefs.concat(`
         extend type Query {
           ${query}
         }
-      `);
-      store.graphql.resolvers.Query[name] = resolver;
-    };
+      `)
+      store.graphql.resolvers.Query[name] = resolver
+    }
 
     const useMutation = ({ query, resolver, name }) => {
       store.graphql.typeDefs = store.graphql.typeDefs.concat(`
         extend type Mutation {
           ${query}
         }
-      `);
-      store.graphql.resolvers.Mutation[name] = resolver;
-    };
+      `)
+      store.graphql.resolvers.Mutation[name] = resolver
+    }
 
     const useExpress = (fn = (express) => {}) => {
       setTimeout(() => {
-        fn(app.express);
-      }, 2500);
-    };
+        fn(app.express)
+      }, 2500)
+    }
 
-    let listSchema = "";
-    let filterSchema = [];
+    let listSchema = ""
+    let filterSchema = []
     if (useDatabase) {
-      var createSchema = [];
-      var updateSchema = [];
-      const connection = app.database[props.database];
+      var createSchema = []
+      var updateSchema = []
+      const connection = app.database[props.database]
       const describe = await connection.instance.query(
         `describe ${props.table}`
-      );
-      const tableInformation = describe[0];
+      )
+      const tableInformation = describe[0]
 
-      let fields = {};
+      let fields = {}
 
       tableInformation.forEach((element) => {
         if (element.Field === "id") {
-          return;
+          return
         }
         const { type, length } = generateDataTypeFromDescribeTableColumnType(
           element.Type
-        );
+        )
         fields[element.Field] = {
           type: {
             type: type,
             null: element.Null === "YES" ? true : false,
           },
-        };
+        }
         tableInstance = connection.instance.define(props.table, fields, {
           ...get(props, "tableOptions", {}),
           ...databaseDefaultOptions.sql.defaultTableOptions,
-        });
-      });
+        })
+      })
 
       if (props?.graphql?.schema) {
-        graphqlSchema = props.graphql.schema.replace("}", "").split("\n");
+        graphqlSchema = props.graphql.schema.replace("}", "").split("\n")
       } else {
         // graphql schema
-        graphqlSchema = [`type ${props.name} {`];
+        graphqlSchema = [`type ${props.name} {`]
 
         tableInformation.forEach((element, index) => {
-          graphqlSchema.push(`${element.Field}: ${getType(element.Type)}`);
-        });
+          graphqlSchema.push(`${element.Field}: ${getType(element.Type)}`)
+        })
       }
 
-      updateSchema = getUpdateSchema(props, tableInformation);
+      updateSchema = getUpdateSchema(props, tableInformation)
 
-      createSchema = getCreateSchema(props, tableInformation);
+      createSchema = getCreateSchema(props, tableInformation)
 
-      filterSchema = [`input ${props.name}FilterInput {`];
+      filterSchema = [`input ${props.name}FilterInput {`]
 
       tableInformation.forEach((element, _index) => {
         if (
@@ -203,14 +203,14 @@ export const useModule = (props: useModuleProps) => {
           element.Type.includes("varchar") ||
           element.Type.includes("text")
         ) {
-          filterSchema.push(`${element.Field}: StringFilterInput`);
+          filterSchema.push(`${element.Field}: StringFilterInput`)
         } else if (
           element.Type.includes("int") ||
           element.Type.includes("number")
         ) {
-          filterSchema.push(`${element.Field}: IntFilterInput`);
+          filterSchema.push(`${element.Field}: IntFilterInput`)
         }
-      });
+      })
 
       listSchema = `
         query List${props.name} {
@@ -218,11 +218,11 @@ export const useModule = (props: useModuleProps) => {
           paginationProperties: PaginationProperties
           filters: ${props.name}Filters
         }
-      `;
+      `
     }
 
     const hasOne = (params: RelationParams) => {
-      graphqlSchema.push(`${params.graphqlKey}: ${params.module}`);
+      graphqlSchema.push(`${params.graphqlKey}: ${params.module}`)
       store.database.relationships.push({
         currentModule: props.name,
         currentModuleDatabase: props.database,
@@ -231,10 +231,10 @@ export const useModule = (props: useModuleProps) => {
         referencedModuleDatabase: params.database,
         options: params.options,
         type: "hasOne",
-      });
-    };
+      })
+    }
     const belongsTo = (params: RelationParams) => {
-      graphqlSchema.push(`${params.graphqlKey}: ${params.module}`);
+      graphqlSchema.push(`${params.graphqlKey}: ${params.module}`)
       store.database.relationships.push({
         currentModule: props.name,
         currentModuleDatabase: props.database,
@@ -243,10 +243,10 @@ export const useModule = (props: useModuleProps) => {
         referencedModuleDatabase: params.database,
         options: params.options,
         type: "belongsTo",
-      });
-    };
+      })
+    }
     const belongsToMany = (params: RelationParams) => {
-      graphqlSchema.push(`${params.graphqlKey}: ${params.module}List`);
+      graphqlSchema.push(`${params.graphqlKey}: ${params.module}List`)
       store.database.relationships.push({
         currentModule: props.name,
         currentModuleDatabase: props.database,
@@ -255,10 +255,10 @@ export const useModule = (props: useModuleProps) => {
         referencedModuleDatabase: params.database,
         options: params.options,
         type: "belongsToMany",
-      });
-    };
+      })
+    }
     const hasMany = (params: RelationParams) => {
-      graphqlSchema.push(`${params.graphqlKey}: ${params.module}List`);
+      graphqlSchema.push(`${params.graphqlKey}: ${params.module}List`)
       store.database.relationships.push({
         currentModule: props.name,
         currentModuleDatabase: props.database,
@@ -267,8 +267,8 @@ export const useModule = (props: useModuleProps) => {
         referencedModuleDatabase: params.database,
         options: params.options,
         type: "hasMany",
-      });
-    };
+      })
+    }
 
     get(props, "on", () => {})({
       useQuery,
@@ -279,11 +279,11 @@ export const useModule = (props: useModuleProps) => {
       belongsToMany,
       hasMany,
       useSchema,
-    });
+    })
 
     if (useDatabase) {
-      graphqlSchema.push("}");
-      filterSchema.push("}");
+      graphqlSchema.push("}")
+      filterSchema.push("}")
     }
 
     const schemaInformation = {
@@ -295,12 +295,12 @@ export const useModule = (props: useModuleProps) => {
         list: listSchema,
         filters: filterSchema.join("\n"),
       },
-    };
-
-    if (useDatabase) {
-      generateGenerateGraphQLCrud(props, schemaInformation, store);
     }
 
-    return schemaInformation;
-  };
-};
+    if (useDatabase) {
+      generateGenerateGraphQLCrud(props, schemaInformation, store)
+    }
+
+    return schemaInformation
+  }
+}
