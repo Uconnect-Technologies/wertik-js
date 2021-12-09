@@ -4,7 +4,7 @@ logs
 dist
 yarn.lock
 .idea
-
+.log
 crit.log
 debug.log
 emerg.log
