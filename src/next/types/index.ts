@@ -130,7 +130,7 @@ export interface WertikApp {
 /**
  * Provide same options that redis createClient method requires.
  */
-export interface useRedisOptions {
+export interface useRedisProps {
   [key: string]: any
   name: string;
 }

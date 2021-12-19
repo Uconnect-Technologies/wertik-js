@@ -1,7 +1,7 @@
 import { createClient } from "redis"
-import { useRedisOptions, WertikApp, WertikConfiguration } from "../types"
+import { useRedisProps, WertikApp, WertikConfiguration } from "../types"
 
-export const useRedis = (props?: useRedisOptions) => {
+export const useRedis = (props?: useRedisProps) => {
   return async ({
     configuration,
     wertikApp,

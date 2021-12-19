@@ -1,6 +1,18 @@
 # Redis(Beta)
 
-Wertik JS allows a using redis, Wertik JS uses package named `redis`. Wertik JS gives a function called `useRedis` which allows creating a redis server. Let's create a redis client:
+Wertik JS allows a using redis, Wertik JS uses package named `redis(options: useRedisProps)`. Wertik JS gives a function called `useRedis` which allows creating a redis server. Let's create a redis client:
+
+Where `useRedisProps` is:
+
+```typescript
+export interface useRedisProps {
+  [key: string]: any
+  name: string;
+}
+```
+
+Where rest of the options will be part of redis `createClient` options. For `createClient` options please check https://github.com/redis/node-redis/blob/master/docs/client-configuration.md.
+
 
 ```javascript
 import wertik, { useRedis } from "wertik-js/lib/next";
@@ -13,7 +25,6 @@ port: 1200,
     }
 })
 ```
-
 This print in console:
 
 ```log
