@@ -1,161 +1,120 @@
-# Wertik-js Next
+# Wertik-JS V3
 
-Redeveloped Wertik-js again taking care of the mistakes I did in past. So the library will be initialized through. I will follow the pattern of hooks in React.
+Wertik is a tiny Node JS framework that helps you setting up servers with support for
 
-```javascript
-import wertik from "wertik-js"
+- MySQL Database
+- Emailing
+- GraphQL
+- Modules
+- Rest Api
+- Storage
+- Sockets
+- Cron Jobs
+- Redis
 
-wertik({
-  port: 5050,
-})
+## Installation
+
+You can install wertik-js by using yarn or npm:
+
+Yarn
+
+```
+yarn add wertik-js
 ```
 
-This is how the app will run. very simple.
+Npm
 
-## Database
-
-Wertik-js will support multiple databases
-
-```javascript
-import wertik, { useDatabase } from "wertik-js"
-
-wertik({
-  port: 5050,
-  database: {
-    gamesDatabase: useDatabase({
-      port: 0134,
-      password: "pass",
-      username: "root",
-      host: "localhost",
-      name: "games",
-    }),
-    clientsDatabase: useDatabase({
-      port: 0134,
-      password: "pass",
-      username: "root",
-      host: "localhost",
-      name: "clients",
-    }),
-  },
-})
+```
+npm install wertik-js
 ```
 
-## Modules
+## Setting up server
 
-To create a custom module you will need to todo some thing like this, IT will automatically generate all graphql subscriptions.
+To start wertik-js server you need to import wertik and start it:
 
-```javascript
-import wertik, { useModule } from "wertik-js"
+```js
+import wertik from "wertik-js/lib/next";
 
-wertik({
-  port: 5050,
-  modules: {
-    users: useModule({
-      hasDatabase: true, // by default true
-      database: "YOUR_DATABASE",
-      table: "TABLE_NAME",
-      on: function ({ useExpress, useQuery, useMutation }) {
-        useExpress((express) => {
-          // express is the express instance
-        })
-        query({
-          query: ``,
-          resolver() {},
-        })
-        mutation({
-          query: ``,
-          resolver() {},
-        })
-      },
-    }),
-  },
-})
+weritk({
+  port: 1200,
+});
 ```
 
-## Modules
+In your console you will see something like this:
 
-To setup email you'll have to do something like this:
-
-```javascript
-import wertik, { useMailer } from "wertik-js"
-
-wertik({
-  port: 5050,
-  mailer: useMailer({
-    //nodemailerconfiguration and sendemail function will be passed to graphql resolvers and to rest api req object
-  }),
-})
+```log
+Wertik JS app listening at http://localhost:1200
 ```
 
-## Sockets
+If you visit [http://localhost:1200](http://localhost:1200), you will see a response like this:
 
-To use sockets you will need to do following and socket will be available in context.
-
-```javascript
-import wertik, { useSockets } from "wertik-js"
-
-wertik({
-  port: 5050,
-  sockets: useSockets({
-    onClientConnected: ({ socket, context }) => {},
-  }),
-})
+```log
+Cannot GET /
 ```
 
-## Storage and backup
+🚀 You have successfully started wertik server. Right now there is nothing in wertik app right now. Let's make it interactive by adding:
 
-To use storage and backup feature you will need to use useStorage and it will provide you functions to take backups to local, digital ocean and dropbox.
+- MySQL Database
+- Mailer
+- GraphQL
+- Modules
+- Rest Api
+- Storage
+- Sockets
+- Cron Jobs
+- Redis
 
-```javascript
-import wertik, { useStorage } from "wertik-js"
+## Accessing Wertik Inside GraphQL Resolver and Express Handler
 
-wertik({
-  port: 5050,
-  storage: useStorage({
-    dropbox: {
-      // dropbox creds
-    },
-    digitalOceanSpaces: {
-      // dropbox creds
-    },
-  }),
-})
-```
+You can access Wertik instance inside GraphQL and Express handler through:
 
-## Cron JOBS
-
-To use Cron JOBS you will have to use useCron to run cron jobs and in each function you will have context to access your app.
+- Express
 
 ```javascript
-import wertik, { useCronJobs } from "wertik-js"
-
-wertik({
-  port: 5050,
-  cronJobs: useCronJobs((schedule) => {
-    schedule("schema", (context) => {
-      // context will contain your app
-    })
-  }),
-})
+app.get("/somepath", (req, res) => {
+  console.log(req.wertik); // Wertik App
+  res.send("Some Info");
+});
 ```
 
-## Assigning GraphQL Queries and Mutations in root
+For more please see [This line](https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/next/index.ts#:~:text=req.wertik%20%3D%20wertikApp%3B).
 
-To assign graphql queries and mutations in root you have to assign like this:
+- GraphQL Resolver
 
 ```javascript
-import wertik, { useCronJobs } from "wertik-js"
-
-wertik({
-  port: 5050,
-  graphql: {
-    typeDefs: ``,
-    resolvers: {
-      Query: {},
-      Mutation: {},
-    },
-  },
-})
+function Resolver(_, args, context, info) => {
+  console.log(context.wertik); // Wertik App
+  return "Some Info"
+}
 ```
 
-...To be continued.
+For more please see: [This line](<https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/next/graphql/index.ts#:~:text=context%3A%20async%20()%20%3D%3E%20%7B>)
+
+With keyword Wertik you can access everything that lies inside wertik from database, modules, sockets, mailer, cron jobs to everything in Wertik app.
+
+## Why you should use Wertik JS
+
+If you have a small project that requires a backend as well. Wertik-js is perfect for it because the recipe is ready you have to just use it. If you have a small blog you just have to create a database and add a connection to the database and then you are all set. Wertik JS will automatically create CRUD operations for you and using events you can secure those operations based on user roles. You can easily add relationships between modules.
+
+## How Wertik JS works internally
+
+Wertik JS v3 is setup in a clean way and easy way. Here is the main file which initializes Wertik JS: [Show File](https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/next/index.ts).
+
+You can check the code and if you find something that needs to be changed, you can create a new Issue [here](https://github.com/Uconnect-Technologies/wertik-js/issues/new).
+
+## Did you find a grammar mistake in the documentation?
+
+If you came across a grammar mistake please create a new issue with more details in the description: [here](https://github.com/Uconnect-Technologies/wertik-js/issues/new?title=I%20have%20found%20a%20grammar%20mistake).
+
+## Contribute & Support
+
+Pull requests are welcome. If you have discovered a bug or have a feature suggestion, feel free to create an issue on GitHub.
+
+If you'd like to make some changes yourself, see the following:
+
+- Fork this repository to your own GitHub account and then clone it to your local device
+- Make sure yarn is globally installed (npm install -g yarn)
+- Run yarn to download required packages.
+- Build and start the application: yarn `dev-next`
+- If you contributed something new, run yarn contrib:add <your GitHub username> <contribution type> to add yourself to the contributors list
+- Finally, submit a pull request with your changes!

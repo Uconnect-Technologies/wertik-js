@@ -133,5 +133,4 @@ export interface WertikApp {
 export interface useRedisOptions {
   [key: string]: any
   name: string;
-
 }
