@@ -107,7 +107,7 @@ export interface WertikConfiguration {
    * Redis
    */
   redis?: {
-    [key:string]: ({
+    [key: string]: ({
       configuration: WertikConfiguration,
       wertikApp: WertikApp,
     }) => iObject
@@ -127,11 +127,11 @@ export interface WertikApp {
   [key: string]: any
 }
 
-
-
 /**
  * Provide same options that redis createClient method requires.
  */
 export interface useRedisOptions {
+  [key: string]: any
   name: string;
+
 }

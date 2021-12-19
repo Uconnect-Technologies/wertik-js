@@ -34,7 +34,7 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
         sockets: {},
         cronJobs: {},
         storage: {},
-        redis: {}
+        redis: {},
       }
 
       const port = get(configuration, "port", 5050)
@@ -108,7 +108,7 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
         for (const redisName of Object.keys(configuration.redis || {})) {
           wertikApp.redis[redisName] = await configuration.redis[redisName]({
             wertikApp,
-            configuration
+            configuration,
           })
         }
       }

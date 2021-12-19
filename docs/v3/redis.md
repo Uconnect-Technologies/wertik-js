@@ -20,3 +20,26 @@ This print in console:
 [REDIS] Initialized redis testRedis
 Wertik JS app listening at http://localhost:1200
 ```
+
+
+### Accessing redis inside Expres handler or GraphQL Resolver
+
+You can access Redis instances inside GraphQL and Express handler through:
+
+- Express
+
+```javascript
+app.get("/somepath", (req, res) => {
+  console.log(req.wertik.redis); // will return object of redis instances
+  res.send("Some Info");
+});
+```
+
+- GraphQL Resolver
+
+```javascript
+function Resolver(_, args, context, info) => {
+  console.log(context.wertik.redis); // will return object of redis instances
+  return "Some Info"
+}
+```
