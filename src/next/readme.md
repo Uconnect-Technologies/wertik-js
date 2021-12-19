@@ -33,11 +33,11 @@ npm install wertik-js
 To start wertik-js server you need to import wertik and start it:
 
 ```js
-import wertik from "wertik-js/lib/next";
+import wertik from "wertik-js/lib/next"
 
 weritk({
   port: 1200,
-});
+})
 ```
 
 In your console you will see something like this:
@@ -72,9 +72,9 @@ You can access Wertik instance inside GraphQL and Express handler through:
 
 ```javascript
 app.get("/somepath", (req, res) => {
-  console.log(req.wertik); // Wertik App
-  res.send("Some Info");
-});
+  console.log(req.wertik) // Wertik App
+  res.send("Some Info")
+})
 ```
 
 For more please see [This line](https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/next/index.ts#:~:text=req.wertik%20%3D%20wertikApp%3B).
