@@ -9,6 +9,7 @@ import { emailSender } from "./mailer/index"
 import http from "http"
 import { WertikConfiguration } from "./types"
 import { WertikApp } from "./types"
+import { ConfigurationServicePlaceholders } from "aws-sdk/lib/config_service_placeholders"
 
 export * from "./database"
 export * from "./modules/modules"
@@ -33,6 +34,7 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
         sockets: {},
         cronJobs: {},
         storage: {},
+        redis: {},
       }
 
       const port = get(configuration, "port", 5050)
@@ -98,6 +100,15 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
             store: store,
             configuration: configuration,
             app: wertikApp,
+          })
+        }
+      }
+
+      if (configuration.redis) {
+        for (const redisName of Object.keys(configuration.redis || {})) {
+          wertikApp.redis[redisName] = await configuration.redis[redisName]({
+            wertikApp,
+            configuration,
           })
         }
       }
