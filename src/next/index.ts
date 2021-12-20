@@ -9,7 +9,6 @@ import { emailSender } from "./mailer/index"
 import http from "http"
 import { WertikConfiguration } from "./types"
 import { WertikApp } from "./types"
-import { ConfigurationServicePlaceholders } from "aws-sdk/lib/config_service_placeholders"
 
 export * from "./database"
 export * from "./modules/modules"
@@ -19,6 +18,7 @@ export * from "./cronJobs"
 export * from "./storage"
 export * from "./helpers/modules/backup"
 export * from "./sockets"
+export * from "./redis"
 
 const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
   configuration: WertikConfiguration

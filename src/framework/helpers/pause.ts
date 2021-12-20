@@ -2,7 +2,7 @@ const pause = function (timeout = 1000) {
   return new Promise((resolve, reject) => {
     try {
       setTimeout(() => {
-        resolve()
+        resolve(true)
       }, timeout)
     } catch (e) {
       reject(e)

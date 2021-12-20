@@ -11,8 +11,10 @@ export const useRedis = (props?: useRedisProps) => {
   }) => {
     const client = createClient(props)
     await client.connect()
-    client.on("error", (err) => console.log("Redis Client Error ", err))
-    console.log(`[REDIS]`, `Initialized redis ${props.name}`)
+    client.on("error", (err) =>
+      console.log(`Redis Client ${props.name} Error `, err)
+    )
+    console.log(`[Redis]`, `Initialized redis "${props.name}"`)
     return client
   }
 }
