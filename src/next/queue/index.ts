@@ -5,7 +5,7 @@ import { useQueueProps } from "../types/queue"
  * @param queueName
  * @param url
  * @param opts
- * @returns
+ * @returns Queue
  */
 
 export const useQueue = (props: useQueueProps) => {

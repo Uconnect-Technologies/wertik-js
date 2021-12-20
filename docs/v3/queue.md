@@ -1,6 +1,5 @@
 # Queue Management
 
-
 Wertik JS allows you creating Queues by using npm bull library. Wertik JS provides a function called `useQueue` which integrates a Queue into your Wertik App.
 
 ## Why use it?
