@@ -1,3 +1,4 @@
+import { useGraphql } from "../graphql"
 import wertik from "../index"
 
 const devIlyas = async () => {
