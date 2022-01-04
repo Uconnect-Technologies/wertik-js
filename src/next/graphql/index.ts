@@ -10,6 +10,7 @@ export const useGraphql = (props?: useGraphqlProps) => {
     store,
     configuration,
   }: GraphqlInitializeProps) => {
+    props = props ? props : {}
     store.graphql.typeDefs = store.graphql.typeDefs.concat(
       get(configuration, "graphql.typeDefs", "")
     )
@@ -51,7 +52,7 @@ export const useGraphql = (props?: useGraphqlProps) => {
     console.log(
       `GraphQL server starting at http://localhost:${
         configuration.port ?? 1200
-      }/${props.applyMiddlewareOptions.path ?? "graphql"}`
+      }/${props?.applyMiddlewareOptions?.path ?? "graphql"}`
     )
 
     return GraphqlApolloServer
