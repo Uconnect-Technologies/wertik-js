@@ -9,6 +9,7 @@ import { emailSender } from "./mailer/index"
 import http from "http"
 import { WertikConfiguration } from "./types"
 import { WertikApp } from "./types"
+import { initializeBullBoard } from "./queue/index"
 
 export * from "./database"
 export * from "./modules/modules"
@@ -34,7 +35,10 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
         sockets: {},
         cronJobs: {},
         storage: {},
-        queue: {},
+        queue: {
+          jobs: {},
+          bullBoard: {},
+        },
       }
 
       const port = get(configuration, "port", 5050)
@@ -104,10 +108,18 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
         }
       }
 
-      if (configuration.queue) {
-        for (const queueName of Object.keys(configuration.queue || {})) {
-          wertikApp.queue[queueName] = configuration.queue[queueName]()
+      if (configuration?.queue?.jobs) {
+        for (const queueName of Object.keys(configuration?.queue?.jobs || {})) {
+          wertikApp.queue.jobs[queueName] =
+            configuration.queue.jobs[queueName]()
         }
+      }
+
+      if (configuration?.queue?.options?.useBullBoard === true) {
+        wertikApp.queue.bullBoard = initializeBullBoard({
+          wertikApp,
+          configuration,
+        })
       }
 
       expressApp.get("/w/info", function (req, res) {

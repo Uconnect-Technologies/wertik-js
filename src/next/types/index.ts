@@ -103,7 +103,20 @@ export interface WertikConfiguration {
     }) => iObject
   }
   queue?: {
-    [key: string]: () => iObject
+    options?: {
+      /**
+       * When set to true, Wertik JS will use Bull Board UI for Queue Jobs, make sure you have installed this package: @bull-board/express
+       */
+      useBullBoard?: boolean
+      /**
+       * Path on which Queue UI will run.
+       * @default /admin/queues
+       */
+      uiPath: string
+    }
+    jobs: {
+      [key: string]: () => iObject
+    }
   }
 }
 
