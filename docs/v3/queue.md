@@ -95,3 +95,9 @@ wertik({
 ```
 
 This will run UI for monitoring jobs at page: [http://localhost:1200/admin/jobs/](http://localhost:1200/admin/jobs/).
+
+This will print in console: 
+
+```log
+Queue UI Monitoring Bull Board running at: http://localhost:1200/admin/jobs
+```

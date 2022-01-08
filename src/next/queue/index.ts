@@ -58,7 +58,7 @@ export const initializeBullBoard = (props: {
       serverAdapter.getRouter()
     )
 
-    console.log(`Queue UI Monitoring running at: http://localhost:${props.configuration.port}${queuePath}`)
+    console.log(`Queue UI Monitoring Bull Board running at: http://localhost:${props.configuration.port}${queuePath}`)
 
     return { addQueue, removeQueue, setQueues, replaceQueues }
   }
