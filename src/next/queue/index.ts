@@ -31,7 +31,7 @@ export const initializeBullBoard = (props: {
     queue: { jobs: QueueJobs },
   } = props.wertikApp
 
-  const quelist = []
+  const queueJobs = []
 
   const { createBullBoard } = require("@bull-board/api")
   const { BullAdapter } = require("@bull-board/api/bullAdapter")
@@ -40,13 +40,12 @@ export const initializeBullBoard = (props: {
   if (QueueJobs) {
     const queuePath =props?.configuration?.queue?.options?.uiPath ?? "/admin/queues"
     for (const queueName of Object.keys(QueueJobs || {})) {
-      var queueInstance = QueueJobs[queueName]
-      quelist.push(new BullAdapter(queueInstance))
+      queueJobs.push(new BullAdapter(QueueJobs[queueName]))
     }
     const serverAdapter = new ExpressAdapter()
     const { addQueue, removeQueue, setQueues, replaceQueues } = createBullBoard(
       {
-        queues: quelist,
+        queues: queueJobs,
         serverAdapter: serverAdapter,
       }
     )
