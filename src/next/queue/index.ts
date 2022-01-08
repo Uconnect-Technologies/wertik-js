@@ -38,6 +38,7 @@ export const initializeBullBoard = (props: {
   const { ExpressAdapter } = require("@bull-board/express")
 
   if (QueueJobs) {
+    const queuePath =props?.configuration?.queue?.options?.uiPath ?? "/admin/queues"
     for (const queueName of Object.keys(QueueJobs || {})) {
       var queueInstance = QueueJobs[queueName]
       quelist.push(new BullAdapter(queueInstance))
@@ -50,12 +51,14 @@ export const initializeBullBoard = (props: {
       }
     )
     serverAdapter.setBasePath(
-      props?.configuration?.queue?.options?.uiPath ?? "/admin/queues"
+      queuePath
     )
     express.use(
-      props?.configuration?.queue?.options?.uiPath ?? "/admin/queues",
+      queuePath,
       serverAdapter.getRouter()
     )
+
+    console.log(`Queue UI Monitoring running at: http://localhost:${props.configuration.port}${queuePath}`)
 
     return { addQueue, removeQueue, setQueues, replaceQueues }
   }
