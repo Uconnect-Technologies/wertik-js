@@ -101,3 +101,25 @@ This will print in console:
 ```log
 Queue UI Monitoring Bull Board running at: http://localhost:1200/admin/jobs
 ```
+
+You can also access Queue Jobs from WertikApp in your app by using: 
+
+- Express
+
+```javascript
+app.get("/somepath", (req, res) => {
+  console.log(req.wertik.queue); // Wertik App
+  res.send("Some Info");
+});
+```
+
+For more please see [This line](https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/next/index.ts#:~:text=req.wertik%20%3D%20wertikApp%3B).
+
+- GraphQL Resolver
+
+```javascript
+function Resolver(_, args, context, info) => {
+  console.log(context.wertik.queue); // Wertik App
+  return "Some Info"
+}
+```
