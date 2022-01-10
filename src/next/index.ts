@@ -9,6 +9,7 @@ import { emailSender } from "./mailer/index"
 import http from "http"
 import { WertikConfiguration } from "./types"
 import { WertikApp } from "./types"
+import { initializeBullBoard } from "./queue/index"
 
 export * from "./database"
 export * from "./modules/modules"
@@ -18,6 +19,7 @@ export * from "./cronJobs"
 export * from "./storage"
 export * from "./helpers/modules/backup"
 export * from "./sockets"
+export * from "./queue"
 export * from "./redis"
 
 const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
@@ -34,6 +36,10 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
         sockets: {},
         cronJobs: {},
         storage: {},
+        queue: {
+          jobs: {},
+          bullBoard: {},
+        },
         redis: {},
       }
 
@@ -102,6 +108,20 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
             app: wertikApp,
           })
         }
+      }
+
+      if (configuration?.queue?.jobs) {
+        for (const queueName of Object.keys(configuration?.queue?.jobs || {})) {
+          wertikApp.queue.jobs[queueName] =
+            configuration.queue.jobs[queueName]()
+        }
+      }
+
+      if (configuration?.queue?.options?.useBullBoard === true) {
+        wertikApp.queue.bullBoard = initializeBullBoard({
+          wertikApp,
+          configuration,
+        })
       }
 
       if (configuration.redis) {

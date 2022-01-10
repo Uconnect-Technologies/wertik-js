@@ -102,7 +102,22 @@ export interface WertikConfiguration {
       wertikApp: WertikApp,
     }) => iObject
   }
-
+  queue?: {
+    options?: {
+      /**
+       * When set to true, Wertik JS will use Bull Board UI for Queue Jobs, make sure you have installed this package: @bull-board/express
+       */
+      useBullBoard?: boolean
+      /**
+       * Path on which Queue UI will run.
+       * @default /admin/queues
+       */
+      uiPath: string
+    }
+    jobs: {
+      [key: string]: () => iObject
+    }
+  }
   /**
    * Redis
    */
@@ -125,6 +140,7 @@ export interface WertikApp {
   cronJobs: iObject
   storage: iObject
   [key: string]: any
+  queue: any
 }
 
 /**

@@ -1,6 +1,6 @@
 {
   "name": "wertik-js",
-  "version": "3.1.4",
+  "version": "3.1.5",
   "main": "lib/main.js",
   "types": "lib/types.d.ts",
   "repository": "https://github.com/Uconnect-Technologies/wertik-js.git",
@@ -44,6 +44,7 @@
     "aws-sdk": "^2.820.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
+    "bull": "^4.1.1",
     "chalk": "^3.0.0",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
@@ -69,7 +70,9 @@
     "ws": "^8.0.0"
   },
   "devDependencies": {
+    "@bull-board/express": "^3.8.1",
     "@types/body-parser": "^1.16.8",
+    "@types/bull": "^3.15.7",
     "@types/cors": "^2.8.4",
     "@types/dotenv": "^4.0.3",
     "@types/express": "^4.16.0",
