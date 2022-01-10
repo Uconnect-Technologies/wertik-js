@@ -1,4 +1,3 @@
-import { useGraphql } from "../graphql"
 import wertik from "../index"
 import { useQueue } from "../queue"
 
