@@ -108,7 +108,7 @@ You can also access Queue Jobs from WertikApp in your app by using:
 
 ```javascript
 app.get("/somepath", (req, res) => {
-  console.log(req.wertik.queue); // Wertik App
+  console.log(req.wertik.queue); // Queue in Wertik App
   res.send("Some Info");
 });
 ```
@@ -119,7 +119,7 @@ For more please see [This line](https://github.com/Uconnect-Technologies/wertik-
 
 ```javascript
 function Resolver(_, args, context, info) => {
-  console.log(context.wertik.queue); // Wertik App
+  console.log(context.wertik.queue); // Queue in Wertik App
   return "Some Info"
 }
 ```
