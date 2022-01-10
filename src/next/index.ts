@@ -20,6 +20,7 @@ export * from "./storage"
 export * from "./helpers/modules/backup"
 export * from "./sockets"
 export * from "./queue"
+export * from "./redis"
 
 const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
   configuration: WertikConfiguration
@@ -39,6 +40,7 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
           jobs: {},
           bullBoard: {},
         },
+        redis: {},
       }
 
       const port = get(configuration, "port", 5050)
@@ -120,6 +122,15 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
           wertikApp,
           configuration,
         })
+      }
+
+      if (configuration.redis) {
+        for (const redisName of Object.keys(configuration.redis || {})) {
+          wertikApp.redis[redisName] = await configuration.redis[redisName]({
+            wertikApp,
+            configuration,
+          })
+        }
       }
 
       expressApp.get("/w/info", function (req, res) {

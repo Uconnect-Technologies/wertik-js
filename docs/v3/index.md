@@ -10,6 +10,7 @@ Wertik is a tiny Node JS framework that helps you setting up servers with suppor
 - Storage
 - Sockets
 - Cron Jobs
+- Redis
 
 ## Installation
 
@@ -61,6 +62,7 @@ Cannot GET /
 - Storage
 - Sockets
 - Cron Jobs
+- Redis
 
 ## Accessing Wertik Inside GraphQL Resolver and Express Handler
 

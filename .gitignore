@@ -4,7 +4,7 @@ logs
 dist
 yarn.lock
 .idea
-
+.log
 crit.log
 debug.log
 emerg.log
@@ -12,6 +12,7 @@ error.log
 notice.log
 info.log
 warning.log
+*.log
 .env
 /backups
 .DS_STORE

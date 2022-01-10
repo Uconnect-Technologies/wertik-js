@@ -118,6 +118,15 @@ export interface WertikConfiguration {
       [key: string]: () => iObject
     }
   }
+  /**
+   * Redis
+   */
+  redis?: {
+    [key: string]: ({
+      configuration: WertikConfiguration,
+      wertikApp: WertikApp,
+    }) => iObject
+  }
 }
 
 export interface WertikApp {
@@ -132,4 +141,12 @@ export interface WertikApp {
   storage: iObject
   [key: string]: any
   queue: any
+}
+
+/**
+ * Provide same options that redis createClient method requires.
+ */
+export interface useRedisProps {
+  [key: string]: any
+  name: string
 }
