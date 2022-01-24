@@ -43,7 +43,7 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
         redis: {},
       }
 
-      const port = get(configuration, "port", 5050)
+      const port = get(configuration, "port", 1200)
       const skip = get(configuration, "skip", false)
       const expressApp = get(configuration, "express", express())
       const httpServer = http.createServer(expressApp)

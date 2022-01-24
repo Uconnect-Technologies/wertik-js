@@ -245,6 +245,8 @@ export const useModule = (module: useModuleProps) => {
       generateGenerateGraphQLCrud(module, schemaInformation, store)
     }
 
+    console.log(`[Module]`, `Initialized module "${module.name}"`)
+
     return schemaInformation
   }
 }
