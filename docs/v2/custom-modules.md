@@ -12,7 +12,7 @@ With this guide, you can extend your app with extra modules and functionality. P
 **Default Value:** null
 **Description:** The name of module.
 
-### useDatabase
+### useMysqlDatabase
 
 **Type:** Boolean
 **Default Value:** true

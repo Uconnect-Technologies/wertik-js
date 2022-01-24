@@ -17,7 +17,7 @@ export const getAllRelationships = (dbName: String) => {
   `
 }
 
-export const useDatabase = function (obj: useDatabaseProps) {
+export const useMysqlDatabase = function (obj: useDatabaseProps) {
   return async () => {
     let sequelize = new Sequelize(obj.name, obj.username, obj.password, {
       host: obj.host,
@@ -39,6 +39,11 @@ export const useDatabase = function (obj: useDatabaseProps) {
     }
   }
 }
+
+/**
+ * @deprecated use useMysqlDatabase instead useDatabase is deprecated and will be removed in 3.5.0 version.
+ */
+export const useDatabase = useMysqlDatabase
 
 export const applyRelationshipsFromStoreToDatabase = async (
   store: Store,

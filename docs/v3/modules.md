@@ -4,7 +4,7 @@ Wertik-js allows extending your app with more features using the `modules` term.
 
 ```js
 import wertik, {
-  useDatabase,
+  useMysqlDatabase,
   useMailer,
   useModule,
   useGraphql,
@@ -13,7 +13,7 @@ import wertik, {
 weritk({
   port: 1200,
   database: {
-    default: useDatabase({
+    default: useMysqlDatabase({
       name: "default",
       password: "pass",
       host: "localhost",
@@ -30,7 +30,7 @@ weritk({
       table: "users",
       database: "default",
       name: "users",
-      useDatabase: true,
+      useMysqlDatabase: true,
     }),
   },
 });
@@ -40,7 +40,7 @@ Please check this [interface](https://github.com/Uconnect-Technologies/wertik-js
 
 # Modules GraphQL Schema and Database operations
 
-When you provide `useDatabase: true`, `table` and `database`, Wertik JS automatically generates GraphQL schema, `updateInput` and `createInput`. For example let's say you have a table called `Games` with following fields:
+When you provide `useMysqlDatabase: true`, `table` and `database`, Wertik JS automatically generates GraphQL schema, `updateInput` and `createInput`. For example let's say you have a table called `Games` with following fields:
 
 - name: varchar
 - publisher: varchar
@@ -48,12 +48,12 @@ When you provide `useDatabase: true`, `table` and `database`, Wertik JS automati
 You have to initialize its module in this way:
 
 ```js
-import wertik, { useModule, useDatabase, useGraphql } from "wertik-js/lib/next";
+import wertik, { useModule, useMysqlDatabase, useGraphql } from "wertik-js/lib/next";
 wertik({
   port: 1200,
   graphql: useGraphql(),
   database: {
-    default: useDatabase({
+    default: useMysqlDatabase({
       name: "dbname",
       password: "pass",
       host: "localhost",
@@ -63,7 +63,7 @@ wertik({
   },
   modules: {
     games: useModule({
-      useDatabase: true,
+      useMysqlDatabase: true,
       name: "Games",
       table: "games",
       database: "default",
@@ -127,6 +127,7 @@ type Query {
 }
 ```
 
+**Note:** When you are using enums in table please make sure that your enum value doesn't contains dashes, it should be something like this `enum('X_SMALL','X_LARGE')` not `enum('X-SMALL','X-LARGE')`.
 ### Mutations:
 
 - update
@@ -151,7 +152,7 @@ You can try these `Mutations` and `Queries` in your GraphQL playground. If you f
 
 # More on filtering rows from a table
 
-When you provide `useDatabase: true` for a module called Games. Wertik JS will create a query as:
+When you provide `useMysqlDatabase: true` for a module called Games. Wertik JS will create a query as:
 
 ```graphql
 listGames(
@@ -218,12 +219,12 @@ When events are running you get access to Apollo GraphQL Resolver arguments wher
 Example:
 
 ```js
-import wertik, { useDatabase, useModule } from "wertik-js/lib/next";
+import wertik, { useMysqlDatabase, useModule } from "wertik-js/lib/next";
 
 wertik({
   port: 1200,
   database: {
-    default: useDatabase({
+    default: useMysqlDatabase({
       name: "default",
       password: "pass",
       host: "localhost",
@@ -233,7 +234,7 @@ wertik({
   },
   modules: {
     games: useModule({
-      useDatabase: true,
+      useMysqlDatabase: true,
       name: "Games",
       table: "games",
       database: "jscontainer",
@@ -275,7 +276,7 @@ wertik({
   port: 1200,
   modules: {
     games: useModule({
-      useDatabase: true,
+      useMysqlDatabase: true,
       name: "Games",
       table: "games",
       database: "jscontainer",
