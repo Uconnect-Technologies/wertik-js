@@ -33,7 +33,8 @@
     "build": "yarn tsc",
     "production": "node lib/devServer.js",
     "watch-ts": "tsc -w",
-    "prettier": "prettier --write src package.json index.js"
+    "prettier": "prettier --write src package.json index.js",
+    "test": "jest"
   },
   "pre-commit": [
     "prettier"
@@ -84,6 +85,7 @@
     "@types/winston": "^2.4.4",
     "concurrently": "^3.6.1",
     "dotenv": "^6.2.0",
+    "jest": "^27.4.7",
     "nodemon": "^1.18.9",
     "prettier": "^2.3.2",
     "tslint": "^5.17.0",
