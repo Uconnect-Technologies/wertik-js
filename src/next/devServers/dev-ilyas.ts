@@ -12,23 +12,23 @@ const devIlyas = async () => {
         username: "root",
         password: "pass",
         name: "wertik",
-        host: "localhost"
-      })
+        host: "localhost",
+      }),
     },
     modules: {
       forgetPassword: useModule({
         name: "forgetPassword",
         useDatabase: true,
         database: "default",
-        table: "forgetPassword"
+        table: "forgetPassword",
       }),
       shirts: useModule({
         name: "shirts",
         useDatabase: true,
         database: "default",
-        table: "shirts"
-      })
-    }
+        table: "shirts",
+      }),
+    },
   })
 }
 
