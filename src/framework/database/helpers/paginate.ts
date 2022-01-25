@@ -53,7 +53,7 @@ export default async function (model) {
             previousPage: page == 1 ? 1 : page - 1,
             pages: totalPages,
             hasMore: page < totalPages,
-            limit: limit
+            limit: limit,
           },
         })
       } catch (error) {
