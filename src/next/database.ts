@@ -52,7 +52,7 @@ export const applyRelationshipsFromStoreToDatabase = async (
   store.database.relationships.forEach((element) => {
     const currentTable = app.modules[element.currentModule].tableInstance
     const referencedTable = app.modules[element.referencedModule].tableInstance
-    // element.type willbe hasOne, hasMany, belongsTo or belongsToMany
+    // element.type will be hasOne, hasMany, belongsTo or belongsToMany
     currentTable[element.type](referencedTable, element.options || {})
   })
 }
@@ -70,7 +70,7 @@ export const applyRelationshipsFromStoreToGraphql = async (
 
     store.graphql.resolvers[element.currentModule] = {
       ...oldResolvers,
-      [element.graphqlKey]: async (parent, args, context) => {
+      [element.graphqlKey]: async (parent, _args, context) => {
         const tableInstance =
           context.wertik.modules[element.referencedModule].tableInstance
         let referencedModuleKey =
