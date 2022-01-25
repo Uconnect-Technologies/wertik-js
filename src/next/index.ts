@@ -95,9 +95,6 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
         }
       }
 
-      applyRelationshipsFromStoreToDatabase(store, wertikApp)
-      applyRelationshipsFromStoreToGraphql(store, wertikApp)
-
       if (configuration.modules) {
         for (const moduleName of Object.keys(configuration.modules || {})) {
           wertikApp.modules[moduleName] = await configuration.modules[
@@ -132,6 +129,9 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
           })
         }
       }
+
+      applyRelationshipsFromStoreToDatabase(store, wertikApp)
+      applyRelationshipsFromStoreToGraphql(store, wertikApp) 
 
       expressApp.get("/w/info", function (req, res) {
         res.json({
