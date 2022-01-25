@@ -28,6 +28,24 @@ const devIlyas = async () => {
         database: "default",
         table: "shirts",
       }),
+      shirt_sales: useModule({
+        name: "shirt_sales",
+        useDatabase: true,
+        database: "default",
+        table: "shirt_sales",
+        on: ({ hasOne }) => {
+          hasOne({
+            module: "shirts",
+            graphqlKey: "shirt",
+            database: "default",
+            options: {
+              foreignKey: "id",
+              sourceKey: "shirt_id",
+              targetKey: "shirt_id",
+            },
+          })
+        },
+      }),
     },
   })
 }

@@ -33,7 +33,7 @@ export interface RelationParams {
   module: string
   graphqlKey: string
   database: string
-  options: {
+  options?: {
     [key: string]: string | number | null
   }
 }
