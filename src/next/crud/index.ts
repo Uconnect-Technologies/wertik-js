@@ -3,7 +3,7 @@ import convertFiltersIntoSequalizeObject from "./../../framework/database/helper
 
 export const paginate = async (arg, tableInstance) => {
   let page = get(arg, "pagination.page", 1)
-  let limit = get(arg, "pagination.limit", 500)
+  let limit = get(arg, "pagination.limit", 100)
   let sorting = get(arg, "sorting", [])
   let offset = limit * (page - 1)
   const where = await convertFiltersIntoSequalizeObject(arg.where)
