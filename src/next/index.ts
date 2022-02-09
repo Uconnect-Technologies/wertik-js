@@ -52,8 +52,12 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
       wertikApp.express = expressApp
       wertikApp.port = configuration.port
 
-      for (const mailName of Object.keys(configuration.mailer || {})) {
-        wertikApp.mailer[mailName] = await configuration.mailer[mailName]()
+      for (const mailName of Object.keys(
+        configuration.mailer.instances || {}
+      )) {
+        wertikApp.mailer[mailName] = await configuration.mailer.instances[
+          mailName
+        ]()
       }
 
       if (configuration.storage) {
@@ -131,7 +135,7 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
       }
 
       applyRelationshipsFromStoreToDatabase(store, wertikApp)
-      applyRelationshipsFromStoreToGraphql(store, wertikApp) 
+      applyRelationshipsFromStoreToGraphql(store, wertikApp)
 
       expressApp.get("/w/info", function (req, res) {
         res.json({
@@ -140,7 +144,10 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
         })
       })
 
-      wertikApp.sendEmail = emailSender(wertikApp)
+      wertikApp.sendEmail = emailSender({
+        wertikApp,
+        configuration,
+      })
 
       if (configuration.graphql) {
         wertikApp.graphql = configuration.graphql({
