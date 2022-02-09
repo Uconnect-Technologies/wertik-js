@@ -1,11 +1,23 @@
 import { useMysqlDatabase } from "../database"
 import { useGraphql } from "../graphql"
 import wertik, { useModule } from "../index"
+import { useMailer } from "../mailer"
 
 const devIlyas = async () => {
   wertik({
     port: 1200,
     graphql: useGraphql(),
+    mailer: {
+      instances: {
+        default: useMailer({
+          name: "default",
+        }),
+      },
+      events: {
+        onEmailSent: (props) => {},
+        onEmailSentFailed: () => {},
+      },
+    },
     database: {
       default: useMysqlDatabase({
         port: 3306,
@@ -47,6 +59,17 @@ const devIlyas = async () => {
         },
       }),
     },
+  }).then(async (a) => {
+    let r = await a.sendEmail({
+      mailer: "default",
+      options: {
+        from: "wapge.inc@gmail.com",
+        template: "hello",
+        to: "ilyas.datoo@gmail.com",
+        subject: "hello how are you?",
+      },
+    })
+    console.log(r)
   })
 }
 

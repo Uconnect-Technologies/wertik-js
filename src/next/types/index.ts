@@ -73,7 +73,30 @@ export interface WertikConfiguration {
    * Mailer
    */
   mailer?: {
-    [key: string]: () => Promise<unknown>
+    instances: {
+      [key: string]: () => Promise<unknown>
+    }
+    events?: {
+      /**
+       * Runs when email sents successfully.
+       */
+      onEmailSent?: ({
+        wertikApp: WertikApp,
+        configuration: WertikConfiguration,
+        emailInstance: any,
+        previewURL: string,
+        mailer: String,
+      }) => void | any | null | undefined
+      /**
+       * Runs when email fails to send.
+       */
+      onEmailSentFailed?: ({
+        mailer: String,
+        wertikApp: WertikApp,
+        configuration: WertikConfiguration,
+        error: any,
+      }) => void | any | null | undefined
+    }
   }
   /**
    * Sockets
@@ -149,4 +172,17 @@ export interface WertikApp {
 export interface useRedisProps {
   [key: string]: any
   name: string
+}
+
+export interface useMailerProps {
+  /**
+   * Provide name for your mailer.
+   */
+  name: string
+  /**
+   * Provide options that you provide procide to nodemailer.createTransport function.
+   */
+  options?: {
+    [key: string]: any
+  }
 }
