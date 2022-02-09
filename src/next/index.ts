@@ -52,8 +52,12 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
       wertikApp.express = expressApp
       wertikApp.port = configuration.port
 
-      for (const mailName of Object.keys(configuration.mailer.instances || {})) {
-        wertikApp.mailer[mailName] = await configuration.mailer.instances[mailName]()
+      for (const mailName of Object.keys(
+        configuration.mailer.instances || {}
+      )) {
+        wertikApp.mailer[mailName] = await configuration.mailer.instances[
+          mailName
+        ]()
       }
 
       if (configuration.storage) {
