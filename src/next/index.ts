@@ -28,6 +28,7 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
   return new Promise(async (resolve, reject) => {
     try {
       const wertikApp: WertikApp = {
+        appEnv: "",
         port: 1200,
         modules: {},
         database: {},
@@ -48,6 +49,7 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
       const expressApp = get(configuration, "express", express())
       const httpServer = http.createServer(expressApp)
 
+      wertikApp.appEnv = configuration.appEnv
       wertikApp.httpServer = httpServer
       wertikApp.express = expressApp
       wertikApp.port = configuration.port
@@ -166,7 +168,9 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
       setTimeout(async () => {
         if (skip === false) {
           httpServer.listen(port, () => {
-            console.log(`Wertik JS app listening at http://localhost:${port}`)
+            console.log(
+              `[${wertikApp.appEnv}] Wertik JS app listening at http://localhost:${port}`
+            )
           })
         }
         resolve(wertikApp)

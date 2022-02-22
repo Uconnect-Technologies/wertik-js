@@ -22,6 +22,11 @@ export interface Store {
 
 export interface WertikConfiguration {
   /**
+   * App environment, production,
+   */
+  appEnv?: "production" | "development" | "local"
+
+  /**
    * Port number on which your will run.
    */
   port: number

@@ -5,6 +5,7 @@ import { useMailer } from "../mailer"
 
 const devIlyas = async () => {
   wertik({
+    appEnv: "development",
     port: 1200,
     graphql: useGraphql(),
     mailer: {
@@ -59,17 +60,6 @@ const devIlyas = async () => {
         },
       }),
     },
-  }).then(async (a) => {
-    let r = await a.sendEmail({
-      mailer: "default",
-      options: {
-        from: "wapge.inc@gmail.com",
-        template: "hello",
-        to: "ilyas.datoo@gmail.com",
-        subject: "hello how are you?",
-      },
-    })
-    console.log(r)
   })
 }
 
