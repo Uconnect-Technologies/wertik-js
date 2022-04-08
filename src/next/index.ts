@@ -27,8 +27,9 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
 ) => {
   return new Promise(async (resolve, reject) => {
     try {
+      configuration.appEnv = configuration.appEnv ?? "local"
       const wertikApp: WertikApp = {
-        appEnv: "",
+        appEnv: configuration,
         port: 1200,
         modules: {},
         database: {},
@@ -54,12 +55,14 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
       wertikApp.express = expressApp
       wertikApp.port = configuration.port
 
-      for (const mailName of Object.keys(
-        configuration.mailer.instances || {}
-      )) {
-        wertikApp.mailer[mailName] = await configuration.mailer.instances[
-          mailName
-        ]()
+      if (configuration.mailer && configuration.mailer.instances) {
+        for (const mailName of Object.keys(
+          configuration.mailer.instances || {}
+        )) {
+          wertikApp.mailer[mailName] = await configuration.mailer.instances[
+            mailName
+          ]()
+        }
       }
 
       if (configuration.storage) {
