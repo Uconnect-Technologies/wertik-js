@@ -86,5 +86,6 @@ export default `
 		nextPage: Int
 		previousPage: Int
 		hasMore: Boolean
+		limit: Int
 	}
 `

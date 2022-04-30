@@ -16,3 +16,5 @@ warning.log
 .env
 uploads
 backups
+docs
+tests

@@ -1,14 +1,17 @@
 import nodemailer from "nodemailer"
 import handlebars from "handlebars"
-import { iObject, WertikApp } from "../types"
+import { useMailerProps, WertikApp, WertikConfiguration } from "../types"
 import { emailSendProps } from "../types/mailer"
+import { get } from "lodash"
 
-export const useMailer = (props?: iObject) => {
+export const useMailer = (props: useMailerProps) => {
   return async () => {
-    let testAccount = props ? null : await nodemailer.createTestAccount()
+    let testAccount = props.options
+      ? null
+      : await nodemailer.createTestAccount()
 
-    const wertiknodemailerDefaultConfiguration = props
-      ? props
+    const emailConfiguration = props.options
+      ? props.options
       : {
           host: "smtp.ethereal.email",
           port: 587,
@@ -19,15 +22,23 @@ export const useMailer = (props?: iObject) => {
           },
         }
 
-    return nodemailer.createTransport(wertiknodemailerDefaultConfiguration)
+    console.log(`[Mailer]`, `Initialized mailer "${props.name}"`)
+
+    return nodemailer.createTransport(emailConfiguration)
   }
 }
 
-export const emailSender = (app: WertikApp) => {
-  const fn = (props: { mailer: string; options: emailSendProps }) => {
-    return async () => {
-      let transporter = app.mailer[props.mailer]
+export const emailSender = ({
+  configuration,
+  wertikApp,
+}: {
+  configuration: WertikConfiguration
+  wertikApp: WertikApp
+}) => {
+  const fn = async (props: { mailer: string; options: emailSendProps }) => {
+    let transporter = wertikApp.mailer[props.mailer]
 
+    try {
       if (!transporter) {
         throw new Error(
           `Email integration ${props.mailer} not found. Please check the typo.`
@@ -35,7 +46,7 @@ export const emailSender = (app: WertikApp) => {
       }
 
       let compiled = handlebars.compile(props.options.template)
-      let resultTemplate = compiled(props.options.variables)
+      let resultTemplate = compiled(props.options.variables ?? {})
       let emailInstance = await transporter.sendMail({
         from: props.options.from,
         to: props.options.to,
@@ -51,7 +62,26 @@ export const emailSender = (app: WertikApp) => {
           nodemailer.getTestMessageUrl(emailInstance)
         )
       }
+
+      get(configuration, "mailer.events.onEmailSent", () => {})({
+        mailer: props.mailer,
+        wertikApp,
+        configuration,
+        emailInstance,
+        previewURL:
+          nodemailer && nodemailer.getTestMessageUrl
+            ? nodemailer.getTestMessageUrl(emailInstance)
+            : "",
+      })
+
       return emailInstance
+    } catch (e) {
+      get(configuration, "mailer.events.onEmailSentFailed", () => {})({
+        mailer: props.mailer,
+        wertikApp,
+        configuration,
+        error: e,
+      })
     }
   }
   return fn

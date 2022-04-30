@@ -28,7 +28,9 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
   configuration = configuration ? configuration : {}
   return new Promise(async (resolve, reject) => {
     try {
+      configuration.appEnv = configuration.appEnv ?? "local"
       const wertikApp: WertikApp = {
+        appEnv: configuration,
         port: 1200,
         modules: {},
         database: {},
@@ -49,12 +51,19 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
       const expressApp = get(configuration, "express", express())
       const httpServer = http.createServer(expressApp)
 
+      wertikApp.appEnv = configuration.appEnv
       wertikApp.httpServer = httpServer
       wertikApp.express = expressApp
       wertikApp.port = configuration.port
 
-      for (const mailName of Object.keys(configuration.mailer || {})) {
-        wertikApp.mailer[mailName] = await configuration.mailer[mailName]()
+      if (configuration.mailer && configuration.mailer.instances) {
+        for (const mailName of Object.keys(
+          configuration.mailer.instances || {}
+        )) {
+          wertikApp.mailer[mailName] = await configuration.mailer.instances[
+            mailName
+          ]()
+        }
       }
 
       if (configuration.storage) {
@@ -96,9 +105,6 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
         }
       }
 
-      applyRelationshipsFromStoreToDatabase(store, wertikApp)
-      applyRelationshipsFromStoreToGraphql(store, wertikApp)
-
       if (configuration.modules) {
         for (const moduleName of Object.keys(configuration.modules || {})) {
           wertikApp.modules[moduleName] = await configuration.modules[
@@ -134,6 +140,9 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
         }
       }
 
+      applyRelationshipsFromStoreToDatabase(store, wertikApp)
+      applyRelationshipsFromStoreToGraphql(store, wertikApp)
+
       expressApp.get("/w/info", function (req, res) {
         res.json({
           message: "You are running wertik-js v3",
@@ -141,7 +150,10 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
         })
       })
 
-      wertikApp.sendEmail = emailSender(wertikApp)
+      wertikApp.sendEmail = emailSender({
+        wertikApp,
+        configuration,
+      })
 
       if (configuration.graphql) {
         wertikApp.graphql = configuration.graphql({
