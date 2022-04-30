@@ -29,7 +29,7 @@ export interface WertikConfiguration {
   /**
    * Port number on which your will run.
    */
-  port: number
+  port?: number
   /**
    * [Optional] If you have already created express app. You can pass here.
    */
