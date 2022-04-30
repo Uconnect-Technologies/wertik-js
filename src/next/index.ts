@@ -22,9 +22,10 @@ export * from "./sockets"
 export * from "./queue"
 export * from "./redis"
 
-const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
+const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
   configuration: WertikConfiguration
 ) => {
+  configuration = configuration ? configuration : {}
   return new Promise(async (resolve, reject) => {
     try {
       const wertikApp: WertikApp = {
@@ -156,14 +157,18 @@ const Wertik: (configuration: WertikConfiguration) => Promise<WertikApp> = (
         next()
       })
 
-      setTimeout(async () => {
-        if (skip === false) {
-          httpServer.listen(port, () => {
-            console.log(`Wertik JS app listening at http://localhost:${port}`)
-          })
-        }
+      if (!new Object(process.env).hasOwnProperty("TEST_MODE")) {
+        setTimeout(async () => {
+          if (skip === false) {
+            httpServer.listen(port, () => {
+              console.log(`Wertik JS app listening at http://localhost:${port}`)
+            })
+          }
+          resolve(wertikApp)
+        }, 500)
+      }else {
         resolve(wertikApp)
-      }, 500)
+      }
     } catch (e) {
       console.error(e)
       reject(e)

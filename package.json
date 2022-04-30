@@ -30,11 +30,11 @@
     "dev-ilyas": "cross-env contributor=ilyas concurrently -n TS,DevServer  \"npm run watch-ts\"  \"nodemon lib/next/devServer.js\" ",
     "dev-zeeshan": "cross-env contributor=zeeshan concurrently -n TS,DevServer  \"npm run watch-ts\"  \"nodemon lib/next/devServer.js\" ",
     "dev-naveed": "cross-env contributor=naveed concurrently -n TS,DevServer  \"npm run watch-ts\"  \"nodemon lib/next/devServer.js\" ",
-    "build": "yarn tsc",
+    "build": "yarn test && yarn tsc",
     "production": "node lib/devServer.js",
     "watch-ts": "tsc -w",
     "prettier": "prettier --write src package.json index.js",
-    "test": "jest"
+    "test": "cross-env TEST_MODE=true jest --runInBand --forceExit --detectOpenHandles"
   },
   "pre-commit": [
     "prettier"
