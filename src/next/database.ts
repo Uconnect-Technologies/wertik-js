@@ -19,29 +19,32 @@ export const getAllRelationships = (dbName: String) => {
 
 export const useMysqlDatabase = function (obj: useDatabaseProps) {
   return async () => {
-    let sequelize = new Sequelize(obj.name, obj.username, obj.password, {
-      host: obj.host,
-      dialect: "mysql",
-      logging: false,
-      ...get(obj, "options", {}),
-      ...(databaseDefaultOptions as any).sql.dbInitializeOptions,
-    })
-    await sequelize.authenticate().catch((err) => {
-      throw new Error(err)
-    })
-    ;(sequelize as any).relationships = await sequelize.query(
-      getAllRelationships(obj.name)
-    )
-    console.log(`[DB] Succcessfully connected to database ${obj.name}`)
-    return {
-      credentials: obj,
-      instance: sequelize,
+    try {
+      let sequelize = new Sequelize(obj.name, obj.username, obj.password, {
+        host: obj.host,
+        dialect: "mysql",
+        logging: false,
+        ...get(obj, "options", {}),
+        ...(databaseDefaultOptions as any).sql.dbInitializeOptions,
+      })
+      await sequelize.authenticate()
+      console.log(`[DB] Succcessfully connected to database ${obj.name}`)
+      ;(sequelize as any).relationships = await sequelize.query(
+        getAllRelationships(obj.name)
+      )
+      return {
+        credentials: obj,
+        instance: sequelize,
+      }
+    } catch (e) {
+      console.log(`[DB] Connecting failed to datbase ${obj.name}`)
+      console.log(e.message)
     }
   }
 }
 
 /**
- * @deprecated use useMysqlDatabase instead useDatabase is deprecated and will be removed in 3.5.0 version.
+ * @deprecated use useMysqlDatabase, useDatabase is deprecated and will be removed in 3.5.0 version.
  */
 export const useDatabase = useMysqlDatabase
 
