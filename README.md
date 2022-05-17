@@ -1,6 +1,6 @@
 # Wertik-JS V3
 
-Wertik is a tiny Node JS framework that helps you setting up servers with support for
+Wertik is a tiny Node JS framework that helps you set up servers with support for
 
 - MySQL Database
 - Emailing
@@ -33,11 +33,11 @@ npm install wertik-js
 To start wertik-js server you need to import wertik and start it:
 
 ```js
-import wertik from "wertik-js/lib/next";
+import wertik from "wertik-js/lib/next"
 
 weritk({
   port: 1200,
-});
+})
 ```
 
 In your console you will see something like this:
@@ -52,7 +52,7 @@ If you visit [http://localhost:1200](http://localhost:1200), you will see a resp
 Cannot GET /
 ```
 
-🚀 You have successfully started wertik server. Right now there is nothing in wertik app right now. Let's make it interactive by adding:
+🚀 You have successfully started wertik server. There is nothing in wertik app right now. Let's make it interactive by adding:
 
 - MySQL Database
 - Mailer
@@ -72,9 +72,9 @@ You can access Wertik instance inside GraphQL and Express handler through:
 
 ```javascript
 app.get("/somepath", (req, res) => {
-  console.log(req.wertik); // Wertik App
-  res.send("Some Info");
-});
+  console.log(req.wertik) // Wertik App
+  res.send("Some Info")
+})
 ```
 
 For more please see [This line](https://github.com/Uconnect-Technologies/wertik-js/blob/master/src/next/index.ts#:~:text=req.wertik%20%3D%20wertikApp%3B).
@@ -94,7 +94,7 @@ With keyword Wertik you can access everything that lies inside wertik from datab
 
 ## Why you should use Wertik JS
 
-If you have a small project that requires a backend as well. Wertik-js is perfect for it because the recipe is ready you have to just use it. If you have a small blog you just have to create a database and add a connection to the database and then you are all set. Wertik JS will automatically create CRUD operations for you and using events you can secure those operations based on user roles. You can easily add relationships between modules.
+Wertik JS lightens up your app with different features, Wertik can be helpful for small projects such as task management or a blog application. With modules with Wertik JS, you can easily create modules with crud operations. Furthermore, Wertik JS can lighten up your app with useful features such as Redis, Sockets, Database such as Mysql, Queue Management, Storage, Cron Jobs, and other useful features.
 
 ## How Wertik JS works internally
 
@@ -102,9 +102,9 @@ Wertik JS v3 is setup in a clean way and easy way. Here is the main file which i
 
 You can check the code and if you find something that needs to be changed, you can create a new Issue [here](https://github.com/Uconnect-Technologies/wertik-js/issues/new).
 
-## Did you find a grammar mistake in the documentation?
+## Did you find a grammatical mistake in the documentation?
 
-If you came across a grammar mistake please create a new issue with more details in the description: [here](https://github.com/Uconnect-Technologies/wertik-js/issues/new?title=I%20have%20found%20a%20grammar%20mistake).
+If you came across a grammatical mistake please create a new issue with more details in the description: [here](https://github.com/Uconnect-Technologies/wertik-js/issues/new?title=I%20found%20a%20grammatical%20mistake).
 
 ## Contribute & Support
 

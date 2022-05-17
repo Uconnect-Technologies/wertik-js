@@ -1,6 +1,6 @@
 # Wertik-JS V3
 
-Wertik is a tiny Node JS framework that helps you setting up servers with support for
+Wertik is a tiny Node JS framework that helps you set up servers with support for
 
 - MySQL Database
 - Emailing
@@ -52,7 +52,7 @@ If you visit [http://localhost:1200](http://localhost:1200), you will see a resp
 Cannot GET /
 ```
 
-🚀 You have successfully started wertik server. Right now there is nothing in wertik app right now. Let's make it interactive by adding:
+🚀 You have successfully started wertik server. There is nothing in wertik app right now. Let's make it interactive by adding:
 
 - MySQL Database
 - Mailer
