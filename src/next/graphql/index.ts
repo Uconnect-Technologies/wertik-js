@@ -34,11 +34,13 @@ export const useGraphql = (props?: useGraphqlProps) => {
       },
       ...defaultApolloGraphqlOptions,
       ...omit(options, ["context"]),
-      context: async () => {
+      context: async (options) => {
         let contextFromOptions = await get(options, "context", function () {})()
 
         return {
           wertik: wertikApp,
+          req: options.req,
+          res: options.res,
           ...contextFromOptions,
         }
       },
