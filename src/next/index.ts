@@ -10,7 +10,6 @@ import http from "http"
 import { WertikConfiguration } from "./types"
 import { WertikApp } from "./types"
 import { initializeBullBoard } from "./queue/index"
-import { resolveModulesTableInstancesToWeritkModels } from "./../framework/helpers/resolveModulesTableInstancesToWeritkModels"
 
 export * from "./database"
 export * from "./modules/modules"
@@ -34,6 +33,7 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
         appEnv: configuration,
         port: 1200,
         modules: {},
+        models: {},
         database: {},
         mailer: {},
         graphql: {},
@@ -172,11 +172,8 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
         })
       }
 
-      var models = resolveModulesTableInstancesToWeritkModels(wertikApp)
-
       expressApp.use(async function (req, _res, next) {
         req.wertik = wertikApp
-        req.wertik.models = models
         next()
       })
 

@@ -243,6 +243,7 @@ export const useModule = (module: useModuleProps) => {
 
     if (useDatabase) {
       generateGenerateGraphQLCrud(module, schemaInformation, store)
+      app.models[module.name] = tableInstance
     }
 
     console.log(`[Module]`, `Initialized module "${module.name}"`)
