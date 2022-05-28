@@ -30,7 +30,7 @@ export default {
         subject: String!
         to: String!
         bcc: String
-      } 
+      }
     `,
     mutation: {
       schema: `

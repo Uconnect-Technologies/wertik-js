@@ -86,6 +86,7 @@ export interface WertikConfiguration {
        * Runs when email sents successfully.
        */
       onEmailSent?: ({
+        options: iObject,
         wertikApp: WertikApp,
         configuration: WertikConfiguration,
         emailInstance: any,
@@ -100,6 +101,7 @@ export interface WertikConfiguration {
         wertikApp: WertikApp,
         configuration: WertikConfiguration,
         error: any,
+        options: iObject,
       }) => void | any | null | undefined
     }
   }

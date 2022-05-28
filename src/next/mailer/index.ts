@@ -63,25 +63,31 @@ export const emailSender = ({
         )
       }
 
-      get(configuration, "mailer.events.onEmailSent", () => {})({
-        mailer: props.mailer,
-        wertikApp,
-        configuration,
-        emailInstance,
-        previewURL:
-          nodemailer && nodemailer.getTestMessageUrl
-            ? nodemailer.getTestMessageUrl(emailInstance)
-            : "",
-      })
+      if (configuration.mailer.events.onEmailSent) {
+        configuration.mailer.events.onEmailSent({
+          mailer: props.mailer,
+          options: props.options,
+          wertikApp,
+          configuration,
+          emailInstance,
+          previewURL:
+            nodemailer && nodemailer.getTestMessageUrl
+              ? nodemailer.getTestMessageUrl(emailInstance)
+              : "",
+        })
+      }
 
       return emailInstance
     } catch (e) {
-      get(configuration, "mailer.events.onEmailSentFailed", () => {})({
-        mailer: props.mailer,
-        wertikApp,
-        configuration,
-        error: e,
-      })
+      if (configuration.mailer.events.onEmailSentFailed) {
+        configuration.mailer.events.onEmailSentFailed({
+          mailer: props.mailer,
+          options: props.options,
+          wertikApp,
+          configuration,
+          error: e,
+        })
+      }
     }
   }
   return fn
