@@ -21,6 +21,7 @@ export * from "./helpers/modules/backup"
 export * from "./sockets"
 export * from "./queue"
 export * from "./redis"
+export * from "./logger"
 
 const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
   configuration: WertikConfiguration
@@ -30,7 +31,7 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
     try {
       configuration.appEnv = configuration.appEnv ?? "local"
       const wertikApp: WertikApp = {
-        appEnv: configuration,
+        appEnv: configuration.appEnv,
         port: 1200,
         modules: {},
         models: {},
@@ -45,6 +46,7 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
           bullBoard: {},
         },
         redis: {},
+        logger: null,
       }
 
       const port = get(configuration, "port", 1200)
@@ -146,6 +148,10 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
             configuration,
           })
         }
+      }
+
+      if (configuration.logger) {
+        wertikApp.logger = configuration.logger
       }
 
       applyRelationshipsFromStoreToDatabase(store, wertikApp)

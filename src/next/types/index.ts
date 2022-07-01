@@ -157,20 +157,30 @@ export interface WertikConfiguration {
       wertikApp: WertikApp,
     }) => iObject
   }
+
+  /**
+   * Winston Logger
+   */
+  logger?: any
 }
 
 export interface WertikApp {
+  appEnv: "production" | "development" | "local"
   sendEmail?: ({ mailer: string, options: emailSendProps }) => iObject
   port: number
   modules: iObject
   database: iObject
+  models: iObject
   mailer: iObject
   graphql: iObject
   sockets: iObject
   cronJobs: iObject
   storage: iObject
-  [key: string]: any
   queue: any
+  httpServer?: any
+  express?: any
+  redis: iObject
+  logger: any
 }
 
 /**
