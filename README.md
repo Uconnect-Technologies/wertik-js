@@ -11,6 +11,7 @@ Wertik is a tiny Node JS framework that helps you set up servers with support fo
 - Sockets
 - Cron Jobs
 - Redis
+- Logger
 
 ## Installation
 
