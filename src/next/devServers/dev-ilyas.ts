@@ -1,4 +1,4 @@
-import wertik, {useModule} from "../index"
+import wertik, { useModule } from "../index"
 import { useLogger, useWinstonTransport } from "../logger"
 
 const devIlyas = async () => {
@@ -19,16 +19,16 @@ const devIlyas = async () => {
       custom: useModule({
         name: "custom",
         useDatabase: false,
-        on: function ({useExpress}) {
+        on: function ({ useExpress }) {
           useExpress((exp) => {
-            exp.get("/check" , (req: any, res: any) => {
-              req.wertik.logger.info({name: "ilyas"});
+            exp.get("/check", (req: any, res: any) => {
+              req.wertik.logger.info({ name: "ilyas" })
               res.send("w")
             })
           })
-        }
-      })
-    }
+        },
+      }),
+    },
   })
 }
 

@@ -61,6 +61,12 @@ export interface useModuleProps {
    * Sequelize Table Options
    */
   tableOptions?: iObject
+
+  /**
+   * Provide set of fields to extend a table, mostly can be used to update createdAt and updatedAt columns.
+   */
+  extendFields?: iObject
+
   /**
    * Graphql options for this module.
    */

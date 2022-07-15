@@ -2,9 +2,9 @@ import devHakeem from "./devServers/dev-hakeem"
 import devNaveed from "./devServers/dev-naveed"
 import devZeeshan from "./devServers/dev-naveed"
 import devIlyas from "./devServers/dev-ilyas"
-const contributor = process.env.contributor
+const dev = process.env.dev
 
-switch (contributor) {
+switch (dev) {
   case "hakeem":
     devHakeem()
     break
@@ -21,5 +21,6 @@ switch (contributor) {
     break
 
   default:
+    devIlyas()
     break
 }

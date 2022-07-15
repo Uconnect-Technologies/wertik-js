@@ -79,6 +79,7 @@ export const emailSender = ({
 
       return emailInstance
     } catch (e) {
+      console.log(e)
       if (configuration.mailer.events.onEmailSentFailed) {
         configuration.mailer.events.onEmailSentFailed({
           mailer: props.mailer,

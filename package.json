@@ -1,6 +1,6 @@
 {
   "name": "wertik-js",
-  "version": "3.2.9",
+  "version": "3.3.0",
   "main": "lib/main.js",
   "types": "lib/types.d.ts",
   "repository": "https://github.com/Uconnect-Technologies/wertik-js.git",
@@ -25,12 +25,9 @@
   "author": "Ilyas Karim <ilyas.datoo@gmail.com> ",
   "license": "MIT",
   "scripts": {
-    "dev": "concurrently -n TS,DevServer  \"npm run watch-ts\"  \"nodemon lib/devServer.js\" ",
-    "dev-hakeem": "cross-env contributor=hakeem concurrently -n TS,DevServer  \"npm run watch-ts\"  \"nodemon lib/next/devServer.js\" ",
-    "dev-ilyas": "cross-env contributor=ilyas concurrently -n TS,DevServer  \"npm run watch-ts\"  \"nodemon lib/next/devServer.js\" ",
-    "dev-zeeshan": "cross-env contributor=zeeshan concurrently -n TS,DevServer  \"npm run watch-ts\"  \"nodemon lib/next/devServer.js\" ",
-    "dev-naveed": "cross-env contributor=naveed concurrently -n TS,DevServer  \"npm run watch-ts\"  \"nodemon lib/next/devServer.js\" ",
-    "build": "yarn tsc && yarn test",
+    "dev-old": "concurrently -n TS,DevServer  \"npm run watch-ts\"  \"nodemon lib/devServer.js\" ",
+    "dev": "concurrently -n TS,DevServer  \"npm run watch-ts\"  \"nodemon lib/next/devServer.js\" ",
+    "build": "yarn prettier && yarn tsc && yarn test",
     "production": "node lib/devServer.js",
     "watch-ts": "tsc -w",
     "prettier": "prettier --write src package.json index.js",

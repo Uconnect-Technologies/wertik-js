@@ -3,7 +3,16 @@ import { useModule } from "../../modules/modules"
 import mysqldump from "mysqldump"
 import fs from "fs"
 
-const dumpDatabase = async (dbName: string, model: any, credentials: any) => {
+const dumpDatabase = async (
+  dbName: string,
+  model: any,
+  credentials: {
+    host: string
+    username: string
+    password: string
+    name: string
+  }
+) => {
   const filename = `backups/${moment().format(
     "MMMM-DD-YYYY-h-mm-ss-a"
   )}-database-${dbName}.sql`.toLowerCase()
@@ -58,13 +67,18 @@ const uploadDumpToDropbox = async (filename, dropboxInstance) => {
   return response
 }
 
-export const WertikBackupModule = (database: string, table: string) =>
+export const WertikBackupModule = (
+  database: string,
+  table: string,
+  tableOptions: any = {}
+) =>
   useModule({
     name: "Backup",
     useDatabase: true,
     database: database,
     table: table,
-    on: function ({ useSchema, useQuery, useMutation, useExpress }) {
+    tableOptions: tableOptions,
+    on: function ({ useSchema, useMutation }) {
       useSchema(`
       type BackupSuccessResponse {
         message: String
@@ -78,6 +92,10 @@ export const WertikBackupModule = (database: string, table: string) =>
         async resolver(_, args, context) {
           const push = []
           for (const dbName of args.database) {
+            const database = context.wertik.database[dbName]
+            if (!database) {
+              throw new Error(`No such database ${dbName}`)
+            }
             push.push(
               await dumpDatabase(
                 dbName,
@@ -102,6 +120,10 @@ export const WertikBackupModule = (database: string, table: string) =>
             }
 
             for (const dbName of args.database) {
+              const database = context.wertik.database[dbName]
+              if (!database) {
+                throw new Error(`No such database ${dbName}`)
+              }
               const dump = await dumpDatabase(
                 dbName,
                 context.wertik.database[dbName].instance.models.Backup,
@@ -142,6 +164,10 @@ export const WertikBackupModule = (database: string, table: string) =>
             }
 
             for (const dbName of args.database) {
+              const database = context.wertik.database[dbName]
+              if (!database) {
+                throw new Error(`No such database ${dbName}`)
+              }
               const dump = await dumpDatabase(
                 dbName,
                 context.wertik.database[dbName].instance.models.Backup,

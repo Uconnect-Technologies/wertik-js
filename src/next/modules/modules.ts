@@ -107,10 +107,17 @@ export const useModule = (module: useModuleProps) => {
             null: element.Null === "YES" ? true : false,
           },
         }
-        tableInstance = connection.instance.define(module.table, fields, {
-          ...get(module, "tableOptions", {}),
-          ...databaseDefaultOptions.sql.defaultTableOptions,
-        })
+        tableInstance = connection.instance.define(
+          module.table,
+          {
+            ...fields,
+            ...get(module, "extendFields", {}),
+          },
+          {
+            ...get(module, "tableOptions", {}),
+            ...databaseDefaultOptions.sql.defaultTableOptions,
+          }
+        )
       })
 
       if (module?.graphql?.schema) {
