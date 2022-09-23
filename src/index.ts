@@ -1,4 +1,4 @@
-import { get } from "lodash"
+import get from "lodash.get"
 import express from "express"
 import store from "./store"
 import {
@@ -10,6 +10,7 @@ import http from "http"
 import { WertikConfiguration } from "./types"
 import { WertikApp } from "./types"
 import { initializeBullBoard } from "./queue/index"
+import path from "path"
 
 export * from "./database"
 export * from "./modules/modules"
@@ -160,7 +161,7 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
       expressApp.get("/w/info", function (req, res) {
         res.json({
           message: "You are running wertik-js v3",
-          version: require("./../../package.json").version,
+          version: require(path.resolve("./package.json")).version,
         })
       })
 

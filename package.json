@@ -25,7 +25,7 @@
   "author": "Ilyas Karim <ilyas.datoo@gmail.com> ",
   "license": "MIT",
   "scripts": {
-    "dev": "concurrently -n TS,DevServer  \"npm run watch-ts\"  \"nodemon lib/next/devServer.js\" ",
+    "dev": "concurrently -n TS,DevServer  \"npm run watch-ts\"  \"nodemon lib/devServer.js\" ",
     "build": "yarn prettier && yarn tsc && yarn test",
     "production": "node lib/devServer.js",
     "watch-ts": "tsc -w",
