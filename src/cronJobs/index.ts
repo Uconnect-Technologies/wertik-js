@@ -6,7 +6,7 @@ import { iObject, WertikApp, WertikConfiguration } from '../types'
 export const useCronJob = (cron: useCronJobsProps) => {
   return ({
     configuration,
-    wertikApp
+    wertikApp,
   }: {
     configuration: WertikConfiguration
     wertikApp: WertikApp

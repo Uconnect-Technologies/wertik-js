@@ -4,7 +4,7 @@ import { useRedisProps, WertikApp, WertikConfiguration } from '../types'
 export const useRedis = (props?: useRedisProps) => {
   return async ({
     configuration,
-    wertikApp
+    wertikApp,
   }: {
     configuration: WertikConfiguration
     wertikApp: WertikApp

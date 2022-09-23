@@ -2,7 +2,7 @@ import get from 'lodash.get'
 import convertFiltersIntoSequalizeObject from '../borrowed/convertFiltersIntoSequalizeObject'
 
 export const paginate = async (arg, tableInstance) => {
-  const page = get(arg, 'pagination.page', 1)
+  const page: number = get(arg, 'pagination.page', 1)
   const limit = get(arg, 'pagination.limit', 100)
   const sorting = get(arg, 'sorting', [])
   const offset = limit * (page - 1)
@@ -13,7 +13,7 @@ export const paginate = async (arg, tableInstance) => {
     limit,
     order: sorting.map((c) => {
       return [c.column, c.type]
-    })
+    }),
   })
   const totalPages = Math.ceil(find.count / limit)
   return {
@@ -22,18 +22,18 @@ export const paginate = async (arg, tableInstance) => {
       total: find.count,
       nextPage: page + 1,
       page,
-      previousPage: page == 1 ? 1 : page - 1,
+      previousPage: page === 1 ? 1 : page - 1,
       pages: totalPages,
       hasMore: page < totalPages,
-      limit
-    }
+      limit,
+    },
   }
 }
 
 export default function (module, schemaInformation, store) {
   return {
     graphql: {
-      generateQueriesCrudSchema () {
+      generateQueriesCrudSchema() {
         return `
 
         type ${module.name}List {
@@ -57,7 +57,7 @@ export default function (module, schemaInformation, store) {
             count${module.name}(where: ${module.name}FilterInput):  Int
         }`
       },
-      generateMutationsCrudSchema () {
+      generateMutationsCrudSchema() {
         return `
             extend type Mutation {
               update${module.name}(input: update${module.name}Input,where: ${module.name}FilterInput!): ${module.name}BulkMutationResponse
@@ -67,7 +67,7 @@ export default function (module, schemaInformation, store) {
             }
           `
       },
-      generateCrudResolvers () {
+      generateCrudResolvers() {
         return {
           Mutation: {
             [`createOrUpdate${module.name}`]: get(
@@ -85,8 +85,8 @@ export default function (module, schemaInformation, store) {
                 if (id) {
                   ___find = await schemaInformation.tableInstance.findOne({
                     where: {
-                      id
-                    }
+                      id,
+                    },
                   })
 
                   if (!___find) {
@@ -94,11 +94,11 @@ export default function (module, schemaInformation, store) {
                   }
 
                   await schemaInformation.tableInstance.update(args.input, {
-                    where: { id }
+                    where: { id },
                   })
 
                   return await schemaInformation.tableInstance.findOne({
-                    where: { id }
+                    where: { id },
                   })
                 } else {
                   return await schemaInformation.tableInstance.create(
@@ -123,15 +123,15 @@ export default function (module, schemaInformation, store) {
                 const response = await schemaInformation.tableInstance.update(
                   args.input,
                   {
-                    where
+                    where,
                   }
                 )
                 const all = await schemaInformation.tableInstance.findAll({
-                  where
+                  where,
                 })
                 return {
                   returning: all,
-                  affectedRows: response[0]
+                  affectedRows: response[0],
                 }
               }
             ),
@@ -149,7 +149,7 @@ export default function (module, schemaInformation, store) {
                   args.where
                 )
                 await schemaInformation.tableInstance.destroy({
-                  where
+                  where,
                 })
                 return { message: `${module.name} Deleted` }
               }
@@ -172,10 +172,10 @@ export default function (module, schemaInformation, store) {
                 }
                 return {
                   returning: response,
-                  affectedRows: response.length
+                  affectedRows: response.length,
                 }
               }
-            )
+            ),
           },
           Query: {
             [`view${module.name}`]: get(
@@ -192,7 +192,7 @@ export default function (module, schemaInformation, store) {
                   args.where
                 )
                 const find = await schemaInformation.tableInstance.findOne({
-                  where
+                  where,
                 })
                 return find
               }
@@ -224,14 +224,14 @@ export default function (module, schemaInformation, store) {
                   args.where
                 )
                 const count = await schemaInformation.tableInstance.count({
-                  where
+                  where,
                 })
                 return count
               }
-            )
-          }
+            ),
+          },
         }
-      }
-    }
+      },
+    },
   }
 }

@@ -5,21 +5,21 @@ import { emailSendProps } from '../types/mailer'
 
 export const useMailer = (props: useMailerProps) => {
   return async () => {
-    const testAccount = props.options
-      ? null
-      : await nodemailer.createTestAccount()
+    const testAccount =
+      props.options != null ? null : await nodemailer.createTestAccount()
 
-    const emailConfiguration = props.options
-      ? props.options
-      : {
-          host: 'smtp.ethereal.email',
-          port: 587,
-          secure: false,
-          auth: {
-            user: testAccount?.user,
-            pass: testAccount?.pass
+    const emailConfiguration =
+      props.options != null
+        ? props.options
+        : {
+            host: 'smtp.ethereal.email',
+            port: 587,
+            secure: false,
+            auth: {
+              user: testAccount?.user,
+              pass: testAccount?.pass,
+            },
           }
-        }
 
     console.log('[Mailer]', `Initialized mailer "${props.name}"`)
 
@@ -29,12 +29,12 @@ export const useMailer = (props: useMailerProps) => {
 
 export const emailSender = ({
   configuration,
-  wertikApp
+  wertikApp,
 }: {
   configuration: WertikConfiguration
   wertikApp: WertikApp
 }) => {
-  const fn = async (props: { mailer: string, options: emailSendProps }) => {
+  const fn = async (props: { mailer: string; options: emailSendProps }) => {
     const transporter = wertikApp.mailer[props.mailer]
 
     try {
@@ -50,7 +50,7 @@ export const emailSender = ({
         from: props.options.from,
         to: props.options.to,
         html: resultTemplate,
-        subject: props.options.subject
+        subject: props.options.subject,
       })
       if (emailInstance && emailInstance.messageId) {
         console.log('Message sent: %s', emailInstance.messageId)
@@ -62,7 +62,7 @@ export const emailSender = ({
         )
       }
 
-      if (configuration.mailer.events.onEmailSent) {
+      if (configuration.mailer.events.onEmailSent != null) {
         configuration.mailer.events.onEmailSent({
           mailer: props.mailer,
           options: props.options,
@@ -72,20 +72,20 @@ export const emailSender = ({
           previewURL:
             nodemailer && nodemailer.getTestMessageUrl
               ? nodemailer.getTestMessageUrl(emailInstance)
-              : ''
+              : '',
         })
       }
 
       return emailInstance
     } catch (e) {
       console.log(e)
-      if (configuration.mailer.events.onEmailSentFailed) {
+      if (configuration.mailer.events.onEmailSentFailed != null) {
         configuration.mailer.events.onEmailSentFailed({
           mailer: props.mailer,
           options: props.options,
           wertikApp,
           configuration,
-          error: e
+          error: e,
         })
       }
     }

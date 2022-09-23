@@ -28,7 +28,7 @@ export const initializeBullBoard = (props: {
   }
   const {
     express,
-    queue: { jobs: QueueJobs }
+    queue: { jobs: QueueJobs },
   } = props.wertikApp
 
   const queueJobsArr = []
@@ -47,7 +47,7 @@ export const initializeBullBoard = (props: {
     const { addQueue, removeQueue, setQueues, replaceQueues } = createBullBoard(
       {
         queues: queueJobsArr,
-        serverAdapter
+        serverAdapter,
       }
     )
     serverAdapter.setBasePath(queuePath)

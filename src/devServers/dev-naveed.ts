@@ -2,7 +2,7 @@ import wertik from '../index'
 
 const devNaveed = async () => {
   wertik({
-    port: 1200
+    port: 1200,
   })
 }
 

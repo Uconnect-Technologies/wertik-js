@@ -7,7 +7,7 @@ import {
   getCreateSchema,
   getGraphQLTypeNameFromSqlType,
   getUpdateSchema,
-  generateEnumTypeForGraphql
+  generateEnumTypeForGraphql,
 } from './modulesHelpers'
 
 const generateGenerateGraphQLCrud = (props, schemaInformation, store) => {
@@ -31,12 +31,12 @@ const generateGenerateGraphQLCrud = (props, schemaInformation, store) => {
 
   store.graphql.resolvers.Query = {
     ...store.graphql.resolvers.Query,
-    ...resolvers.Query
+    ...resolvers.Query,
   }
 
   store.graphql.resolvers.Mutation = {
     ...store.graphql.resolvers.Mutation,
-    ...resolvers.Mutation
+    ...resolvers.Mutation,
   }
 }
 
@@ -104,18 +104,18 @@ export const useModule = (module: useModuleProps) => {
         fields[element.Field] = {
           type: {
             type,
-            null: element.Null === 'YES'
-          }
+            null: element.Null === 'YES',
+          },
         }
         tableInstance = connection.instance.define(
           module.table,
           {
             ...fields,
-            ...get(module, 'extendFields', {})
+            ...get(module, 'extendFields', {}),
           },
           {
             ...get(module, 'tableOptions', {}),
-            ...databaseDefaultOptions.sql.defaultTableOptions
+            ...databaseDefaultOptions.sql.defaultTableOptions,
           }
         )
       })
@@ -181,7 +181,7 @@ export const useModule = (module: useModuleProps) => {
         referencedModule: params.module,
         referencedModuleDatabase: params.database,
         options: params.options,
-        type: 'hasOne'
+        type: 'hasOne',
       })
     }
     const belongsTo = (params: RelationParams) => {
@@ -193,7 +193,7 @@ export const useModule = (module: useModuleProps) => {
         referencedModule: params.module,
         referencedModuleDatabase: params.database,
         options: params.options,
-        type: 'belongsTo'
+        type: 'belongsTo',
       })
     }
     const belongsToMany = (params: RelationParams) => {
@@ -205,7 +205,7 @@ export const useModule = (module: useModuleProps) => {
         referencedModule: params.module,
         referencedModuleDatabase: params.database,
         options: params.options,
-        type: 'belongsToMany'
+        type: 'belongsToMany',
       })
     }
     const hasMany = (params: RelationParams) => {
@@ -217,7 +217,7 @@ export const useModule = (module: useModuleProps) => {
         referencedModule: params.module,
         referencedModuleDatabase: params.database,
         options: params.options,
-        type: 'hasMany'
+        type: 'hasMany',
       })
     }
 
@@ -229,7 +229,7 @@ export const useModule = (module: useModuleProps) => {
       belongsTo,
       belongsToMany,
       hasMany,
-      useSchema
+      useSchema,
     })
 
     if (useDatabase) {
@@ -244,8 +244,8 @@ export const useModule = (module: useModuleProps) => {
         create: createSchema || '',
         update: updateSchema || '',
         list: listSchema,
-        filters: filterSchema.join('\n')
-      }
+        filters: filterSchema.join('\n'),
+      },
     }
 
     if (useDatabase) {

@@ -1,10 +1,10 @@
 import {
   Server as SocketIOServer,
-  ServerOptions as SocketIOServerOptions
+  ServerOptions as SocketIOServerOptions,
 } from 'socket.io'
 import {
   Server as WebSocketServer,
-  ServerOptions as WebSocketServerOptions
+  ServerOptions as WebSocketServerOptions,
 } from 'ws'
 import { WertikApp, WertikConfiguration } from '../types'
 
@@ -16,7 +16,7 @@ import { WertikApp, WertikConfiguration } from '../types'
 export const useWebSockets = (props: WebSocketServerOptions = {}) => {
   return ({
     configuration,
-    wertikApp
+    wertikApp,
   }: {
     configuration: WertikConfiguration
     wertikApp: WertikApp
@@ -29,7 +29,7 @@ export const useWebSockets = (props: WebSocketServerOptions = {}) => {
     )
     return new WebSocketServer({
       server: wertikApp.httpServer,
-      ...props
+      ...props,
     })
   }
 }
@@ -44,7 +44,7 @@ export const useIndependentWebSocketsServer = (
 ) => {
   return ({
     configuration,
-    wertikApp
+    wertikApp,
   }: {
     configuration: WertikConfiguration
     wertikApp: WertikApp
@@ -55,7 +55,7 @@ export const useIndependentWebSocketsServer = (
       }`
     )
     return new WebSocketServer({
-      ...props
+      ...props,
     })
   }
 }
@@ -68,7 +68,7 @@ export const useIndependentWebSocketsServer = (
 export const useSocketIO = (props: any = {}) => {
   return ({
     configuration,
-    wertikApp
+    wertikApp,
   }: {
     configuration: WertikConfiguration
     wertikApp: WertikApp

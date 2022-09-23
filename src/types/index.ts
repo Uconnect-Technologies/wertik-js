@@ -1,7 +1,9 @@
 import { Sequelize } from 'sequelize/types'
 import { useDatabaseProps } from './database'
 
-export interface iObject { [key: string]: any }
+export interface iObject {
+  [key: string]: any
+}
 
 export interface Store {
   graphql: {
@@ -58,7 +60,7 @@ export interface WertikConfiguration {
     [key: string]: ({
       store: Store,
       configuration: WertikConfiguration,
-      app: WertikApp
+      app: WertikApp,
     }) => iObject
   }
   /**
@@ -67,7 +69,7 @@ export interface WertikConfiguration {
   storage?: {
     [key: string]: ({
       configuration: WertikConfiguration,
-      wertikApp: WertikApp
+      wertikApp: WertikApp,
     }) => {
       spacesEndpoint?: iObject
       s3?: iObject
@@ -91,7 +93,7 @@ export interface WertikConfiguration {
         configuration: WertikConfiguration,
         emailInstance: any,
         previewURL: string,
-        mailer: String
+        mailer: String,
       }) => void | any | null | undefined
       /**
        * Runs when email fails to send.
@@ -101,7 +103,7 @@ export interface WertikConfiguration {
         wertikApp: WertikApp,
         configuration: WertikConfiguration,
         error: any,
-        options: iObject
+        options: iObject,
       }) => void | any | null | undefined
     }
   }
@@ -111,7 +113,7 @@ export interface WertikConfiguration {
   sockets?: {
     [key: string]: ({
       configuration: WertikConfiguration,
-      wertikApp: WertikApp
+      wertikApp: WertikApp,
     }) => iObject
   }
   /**
@@ -121,7 +123,7 @@ export interface WertikConfiguration {
     store: Store,
     configuration: WertikConfiguration,
     wertikApp: WertikApp,
-    expressApp: any
+    expressApp: any,
   }) => iObject
   /**
    * Cron Jobs
@@ -129,7 +131,7 @@ export interface WertikConfiguration {
   cronJobs?: {
     [key: string]: ({
       configuration: WertikConfiguration,
-      wertikApp: WertikApp
+      wertikApp: WertikApp,
     }) => iObject
   }
   queue?: {
@@ -154,7 +156,7 @@ export interface WertikConfiguration {
   redis?: {
     [key: string]: ({
       configuration: WertikConfiguration,
-      wertikApp: WertikApp
+      wertikApp: WertikApp,
     }) => iObject
   }
 

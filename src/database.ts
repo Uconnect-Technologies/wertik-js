@@ -24,7 +24,7 @@ export const useMysqlDatabase = function (obj: useDatabaseProps) {
         dialect: 'mysql',
         logging: false,
         ...get(obj, 'options', {}),
-        ...(databaseDefaultOptions as any).sql.dbInitializeOptions
+        ...(databaseDefaultOptions as any).sql.dbInitializeOptions,
       })
       await sequelize.authenticate()
       console.log(`[DB] Succcessfully connected to database ${obj.name}`)
@@ -33,7 +33,7 @@ export const useMysqlDatabase = function (obj: useDatabaseProps) {
       )
       return {
         credentials: obj,
-        instance: sequelize
+        instance: sequelize,
       }
     } catch (e) {
       console.log(`[DB] Connecting failed to datbase ${obj.name}`)
@@ -86,20 +86,20 @@ export const applyRelationshipsFromStoreToGraphql = async (
         if (['hasOne', 'belongsTo'].includes(element.type)) {
           return await tableInstance.findOne({
             where: {
-              [currentModuleKey]: parent[referencedModuleKey]
-            }
+              [currentModuleKey]: parent[referencedModuleKey],
+            },
           })
         } else if (['hasMany', 'belongsToMany']) {
           return await paginate(
             {
               where: {
-                [currentModuleKey]: parent[referencedModuleKey]
-              }
+                [currentModuleKey]: parent[referencedModuleKey],
+              },
             },
             tableInstance
           )
         }
-      }
+      },
     }
   })
 }

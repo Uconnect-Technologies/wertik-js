@@ -19,7 +19,7 @@ const dumpDatabase = async (
 
   const backupInstance = await model.create({
     uploaded_filename: filename,
-    uploaded_to: 'local'
+    uploaded_to: 'local',
   })
 
   await mysqldump({
@@ -27,15 +27,15 @@ const dumpDatabase = async (
       host: credentials.host,
       user: credentials.username,
       password: credentials.password,
-      database: credentials.name
+      database: credentials.name,
     },
-    dumpToFile: filename
+    dumpToFile: filename,
   })
 
   return {
     message: 'Backup was successfull',
     filename,
-    backup: backupInstance
+    backup: backupInstance,
   }
 }
 const uploadDumpToDigitalOceanSpaces = async (
@@ -50,7 +50,7 @@ const uploadDumpToDigitalOceanSpaces = async (
     Bucket,
     Key: `${filename}`,
     Body: data,
-    ACL
+    ACL,
   }
 
   const response = await digitaloceanInstance.s3.upload(params).promise()
@@ -62,7 +62,7 @@ const uploadDumpToDropbox = async (filename, dropboxInstance) => {
   const response = await dropboxInstance.dropbox.filesUpload({
     strict_conflict: false,
     path: `/${filename}`,
-    contents: data
+    contents: data,
   })
   return response
 }
@@ -89,7 +89,7 @@ export const WertikBackupModule = (
       useMutation({
         name: 'backupLocal',
         query: 'backupLocal(database: [String]!): [BackupSuccessResponse]',
-        async resolver (_, args, context) {
+        async resolver(_, args, context) {
           const push = []
           for (const dbName of args.database) {
             const database = context.wertik.database[dbName]
@@ -105,13 +105,13 @@ export const WertikBackupModule = (
             )
           }
           return push
-        }
+        },
       })
       useMutation({
         name: 'backupDigitalOceanSpaces',
         query:
           'backupDigitalOceanSpaces(ACL: String!, Bucket: String!, storage: String!, database: [String]!): [BackupSuccessResponse]',
-        async resolver (_, args, context) {
+        async resolver(_, args, context) {
           try {
             const push = []
             const storage = context.wertik.storage[args.storage]
@@ -139,7 +139,7 @@ export const WertikBackupModule = (
               )
               await dump.backup.update({
                 uploaded_to: 'digitalocean',
-                uploaded_filename: uploadToDigitalOcean.Tag
+                uploaded_filename: uploadToDigitalOcean.Tag,
               })
               dump.backup.uploaded_to = 'digitalocean'
               dump.backup.uploaded_filename = uploadToDigitalOcean.key
@@ -149,13 +149,13 @@ export const WertikBackupModule = (
           } catch (e) {
             throw new Error(e)
           }
-        }
+        },
       })
       useMutation({
         name: 'backupDropbox',
         query:
           'backupDropbox(storage: String!, database: [String]): [BackupSuccessResponse]',
-        async resolver (_, args, context) {
+        async resolver(_, args, context) {
           try {
             const push = []
             const storage = context.wertik.storage[args.storage]
@@ -180,7 +180,7 @@ export const WertikBackupModule = (
               )
               await dump.backup.update({
                 uploaded_to: 'dropbox',
-                uploaded_filename: uploadToDropbox.result.path_lower
+                uploaded_filename: uploadToDropbox.result.path_lower,
               })
               dump.backup.uploaded_to = 'dropbox'
               dump.backup.uploaded_filename = uploadToDropbox.result.path_lower
@@ -191,7 +191,7 @@ export const WertikBackupModule = (
             console.log(e)
             throw new Error(e)
           }
-        }
+        },
       })
-    }
+    },
   })

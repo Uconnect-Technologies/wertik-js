@@ -3,7 +3,7 @@ import express from 'express'
 import store from './store'
 import {
   applyRelationshipsFromStoreToDatabase,
-  applyRelationshipsFromStoreToGraphql
+  applyRelationshipsFromStoreToGraphql,
 } from './database'
 import { emailSender } from './mailer/index'
 import http from 'http'
@@ -23,9 +23,9 @@ export * from './queue'
 export * from './redis'
 export * from './logger'
 
-const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = async (
-  configuration: WertikConfiguration
-) => {
+const Wertik: (
+  configuration?: WertikConfiguration
+) => Promise<WertikApp> = async (configuration: WertikConfiguration) => {
   configuration = configuration || {}
   return await new Promise(async (resolve, reject) => {
     try {
@@ -43,10 +43,10 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = asyn
         storage: {},
         queue: {
           jobs: {},
-          bullBoard: {}
+          bullBoard: {},
         },
         redis: {},
-        logger: null
+        logger: null,
       }
 
       const port = get(configuration, 'port', 1200)
@@ -59,7 +59,7 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = asyn
       wertikApp.express = expressApp
       wertikApp.port = configuration.port
 
-      if (configuration.mailer && configuration.mailer.instances) {
+      if (configuration.mailer != null && configuration.mailer.instances) {
         for (const mailName of Object.keys(
           configuration.mailer.instances || {}
         )) {
@@ -69,40 +69,40 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = asyn
         }
       }
 
-      if (configuration.storage) {
+      if (configuration.storage != null) {
         for (const storageName of Object.keys(configuration.storage || {})) {
           wertikApp.storage[storageName] = await configuration.storage[
             storageName
           ]({
             configuration,
-            wertikApp
+            wertikApp,
           })
         }
       }
 
-      if (configuration.cronJobs) {
+      if (configuration.cronJobs != null) {
         for (const cronName of Object.keys(configuration.cronJobs || {})) {
           wertikApp.cronJobs[cronName] = await configuration.cronJobs[cronName](
             {
               configuration,
-              wertikApp
+              wertikApp,
             }
           )
         }
       }
 
-      if (configuration.sockets) {
+      if (configuration.sockets != null) {
         for (const socketName of Object.keys(configuration.sockets || {})) {
           wertikApp.sockets[socketName] = await configuration.sockets[
             socketName
           ]({
             configuration,
-            wertikApp
+            wertikApp,
           })
         }
       }
 
-      if (configuration.database) {
+      if (configuration.database != null) {
         for (const databaseName of Object.keys(configuration.database || {})) {
           try {
             wertikApp.database[databaseName] = await configuration.database[
@@ -114,19 +114,19 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = asyn
         }
       }
 
-      if (configuration.modules) {
+      if (configuration.modules != null) {
         for (const moduleName of Object.keys(configuration.modules || {})) {
           wertikApp.modules[moduleName] = await configuration.modules[
             moduleName
           ]({
             store,
             configuration,
-            app: wertikApp
+            app: wertikApp,
           })
         }
       }
 
-      if (configuration?.queue?.jobs) {
+      if (configuration?.queue?.jobs != null) {
         for (const queueName of Object.keys(configuration?.queue?.jobs || {})) {
           wertikApp.queue.jobs[queueName] = await configuration.queue.jobs[
             queueName
@@ -137,15 +137,15 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = asyn
       if (configuration?.queue?.options?.useBullBoard) {
         wertikApp.queue.bullBoard = initializeBullBoard({
           wertikApp,
-          configuration
+          configuration,
         })
       }
 
-      if (configuration.redis) {
+      if (configuration.redis != null) {
         for (const redisName of Object.keys(configuration.redis || {})) {
           wertikApp.redis[redisName] = await configuration.redis[redisName]({
             wertikApp,
-            configuration
+            configuration,
           })
         }
       }
@@ -160,21 +160,21 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = asyn
       expressApp.get('/w/info', function (req, res) {
         res.json({
           message: 'You are running wertik-js v3',
-          version: require(path.resolve('./package.json')).version
+          version: require(path.resolve('./package.json')).version,
         })
       })
 
       wertikApp.sendEmail = emailSender({
         wertikApp,
-        configuration
+        configuration,
       })
 
-      if (configuration.graphql) {
+      if (configuration.graphql != null) {
         wertikApp.graphql = configuration.graphql({
           wertikApp,
           store,
           configuration,
-          expressApp
+          expressApp,
         })
       }
 

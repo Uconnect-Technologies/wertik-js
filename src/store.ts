@@ -21,16 +21,16 @@ const store = {
     `,
     resolvers: {
       Query: {
-        version: () => require('../../package.json').version
+        version: () => require('../../package.json').version,
       },
       Mutation: {
-        version: () => require('../../package.json').version
-      }
-    }
+        version: () => require('../../package.json').version,
+      },
+    },
   },
   database: {
-    relationships: []
-  }
+    relationships: [],
+  },
 }
 
 export default store
