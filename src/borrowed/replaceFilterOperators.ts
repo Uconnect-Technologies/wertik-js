@@ -1,9 +1,9 @@
-import isPlainObject from "lodash.isplainobject"
-import sequelize from "sequelize"
+import isPlainObject from 'lodash.isplainobject'
+import sequelize from 'sequelize'
 const Op = sequelize.Op
 
 const wrap = (operator) => {
-  return Op[operator.replace("_", "")]
+  return Op[operator.replace('_', '')]
 }
 
 const iterate = (obj) => {
@@ -15,12 +15,12 @@ const iterate = (obj) => {
       const value = obj[element]
       const isArray = Array.isArray(value)
       const isObject = isPlainObject(value)
-      if (element.startsWith("_")) {
+      if (element.startsWith('_')) {
         const newWrapValue = wrap(element)
         obj[newWrapValue] = obj[element]
         delete obj[element]
       }
-      if (isArray === true || isObject === true) {
+      if (isArray || isObject === true) {
         iterate(value)
       }
     })

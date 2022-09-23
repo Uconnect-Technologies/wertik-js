@@ -1,4 +1,4 @@
-import { iObject } from "."
+import { iObject } from '.'
 
 export interface useDatabaseProps {
   /**

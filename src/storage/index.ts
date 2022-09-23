@@ -1,13 +1,13 @@
-import { WertikApp, WertikConfiguration } from "../types"
-import { useStorageProps } from "../types/storage"
+import { WertikApp, WertikConfiguration } from '../types'
+import { useStorageProps } from '../types/storage'
 
-const DIGITAL_OCEAN = "digitalocean"
-const DROPBOX = "dropbox"
+const DIGITAL_OCEAN = 'digitalocean'
+const DROPBOX = 'dropbox'
 
 export const useStorage = (storageItem: useStorageProps) => {
   return ({
     configuration,
-    wertikApp,
+    wertikApp
   }: {
     configuration: WertikConfiguration
     wertikApp: WertikApp
@@ -15,11 +15,11 @@ export const useStorage = (storageItem: useStorageProps) => {
     if (storageItem.for === DIGITAL_OCEAN) {
       const digitalOceanSpacesDetails = storageItem.digitalOceanOptions
 
-      const aws = require("aws-sdk")
+      const aws = require('aws-sdk')
 
       aws.config.update({
         accessKeyId: digitalOceanSpacesDetails.accessKeyId,
-        secretAccessKey: digitalOceanSpacesDetails.secretAccessKey,
+        secretAccessKey: digitalOceanSpacesDetails.secretAccessKey
       })
 
       const spacesEndpoint: any = new aws.Endpoint(
@@ -27,7 +27,7 @@ export const useStorage = (storageItem: useStorageProps) => {
       )
 
       const s3 = new aws.S3({
-        endpoint: spacesEndpoint,
+        endpoint: spacesEndpoint
       })
 
       console.log(
@@ -36,19 +36,19 @@ export const useStorage = (storageItem: useStorageProps) => {
 
       return {
         spacesEndpoint,
-        s3,
+        s3
       }
     } else if (storageItem.for === DROPBOX) {
       const dropboxOptions = storageItem.dropboxOptions
-      const { Dropbox } = require("dropbox")
+      const { Dropbox } = require('dropbox')
       const dropboxInstance = new Dropbox({
-        accessToken: dropboxOptions.accessToken,
+        accessToken: dropboxOptions.accessToken
       })
 
       console.log(`[Storage] Initialized Dropbox instance ${storageItem.name}`)
 
       return {
-        dropbox: dropboxInstance,
+        dropbox: dropboxInstance
       }
     }
   }

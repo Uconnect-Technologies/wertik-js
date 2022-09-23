@@ -1,5 +1,5 @@
-import { GetMiddlewareOptions } from "apollo-server-express"
-import { Store, WertikApp, WertikConfiguration } from "."
+import { GetMiddlewareOptions } from 'apollo-server-express'
+import { Store, WertikApp, WertikConfiguration } from '.'
 
 export interface GetMiddlewareOptionsGraphql extends GetMiddlewareOptions {
   path: string

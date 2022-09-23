@@ -1,7 +1,7 @@
-import moment from "moment"
-import { useModule } from "../../modules/modules"
-import mysqldump from "mysqldump"
-import fs from "fs"
+import moment from 'moment'
+import { useModule } from '../../modules/modules'
+import mysqldump from 'mysqldump'
+import fs from 'fs'
 
 const dumpDatabase = async (
   dbName: string,
@@ -14,12 +14,12 @@ const dumpDatabase = async (
   }
 ) => {
   const filename = `backups/${moment().format(
-    "MMMM-DD-YYYY-h-mm-ss-a"
+    'MMMM-DD-YYYY-h-mm-ss-a'
   )}-database-${dbName}.sql`.toLowerCase()
 
   const backupInstance = await model.create({
     uploaded_filename: filename,
-    uploaded_to: "local",
+    uploaded_to: 'local'
   })
 
   await mysqldump({
@@ -27,15 +27,15 @@ const dumpDatabase = async (
       host: credentials.host,
       user: credentials.username,
       password: credentials.password,
-      database: credentials.name,
+      database: credentials.name
     },
-    dumpToFile: filename,
+    dumpToFile: filename
   })
 
   return {
-    message: "Backup was successfull",
+    message: 'Backup was successfull',
     filename,
-    backup: backupInstance,
+    backup: backupInstance
   }
 }
 const uploadDumpToDigitalOceanSpaces = async (
@@ -47,10 +47,10 @@ const uploadDumpToDigitalOceanSpaces = async (
   const data = await fs.readFileSync(filename)
 
   const params = {
-    Bucket: Bucket,
+    Bucket,
     Key: `${filename}`,
     Body: data,
-    ACL: ACL,
+    ACL
   }
 
   const response = await digitaloceanInstance.s3.upload(params).promise()
@@ -62,7 +62,7 @@ const uploadDumpToDropbox = async (filename, dropboxInstance) => {
   const response = await dropboxInstance.dropbox.filesUpload({
     strict_conflict: false,
     path: `/${filename}`,
-    contents: data,
+    contents: data
   })
   return response
 }
@@ -73,11 +73,11 @@ export const WertikBackupModule = (
   tableOptions: any = {}
 ) =>
   useModule({
-    name: "Backup",
+    name: 'Backup',
     useDatabase: true,
-    database: database,
-    table: table,
-    tableOptions: tableOptions,
+    database,
+    table,
+    tableOptions,
     on: function ({ useSchema, useMutation }) {
       useSchema(`
       type BackupSuccessResponse {
@@ -87,9 +87,9 @@ export const WertikBackupModule = (
       }
     `)
       useMutation({
-        name: "backupLocal",
-        query: "backupLocal(database: [String]!): [BackupSuccessResponse]",
-        async resolver(_, args, context) {
+        name: 'backupLocal',
+        query: 'backupLocal(database: [String]!): [BackupSuccessResponse]',
+        async resolver (_, args, context) {
           const push = []
           for (const dbName of args.database) {
             const database = context.wertik.database[dbName]
@@ -105,18 +105,18 @@ export const WertikBackupModule = (
             )
           }
           return push
-        },
+        }
       })
       useMutation({
-        name: "backupDigitalOceanSpaces",
+        name: 'backupDigitalOceanSpaces',
         query:
-          "backupDigitalOceanSpaces(ACL: String!, Bucket: String!, storage: String!, database: [String]!): [BackupSuccessResponse]",
-        async resolver(_, args, context) {
+          'backupDigitalOceanSpaces(ACL: String!, Bucket: String!, storage: String!, database: [String]!): [BackupSuccessResponse]',
+        async resolver (_, args, context) {
           try {
             const push = []
             const storage = context.wertik.storage[args.storage]
             if (!storage) {
-              throw new Error("No such storage found: " + args.storage)
+              throw new Error('No such storage found: ' + args.storage)
             }
 
             for (const dbName of args.database) {
@@ -138,10 +138,10 @@ export const WertikBackupModule = (
                 args.ACL
               )
               await dump.backup.update({
-                uploaded_to: "digitalocean",
-                uploaded_filename: uploadToDigitalOcean.Tag,
+                uploaded_to: 'digitalocean',
+                uploaded_filename: uploadToDigitalOcean.Tag
               })
-              dump.backup.uploaded_to = "digitalocean"
+              dump.backup.uploaded_to = 'digitalocean'
               dump.backup.uploaded_filename = uploadToDigitalOcean.key
             }
 
@@ -149,18 +149,18 @@ export const WertikBackupModule = (
           } catch (e) {
             throw new Error(e)
           }
-        },
+        }
       })
       useMutation({
-        name: "backupDropbox",
+        name: 'backupDropbox',
         query:
-          "backupDropbox(storage: String!, database: [String]): [BackupSuccessResponse]",
-        async resolver(_, args, context) {
+          'backupDropbox(storage: String!, database: [String]): [BackupSuccessResponse]',
+        async resolver (_, args, context) {
           try {
             const push = []
             const storage = context.wertik.storage[args.storage]
             if (!storage) {
-              throw new Error("No such storage found: " + args.storage)
+              throw new Error('No such storage found: ' + args.storage)
             }
 
             for (const dbName of args.database) {
@@ -179,10 +179,10 @@ export const WertikBackupModule = (
                 storage
               )
               await dump.backup.update({
-                uploaded_to: "dropbox",
-                uploaded_filename: uploadToDropbox.result.path_lower,
+                uploaded_to: 'dropbox',
+                uploaded_filename: uploadToDropbox.result.path_lower
               })
-              dump.backup.uploaded_to = "dropbox"
+              dump.backup.uploaded_to = 'dropbox'
               dump.backup.uploaded_filename = uploadToDropbox.result.path_lower
             }
 
@@ -191,7 +191,7 @@ export const WertikBackupModule = (
             console.log(e)
             throw new Error(e)
           }
-        },
+        }
       })
-    },
+    }
   })

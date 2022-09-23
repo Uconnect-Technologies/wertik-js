@@ -5,6 +5,8 @@
 - Worked on improving folder structure for adding more database features like postgres and mongodb.
 - Removed support for v1.
 - Removed code for v1.
+- Setup eslint
+- Setup workflow
 
 ### 3.3.0
 

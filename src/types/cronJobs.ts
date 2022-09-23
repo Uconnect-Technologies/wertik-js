@@ -1,4 +1,4 @@
-import { WertikApp } from "."
+import { WertikApp } from '.'
 
 export interface useCronJobsProps {
   expression: string

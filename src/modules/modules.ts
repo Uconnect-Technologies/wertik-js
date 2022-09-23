@@ -1,14 +1,14 @@
-import get from "lodash.get"
-import crud from "../crud"
-import { databaseDefaultOptions } from "../borrowed/options"
-import { RelationParams, useModuleProps } from "../types/modules"
+import get from 'lodash.get'
+import crud from '../crud'
+import { databaseDefaultOptions } from '../borrowed/options'
+import { RelationParams, useModuleProps } from '../types/modules'
 import {
   generateDataTypeFromDescribeTableColumnType,
   getCreateSchema,
   getGraphQLTypeNameFromSqlType,
   getUpdateSchema,
-  generateEnumTypeForGraphql,
-} from "./modulesHelpers"
+  generateEnumTypeForGraphql
+} from './modulesHelpers'
 
 const generateGenerateGraphQLCrud = (props, schemaInformation, store) => {
   const { graphql } = crud(props, schemaInformation, store)
@@ -31,12 +31,12 @@ const generateGenerateGraphQLCrud = (props, schemaInformation, store) => {
 
   store.graphql.resolvers.Query = {
     ...store.graphql.resolvers.Query,
-    ...resolvers.Query,
+    ...resolvers.Query
   }
 
   store.graphql.resolvers.Mutation = {
     ...store.graphql.resolvers.Mutation,
-    ...resolvers.Mutation,
+    ...resolvers.Mutation
   }
 }
 
@@ -49,7 +49,7 @@ export const useModule = (module: useModuleProps) => {
     let tableInstance
     let graphqlSchema = []
 
-    const useDatabase = get(module, "useDatabase", false)
+    const useDatabase = get(module, 'useDatabase', false)
 
     const useSchema = (string: string) => {
       store.graphql.typeDefs = store.graphql.typeDefs.concat(`
@@ -81,7 +81,7 @@ export const useModule = (module: useModuleProps) => {
       }, 2500)
     }
 
-    let listSchema = ""
+    let listSchema = ''
     let filterSchema = []
     if (useDatabase) {
       var createSchema = []
@@ -92,10 +92,10 @@ export const useModule = (module: useModuleProps) => {
       )
       const tableInformation = describe[0]
 
-      let fields = {}
+      const fields = {}
 
       tableInformation.forEach((element) => {
-        if (element.Field === "id") {
+        if (element.Field === 'id') {
           return
         }
         const { type, length } = generateDataTypeFromDescribeTableColumnType(
@@ -103,31 +103,31 @@ export const useModule = (module: useModuleProps) => {
         )
         fields[element.Field] = {
           type: {
-            type: type,
-            null: element.Null === "YES" ? true : false,
-          },
+            type,
+            null: element.Null === 'YES'
+          }
         }
         tableInstance = connection.instance.define(
           module.table,
           {
             ...fields,
-            ...get(module, "extendFields", {}),
+            ...get(module, 'extendFields', {})
           },
           {
-            ...get(module, "tableOptions", {}),
-            ...databaseDefaultOptions.sql.defaultTableOptions,
+            ...get(module, 'tableOptions', {}),
+            ...databaseDefaultOptions.sql.defaultTableOptions
           }
         )
       })
 
       if (module?.graphql?.schema) {
-        graphqlSchema = module.graphql.schema.replace("}", "").split("\n")
+        graphqlSchema = module.graphql.schema.replace('}', '').split('\n')
       } else {
         // graphql schema
         graphqlSchema = [`type ${module.name} {`]
 
         tableInformation.forEach((element) => {
-          if (element.Type.includes("enum")) {
+          if (element.Type.includes('enum')) {
             store.graphql.typeDefs = store.graphql.typeDefs.concat(
               generateEnumTypeForGraphql(element, module)
             )
@@ -149,15 +149,15 @@ export const useModule = (module: useModuleProps) => {
 
       tableInformation.forEach((element) => {
         if (
-          element.Type.includes("timestamp") ||
-          element.Type.includes("datetime") ||
-          element.Type.includes("varchar") ||
-          element.Type.includes("text")
+          element.Type.includes('timestamp') ||
+          element.Type.includes('datetime') ||
+          element.Type.includes('varchar') ||
+          element.Type.includes('text')
         ) {
           filterSchema.push(`${element.Field}: StringFilterInput`)
         } else if (
-          element.Type.includes("int") ||
-          element.Type.includes("number")
+          element.Type.includes('int') ||
+          element.Type.includes('number')
         ) {
           filterSchema.push(`${element.Field}: IntFilterInput`)
         }
@@ -181,7 +181,7 @@ export const useModule = (module: useModuleProps) => {
         referencedModule: params.module,
         referencedModuleDatabase: params.database,
         options: params.options,
-        type: "hasOne",
+        type: 'hasOne'
       })
     }
     const belongsTo = (params: RelationParams) => {
@@ -193,7 +193,7 @@ export const useModule = (module: useModuleProps) => {
         referencedModule: params.module,
         referencedModuleDatabase: params.database,
         options: params.options,
-        type: "belongsTo",
+        type: 'belongsTo'
       })
     }
     const belongsToMany = (params: RelationParams) => {
@@ -205,7 +205,7 @@ export const useModule = (module: useModuleProps) => {
         referencedModule: params.module,
         referencedModuleDatabase: params.database,
         options: params.options,
-        type: "belongsToMany",
+        type: 'belongsToMany'
       })
     }
     const hasMany = (params: RelationParams) => {
@@ -217,11 +217,11 @@ export const useModule = (module: useModuleProps) => {
         referencedModule: params.module,
         referencedModuleDatabase: params.database,
         options: params.options,
-        type: "hasMany",
+        type: 'hasMany'
       })
     }
 
-    get(module, "on", () => {})({
+    get(module, 'on', () => {})({
       useQuery,
       useMutation,
       useExpress,
@@ -229,23 +229,23 @@ export const useModule = (module: useModuleProps) => {
       belongsTo,
       belongsToMany,
       hasMany,
-      useSchema,
+      useSchema
     })
 
     if (useDatabase) {
-      graphqlSchema.push("}")
-      filterSchema.push("}")
+      graphqlSchema.push('}')
+      filterSchema.push('}')
     }
 
     const schemaInformation = {
-      tableInstance: tableInstance,
-      schema: graphqlSchema.join(`\n`),
+      tableInstance,
+      schema: graphqlSchema.join('\n'),
       inputSchema: {
-        create: createSchema || "",
-        update: updateSchema || "",
+        create: createSchema || '',
+        update: updateSchema || '',
         list: listSchema,
-        filters: filterSchema.join("\n"),
-      },
+        filters: filterSchema.join('\n')
+      }
     }
 
     if (useDatabase) {
@@ -253,7 +253,7 @@ export const useModule = (module: useModuleProps) => {
       app.models[module.name] = tableInstance
     }
 
-    console.log(`[Module]`, `Initialized module "${module.name}"`)
+    console.log('[Module]', `Initialized module "${module.name}"`)
 
     return schemaInformation
   }

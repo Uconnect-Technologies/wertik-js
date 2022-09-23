@@ -1,4 +1,4 @@
-import generalSchema from "./graphql/generalSchema"
+import generalSchema from './graphql/generalSchema'
 
 const store = {
   graphql: {
@@ -21,16 +21,16 @@ const store = {
     `,
     resolvers: {
       Query: {
-        version: () => require("../../package.json").version,
+        version: () => require('../../package.json').version
       },
       Mutation: {
-        version: () => require("../../package.json").version,
-      },
-    },
+        version: () => require('../../package.json').version
+      }
+    }
   },
   database: {
-    relationships: [],
-  },
+    relationships: []
+  }
 }
 
 export default store

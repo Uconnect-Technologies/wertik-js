@@ -27,6 +27,8 @@
   "scripts": {
     "dev": "tsc-watch --noClear --onSuccess \"node ./lib/devServer.js\"",
     "build": "yarn prettier && yarn tsc && yarn test",
+    "lint": "eslint \"**/*.{ts,tsx}\"",
+    "lint:fix": "eslint --fix \"**/*.{ts,tsx}\"",
     "production": "node lib/devServer.js",
     "watch-ts": "tsc -w",
     "prettier": "prettier --write src package.json index.js",
@@ -81,12 +83,18 @@
     "@types/node": "^9.6.7",
     "@types/nodemailer": "^4.3.4",
     "@types/winston": "^2.4.4",
+    "@typescript-eslint/eslint-plugin": "^5.38.0",
     "concurrently": "^3.6.1",
     "dotenv": "^16.0.0",
+    "eslint": "^8.23.1",
+    "eslint-config-standard-with-typescript": "^23.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.3.0",
+    "eslint-plugin-promise": "^6.0.1",
     "jest": "^27.4.7",
     "prettier": "^2.3.2",
+    "tsc-watch": "^5.0.3",
     "tslint": "^5.17.0",
-    "typescript": "^4.5.4",
-    "tsc-watch": "^5.0.3"
+    "typescript": "^4.8.3"
   }
 }

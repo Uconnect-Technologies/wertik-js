@@ -1,36 +1,35 @@
-import get from "lodash.get"
-import express from "express"
-import store from "./store"
+import get from 'lodash.get'
+import express from 'express'
+import store from './store'
 import {
   applyRelationshipsFromStoreToDatabase,
-  applyRelationshipsFromStoreToGraphql,
-} from "./database"
-import { emailSender } from "./mailer/index"
-import http from "http"
-import { WertikConfiguration } from "./types"
-import { WertikApp } from "./types"
-import { initializeBullBoard } from "./queue/index"
-import path from "path"
+  applyRelationshipsFromStoreToGraphql
+} from './database'
+import { emailSender } from './mailer/index'
+import http from 'http'
+import { WertikConfiguration, WertikApp } from './types'
+import { initializeBullBoard } from './queue/index'
+import path from 'path'
 
-export * from "./database"
-export * from "./modules/modules"
-export * from "./graphql"
-export * from "./mailer"
-export * from "./cronJobs"
-export * from "./storage"
-export * from "./helpers/modules/backup"
-export * from "./sockets"
-export * from "./queue"
-export * from "./redis"
-export * from "./logger"
+export * from './database'
+export * from './modules/modules'
+export * from './graphql'
+export * from './mailer'
+export * from './cronJobs'
+export * from './storage'
+export * from './helpers/modules/backup'
+export * from './sockets'
+export * from './queue'
+export * from './redis'
+export * from './logger'
 
-const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
+const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = async (
   configuration: WertikConfiguration
 ) => {
-  configuration = configuration ? configuration : {}
-  return new Promise(async (resolve, reject) => {
+  configuration = configuration || {}
+  return await new Promise(async (resolve, reject) => {
     try {
-      configuration.appEnv = configuration.appEnv ?? "local"
+      configuration.appEnv = configuration.appEnv ?? 'local'
       const wertikApp: WertikApp = {
         appEnv: configuration.appEnv,
         port: 1200,
@@ -44,15 +43,15 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
         storage: {},
         queue: {
           jobs: {},
-          bullBoard: {},
+          bullBoard: {}
         },
         redis: {},
-        logger: null,
+        logger: null
       }
 
-      const port = get(configuration, "port", 1200)
-      const skip = get(configuration, "skip", false)
-      const expressApp = get(configuration, "express", express())
+      const port = get(configuration, 'port', 1200)
+      const skip = get(configuration, 'skip', false)
+      const expressApp = get(configuration, 'express', express())
       const httpServer = http.createServer(expressApp)
 
       wertikApp.appEnv = configuration.appEnv
@@ -75,8 +74,8 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
           wertikApp.storage[storageName] = await configuration.storage[
             storageName
           ]({
-            configuration: configuration,
-            wertikApp: wertikApp,
+            configuration,
+            wertikApp
           })
         }
       }
@@ -85,8 +84,8 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
         for (const cronName of Object.keys(configuration.cronJobs || {})) {
           wertikApp.cronJobs[cronName] = await configuration.cronJobs[cronName](
             {
-              configuration: configuration,
-              wertikApp: wertikApp,
+              configuration,
+              wertikApp
             }
           )
         }
@@ -97,8 +96,8 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
           wertikApp.sockets[socketName] = await configuration.sockets[
             socketName
           ]({
-            configuration: configuration,
-            wertikApp: wertikApp,
+            configuration,
+            wertikApp
           })
         }
       }
@@ -120,9 +119,9 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
           wertikApp.modules[moduleName] = await configuration.modules[
             moduleName
           ]({
-            store: store,
-            configuration: configuration,
-            app: wertikApp,
+            store,
+            configuration,
+            app: wertikApp
           })
         }
       }
@@ -135,10 +134,10 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
         }
       }
 
-      if (configuration?.queue?.options?.useBullBoard === true) {
+      if (configuration?.queue?.options?.useBullBoard) {
         wertikApp.queue.bullBoard = initializeBullBoard({
           wertikApp,
-          configuration,
+          configuration
         })
       }
 
@@ -146,7 +145,7 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
         for (const redisName of Object.keys(configuration.redis || {})) {
           wertikApp.redis[redisName] = await configuration.redis[redisName]({
             wertikApp,
-            configuration,
+            configuration
           })
         }
       }
@@ -158,24 +157,24 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
       applyRelationshipsFromStoreToDatabase(store, wertikApp)
       applyRelationshipsFromStoreToGraphql(store, wertikApp)
 
-      expressApp.get("/w/info", function (req, res) {
+      expressApp.get('/w/info', function (req, res) {
         res.json({
-          message: "You are running wertik-js v3",
-          version: require(path.resolve("./package.json")).version,
+          message: 'You are running wertik-js v3',
+          version: require(path.resolve('./package.json')).version
         })
       })
 
       wertikApp.sendEmail = emailSender({
         wertikApp,
-        configuration,
+        configuration
       })
 
       if (configuration.graphql) {
         wertikApp.graphql = configuration.graphql({
-          wertikApp: wertikApp,
-          store: store,
-          configuration: configuration,
-          expressApp: expressApp,
+          wertikApp,
+          store,
+          configuration,
+          expressApp
         })
       }
 
@@ -184,7 +183,7 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
         next()
       })
 
-      if (!new Object(process.env).hasOwnProperty("TEST_MODE")) {
+      if (!new Object(process.env).hasOwnProperty('TEST_MODE')) {
         setTimeout(async () => {
           if (skip === false) {
             httpServer.listen(port, () => {

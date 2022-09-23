@@ -1,19 +1,19 @@
-import get from "lodash.get"
-import convertFiltersIntoSequalizeObject from "../borrowed/convertFiltersIntoSequalizeObject"
+import get from 'lodash.get'
+import convertFiltersIntoSequalizeObject from '../borrowed/convertFiltersIntoSequalizeObject'
 
 export const paginate = async (arg, tableInstance) => {
-  let page = get(arg, "pagination.page", 1)
-  let limit = get(arg, "pagination.limit", 100)
-  let sorting = get(arg, "sorting", [])
-  let offset = limit * (page - 1)
+  const page = get(arg, 'pagination.page', 1)
+  const limit = get(arg, 'pagination.limit', 100)
+  const sorting = get(arg, 'sorting', [])
+  const offset = limit * (page - 1)
   const where = await convertFiltersIntoSequalizeObject(arg.where)
   const find = await tableInstance.findAndCountAll({
-    where: where,
-    offset: offset,
-    limit: limit,
+    where,
+    offset,
+    limit,
     order: sorting.map((c) => {
       return [c.column, c.type]
-    }),
+    })
   })
   const totalPages = Math.ceil(find.count / limit)
   return {
@@ -21,19 +21,19 @@ export const paginate = async (arg, tableInstance) => {
     paginationProperties: {
       total: find.count,
       nextPage: page + 1,
-      page: page,
+      page,
       previousPage: page == 1 ? 1 : page - 1,
       pages: totalPages,
       hasMore: page < totalPages,
-      limit: limit,
-    },
+      limit
+    }
   }
 }
 
 export default function (module, schemaInformation, store) {
   return {
     graphql: {
-      generateQueriesCrudSchema() {
+      generateQueriesCrudSchema () {
         return `
 
         type ${module.name}List {
@@ -57,7 +57,7 @@ export default function (module, schemaInformation, store) {
             count${module.name}(where: ${module.name}FilterInput):  Int
         }`
       },
-      generateMutationsCrudSchema() {
+      generateMutationsCrudSchema () {
         return `
             extend type Mutation {
               update${module.name}(input: update${module.name}Input,where: ${module.name}FilterInput!): ${module.name}BulkMutationResponse
@@ -67,26 +67,26 @@ export default function (module, schemaInformation, store) {
             }
           `
       },
-      generateCrudResolvers() {
+      generateCrudResolvers () {
         return {
           Mutation: {
             [`createOrUpdate${module.name}`]: get(
               module,
-              "graphql.mutations.createOrUpdate",
+              'graphql.mutations.createOrUpdate',
               async (_, args, context, info) => {
                 const argsFromEvent = await get(
                   module,
-                  "events.beforeCreateOrUpdate",
+                  'events.beforeCreateOrUpdate',
                   function () {}
                 )(_, args, context, info)
-                args = argsFromEvent ? argsFromEvent : args
+                args = argsFromEvent || args
                 const id = args.id
                 let ___find: any
                 if (id) {
                   ___find = await schemaInformation.tableInstance.findOne({
                     where: {
-                      id: id,
-                    },
+                      id
+                    }
                   })
 
                   if (!___find) {
@@ -94,11 +94,11 @@ export default function (module, schemaInformation, store) {
                   }
 
                   await schemaInformation.tableInstance.update(args.input, {
-                    where: { id: id },
+                    where: { id }
                   })
 
                   return await schemaInformation.tableInstance.findOne({
-                    where: { id: id },
+                    where: { id }
                   })
                 } else {
                   return await schemaInformation.tableInstance.create(
@@ -109,61 +109,61 @@ export default function (module, schemaInformation, store) {
             ),
             [`update${module.name}`]: get(
               module,
-              "graphql.mutations.update",
+              'graphql.mutations.update',
               async (_, args, context, info) => {
                 const argsFromEvent = await get(
                   module,
-                  "events.beforeUpdate",
+                  'events.beforeUpdate',
                   function () {}
                 )(_, args, context, info)
-                args = argsFromEvent ? argsFromEvent : args
+                args = argsFromEvent || args
                 const where = await convertFiltersIntoSequalizeObject(
                   args.where
                 )
                 const response = await schemaInformation.tableInstance.update(
                   args.input,
                   {
-                    where: where,
+                    where
                   }
                 )
                 const all = await schemaInformation.tableInstance.findAll({
-                  where: where,
+                  where
                 })
                 return {
                   returning: all,
-                  affectedRows: response[0],
+                  affectedRows: response[0]
                 }
               }
             ),
             [`delete${module.name}`]: get(
               module,
-              "graphql.mutations.delete",
+              'graphql.mutations.delete',
               async (_, args, context, info) => {
                 const argsFromEvent = await get(
                   module,
-                  "events.beforeDelete",
+                  'events.beforeDelete',
                   function () {}
                 )(_, args, context, info)
-                args = argsFromEvent ? argsFromEvent : args
+                args = argsFromEvent || args
                 const where = await convertFiltersIntoSequalizeObject(
                   args.where
                 )
                 await schemaInformation.tableInstance.destroy({
-                  where: where,
+                  where
                 })
                 return { message: `${module.name} Deleted` }
               }
             ),
             [`create${module.name}`]: get(
               module,
-              "graphql.mutations.create",
+              'graphql.mutations.create',
               async (_, args, context, info) => {
                 const argsFromEvent = await get(
                   module,
-                  "events.beforeCreate",
+                  'events.beforeCreate',
                   function () {}
                 )(_, args, context, info)
-                args = argsFromEvent ? argsFromEvent : args
+                args = argsFromEvent || args
                 const response = []
                 for (const input of args.input) {
                   response.push(
@@ -172,66 +172,66 @@ export default function (module, schemaInformation, store) {
                 }
                 return {
                   returning: response,
-                  affectedRows: response.length,
+                  affectedRows: response.length
                 }
               }
-            ),
+            )
           },
           Query: {
             [`view${module.name}`]: get(
               module,
-              "graphql.queries.view",
+              'graphql.queries.view',
               async (_, args, context, info) => {
                 const argsFromEvent = await get(
                   module,
-                  "events.beforeView",
+                  'events.beforeView',
                   function () {}
                 )(_, args, context, info)
-                args = argsFromEvent ? argsFromEvent : args
+                args = argsFromEvent || args
                 const where = await convertFiltersIntoSequalizeObject(
                   args.where
                 )
                 const find = await schemaInformation.tableInstance.findOne({
-                  where: where,
+                  where
                 })
                 return find
               }
             ),
             [`list${module.name}`]: get(
               module,
-              "graphql.queries.list",
+              'graphql.queries.list',
               async (_, args, context, info) => {
                 const argsFromEvent = await get(
                   module,
-                  "events.beforeList",
+                  'events.beforeList',
                   function () {}
                 )(_, args, context, info)
-                args = argsFromEvent ? argsFromEvent : args
+                args = argsFromEvent || args
                 return await paginate(args, schemaInformation.tableInstance)
               }
             ),
             [`count${module.name}`]: get(
               module,
-              "graphql.queries.count",
+              'graphql.queries.count',
               async (_, args, context, info) => {
                 const argsFromEvent = await get(
                   module,
-                  "events.beforeCount",
+                  'events.beforeCount',
                   function () {}
                 )(_, args, context, info)
-                args = argsFromEvent ? argsFromEvent : args
+                args = argsFromEvent || args
                 const where = await convertFiltersIntoSequalizeObject(
                   args.where
                 )
                 const count = await schemaInformation.tableInstance.count({
-                  where: where,
+                  where
                 })
                 return count
               }
-            ),
-          },
+            )
+          }
         }
-      },
-    },
+      }
+    }
   }
 }

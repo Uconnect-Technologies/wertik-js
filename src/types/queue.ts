@@ -1,4 +1,4 @@
-import { QueueOptions } from "bull"
+import { QueueOptions } from 'bull'
 
 export interface useQueueProps {
   name: string

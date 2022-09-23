@@ -1,10 +1,9 @@
-import { Sequelize } from "sequelize"
-import { databaseDefaultOptions } from "./borrowed/options"
-import get from "lodash.get"
-import { paginate } from "./crud/index"
-import { Store } from "./types"
-import { WertikApp } from "./types"
-import { useDatabaseProps } from "./types/database"
+import { Sequelize } from 'sequelize'
+import { databaseDefaultOptions } from './borrowed/options'
+import get from 'lodash.get'
+import { paginate } from './crud/index'
+import { Store, WertikApp } from './types'
+import { useDatabaseProps } from './types/database'
 
 export const getAllRelationships = (dbName: String) => {
   return `
@@ -20,12 +19,12 @@ export const getAllRelationships = (dbName: String) => {
 export const useMysqlDatabase = function (obj: useDatabaseProps) {
   return async () => {
     try {
-      let sequelize = new Sequelize(obj.name, obj.username, obj.password, {
+      const sequelize = new Sequelize(obj.name, obj.username, obj.password, {
         host: obj.host,
-        dialect: "mysql",
+        dialect: 'mysql',
         logging: false,
-        ...get(obj, "options", {}),
-        ...(databaseDefaultOptions as any).sql.dbInitializeOptions,
+        ...get(obj, 'options', {}),
+        ...(databaseDefaultOptions as any).sql.dbInitializeOptions
       })
       await sequelize.authenticate()
       console.log(`[DB] Succcessfully connected to database ${obj.name}`)
@@ -34,7 +33,7 @@ export const useMysqlDatabase = function (obj: useDatabaseProps) {
       )
       return {
         credentials: obj,
-        instance: sequelize,
+        instance: sequelize
       }
     } catch (e) {
       console.log(`[DB] Connecting failed to datbase ${obj.name}`)
@@ -78,29 +77,29 @@ export const applyRelationshipsFromStoreToGraphql = async (
           context.wertik.modules[element.referencedModule].tableInstance
         let referencedModuleKey =
           element.options.sourceKey || element.options.targetKey
-        let currentModuleKey = element.options.foreignKey || "id"
+        const currentModuleKey = element.options.foreignKey || 'id'
 
         if (!referencedModuleKey) {
-          referencedModuleKey = "id"
+          referencedModuleKey = 'id'
         }
 
-        if (["hasOne", "belongsTo"].includes(element.type)) {
+        if (['hasOne', 'belongsTo'].includes(element.type)) {
           return await tableInstance.findOne({
             where: {
-              [currentModuleKey]: parent[referencedModuleKey],
-            },
+              [currentModuleKey]: parent[referencedModuleKey]
+            }
           })
-        } else if (["hasMany", "belongsToMany"]) {
+        } else if (['hasMany', 'belongsToMany']) {
           return await paginate(
             {
               where: {
-                [currentModuleKey]: parent[referencedModuleKey],
-              },
+                [currentModuleKey]: parent[referencedModuleKey]
+              }
             },
             tableInstance
           )
         }
-      },
+      }
     }
   })
 }
