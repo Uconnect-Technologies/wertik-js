@@ -1,8 +1,8 @@
 import wertik, { useModule, useMysqlDatabase, useGraphql } from '../index'
 import { useLogger, useWinstonTransport } from '../logger'
 
-const devIlyas = () => {
-  wertik({
+const devIlyas = async (): Promise<void> => {
+  await wertik({
     port: 1200,
     graphql: useGraphql(),
     database: {

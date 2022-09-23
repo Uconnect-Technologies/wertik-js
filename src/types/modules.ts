@@ -109,11 +109,11 @@ export interface useModuleProps {
     /**
      * This Method allows you adding graphql query to your module.
      */
-    useQuery: (props: useQueryProps) => {} | void
+    useQuery: (props: useQueryProps) => {}
     /**
      * This Method allows you adding graphql mutation to your module.
      */
-    useMutation: (props: useMutationProps) => {} | void
+    useMutation: (props: useMutationProps) => {}
     /**
      * This method gives you access to express app instance.
      */
@@ -121,23 +121,23 @@ export interface useModuleProps {
     /**
      * This method adds a one-to-one relationship to a module.
      */
-    hasOne: (props: RelationParams) => {} | void
+    hasOne: (props: RelationParams) => {}
     /**
      * This method adds belongs to relationship to a module.
      */
-    belongsTo: (props: RelationParams) => {} | void
+    belongsTo: (props: RelationParams) => {}
     /**
      * This method adds one to many relationship to a module.
      */
-    belongsToMany: (props: RelationParams) => {} | void
+    belongsToMany: (props: RelationParams) => {}
     /**
      * This method adds belogs to many relationship to a module.
      */
-    hasMany: (props: RelationParams) => {} | void
+    hasMany: (props: RelationParams) => {}
     /**
      * This method adds has many relationship to a module.
      */
-    useSchema: (props: useSchemaProps) => {} | void
+    useSchema: (props: useSchemaProps) => {}
   }) => void
   /**
    * Graphql events when a CRUD opreation happens.
