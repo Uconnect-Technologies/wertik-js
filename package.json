@@ -29,8 +29,6 @@
     "build": "yarn tsc && yarn test",
     "lint": "eslint \"**/*.{ts,tsx}\"",
     "lint:fix": "eslint --fix \"**/*.{ts,tsx}\"",
-    "production": "node lib/devServer.js",
-    "watch-ts": "tsc -w",
     "prettier": "prettier --write src package.json index.js",
     "test": "cross-env TEST_MODE=true jest --runInBand --forceExit --detectOpenHandles"
   },
