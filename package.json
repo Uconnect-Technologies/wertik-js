@@ -1,6 +1,6 @@
 {
   "name": "wertik-js",
-  "version": "3.3.0",
+  "version": "3.3.1",
   "main": "lib/main.js",
   "types": "lib/types.d.ts",
   "repository": "https://github.com/Uconnect-Technologies/wertik-js.git",
@@ -25,7 +25,7 @@
   "author": "Ilyas Karim <ilyas.datoo@gmail.com> ",
   "license": "MIT",
   "scripts": {
-    "dev": "concurrently -n TS,DevServer  \"npm run watch-ts\"  \"nodemon lib/devServer.js\" ",
+    "dev": "concurrently -n TS,DevServer  \"npm run watch-ts\"  \"nodemon lib/next/devServer.js\" ",
     "build": "yarn prettier && yarn tsc && yarn test",
     "production": "node lib/devServer.js",
     "watch-ts": "tsc -w",
