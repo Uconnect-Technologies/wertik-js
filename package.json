@@ -25,7 +25,7 @@
   "author": "Ilyas Karim <ilyas.datoo@gmail.com> ",
   "license": "MIT",
   "scripts": {
-    "dev": "concurrently -n TS,DevServer  \"npm run watch-ts\"  \"nodemon lib/next/devServer.js\" ",
+    "dev": "tsc-watch --noClear --onSuccess \"node ./lib/devServer.js\"",
     "build": "yarn prettier && yarn tsc && yarn test",
     "production": "node lib/devServer.js",
     "watch-ts": "tsc -w",
@@ -84,9 +84,9 @@
     "concurrently": "^3.6.1",
     "dotenv": "^16.0.0",
     "jest": "^27.4.7",
-    "nodemon": "^1.18.9",
     "prettier": "^2.3.2",
     "tslint": "^5.17.0",
-    "typescript": "^4.5.4"
+    "typescript": "^4.5.4",
+    "tsc-watch": "^5.0.3"
   }
 }

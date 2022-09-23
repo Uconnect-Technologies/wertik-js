@@ -2,8 +2,9 @@ import devHakeem from "./devServers/dev-hakeem"
 import devNaveed from "./devServers/dev-naveed"
 import devZeeshan from "./devServers/dev-naveed"
 import devIlyas from "./devServers/dev-ilyas"
-const dev = process.env.dev
+const dev = process.env.dev ?? "ilyas"
 
+console.log(dev)
 switch (dev) {
   case "hakeem":
     devHakeem()

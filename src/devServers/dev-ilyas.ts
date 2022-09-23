@@ -1,9 +1,27 @@
-import wertik, { useModule } from "../index"
+import wertik, { useModule, useMysqlDatabase, useGraphql } from "../index"
 import { useLogger, useWinstonTransport } from "../logger"
 
 const devIlyas = async () => {
   wertik({
     port: 1200,
+    graphql: useGraphql(),
+    database: {
+      wapgee: useMysqlDatabase({
+        name: "wapgee",
+        host: "localhost",
+        password: "pass",
+        username: "root",
+        port: 3306,
+      }),
+    },
+    modules: {
+      User: useModule({
+        useDatabase: true,
+        name: "User",
+        table: "users",
+        database: "wapgee",
+      }),
+    },
     logger: useLogger({
       transports: useWinstonTransport((winston) => {
         return [
@@ -15,20 +33,6 @@ const devIlyas = async () => {
         ]
       }),
     }),
-    modules: {
-      custom: useModule({
-        name: "custom",
-        useDatabase: false,
-        on: function ({ useExpress }) {
-          useExpress((exp) => {
-            exp.get("/check", (req: any, res: any) => {
-              req.wertik.logger.info({ name: "ilyas" })
-              res.send("w")
-            })
-          })
-        },
-      }),
-    },
   })
 }
 
