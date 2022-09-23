@@ -1,6 +1,6 @@
-import { get } from "lodash"
+import get from "lodash.get"
 import crud from "../crud"
-import { databaseDefaultOptions } from "../../framework/defaults/options"
+import { databaseDefaultOptions } from "../borrowed/options"
 import { RelationParams, useModuleProps } from "../types/modules"
 import {
   generateDataTypeFromDescribeTableColumnType,

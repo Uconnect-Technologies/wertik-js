@@ -25,7 +25,6 @@
   "author": "Ilyas Karim <ilyas.datoo@gmail.com> ",
   "license": "MIT",
   "scripts": {
-    "dev-old": "concurrently -n TS,DevServer  \"npm run watch-ts\"  \"nodemon lib/devServer.js\" ",
     "dev": "concurrently -n TS,DevServer  \"npm run watch-ts\"  \"nodemon lib/next/devServer.js\" ",
     "build": "yarn prettier && yarn tsc && yarn test",
     "production": "node lib/devServer.js",
@@ -52,7 +51,9 @@
     "graphql-fields": "^2.0.3",
     "graphql-type-json": "^0.3.2",
     "handlebars": "^4.5.3",
-    "lodash": "^4.17.15",
+    "lodash.get": "^4.4.2",
+    "lodash.isplainobject": "^4.0.6",
+    "lodash.omit": "^4.5.0",
     "log-symbols": "^3.0.0",
     "moment": "^2.23.0",
     "morgan": "^1.9.1",

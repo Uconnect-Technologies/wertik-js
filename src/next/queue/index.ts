@@ -1,5 +1,5 @@
 import Queue from "bull"
-import { checkIfPackageIsInstalled } from "../../framework/initialization/checkInstalledPackages"
+import { checkIfPackageIsInstalled } from "../borrowed/checkInstalledPackages"
 import { WertikApp, WertikConfiguration } from "../types"
 import { useQueueProps } from "./../types/queue"
 

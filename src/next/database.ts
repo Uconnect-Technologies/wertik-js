@@ -1,6 +1,6 @@
 import { Sequelize } from "sequelize"
-import { databaseDefaultOptions } from "../framework/defaults/options"
-import { get } from "lodash"
+import { databaseDefaultOptions } from "./borrowed/options"
+import get from "lodash.get"
 import { paginate } from "./crud/index"
 import { Store } from "./types"
 import { WertikApp } from "./types"

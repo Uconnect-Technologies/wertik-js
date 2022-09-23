@@ -1,4 +1,4 @@
-import { get } from "lodash"
+import get from "lodash.get"
 
 export const generateDataTypeFromDescribeTableColumnType = (Type: string) => {
   let length = Type.match(/[0-9]/g)?.join("")

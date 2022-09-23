@@ -1,4 +1,4 @@
-import { isPlainObject } from "lodash"
+import isPlainObject from "lodash.isplainobject"
 import sequelize from "sequelize"
 const Op = sequelize.Op
 

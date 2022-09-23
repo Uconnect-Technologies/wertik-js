@@ -2,7 +2,6 @@ import nodemailer from "nodemailer"
 import handlebars from "handlebars"
 import { useMailerProps, WertikApp, WertikConfiguration } from "../types"
 import { emailSendProps } from "../types/mailer"
-import { get } from "lodash"
 
 export const useMailer = (props: useMailerProps) => {
   return async () => {

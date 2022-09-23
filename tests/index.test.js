@@ -11,7 +11,7 @@ const {
   useWebSockets,
   useMailer,
   useGraphql,
-} = require("./../lib/next/index")
+} = require("./../lib/index")
 
 const database = {
   name: process.env.TEST_DATABASE_NAME,
