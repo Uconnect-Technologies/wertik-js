@@ -48,16 +48,18 @@ export const useModule = (module: useModuleProps) => {
   return async ({ store, configuration, app }: any) => {
     let tableInstance
     let graphqlSchema = []
+    let createSchema = []
+    let updateSchema = []
 
-    const useDatabase = get(module, 'useDatabase', false)
+    const useDatabase = module.useDatabase ?? false
 
-    const useSchema = (string: string) => {
+    const useSchema = (string: string): void => {
       store.graphql.typeDefs = store.graphql.typeDefs.concat(`
         ${string}
       `)
     }
 
-    const useQuery = ({ query, resolver, name }) => {
+    const useQuery = ({ query, resolver, name }): void => {
       store.graphql.typeDefs = store.graphql.typeDefs.concat(`
         extend type Query {
           ${query}
@@ -66,7 +68,7 @@ export const useModule = (module: useModuleProps) => {
       store.graphql.resolvers.Query[name] = resolver
     }
 
-    const useMutation = ({ query, resolver, name }) => {
+    const useMutation = ({ query, resolver, name }): void => {
       store.graphql.typeDefs = store.graphql.typeDefs.concat(`
         extend type Mutation {
           ${query}
@@ -75,7 +77,7 @@ export const useModule = (module: useModuleProps) => {
       store.graphql.resolvers.Mutation[name] = resolver
     }
 
-    const useExpress = (fn = (express) => {}) => {
+    const useExpress = (fn = (express) => {}): void => {
       setTimeout(() => {
         fn(app.express)
       }, 2500)
@@ -84,8 +86,6 @@ export const useModule = (module: useModuleProps) => {
     let listSchema = ''
     let filterSchema = []
     if (useDatabase) {
-      var createSchema = []
-      var updateSchema = []
       const connection = app.database[module.database]
       const describe = await connection.instance.query(
         `describe ${module.table}`
@@ -98,7 +98,7 @@ export const useModule = (module: useModuleProps) => {
         if (element.Field === 'id') {
           return
         }
-        const { type, length } = generateDataTypeFromDescribeTableColumnType(
+        const { type } = generateDataTypeFromDescribeTableColumnType(
           element.Type
         )
         fields[element.Field] = {
@@ -172,7 +172,7 @@ export const useModule = (module: useModuleProps) => {
       `
     }
 
-    const hasOne = (params: RelationParams) => {
+    const hasOne = (params: RelationParams): void => {
       graphqlSchema.push(`${params.graphqlKey}: ${params.module}`)
       store.database.relationships.push({
         currentModule: module.name,
@@ -184,7 +184,7 @@ export const useModule = (module: useModuleProps) => {
         type: 'hasOne',
       })
     }
-    const belongsTo = (params: RelationParams) => {
+    const belongsTo = (params: RelationParams): void => {
       graphqlSchema.push(`${params.graphqlKey}: ${params.module}`)
       store.database.relationships.push({
         currentModule: module.name,
@@ -196,7 +196,7 @@ export const useModule = (module: useModuleProps) => {
         type: 'belongsTo',
       })
     }
-    const belongsToMany = (params: RelationParams) => {
+    const belongsToMany = (params: RelationParams): void => {
       graphqlSchema.push(`${params.graphqlKey}: ${params.module}List`)
       store.database.relationships.push({
         currentModule: module.name,
@@ -208,7 +208,7 @@ export const useModule = (module: useModuleProps) => {
         type: 'belongsToMany',
       })
     }
-    const hasMany = (params: RelationParams) => {
+    const hasMany = (params: RelationParams): void => {
       graphqlSchema.push(`${params.graphqlKey}: ${params.module}List`)
       store.database.relationships.push({
         currentModule: module.name,
