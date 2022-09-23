@@ -26,7 +26,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "tsc-watch --noClear --onSuccess \"node ./lib/devServer.js\"",
-    "build": "yarn prettier && yarn tsc && yarn test",
+    "build": "yarn tsc && yarn test",
     "lint": "eslint \"**/*.{ts,tsx}\"",
     "lint:fix": "eslint --fix \"**/*.{ts,tsx}\"",
     "production": "node lib/devServer.js",
