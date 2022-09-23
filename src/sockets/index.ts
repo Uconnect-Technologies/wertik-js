@@ -21,16 +21,19 @@ export const useWebSockets = (props: WebSocketServerOptions = {}) => {
     configuration: WertikConfiguration
     wertikApp: WertikApp
   }) => {
-    if (!props.path) {
+    if (props.path) {
+      console.log(
+        `Web Sockets server starting at ws://localhost:${
+          configuration.port ?? 1200
+        }${props.path}`
+      )
+      return new WebSocketServer({
+        server: wertikApp.httpServer,
+        ...props,
+      })
+    } else {
       throw new Error('Path must be passed for useWebSockets')
     }
-    console.log(
-      `Web Sockets server starting at ws://localhost:${configuration.port}${props.path}`
-    )
-    return new WebSocketServer({
-      server: wertikApp.httpServer,
-      ...props,
-    })
   }
 }
 
