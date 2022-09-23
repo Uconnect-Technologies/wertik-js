@@ -1,4 +1,5 @@
 require("dotenv").config()
+const appFromRoot = require("../index").default
 
 const {
   default: wertik,
@@ -23,6 +24,10 @@ const database = {
 
 test("Expect no configuration can start the server", async () => {
   await expect((app = wertik())).resolves.not.toThrowError()
+})
+
+test("Expect library to run when imported from root", async () => {
+  await expect((app = appFromRoot())).resolves.not.toThrowError()
 })
 
 test("Expect empty configuration object an start the server", async () => {
