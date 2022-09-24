@@ -10,7 +10,7 @@ import {
   generateEnumTypeForGraphql,
 } from './modulesHelpers'
 
-const generateGenerateGraphQLCrud = (props, schemaInformation, store) => {
+const generateGenerateGraphQLCrud = (props: useModuleProps, schemaInformation, store) => {
   const { graphql } = crud(props, schemaInformation, store)
   const resolvers = graphql.generateCrudResolvers()
 

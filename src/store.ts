@@ -21,9 +21,11 @@ const store = {
     `,
     resolvers: {
       Query: {
+        // eslint-disable-next-line
         version: () => require('../../package.json').version,
       },
       Mutation: {
+        // eslint-disable-next-line
         version: () => require('../../package.json').version,
       },
     },

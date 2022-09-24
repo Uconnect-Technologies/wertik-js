@@ -2,13 +2,12 @@ import isPlainObject from 'lodash.isplainobject'
 import sequelize from 'sequelize'
 const Op = sequelize.Op
 
-const wrap = (operator) => {
+const wrap = (operator: string): string => {
   return Op[operator.replace('_', '')]
 }
 
-const iterate = (obj) => {
+const iterate = (obj: any): any => {
   const isObject = isPlainObject(obj)
-  const isArray = Array.isArray(obj)
   if (isObject) {
     const keys = Object.keys(obj)
     keys.forEach((element: string) => {

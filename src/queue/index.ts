@@ -32,9 +32,11 @@ export const initializeBullBoard = (props: {
   } = props.wertikApp
 
   const queueJobsArr = []
-
+  // eslint-disable-next-line
   const { createBullBoard } = require('@bull-board/api')
+  // eslint-disable-next-line
   const { BullAdapter } = require('@bull-board/api/bullAdapter')
+  // eslint-disable-next-line
   const { ExpressAdapter } = require('@bull-board/express')
 
   if (QueueJobs) {
