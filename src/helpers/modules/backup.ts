@@ -12,7 +12,11 @@ const dumpDatabase = async (
     password: string
     name: string
   }
-) => {
+): Promise<{
+  message: string
+  filename: string
+  backup: any
+}> => {
   const filename = `backups/${moment().format(
     'MMMM-DD-YYYY-h-mm-ss-a'
   )}-database-${dbName}.sql`.toLowerCase()
@@ -43,12 +47,12 @@ const uploadDumpToDigitalOceanSpaces = async (
   digitaloceanInstance,
   Bucket,
   ACL
-) => {
+): Promise<any> => {
   const data = await fs.readFileSync(filename)
 
   const params = {
     Bucket,
-    Key: `${filename}`,
+    Key: filename,
     Body: data,
     ACL,
   }
@@ -113,10 +117,10 @@ export const WertikBackupModule = (
           'backupDigitalOceanSpaces(ACL: String!, Bucket: String!, storage: String!, database: [String]!): [BackupSuccessResponse]',
         async resolver(_, args, context) {
           try {
-            const push = []
+            const push: any[] = []
             const storage = context.wertik.storage[args.storage]
             if (!storage) {
-              throw new Error('No such storage found: ' + args.storage)
+              throw new Error(`No such storage found: ${args.storage}`)
             }
 
             for (const dbName of args.database) {

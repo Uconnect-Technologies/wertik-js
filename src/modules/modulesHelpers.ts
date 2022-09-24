@@ -1,6 +1,11 @@
 import get from 'lodash.get'
 
-export const generateDataTypeFromDescribeTableColumnType = (Type: string) => {
+export const generateDataTypeFromDescribeTableColumnType = (
+  Type: string
+): {
+  length: string | undefined
+  type: string
+} => {
   const length = Type.match(/[0-9]/g)?.join('')
   let type = Type.replace(/[0-9]/g, '')
     .replace('(', '')
@@ -25,7 +30,7 @@ export const getGraphQLTypeNameFromSqlType = (
     Field: string
   },
   module
-) => {
+): string | undefined => {
   let type = column.Type
   if (typeof column.Type === 'string') {
     type = type.toLowerCase()
@@ -51,6 +56,8 @@ export const getGraphQLTypeNameFromSqlType = (
   if (type.includes('int')) {
     return 'Int'
   }
+
+  return undefined
 }
 
 export const getUpdateSchema = (module, tableInformation) => {

@@ -2,6 +2,10 @@ import Queue from 'bull'
 import { checkIfPackageIsInstalled } from '../borrowed/checkInstalledPackages'
 import { WertikApp, WertikConfiguration } from '../types'
 import { useQueueProps } from './../types/queue'
+import { createBullBoard } from '@bull-board/api'
+import { BullAdapter } from '@bull-board/api/bullAdapter'
+import { ExpressAdapter } from '@bull-board/express'
+import { defaultPort } from 'src/borrowed/options'
 
 /**
  * @param name
@@ -17,7 +21,8 @@ export const useQueue = (props: useQueueProps) => {
 export const initializeBullBoard = (props: {
   wertikApp: WertikApp
   configuration: WertikConfiguration
-}) => {
+}): any => {
+  const port = props.configuration.port ?? defaultPort
   const isInstalledBullBoardExpress = checkIfPackageIsInstalled(
     '@bull-board/express'
   )
@@ -31,34 +36,24 @@ export const initializeBullBoard = (props: {
     queue: { jobs: QueueJobs },
   } = props.wertikApp
 
-  const queueJobsArr = []
-  // eslint-disable-next-line
-  const { createBullBoard } = require('@bull-board/api')
-  // eslint-disable-next-line
-  const { BullAdapter } = require('@bull-board/api/bullAdapter')
-  // eslint-disable-next-line
-  const { ExpressAdapter } = require('@bull-board/express')
+  const queueJobsArr: BullAdapter[] = []
 
-  if (QueueJobs) {
-    const queuePath =
-      props?.configuration?.queue?.options?.uiPath ?? '/admin/queues'
-    for (const queueName of Object.keys(QueueJobs || {})) {
-      queueJobsArr.push(new BullAdapter(QueueJobs[queueName]))
-    }
-    const serverAdapter = new ExpressAdapter()
-    const { addQueue, removeQueue, setQueues, replaceQueues } = createBullBoard(
-      {
-        queues: queueJobsArr,
-        serverAdapter,
-      }
-    )
-    serverAdapter.setBasePath(queuePath)
-    express.use(queuePath, serverAdapter.getRouter())
-
-    console.log(
-      `Queue UI Monitoring Bull Board running at: http://localhost:${props.configuration.port}${queuePath}`
-    )
-
-    return { addQueue, removeQueue, setQueues, replaceQueues }
+  const queuePath =
+    props?.configuration?.queue?.options?.uiPath ?? '/admin/queues'
+  for (const queueName of Object.keys(QueueJobs || {})) {
+    queueJobsArr.push(new BullAdapter(QueueJobs[queueName]))
   }
+  const serverAdapter = new ExpressAdapter()
+  const bullBoardInstance = createBullBoard({
+    queues: queueJobsArr,
+    serverAdapter,
+  })
+  serverAdapter.setBasePath(queuePath)
+  express.use(queuePath, serverAdapter.getRouter())
+
+  console.log(
+    `Queue UI Monitoring Bull Board running at: http://localhost:${port}${queuePath}`
+  )
+
+  return bullBoardInstance
 }

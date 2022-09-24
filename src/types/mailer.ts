@@ -8,5 +8,3 @@ export interface emailSendProps {
   subject: string
   [key: string]: any
 }
-
-export interface userMailerProps {}

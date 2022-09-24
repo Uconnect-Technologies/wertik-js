@@ -1,7 +1,23 @@
 import get from 'lodash.get'
 import convertFiltersIntoSequalizeObject from '../borrowed/convertFiltersIntoSequalizeObject'
 
-export const paginate = async (arg, tableInstance) => {
+export interface PaginateResponse {
+  list: any[]
+  paginationProperties: {
+    total: number
+    nextPage: number
+    page: number
+    previousPage: number
+    pages: number
+    hasMore: boolean
+    limit: number
+  }
+}
+
+export const paginate = async (
+  arg,
+  tableInstance
+): Promise<PaginateResponse> => {
   const page: number = get(arg, 'pagination.page', 1)
   const limit = get(arg, 'pagination.limit', 100)
   const sorting = get(arg, 'sorting', [])

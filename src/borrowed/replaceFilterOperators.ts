@@ -17,6 +17,7 @@ const iterate = (obj: any): any => {
       if (element.startsWith('_')) {
         const newWrapValue = wrap(element)
         obj[newWrapValue] = obj[element]
+        // eslint-disable-next-line
         delete obj[element]
       }
       if (isArray || isObject === true) {
@@ -25,10 +26,11 @@ const iterate = (obj: any): any => {
     })
     return obj
   } else {
-    obj.forEach &&
+    if (obj.forEach) {
       obj.forEach((element) => {
         iterate(element)
       })
+    }
   }
 }
 

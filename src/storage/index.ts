@@ -54,6 +54,6 @@ export const useStorage = (storageItem: useStorageProps) => {
   }
 }
 
-export default function (props, wertikApp) {
+export default function (props, wertikApp): void {
   Object.keys(props.storage).forEach((element) => {})
 }

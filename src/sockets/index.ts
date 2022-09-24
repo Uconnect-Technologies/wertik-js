@@ -1,7 +1,5 @@
-import {
-  Server as SocketIOServer,
-  ServerOptions as SocketIOServerOptions,
-} from 'socket.io'
+import { Server as SocketIOServer } from 'socket.io'
+import { defaultPort } from 'src/borrowed/options'
 import {
   Server as WebSocketServer,
   ServerOptions as WebSocketServerOptions,
@@ -24,7 +22,7 @@ export const useWebSockets = (props: WebSocketServerOptions = {}) => {
     if (props.path) {
       console.log(
         `Web Sockets server starting at ws://localhost:${
-          configuration.port ?? 1200
+          configuration.port ?? defaultPort
         }${props.path}`
       )
       return new WebSocketServer({
@@ -52,14 +50,18 @@ export const useIndependentWebSocketsServer = (
     configuration: WertikConfiguration
     wertikApp: WertikApp
   }) => {
-    console.log(
-      `Web Sockets server starting at ws://localhost:${props.port}/${
-        props.path ?? ''
-      }`
-    )
-    return new WebSocketServer({
-      ...props,
-    })
+    if (!props.port) {
+      console.error('useIndependentWebSocketsServer.port is required')
+    } else {
+      console.log(
+        `Web Sockets server starting at ws://localhost:${props.port}/${
+          props.path ?? ''
+        }`
+      )
+      return new WebSocketServer({
+        ...props,
+      })
+    }
   }
 }
 
@@ -76,11 +78,9 @@ export const useSocketIO = (props: any = {}) => {
     configuration: WertikConfiguration
     wertikApp: WertikApp
   }) => {
-    console.log(
-      `Socket.IO server starting at http://localhost:${configuration.port}${
-        props.path ?? '/socket.io'
-      }`
-    )
+    const port = configuration.port ?? defaultPort
+    const path: string = props.path ?? '/socket.io'
+    console.log(`Socket.IO server starting at http://localhost:${port}${path}`)
     return new SocketIOServer(wertikApp.httpServer, props ?? {})
   }
 }

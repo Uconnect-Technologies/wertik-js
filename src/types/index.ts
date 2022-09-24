@@ -94,7 +94,7 @@ export interface WertikConfiguration {
         emailInstance: any
         previewURL: string
         mailer: String
-      }) => void | any | null | undefined
+      }) => any | null | undefined
       /**
        * Runs when email fails to send.
        */
@@ -104,7 +104,7 @@ export interface WertikConfiguration {
         configuration: WertikConfiguration
         error: any
         options: iObject
-      }) => void | any | null | undefined
+      }) => any | null | undefined
     }
   }
   /**
@@ -129,9 +129,9 @@ export interface WertikConfiguration {
    * Cron Jobs
    */
   cronJobs?: {
-    [key: string]: ({
-      configuration: WertikConfiguration,
-      wertikApp: WertikApp,
+    [key: string]: (options: {
+      configuration: WertikConfiguration
+      wertikApp: WertikApp
     }) => iObject
   }
   queue?: {
@@ -154,9 +154,9 @@ export interface WertikConfiguration {
    * Redis
    */
   redis?: {
-    [key: string]: ({
-      configuration: WertikConfiguration,
-      wertikApp: WertikApp,
+    [key: string]: (options: {
+      configuration: WertikConfiguration
+      wertikApp: WertikApp
     }) => iObject
   }
 

@@ -1,5 +1,5 @@
 import replaceFilterOperators from './replaceFilterOperators'
-export default async function (filters: any) {
+export default function (filters: any): any {
   if (filters) {
     const output = replaceFilterOperators(filters)
     return output

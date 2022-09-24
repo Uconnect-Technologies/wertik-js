@@ -51,7 +51,7 @@ export const applyRelationshipsFromStoreToDatabase = (
   store: Store,
   app: WertikApp
 ): void => {
-  store.database.relationships.forEach((element) => {
+  store.database.relationships.forEach((element: any) => {
     const currentTable = app.modules[element.currentModule].tableInstance
     const referencedTable = app.modules[element.referencedModule].tableInstance
     // element.type will be hasOne, hasMany, belongsTo or belongsToMany
@@ -89,7 +89,7 @@ export const applyRelationshipsFromStoreToGraphql = (
               [currentModuleKey]: parent[referencedModuleKey],
             },
           })
-        } else if (['hasMany', 'belongsToMany']) {
+        } else if (['hasMany', 'belongsToMany'].includes(element.type)) {
           return await paginate(
             {
               where: {

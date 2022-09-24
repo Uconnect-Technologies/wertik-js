@@ -1,5 +1,5 @@
 import get from 'lodash.get'
-import { defaultApolloGraphqlOptions } from '../borrowed/options'
+import { defaultApolloGraphqlOptions, defaultPort } from '../borrowed/options'
 import { ApolloServer } from 'apollo-server-express'
 import { useGraphqlProps, GraphqlInitializeProps } from '../types/graphql'
 import omit from 'lodash.omit'
@@ -58,7 +58,7 @@ export const useGraphql = (props?: useGraphqlProps) => {
 
     console.log(
       `GraphQL server starting at http://localhost:${
-        configuration.port ?? 1200
+        configuration.port ?? defaultPort
       }/${props?.applyMiddlewareOptions?.path ?? 'graphql'}`
     )
 
