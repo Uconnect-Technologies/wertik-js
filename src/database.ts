@@ -5,7 +5,7 @@ import { paginate } from './crud/index'
 import { Store, WertikApp } from './types'
 import { useDatabaseProps } from './types/database'
 
-export const getAllRelationships = (dbName: String) => {
+export const getAllRelationships = (dbName: string): string => {
   return `
     SELECT *
     FROM information_schema.KEY_COLUMN_USAGE
@@ -47,10 +47,10 @@ export const useMysqlDatabase = function (obj: useDatabaseProps) {
  */
 export const useDatabase = useMysqlDatabase
 
-export const applyRelationshipsFromStoreToDatabase = async (
+export const applyRelationshipsFromStoreToDatabase = (
   store: Store,
   app: WertikApp
-) => {
+): void => {
   store.database.relationships.forEach((element) => {
     const currentTable = app.modules[element.currentModule].tableInstance
     const referencedTable = app.modules[element.referencedModule].tableInstance
@@ -59,10 +59,10 @@ export const applyRelationshipsFromStoreToDatabase = async (
   })
 }
 
-export const applyRelationshipsFromStoreToGraphql = async (
+export const applyRelationshipsFromStoreToGraphql = (
   store: Store,
   _app: WertikApp
-) => {
+): void => {
   store.database.relationships.forEach((element) => {
     const oldResolvers = get(
       store,

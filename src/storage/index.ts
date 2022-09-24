@@ -1,5 +1,7 @@
 import { WertikApp, WertikConfiguration } from '../types'
 import { useStorageProps } from '../types/storage'
+import aws from 'aws-sdk'
+import { Dropbox } from 'dropbox'
 
 const DIGITAL_OCEAN = 'digitalocean'
 const DROPBOX = 'dropbox'
@@ -14,8 +16,6 @@ export const useStorage = (storageItem: useStorageProps) => {
   }) => {
     if (storageItem.for === DIGITAL_OCEAN) {
       const digitalOceanSpacesDetails = storageItem.digitalOceanOptions
-
-      const aws = require('aws-sdk')
 
       aws.config.update({
         accessKeyId: digitalOceanSpacesDetails.accessKeyId,
@@ -40,7 +40,7 @@ export const useStorage = (storageItem: useStorageProps) => {
       }
     } else if (storageItem.for === DROPBOX) {
       const dropboxOptions = storageItem.dropboxOptions
-      const { Dropbox } = require('dropbox')
+
       const dropboxInstance = new Dropbox({
         accessToken: dropboxOptions.accessToken,
       })

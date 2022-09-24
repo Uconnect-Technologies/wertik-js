@@ -57,19 +57,19 @@ export interface WertikConfiguration {
    * Modules
    */
   modules?: {
-    [key: string]: ({
-      store: Store,
-      configuration: WertikConfiguration,
-      app: WertikApp,
+    [key: string]: (options: {
+      store: Store
+      configuration: WertikConfiguration
+      app: WertikApp
     }) => iObject
   }
   /**
    * Storage
    */
   storage?: {
-    [key: string]: ({
-      configuration: WertikConfiguration,
-      wertikApp: WertikApp,
+    [key: string]: (options: {
+      configuration: WertikConfiguration
+      wertikApp: WertikApp
     }) => {
       spacesEndpoint?: iObject
       s3?: iObject
@@ -87,23 +87,23 @@ export interface WertikConfiguration {
       /**
        * Runs when email sents successfully.
        */
-      onEmailSent?: ({
-        options: iObject,
-        wertikApp: WertikApp,
-        configuration: WertikConfiguration,
-        emailInstance: any,
-        previewURL: string,
-        mailer: String,
+      onEmailSent?: (options: {
+        options: iObject
+        wertikApp: WertikApp
+        configuration: WertikConfiguration
+        emailInstance: any
+        previewURL: string
+        mailer: String
       }) => void | any | null | undefined
       /**
        * Runs when email fails to send.
        */
-      onEmailSentFailed?: ({
-        mailer: String,
-        wertikApp: WertikApp,
-        configuration: WertikConfiguration,
-        error: any,
-        options: iObject,
+      onEmailSentFailed?: (options: {
+        mailer: String
+        wertikApp: WertikApp
+        configuration: WertikConfiguration
+        error: any
+        options: iObject
       }) => void | any | null | undefined
     }
   }
@@ -111,19 +111,19 @@ export interface WertikConfiguration {
    * Sockets
    */
   sockets?: {
-    [key: string]: ({
-      configuration: WertikConfiguration,
-      wertikApp: WertikApp,
+    [key: string]: (options: {
+      configuration: WertikConfiguration
+      wertikApp: WertikApp
     }) => iObject
   }
   /**
    * Graphql
    */
-  graphql?: ({
-    store: Store,
-    configuration: WertikConfiguration,
-    wertikApp: WertikApp,
-    expressApp: any,
+  graphql?: (options: {
+    store: Store
+    configuration: WertikConfiguration
+    wertikApp: WertikApp
+    expressApp: any
   }) => iObject
   /**
    * Cron Jobs
@@ -168,7 +168,7 @@ export interface WertikConfiguration {
 
 export interface WertikApp {
   appEnv: 'production' | 'development' | 'local'
-  sendEmail?: ({ mailer: string, options: emailSendProps }) => iObject
+  sendEmail?: (options: { mailer: string; options: emailSendProps }) => iObject
   port: number
   modules: iObject
   database: iObject
