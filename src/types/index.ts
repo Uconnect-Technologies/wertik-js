@@ -92,7 +92,7 @@ export interface WertikConfiguration {
         wertikApp: WertikApp
         configuration: WertikConfiguration
         emailInstance: any
-        previewURL: string
+        previewURL: string | boolean
         mailer: String
       }) => any | null | undefined
       /**

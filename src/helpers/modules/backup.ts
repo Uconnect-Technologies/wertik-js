@@ -61,7 +61,10 @@ const uploadDumpToDigitalOceanSpaces = async (
 
   return response
 }
-const uploadDumpToDropbox = async (filename, dropboxInstance) => {
+const uploadDumpToDropbox = async (
+  filename: string,
+  dropboxInstance
+): Promise<any> => {
   const data: Buffer = await fs.readFileSync(filename)
   const response = await dropboxInstance.dropbox.filesUpload({
     strict_conflict: false,
@@ -75,7 +78,7 @@ export const WertikBackupModule = (
   database: string,
   table: string,
   tableOptions: any = {}
-) =>
+): any =>
   useModule({
     name: 'Backup',
     useDatabase: true,
@@ -94,11 +97,11 @@ export const WertikBackupModule = (
         name: 'backupLocal',
         query: 'backupLocal(database: [String]!): [BackupSuccessResponse]',
         async resolver(_, args, context) {
-          const push = []
+          const push: any[] = []
           for (const dbName of args.database) {
             const database = context.wertik.database[dbName]
             if (!database) {
-              throw new Error(`No such database ${dbName}`)
+              throw new Error(`No such database ${dbName as string}`)
             }
             push.push(
               await dumpDatabase(
@@ -117,16 +120,33 @@ export const WertikBackupModule = (
           'backupDigitalOceanSpaces(ACL: String!, Bucket: String!, storage: String!, database: [String]!): [BackupSuccessResponse]',
         async resolver(_, args, context) {
           try {
+<<<<<<< HEAD
             const push: any[] = []
             const storage = context.wertik.storage[args.storage]
             if (!storage) {
               throw new Error(`No such storage found: ${args.storage}`)
+=======
+            const push: any = []
+            const storage = context.wertik.storage[args.storage]
+            if (
+              storage === undefined ||
+              storage === null ||
+              storage === false
+            ) {
+              throw new Error(
+                `No such storage found: ${args.storage as string}`
+              )
+>>>>>>> 681bf23 (Fixing lint issues)
             }
 
             for (const dbName of args.database) {
               const database = context.wertik.database[dbName]
-              if (!database) {
-                throw new Error(`No such database ${dbName}`)
+              if (
+                database === undefined ||
+                database === null ||
+                database === false
+              ) {
+                throw new Error(`No such database ${dbName as string}`)
               }
               const dump = await dumpDatabase(
                 dbName,
@@ -161,16 +181,26 @@ export const WertikBackupModule = (
           'backupDropbox(storage: String!, database: [String]): [BackupSuccessResponse]',
         async resolver(_, args, context) {
           try {
-            const push = []
+            const push: any = []
             const storage = context.wertik.storage[args.storage]
-            if (!storage) {
-              throw new Error('No such storage found: ' + args.storage)
+            if (
+              storage === undefined ||
+              storage === null ||
+              storage === false
+            ) {
+              throw new Error(
+                `No such storage found: ${args.storage as string}`
+              )
             }
 
             for (const dbName of args.database) {
               const database = context.wertik.database[dbName]
-              if (!database) {
-                throw new Error(`No such database ${dbName}`)
+              if (
+                database === undefined ||
+                database === null ||
+                database === false
+              ) {
+                throw new Error(`No such database ${dbName as string}`)
               }
               const dump = await dumpDatabase(
                 dbName,

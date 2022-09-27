@@ -17,6 +17,6 @@ export const useLogger = (options?: LoggerOptions): Logger => {
  */
 export const useWinstonTransport = (
   fn = (_winstonInstance = winston) => []
-) => {
+): any => {
   return fn(winston)
 }

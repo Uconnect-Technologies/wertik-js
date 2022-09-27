@@ -10,15 +10,28 @@ import {
   generateEnumTypeForGraphql,
 } from './modulesHelpers'
 
-const generateGenerateGraphQLCrud = (props: useModuleProps, schemaInformation, store) => {
+const generateGenerateGraphQLCrud = (
+  props: useModuleProps,
+  schemaInformation: {
+    tableInstance: any
+    schema: string
+    inputSchema: {
+      create: string[]
+      update: string[]
+      list: string
+      filters: string
+    }
+  },
+  store
+): void => {
   const { graphql } = crud(props, schemaInformation, store)
   const resolvers = graphql.generateCrudResolvers()
 
   store.graphql.typeDefs = store.graphql.typeDefs.concat(
     `\n ${schemaInformation.schema} 
     \n ${schemaInformation.inputSchema.filters}
-    \n ${schemaInformation.inputSchema.create}
-    \n ${schemaInformation.inputSchema.update}
+    \n ${schemaInformation.inputSchema.create.join('\n')}
+    \n ${schemaInformation.inputSchema.update.join('\n')}
     `
   )
 
@@ -47,9 +60,9 @@ const generateGenerateGraphQLCrud = (props: useModuleProps, schemaInformation, s
 export const useModule = (module: useModuleProps) => {
   return async ({ store, configuration, app }: any) => {
     let tableInstance
-    let graphqlSchema = []
-    let createSchema = []
-    let updateSchema = []
+    let graphqlSchema: string[] | string = []
+    let createSchema: string[] | string = []
+    let updateSchema: string[] | string = []
 
     const useDatabase = module.useDatabase ?? false
 
@@ -62,7 +75,7 @@ export const useModule = (module: useModuleProps) => {
     const useQuery = ({ query, resolver, name }): void => {
       store.graphql.typeDefs = store.graphql.typeDefs.concat(`
         extend type Query {
-          ${query}
+          ${query as string}
         }
       `)
       store.graphql.resolvers.Query[name] = resolver
@@ -71,7 +84,7 @@ export const useModule = (module: useModuleProps) => {
     const useMutation = ({ query, resolver, name }): void => {
       store.graphql.typeDefs = store.graphql.typeDefs.concat(`
         extend type Mutation {
-          ${query}
+          ${query as string}
         }
       `)
       store.graphql.resolvers.Mutation[name] = resolver
@@ -84,8 +97,8 @@ export const useModule = (module: useModuleProps) => {
     }
 
     let listSchema = ''
-    let filterSchema = []
-    if (useDatabase) {
+    let filterSchema: string[] = []
+    if (useDatabase && module.database && module.table) {
       const connection = app.database[module.database]
       const describe = await connection.instance.query(
         `describe ${module.table}`
@@ -126,18 +139,16 @@ export const useModule = (module: useModuleProps) => {
         // graphql schema
         graphqlSchema = [`type ${module.name} {`]
 
-        tableInformation.forEach((element) => {
+        tableInformation.forEach((element: { Field: string; Type: string }) => {
           if (element.Type.includes('enum')) {
             store.graphql.typeDefs = store.graphql.typeDefs.concat(
               generateEnumTypeForGraphql(element, module)
             )
           }
-          graphqlSchema.push(
-            `${element.Field}: ${getGraphQLTypeNameFromSqlType(
-              element,
-              module
-            )}`
-          )
+          const type = getGraphQLTypeNameFromSqlType(element, module)
+          if (type && Array.isArray(graphqlSchema)) {
+            graphqlSchema.push(`${element.Field}: ${type}`)
+          }
         })
       }
 
@@ -147,7 +158,7 @@ export const useModule = (module: useModuleProps) => {
 
       filterSchema = [`input ${module.name}FilterInput {`]
 
-      tableInformation.forEach((element) => {
+      tableInformation.forEach((element: { Field: string; Type: string }) => {
         if (
           element.Type.includes('timestamp') ||
           element.Type.includes('datetime') ||
@@ -173,7 +184,8 @@ export const useModule = (module: useModuleProps) => {
     }
 
     const hasOne = (params: RelationParams): void => {
-      graphqlSchema.push(`${params.graphqlKey}: ${params.module}`)
+      Array.isArray(graphqlSchema) &&
+        graphqlSchema.push(`${params.graphqlKey}: ${params.module}`)
       store.database.relationships.push({
         currentModule: module.name,
         currentModuleDatabase: module.database,
@@ -185,7 +197,8 @@ export const useModule = (module: useModuleProps) => {
       })
     }
     const belongsTo = (params: RelationParams): void => {
-      graphqlSchema.push(`${params.graphqlKey}: ${params.module}`)
+      Array.isArray(graphqlSchema) &&
+        graphqlSchema.push(`${params.graphqlKey}: ${params.module}`)
       store.database.relationships.push({
         currentModule: module.name,
         currentModuleDatabase: module.database,
@@ -197,7 +210,8 @@ export const useModule = (module: useModuleProps) => {
       })
     }
     const belongsToMany = (params: RelationParams): void => {
-      graphqlSchema.push(`${params.graphqlKey}: ${params.module}List`)
+      Array.isArray(graphqlSchema) &&
+        graphqlSchema.push(`${params.graphqlKey}: ${params.module}List`)
       store.database.relationships.push({
         currentModule: module.name,
         currentModuleDatabase: module.database,
@@ -209,7 +223,8 @@ export const useModule = (module: useModuleProps) => {
       })
     }
     const hasMany = (params: RelationParams): void => {
-      graphqlSchema.push(`${params.graphqlKey}: ${params.module}List`)
+      Array.isArray(graphqlSchema) &&
+        graphqlSchema.push(`${params.graphqlKey}: ${params.module}List`)
       store.database.relationships.push({
         currentModule: module.name,
         currentModuleDatabase: module.database,
@@ -249,7 +264,7 @@ export const useModule = (module: useModuleProps) => {
     }
 
     if (useDatabase) {
-      generateGenerateGraphQLCrud(module, schemaInformation, store)
+      generateGenerateGraphQLCrud(module, schemaInformation as any, store)
       app.models[module.name] = tableInstance
     }
 

@@ -17,6 +17,10 @@ export const useStorage = (storageItem: useStorageProps) => {
     if (storageItem.for === DIGITAL_OCEAN) {
       const digitalOceanSpacesDetails = storageItem.digitalOceanOptions
 
+      if (digitalOceanSpacesDetails == null) {
+        throw new Error('Please provide digitalOceanSpacesDetails')
+      }
+
       aws.config.update({
         accessKeyId: digitalOceanSpacesDetails.accessKeyId,
         secretAccessKey: digitalOceanSpacesDetails.secretAccessKey,
@@ -41,6 +45,10 @@ export const useStorage = (storageItem: useStorageProps) => {
     } else if (storageItem.for === DROPBOX) {
       const dropboxOptions = storageItem.dropboxOptions
 
+      if (dropboxOptions == null) {
+        throw new Error('Please provide dropbox options')
+      }
+
       const dropboxInstance = new Dropbox({
         accessToken: dropboxOptions.accessToken,
       })
@@ -54,6 +62,10 @@ export const useStorage = (storageItem: useStorageProps) => {
   }
 }
 
+<<<<<<< HEAD
 export default function (props, wertikApp): void {
+=======
+export default function (props, _wertikApp): any {
+>>>>>>> 681bf23 (Fixing lint issues)
   Object.keys(props.storage).forEach((element) => {})
 }

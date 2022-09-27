@@ -33,8 +33,11 @@ export const emailSender = ({
 }: {
   configuration: WertikConfiguration
   wertikApp: WertikApp
-}) => {
-  const fn = async (props: { mailer: string; options: emailSendProps }) => {
+}): any => {
+  const fn = async (props: {
+    mailer: string
+    options: emailSendProps
+  }): Promise<any> => {
     const transporter = wertikApp.mailer[props.mailer]
 
     try {
@@ -52,34 +55,33 @@ export const emailSender = ({
         html: resultTemplate,
         subject: props.options.subject,
       })
-      if (emailInstance && emailInstance.messageId) {
+      if (emailInstance?.messageId) {
         console.log('Message sent: %s', emailInstance.messageId)
       }
-      if (nodemailer && nodemailer.getTestMessageUrl) {
+      if (nodemailer?.getTestMessageUrl) {
         console.log(
           'Preview URL: %s',
           nodemailer.getTestMessageUrl(emailInstance)
         )
       }
 
-      if (configuration.mailer.events.onEmailSent != null) {
+      if (configuration?.mailer?.events?.onEmailSent != null) {
         configuration.mailer.events.onEmailSent({
           mailer: props.mailer,
           options: props.options,
           wertikApp,
           configuration,
           emailInstance,
-          previewURL:
-            nodemailer && nodemailer.getTestMessageUrl
-              ? nodemailer.getTestMessageUrl(emailInstance)
-              : '',
+          previewURL: nodemailer?.getTestMessageUrl
+            ? nodemailer.getTestMessageUrl(emailInstance)
+            : '',
         })
       }
 
       return emailInstance
     } catch (e) {
       console.log(e)
-      if (configuration.mailer.events.onEmailSentFailed != null) {
+      if (configuration?.mailer?.events?.onEmailSentFailed) {
         configuration.mailer.events.onEmailSentFailed({
           mailer: props.mailer,
           options: props.options,

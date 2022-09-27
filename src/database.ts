@@ -63,28 +63,37 @@ export const applyRelationshipsFromStoreToGraphql = (
   store: Store,
   _app: WertikApp
 ): void => {
-  store.database.relationships.forEach((element) => {
-    const oldResolvers = get(
-      store,
-      `graphql.resolvers.${element.currentModule}`,
-      {}
-    )
+  store.database.relationships.forEach(
+    (element: {
+      type: string
+      currentModule: string
+      graphqlKey: string
+      referencedModule: string
+      options: any
+    }) => {
+      const oldResolvers = get(
+        store,
+        `graphql.resolvers.${element.currentModule}`,
+        {}
+      )
 
-    store.graphql.resolvers[element.currentModule] = {
-      ...oldResolvers,
-      [element.graphqlKey]: async (parent, _args, context) => {
-        const tableInstance =
-          context.wertik.modules[element.referencedModule].tableInstance
-        let referencedModuleKey =
-          element.options.sourceKey || element.options.targetKey
-        const currentModuleKey = element.options.foreignKey || 'id'
+      store.graphql.resolvers[element.currentModule] = {
+        ...oldResolvers,
+        [element.graphqlKey]: async (parent, _args, context) => {
+          const tableInstance =
+            context.wertik.modules[element.referencedModule].tableInstance
+          let referencedModuleKey =
+            element.options.sourceKey || element.options.targetKey
+          const currentModuleKey = element.options.foreignKey || 'id'
 
-        if (!referencedModuleKey) {
-          referencedModuleKey = 'id'
-        }
+          if (!referencedModuleKey) {
+            referencedModuleKey = 'id'
+          }
 
-        if (['hasOne', 'belongsTo'].includes(element.type)) {
+          if (['hasOne', 'belongsTo'].includes(element.type)) {
+            // eslint-disable-next-line
           return await tableInstance.findOne({
+<<<<<<< HEAD
             where: {
               [currentModuleKey]: parent[referencedModuleKey],
             },
@@ -92,14 +101,24 @@ export const applyRelationshipsFromStoreToGraphql = (
         } else if (['hasMany', 'belongsToMany'].includes(element.type)) {
           return await paginate(
             {
+=======
+>>>>>>> 681bf23 (Fixing lint issues)
               where: {
                 [currentModuleKey]: parent[referencedModuleKey],
               },
-            },
-            tableInstance
-          )
-        }
-      },
+            })
+          } else if (['hasMany', 'belongsToMany'].includes(element.type)) {
+            return await paginate(
+              {
+                where: {
+                  [currentModuleKey]: parent[referencedModuleKey],
+                },
+              },
+              tableInstance
+            )
+          }
+        },
+      }
     }
-  })
+  )
 }

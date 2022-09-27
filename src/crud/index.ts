@@ -1,7 +1,14 @@
 import get from 'lodash.get'
 import convertFiltersIntoSequalizeObject from '../borrowed/convertFiltersIntoSequalizeObject'
 
+<<<<<<< HEAD
 export interface PaginateResponse {
+=======
+export const paginate = async (
+  arg: any,
+  tableInstance: any
+): Promise<{
+>>>>>>> 681bf23 (Fixing lint issues)
   list: any[]
   paginationProperties: {
     total: number
@@ -12,12 +19,16 @@ export interface PaginateResponse {
     hasMore: boolean
     limit: number
   }
+<<<<<<< HEAD
 }
 
 export const paginate = async (
   arg,
   tableInstance
 ): Promise<PaginateResponse> => {
+=======
+}> => {
+>>>>>>> 681bf23 (Fixing lint issues)
   const page: number = get(arg, 'pagination.page', 1)
   const limit = get(arg, 'pagination.limit', 100)
   const sorting = get(arg, 'sorting', [])
@@ -46,7 +57,24 @@ export const paginate = async (
   }
 }
 
-export default function (module, schemaInformation, store) {
+export default function (
+  module: { name: string },
+  schemaInformation,
+  store
+): {
+  graphql: {
+    generateQueriesCrudSchema: () => string
+    generateMutationsCrudSchema: () => string
+    generateCrudResolvers: () => {
+      Mutation: {
+        [x: string]: Function
+      }
+      Query: {
+        [x: string]: Function
+      }
+    }
+  }
+} {
   return {
     graphql: {
       generateQueriesCrudSchema() {
@@ -97,15 +125,15 @@ export default function (module, schemaInformation, store) {
                 )(_, args, context, info)
                 args = argsFromEvent || args
                 const id = args.id
-                let ___find: any
+                let findItem: any
                 if (id) {
-                  ___find = await schemaInformation.tableInstance.findOne({
+                  findItem = await schemaInformation.tableInstance.findOne({
                     where: {
                       id,
                     },
                   })
 
-                  if (!___find) {
+                  if (!findItem) {
                     throw new Error(`${module.name} Not found`)
                   }
 
@@ -113,10 +141,12 @@ export default function (module, schemaInformation, store) {
                     where: { id },
                   })
 
+                  // eslint-disable-next-line
                   return await schemaInformation.tableInstance.findOne({
                     where: { id },
                   })
                 } else {
+                  // eslint-disable-next-line
                   return await schemaInformation.tableInstance.create(
                     args.input
                   )
@@ -180,7 +210,7 @@ export default function (module, schemaInformation, store) {
                   function () {}
                 )(_, args, context, info)
                 args = argsFromEvent || args
-                const response = []
+                const response: any = []
                 for (const input of args.input) {
                   response.push(
                     await schemaInformation.tableInstance.create(input)

@@ -51,6 +51,7 @@ export const useIndependentWebSocketsServer = (
     wertikApp: WertikApp
   }) => {
     if (!props.port) {
+<<<<<<< HEAD
       console.error('useIndependentWebSocketsServer.port is required')
     } else {
       console.log(
@@ -62,6 +63,18 @@ export const useIndependentWebSocketsServer = (
         ...props,
       })
     }
+=======
+      throw new Error('useIndependentWebSocketsServer requires port configured')
+    }
+    console.log(
+      `Web Sockets server starting at ws://localhost:${props.port}/${
+        props.path ?? ''
+      }`
+    )
+    return new WebSocketServer({
+      ...props,
+    })
+>>>>>>> 681bf23 (Fixing lint issues)
   }
 }
 
@@ -79,8 +92,16 @@ export const useSocketIO = (props: any = {}) => {
     wertikApp: WertikApp
   }) => {
     const port = configuration.port ?? defaultPort
+<<<<<<< HEAD
     const path: string = props.path ?? '/socket.io'
     console.log(`Socket.IO server starting at http://localhost:${port}${path}`)
+=======
+    console.log(
+      `Socket.IO server starting at http://localhost:${port}${
+        props.path ? '/socket.io' : ''
+      }`
+    )
+>>>>>>> 681bf23 (Fixing lint issues)
     return new SocketIOServer(wertikApp.httpServer, props ?? {})
   }
 }
