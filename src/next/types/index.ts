@@ -1,5 +1,6 @@
 import { Sequelize } from "sequelize/types"
 import { useDatabaseProps } from "./database"
+import { SendEmailProps } from "./mailer"
 
 export type iObject = { [key: string]: any }
 
@@ -55,7 +56,7 @@ export interface WertikConfiguration {
    * Modules
    */
   modules?: {
-    [key: string]: ({
+    [key: string]: (options: {
       store: Store,
       configuration: WertikConfiguration,
       app: WertikApp,
@@ -65,7 +66,7 @@ export interface WertikConfiguration {
    * Storage
    */
   storage?: {
-    [key: string]: ({
+    [key: string]: (options: {
       configuration: WertikConfiguration,
       wertikApp: WertikApp,
     }) => {
@@ -85,18 +86,18 @@ export interface WertikConfiguration {
       /**
        * Runs when email sents successfully.
        */
-      onEmailSent?: ({
+      onEmailSent?: (options: {
         options: iObject,
         wertikApp: WertikApp,
         configuration: WertikConfiguration,
         emailInstance: any,
-        previewURL: string,
+        previewURL: string | boolean,
         mailer: String,
       }) => void | any | null | undefined
       /**
        * Runs when email fails to send.
        */
-      onEmailSentFailed?: ({
+      onEmailSentFailed?: (options: {
         mailer: String,
         wertikApp: WertikApp,
         configuration: WertikConfiguration,
@@ -109,7 +110,7 @@ export interface WertikConfiguration {
    * Sockets
    */
   sockets?: {
-    [key: string]: ({
+    [key: string]: (options: {
       configuration: WertikConfiguration,
       wertikApp: WertikApp,
     }) => iObject
@@ -117,7 +118,7 @@ export interface WertikConfiguration {
   /**
    * Graphql
    */
-  graphql?: ({
+  graphql?: (options: {
     store: Store,
     configuration: WertikConfiguration,
     wertikApp: WertikApp,
@@ -127,7 +128,7 @@ export interface WertikConfiguration {
    * Cron Jobs
    */
   cronJobs?: {
-    [key: string]: ({
+    [key: string]: (options: {
       configuration: WertikConfiguration,
       wertikApp: WertikApp,
     }) => iObject
@@ -152,7 +153,7 @@ export interface WertikConfiguration {
    * Redis
    */
   redis?: {
-    [key: string]: ({
+    [key: string]: (options: {
       configuration: WertikConfiguration,
       wertikApp: WertikApp,
     }) => iObject
@@ -166,7 +167,7 @@ export interface WertikConfiguration {
 
 export interface WertikApp {
   appEnv: "production" | "development" | "local"
-  sendEmail?: ({ mailer: string, options: emailSendProps }) => iObject
+  sendEmail?: (options: { mailer: string, options: SendEmailProps }) => iObject
   port: number
   modules: iObject
   database: iObject

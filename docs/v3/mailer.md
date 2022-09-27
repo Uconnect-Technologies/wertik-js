@@ -3,7 +3,7 @@
 To send emails. Wertik-js uses Node Mailer for sending emails. To setup emails Wertik JS provides a function called `useMailer` as argument you need to pass Node Mailer Configuration.
 
 ```js
-import wertik, { useMysqlDatabase, useMailer } from "wertik-js/lib/next";
+import wertik, { useMysqlDatabase, useMailer } from "wertik-js/lib/next"
 weritk({
   port: 1200,
   database: {
@@ -18,7 +18,7 @@ weritk({
   mailer: {
     default: useMailer(),
   },
-});
+})
 ```
 
 `useMailer` will ask for node mailer configuration. The configuration passed through `useMailer` will be used here:
@@ -27,17 +27,17 @@ weritk({
 
 ### Sending Emails
 
-Once you set up at least one mail. In context, wertik will pass `sendEmail(mailer: string, options: emailSendProps)` method that will send email using a different email. Send Email API: `sendEmail(mailer: string, options: emailSendProps)`. The mailer will be `default` here. And the options include:
+Once you set up at least one mail. In context, wertik will pass `sendEmail(mailer: string, options: SendEmailProps)` method that will send email using a different email. Send Email API: `sendEmail(mailer: string, options: SendEmailProps)`. The mailer will be `default` here. And the options include:
 
 ```typescript
-export interface emailSendProps {
-  template: string;
+export interface SendEmailProps {
+  template: string
   variables: {
-    [key: string]: any;
-  };
-  from: string;
-  to: string;
-  subject: string;
+    [key: string]: any
+  }
+  from: string
+  to: string
+  subject: string
 }
 ```
 

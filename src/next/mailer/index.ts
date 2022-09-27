@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer"
 import handlebars from "handlebars"
 import { useMailerProps, WertikApp, WertikConfiguration } from "../types"
-import { emailSendProps } from "../types/mailer"
+import { SendEmailProps } from "../types/mailer"
 import { get } from "lodash"
 
 export const useMailer = (props: useMailerProps) => {
@@ -35,7 +35,7 @@ export const emailSender = ({
   configuration: WertikConfiguration
   wertikApp: WertikApp
 }) => {
-  const fn = async (props: { mailer: string; options: emailSendProps }) => {
+  const fn = async (props: { mailer: string; options: SendEmailProps }) => {
     let transporter = wertikApp.mailer[props.mailer]
 
     try {

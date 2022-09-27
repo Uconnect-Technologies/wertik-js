@@ -1,4 +1,4 @@
-export interface emailSendProps {
+export interface SendEmailProps {
   template: string
   variables: {
     [key: string]: any
