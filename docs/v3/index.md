@@ -33,7 +33,7 @@ npm install wertik-js
 To start wertik-js server you need to import wertik and start it:
 
 ```js
-import wertik from "wertik-js/lib/next";
+import wertik from "wertik-js/lib/";
 
 weritk({
   port: 1200,

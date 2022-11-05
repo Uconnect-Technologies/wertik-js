@@ -7,7 +7,7 @@ Wertik JS allows using both Socket.IO and WebSockets on the same HTTP server as 
 useWebSockets allows you to creating a websockets server on current http server.
 
 ```js
-import wertik, { useWebSockets } from "wertik-js/lib/next";
+import wertik, { useWebSockets } from "wertik-js/lib/";
 
 wertik({
   port: 1200,
@@ -33,7 +33,7 @@ Your Web Sockets server is up an running at ws://localhost:1200/websockets.
 useIndependentWebSocketsServer allows you creating a websockets server that runs on different port.
 
 ```js
-import wertik, { useIndependentWebSocketsServer } from "wertik-js/lib/next";
+import wertik, { useIndependentWebSocketsServer } from "wertik-js/lib/";
 
 wertik({
   port: 1200,
@@ -57,7 +57,7 @@ Wertik JS app listening at http://localhost:1200
 useSocketIO allows you creating a Socket IO server that runs on same http server.
 
 ```js
-import wertik, { useSocketIO } from "wertik-js/lib/next";
+import wertik, { useSocketIO } from "wertik-js/lib/";
 
 wertik({
   port: 1200,

@@ -3,7 +3,7 @@
 To send emails. Wertik-js uses Node Mailer for sending emails. To setup emails Wertik JS provides a function called `useMailer` as argument you need to pass Node Mailer Configuration.
 
 ```js
-import wertik, { useMysqlDatabase, useMailer } from "wertik-js/lib/next"
+import wertik, { useMysqlDatabase, useMailer } from "wertik-js/lib/"
 weritk({
   port: 1200,
   database: {

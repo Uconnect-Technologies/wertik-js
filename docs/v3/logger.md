@@ -3,7 +3,7 @@
 Wertik JS allows using logger for logging purpose. Wertik JS uses `winston` for logging purpose. We choose `winston` because of its popularity. To setup logger, you need to import `useLogger`and `useWinstonTransport` from wertik.
 
 ```javascript
-import wertik, { useLogger, useWinstonTransport } from "wertik-js/lib/next"
+import wertik, { useLogger, useWinstonTransport } from "wertik-js/lib/"
 const devIlyas = async () => {
   wertik({
     port: 1200,
@@ -32,7 +32,7 @@ import wertik, {
   useModule,
   useLogger,
   useWinstonTransport,
-} from "wertik-js/lib/next"
+} from "wertik-js/lib/"
 
 const devIlyas = async () => {
   wertik({

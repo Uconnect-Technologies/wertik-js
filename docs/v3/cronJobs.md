@@ -3,7 +3,7 @@
 Wertik JS allows you to creating Cron Jobs that runs on interval. To use a Cron JOB you need to use `useCronJob`.
 
 ```js
-import wertik, { useCronJob } from "wertik-js/lib/next";
+import wertik, { useCronJob } from "wertik-js/lib/";
 
 wertik({
   port: 1200,

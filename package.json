@@ -25,7 +25,7 @@
   "author": "Ilyas Karim <ilyas.datoo@gmail.com> ",
   "license": "MIT",
   "scripts": {
-    "dev": "tsc-watch --onSuccess \"node lib/next/devServer.js\"",
+    "dev": "tsc-watch --onSuccess \"node lib/devServer.js\"",
     "build": "yarn prettier && yarn tsc && yarn test",
     "prettier": "prettier --write src package.json index.js",
     "test": "cross-env TEST_MODE=true jest --runInBand --forceExit --detectOpenHandles"

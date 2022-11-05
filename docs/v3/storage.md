@@ -3,7 +3,7 @@
 Wertik JS allows adding support for third party Storage services to your app. As of today 28 November 2021, Wertik JS supports `digitalocean` and `dropbox`. To use storage services you need to use `useStorage` function from wertik-js.
 
 ```js
-import wertik, { useStorage } from "wertik-js/lib/next";
+import wertik, { useStorage } from "wertik-js/lib/";
 
 wertik({
   port: 1200,
@@ -49,7 +49,7 @@ Wertik JS provides a builtin module to take backups of your database called Back
 To use it You can import it from Wertik JS:
 
 ```js
-import wertik, { WertikBackupModule } from "wertik-js/lib/next";
+import wertik, { WertikBackupModule } from "wertik-js/lib/";
 wertik({
   port: 1200,
   modules: {
