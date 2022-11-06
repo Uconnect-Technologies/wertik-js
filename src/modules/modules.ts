@@ -9,6 +9,7 @@ import {
   getUpdateSchema,
   generateEnumTypeForGraphql,
 } from "./modulesHelpers"
+import { getMysqlTableInfo } from "../database/mysql/getTableInfo"
 
 const generateGenerateGraphQLCrud = (props, schemaInformation, store) => {
   const { graphql } = crud(props, schemaInformation, store)
@@ -87,6 +88,11 @@ export const useModule = (module: useModuleProps) => {
       var createSchema = []
       var updateSchema = []
       const connection = app.database[module.database]
+      // info
+      let info = await getMysqlTableInfo(module.table, connection.instance)
+      console.log(JSON.stringify(info, null, 2))
+
+      // /
       const describe = await connection.instance.query(
         `describe ${module.table}`
       )

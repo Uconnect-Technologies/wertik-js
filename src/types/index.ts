@@ -1,5 +1,5 @@
 import { Sequelize } from "sequelize/types"
-import { useDatabaseProps } from "./database"
+import { useMysqlDatabaseProps } from "./database"
 import { SendEmailProps } from "./mailer"
 
 export type iObject = { [key: string]: any }
@@ -48,7 +48,7 @@ export interface WertikConfiguration {
    */
   database?: {
     [key: string]: () => Promise<{
-      credentials: useDatabaseProps
+      credentials: useMysqlDatabaseProps
       instance: Sequelize
     }>
   }

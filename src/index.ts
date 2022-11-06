@@ -4,14 +4,14 @@ import store from "./store"
 import {
   applyRelationshipsFromStoreToDatabase,
   applyRelationshipsFromStoreToGraphql,
-} from "./database"
+} from "./database/database"
 import { emailSender } from "./mailer/index"
 import http from "http"
 import { WertikConfiguration } from "./types"
 import { WertikApp } from "./types"
 import { initializeBullBoard } from "./queue/index"
 
-export * from "./database"
+export * from "./database/database"
 export * from "./modules/modules"
 export * from "./graphql"
 export * from "./mailer"
@@ -22,6 +22,8 @@ export * from "./sockets"
 export * from "./queue"
 export * from "./redis"
 export * from "./logger"
+export * from "./database/mysql/mysql"
+export * from "./database/database"
 
 const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
   configuration: WertikConfiguration

@@ -1,6 +1,6 @@
 import { iObject } from "."
 
-export interface useDatabaseProps {
+export interface useMysqlDatabaseProps {
   /**
    * Database name
    */
@@ -25,4 +25,30 @@ export interface useDatabaseProps {
    * Sequelize Database options.
    */
   options?: iObject
+}
+
+export interface TableInfo {
+  name: string
+  columns: {
+    columnName: string
+    type: string
+    null: boolean
+    key: string
+    default: string | number
+    extra: any
+    graphqlType: string
+    graphqlCreateInputType: string
+    graphqlUpdateInputType: string
+    enumValues: string[] | null
+    isEnum: boolean
+  }[]
+}
+
+export interface MysqlColumnInfoDescribeTable {
+  Field: string
+  Type: string
+  Null: string
+  Key: string
+  Default: null
+  Extra: string
 }
