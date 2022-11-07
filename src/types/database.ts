@@ -41,6 +41,9 @@ export interface TableInfo {
     graphqlUpdateInputType: string
     enumValues: string[] | null
     isEnum: boolean
+    isPrimary: boolean
+    databaseType: string
+    isDateColumn: boolean
   }[]
   originalDescribeColumns: MysqlColumnInfoDescribeTable[]
 }

@@ -44,6 +44,7 @@ export const getMysqlTableInfo = async (
         element,
         module.name
       )
+      var isPrimary = element.Key === "PRI"
 
       return {
         columnName: element.Field,
@@ -54,6 +55,9 @@ export const getMysqlTableInfo = async (
         enumValues: graphqlType.enumValues,
         isNull: element.Null === "no" ? false : true,
         isEnum: graphqlType.isEnum,
+        databaseType: graphqlType.databaseType,
+        isPrimary: isPrimary,
+        isDateColumn: graphqlType.isDateColumn,
       } as TableInfo["columns"][0]
     })
     return {

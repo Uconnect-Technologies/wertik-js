@@ -11,7 +11,7 @@ import {
 } from "./modulesHelpers"
 import { getMysqlTableInfo } from "../database/mysql/getTableInfo"
 import { Store, WertikApp, WertikConfiguration } from "./../types/index"
-import { ModelCtor, Model } from "sequelize/types"
+import { ModelCtor, Model, ModelAttributes } from "sequelize/types"
 
 const generateGenerateGraphQLCrud = (props, schemaInformation, store) => {
   const { graphql } = crud(props, schemaInformation, store)
@@ -47,7 +47,7 @@ const generateGenerateGraphQLCrud = (props, schemaInformation, store) => {
  * Wertik js module
  * @param props see interface useModuleProps
  */
-export const useModule = (module: useModuleProps) => {
+export const useModule = (moduleProps: useModuleProps) => {
   return async ({
     store,
     configuration,
@@ -60,7 +60,7 @@ export const useModule = (module: useModuleProps) => {
     let tableInstance: ModelCtor<Model<any, any>>
     let graphqlSchema = []
 
-    const useDatabase = get(module, "useDatabase", false)
+    const useDatabase = get(moduleProps, "useDatabase", false)
 
     const useSchema = (string: string) => {
       store.graphql.typeDefs = store.graphql.typeDefs.concat(`
@@ -97,65 +97,64 @@ export const useModule = (module: useModuleProps) => {
     if (useDatabase) {
       var createSchema = []
       var updateSchema = []
-      const connection = app.database[module.database]
+      const connection = app.database[moduleProps.database]
       // info
-      const tableInfo = await getMysqlTableInfo(module, connection.instance)
+      const tableInfo = await getMysqlTableInfo(
+        moduleProps,
+        connection.instance
+      )
       const tableInformation = tableInfo.originalDescribeColumns
 
-      let fields = {}
+      // console.log(tableInfo)
 
-      tableInformation.forEach((element) => {
-        if (element.Field === "id") {
-          return
+      let fields: ModelAttributes<Model<any, any>, any> = {}
+
+      tableInfo.columns.forEach((column) => {
+        if (column.columnName === "id") return
+        fields[column.columnName] = {
+          type: column.databaseType,
+          allowNull: column.isNull,
+          defaultValue: column.default,
+          primaryKey: column.isPrimary,
+          values: column.isEnum ? column.enumValues : null,
         }
-        const { type, length } = generateDataTypeFromDescribeTableColumnType(
-          element.Type
-        )
-        fields[element.Field] = {
-          type: {
-            type: type,
-            null: element.Null === "YES" ? true : false,
-          },
-        }
-        tableInstance = connection.instance.define(
-          module.table,
-          {
-            ...fields,
-            ...get(module, "extendFields", {}),
-          },
-          {
-            ...get(module, "tableOptions", {}),
-            ...databaseDefaultOptions.sql.defaultTableOptions,
-          }
-        )
       })
 
-      if (module?.graphql?.schema) {
-        graphqlSchema = module.graphql.schema.replace("}", "").split("\n")
+      tableInstance = connection.instance.define(
+        moduleProps.table,
+        {
+          ...fields,
+          ...get(moduleProps, "extendFields", {}),
+        },
+        {
+          ...get(moduleProps, "tableOptions", {}),
+          ...databaseDefaultOptions.sql.defaultTableOptions,
+        }
+      )
+
+      if (moduleProps?.graphql?.schema) {
+        graphqlSchema = moduleProps.graphql.schema.replace("}", "").split("\n")
       } else {
         // graphql schema
-        graphqlSchema = [`type ${module.name} {`]
+        graphqlSchema = [`type ${moduleProps.name} {`]
 
-        tableInformation.forEach((element) => {
-          if (element.Type.includes("enum")) {
+        tableInfo.columns.forEach((columnInfo) => {
+          if (columnInfo.isEnum) {
             store.graphql.typeDefs = store.graphql.typeDefs.concat(
-              generateEnumTypeForGraphql(element, module)
+              generateEnumTypeForGraphql(columnInfo)
             )
           }
           graphqlSchema.push(
-            `${element.Field}: ${getGraphQLTypeNameFromSqlType(
-              element,
-              module
-            )}`
+            `${columnInfo.columnName}: ${columnInfo.graphqlType}`
           )
         })
       }
 
-      updateSchema = getUpdateSchema(module, tableInformation)
+      updateSchema = getUpdateSchema(moduleProps, tableInfo)
 
-      createSchema = getCreateSchema(module, tableInformation)
+      createSchema = getCreateSchema(moduleProps, tableInfo)
 
-      filterSchema = [`input ${module.name}FilterInput {`]
+      filterSchema = [`input ${moduleProps.name}FilterInput {`]
 
       tableInformation.forEach((element) => {
         if (
@@ -174,10 +173,10 @@ export const useModule = (module: useModuleProps) => {
       })
 
       listSchema = `
-        query List${module.name} {
-          list: [${module.name}]
+        query List${moduleProps.name} {
+          list: [${moduleProps.name}]
           paginationProperties: PaginationProperties
-          filters: ${module.name}Filters
+          filters: ${moduleProps.name}Filters
         }
       `
     }
@@ -185,8 +184,8 @@ export const useModule = (module: useModuleProps) => {
     const hasOne = (params: RelationParams) => {
       graphqlSchema.push(`${params.graphqlKey}: ${params.module}`)
       store.database.relationships.push({
-        currentModule: module.name,
-        currentModuleDatabase: module.database,
+        currentModule: moduleProps.name,
+        currentModuleDatabase: moduleProps.database,
         graphqlKey: params.graphqlKey,
         referencedModule: params.module,
         referencedModuleDatabase: params.database,
@@ -197,8 +196,8 @@ export const useModule = (module: useModuleProps) => {
     const belongsTo = (params: RelationParams) => {
       graphqlSchema.push(`${params.graphqlKey}: ${params.module}`)
       store.database.relationships.push({
-        currentModule: module.name,
-        currentModuleDatabase: module.database,
+        currentModule: moduleProps.name,
+        currentModuleDatabase: moduleProps.database,
         graphqlKey: params.graphqlKey,
         referencedModule: params.module,
         referencedModuleDatabase: params.database,
@@ -209,8 +208,8 @@ export const useModule = (module: useModuleProps) => {
     const belongsToMany = (params: RelationParams) => {
       graphqlSchema.push(`${params.graphqlKey}: ${params.module}List`)
       store.database.relationships.push({
-        currentModule: module.name,
-        currentModuleDatabase: module.database,
+        currentModule: moduleProps.name,
+        currentModuleDatabase: moduleProps.database,
         graphqlKey: params.graphqlKey,
         referencedModule: params.module,
         referencedModuleDatabase: params.database,
@@ -221,8 +220,8 @@ export const useModule = (module: useModuleProps) => {
     const hasMany = (params: RelationParams) => {
       graphqlSchema.push(`${params.graphqlKey}: ${params.module}List`)
       store.database.relationships.push({
-        currentModule: module.name,
-        currentModuleDatabase: module.database,
+        currentModule: moduleProps.name,
+        currentModuleDatabase: moduleProps.database,
         graphqlKey: params.graphqlKey,
         referencedModule: params.module,
         referencedModuleDatabase: params.database,
@@ -231,7 +230,7 @@ export const useModule = (module: useModuleProps) => {
       })
     }
 
-    get(module, "on", () => {})({
+    get(moduleProps, "on", () => {})({
       useQuery,
       useMutation,
       useExpress,
@@ -259,11 +258,11 @@ export const useModule = (module: useModuleProps) => {
     }
 
     if (useDatabase) {
-      generateGenerateGraphQLCrud(module, schemaInformation, store)
-      app.models[module.name] = tableInstance
+      generateGenerateGraphQLCrud(moduleProps, schemaInformation, store)
+      app.models[moduleProps.name] = tableInstance
     }
 
-    console.log(`[Module]`, `Initialized module "${module.name}"`)
+    console.log(`[Module]`, `Initialized module "${moduleProps.name}"`)
 
     return schemaInformation
   }

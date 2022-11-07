@@ -1,4 +1,7 @@
 import { get } from "lodash"
+import { useModuleProps } from "../types/modules"
+import { TableInfo } from "../types/database"
+import { capitalizeFirstLetter } from "../utils/capitalizeFirstLetter"
 
 export const generateDataTypeFromDescribeTableColumnType = (Type: string) => {
   let length = Type.match(/[0-9]/g)?.join("")
@@ -33,7 +36,9 @@ export const getGraphQLTypeNameFromSqlType = (
     return
   }
   if (type.includes("enum")) {
-    return `${module.name}${column.Field}Enum`
+    return `${capitalizeFirstLetter(module.name)}${capitalizeFirstLetter(
+      column.Field
+    )}Enum`
   }
   if (
     type.includes("varchar") ||
@@ -53,30 +58,36 @@ export const getGraphQLTypeNameFromSqlType = (
   }
 }
 
-export const getUpdateSchema = (module, tableInformation) => {
+export const getUpdateSchema = (
+  module: useModuleProps,
+  tableInfo: TableInfo
+) => {
   const optionsUpdateSchema = get(module, "graphql.updateSchema", "")
   if (optionsUpdateSchema) return optionsUpdateSchema
   let updateSchema = [`input update${module.name}Input {`]
-  tableInformation.forEach((element) => {
-    updateSchema.push(
-      `${element.Field}: ${getGraphQLTypeNameFromSqlType(element, module)}`
-    )
+  tableInfo.columns.forEach((column) => {
+    if (column.columnName !== "id" && !column.isDateColumn) {
+      updateSchema.push(
+        `${column.columnName}: ${column.graphqlUpdateInputType}`
+      )
+    }
   })
   updateSchema.push("}")
 
   return updateSchema.join("\n")
 }
 
-export const getCreateSchema = (module, tableInformation) => {
+export const getCreateSchema = (
+  module: useModuleProps,
+  tableInfo: TableInfo
+) => {
   const optionsCreateSchema = get(module, "graphql.createSchema", "")
   if (optionsCreateSchema) return optionsCreateSchema
   let createSchema = [`input create${module.name}Input {`]
-  tableInformation.forEach((element) => {
-    if (element.Field !== "id" && element.Type !== "timestamp") {
+  tableInfo.columns.forEach((column) => {
+    if (column.columnName !== "id" && !column.isDateColumn) {
       createSchema.push(
-        `${element.Field}: ${getGraphQLTypeNameFromSqlType(element, module)}${
-          element.Null.toLowerCase() === "no" ? "!" : ""
-        }`
+        `${column.columnName}: ${column.graphqlCreateInputType}`
       )
     }
   })
@@ -85,12 +96,8 @@ export const getCreateSchema = (module, tableInformation) => {
   return createSchema.join("\n")
 }
 
-export const generateEnumTypeForGraphql = (column, module) => {
-  var enums = column.Type.replace("enum(", "")
-    .replace(")", "")
-    .replace(/'/g, "")
-    .split(",")
-  return `enum ${module.name}${column.Field}Enum {
-    ${enums.join("\n")}
+export const generateEnumTypeForGraphql = (column: TableInfo["columns"][0]) => {
+  return `enum ${column.graphqlType} {
+    ${column.enumValues.join("\n")}
    }`
 }
