@@ -1,4 +1,5 @@
 import { iObject } from "."
+import { ModelCtor, Model } from "sequelize/types"
 
 export interface useQueryProps {
   /**
@@ -171,5 +172,16 @@ export interface useModuleProps {
      * This events runs before beforeCreateOrUpdate mutation.
      */
     beforeCreateOrUpdate?: Function
+  }
+}
+
+export interface WertikModule {
+  tableInstance: ModelCtor<Model<any, any>>
+  schema: string
+  inputSchema: {
+    create: string | any[]
+    update: string | any[]
+    list: string
+    filters: string
   }
 }

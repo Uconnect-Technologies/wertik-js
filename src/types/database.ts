@@ -32,7 +32,7 @@ export interface TableInfo {
   columns: {
     columnName: string
     type: string
-    null: boolean
+    isNull: boolean
     key: string
     default: string | number
     extra: any
@@ -42,6 +42,7 @@ export interface TableInfo {
     enumValues: string[] | null
     isEnum: boolean
   }[]
+  originalDescribeColumns: MysqlColumnInfoDescribeTable[]
 }
 
 export interface MysqlColumnInfoDescribeTable {

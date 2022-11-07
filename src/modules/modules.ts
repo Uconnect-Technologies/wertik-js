@@ -10,6 +10,8 @@ import {
   generateEnumTypeForGraphql,
 } from "./modulesHelpers"
 import { getMysqlTableInfo } from "../database/mysql/getTableInfo"
+import { Store, WertikApp, WertikConfiguration } from "./../types/index"
+import { ModelCtor, Model } from "sequelize/types"
 
 const generateGenerateGraphQLCrud = (props, schemaInformation, store) => {
   const { graphql } = crud(props, schemaInformation, store)
@@ -46,8 +48,16 @@ const generateGenerateGraphQLCrud = (props, schemaInformation, store) => {
  * @param props see interface useModuleProps
  */
 export const useModule = (module: useModuleProps) => {
-  return async ({ store, configuration, app }: any) => {
-    let tableInstance
+  return async ({
+    store,
+    configuration,
+    app,
+  }: {
+    store: Store
+    configuration: WertikConfiguration
+    app: WertikApp
+  }) => {
+    let tableInstance: ModelCtor<Model<any, any>>
     let graphqlSchema = []
 
     const useDatabase = get(module, "useDatabase", false)
@@ -89,14 +99,8 @@ export const useModule = (module: useModuleProps) => {
       var updateSchema = []
       const connection = app.database[module.database]
       // info
-      let info = await getMysqlTableInfo(module.table, connection.instance)
-      console.log(JSON.stringify(info, null, 2))
-
-      // /
-      const describe = await connection.instance.query(
-        `describe ${module.table}`
-      )
-      const tableInformation = describe[0]
+      const tableInfo = await getMysqlTableInfo(module, connection.instance)
+      const tableInformation = tableInfo.originalDescribeColumns
 
       let fields = {}
 

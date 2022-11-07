@@ -1,6 +1,7 @@
 import { Sequelize } from "sequelize/types"
 import { useMysqlDatabaseProps } from "./database"
 import { SendEmailProps } from "./mailer"
+import { WertikModule } from "./modules"
 
 export type iObject = { [key: string]: any }
 
@@ -60,7 +61,7 @@ export interface WertikConfiguration {
       store: Store
       configuration: WertikConfiguration
       app: WertikApp
-    }) => iObject
+    }) => Promise<WertikModule>
   }
   /**
    * Storage
@@ -169,9 +170,24 @@ export interface WertikApp {
   appEnv: "production" | "development" | "local"
   sendEmail?: (options: { mailer: string; options: SendEmailProps }) => iObject
   port: number
-  modules: iObject
-  database: iObject
-  models: iObject
+  modules: {
+    [key: string]: WertikModule
+  }
+  database: {
+    [key: string]: {
+      credentials: {
+        port: number
+        name: string
+        password: string
+        username: string
+        host: string
+      }
+      instance: Sequelize
+    }
+  }
+  models: {
+    [key: string]: WertikModule["tableInstance"]
+  }
   mailer: iObject
   graphql: iObject
   sockets: iObject
