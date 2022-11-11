@@ -8,7 +8,7 @@ import wertik, {
   useMailer,
   useModule,
   useGraphql,
-} from "wertik-js/lib/next";
+} from "wertik-js/lib/";
 
 weritk({
   port: 1200,
@@ -48,7 +48,7 @@ When you provide `useMysqlDatabase: true`, `table` and `database`, Wertik JS aut
 You have to initialize its module in this way:
 
 ```js
-import wertik, { useModule, useMysqlDatabase, useGraphql } from "wertik-js/lib/next";
+import wertik, { useModule, useMysqlDatabase, useGraphql } from "wertik-js/lib/";
 wertik({
   port: 1200,
   graphql: useGraphql(),
@@ -219,7 +219,7 @@ When events are running you get access to Apollo GraphQL Resolver arguments wher
 Example:
 
 ```js
-import wertik, { useMysqlDatabase, useModule } from "wertik-js/lib/next";
+import wertik, { useMysqlDatabase, useModule } from "wertik-js/lib/";
 
 wertik({
   port: 1200,
@@ -271,7 +271,7 @@ When using Wertik JS modules. `useModule` has a function called `on` which can b
 Example:
 
 ```js
-import wertik, { useModule } from "wertik-js/lib/next";
+import wertik, { useModule } from "wertik-js/lib/";
 wertik({
   port: 1200,
   modules: {

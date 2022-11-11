@@ -9,7 +9,7 @@ When handling requests from API clients, We might run into a situation where a r
 It is considered the elegant way of scaling and solving performance challenges in common applications.
 
 ```js
-import wertik, { useQueue } from "wertik-js/lib/next"
+import wertik, { useQueue } from "wertik-js/lib/"
 
 wertik({
   port: 1200,
@@ -77,7 +77,7 @@ export interface useQueueProps {
 As of today(Friday 7 Jan 2022), Wertik JS provides [Bull Board UI](https://github.com/felixmosh/bull-board) for monitoring Jobs.
 
 ```javascript
-import wertik, { useQueue } from "wertik-js/lib/next"
+import wertik, { useQueue } from "wertik-js/lib/"
 wertik({
   port: 1200,
   queue: {

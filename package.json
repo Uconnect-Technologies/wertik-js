@@ -1,6 +1,6 @@
 {
   "name": "wertik-js",
-  "version": "3.3.0",
+  "version": "3.3.1",
   "main": "lib/main.js",
   "types": "lib/types.d.ts",
   "repository": "https://github.com/Uconnect-Technologies/wertik-js.git",
@@ -25,11 +25,8 @@
   "author": "Ilyas Karim <ilyas.datoo@gmail.com> ",
   "license": "MIT",
   "scripts": {
-    "dev-old": "concurrently -n TS,DevServer  \"npm run watch-ts\"  \"nodemon lib/devServer.js\" ",
-    "dev": "concurrently -n TS,DevServer  \"npm run watch-ts\"  \"nodemon lib/next/devServer.js\" ",
+    "dev": "tsc-watch --onSuccess \"node lib/devServer.js\"",
     "build": "yarn prettier && yarn tsc && yarn test",
-    "production": "node lib/devServer.js",
-    "watch-ts": "tsc -w",
     "prettier": "prettier --write src package.json index.js",
     "test": "cross-env TEST_MODE=true jest --runInBand --forceExit --detectOpenHandles"
   },
@@ -64,6 +61,7 @@
     "redis": "^4.0.1",
     "sequelize": "^6.3.5",
     "socket.io": "^4.1.3",
+    "tsc-watch": "^5.0.3",
     "winston": "^3.1.0",
     "ws": "^8.0.0"
   },

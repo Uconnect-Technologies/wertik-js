@@ -15,7 +15,7 @@ Where rest of the options will be part of redis `createClient` options. For `cre
 
 
 ```javascript
-import wertik, { useRedis } from "wertik-js/lib/next";
+import wertik, { useRedis } from "wertik-js/lib/";
 wertik({
 port: 1200,
     redis: {
