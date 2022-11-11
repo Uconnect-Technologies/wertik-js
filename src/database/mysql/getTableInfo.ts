@@ -60,6 +60,7 @@ export const getMysqlTableInfo = async (
         isDateColumn: graphqlType.isDateColumn,
       } as TableInfo["columns"][0]
     })
+
     return {
       name: module.table,
       columns: fields,
