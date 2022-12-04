@@ -2,30 +2,26 @@ import { get } from "lodash"
 import convertFiltersIntoSequalizeObject from "../utils/convertFiltersIntoSequalizeObject"
 
 export const paginate = async (arg, tableInstance) => {
-  let page = get(arg, "pagination.page", 1)
-  let limit = get(arg, "pagination.limit", 100)
-  let sorting = get(arg, "sorting", [])
-  let offset = limit * (page - 1)
+  const { page = 1, limit = 100, sorting = [] } = arg.pagination ?? {}
+  const offset = limit * (page - 1)
   const where = await convertFiltersIntoSequalizeObject(arg.where)
-  const find = await tableInstance.findAndCountAll({
-    where: where,
-    offset: offset,
-    limit: limit,
-    order: sorting.map((c) => {
-      return [c.column, c.type]
-    }),
+  const { count, rows } = await tableInstance.findAndCountAll({
+    where,
+    offset,
+    limit,
+    order: sorting.map(({ column, type }) => [column, type]),
   })
-  const totalPages = Math.ceil(find.count / limit)
+  const totalPages = Math.ceil(count / limit)
   return {
-    list: find.rows,
+    list: rows,
     paginationProperties: {
-      total: find.count,
+      total: count,
       nextPage: page + 1,
-      page: page,
-      previousPage: page == 1 ? 1 : page - 1,
+      page,
+      previousPage: page === 1 ? 1 : page - 1,
       pages: totalPages,
       hasMore: page < totalPages,
-      limit: limit,
+      limit,
     },
   }
 }
@@ -49,7 +45,6 @@ export default function (module, schemaInformation, store) {
         type Count${module.name} {
             count: Int
         }
-        
 
         extend type Query {
             view${module.name}(where: ${module.name}FilterInput): ${module.name}

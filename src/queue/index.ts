@@ -1,5 +1,5 @@
 import Queue from "bull"
-import { checkIfPackageIsInstalled } from "../utils/checkInstalledPackages"
+import { isPackageInstalled } from "../utils/checkInstalledPackages"
 import { WertikApp, WertikConfiguration } from "../types"
 import { useQueueProps } from "./../types/queue"
 
@@ -18,9 +18,7 @@ export const initializeBullBoard = (props: {
   wertikApp: WertikApp
   configuration: WertikConfiguration
 }) => {
-  var isInstalledBullBoardExpress = checkIfPackageIsInstalled(
-    "@bull-board/express"
-  )
+  var isInstalledBullBoardExpress = isPackageInstalled("@bull-board/express")
   if (!isInstalledBullBoardExpress) {
     throw new Error(
       "Please install package @bull-board/express to initialize Bull Board for Queue"

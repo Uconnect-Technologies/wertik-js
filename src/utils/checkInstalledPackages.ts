@@ -1,15 +1,19 @@
+const fs = require("fs")
+const path = require("path")
 import { errorMessage } from "../logger/consoleMessages"
-export function checkIfPackageIsInstalled(packageName: String) {
+
+export function isPackageInstalled(packageName) {
   try {
-    let version = require(`${packageName}/package.json`).version
-    return version
-  } catch (e) {
+    const packageJsonPath = path.resolve(process.cwd(), "package.json")
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath))
+    return packageName in packageJson.dependencies
+  } catch (error) {
     return false
   }
 }
 
 export function check(name: String) {
-  const isInstalled = checkIfPackageIsInstalled(name)
+  const isInstalled = isPackageInstalled(name)
   if (isInstalled) {
     return true
   } else {
