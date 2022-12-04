@@ -2,34 +2,26 @@ import { isPlainObject } from "lodash"
 import sequelize from "sequelize"
 const Op = sequelize.Op
 
-const wrap = (operator) => {
+const wrap = (operator: string) => {
   return Op[operator.replace("_", "")]
 }
 
 const iterate = (obj) => {
-  const isObject = isPlainObject(obj)
-  const isArray = Array.isArray(obj)
-  if (isObject) {
-    const keys = Object.keys(obj)
-    keys.forEach((element: string) => {
+  if (isPlainObject(obj)) {
+    Object.keys(obj).forEach((element) => {
       const value = obj[element]
-      const isArray = Array.isArray(value)
-      const isObject = isPlainObject(value)
       if (element.startsWith("_")) {
-        const newWrapValue = wrap(element)
-        obj[newWrapValue] = obj[element]
+        const newElement = wrap(element)
+        obj[newElement] = obj[element]
         delete obj[element]
       }
-      if (isArray === true || isObject === true) {
+      if (isPlainObject(value) || Array.isArray(value)) {
         iterate(value)
       }
     })
     return obj
-  } else {
-    obj.forEach &&
-      obj.forEach((element) => {
-        iterate(element)
-      })
+  } else if (Array.isArray(obj)) {
+    obj.forEach((element) => iterate(element))
   }
 }
 

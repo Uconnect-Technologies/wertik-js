@@ -3,9 +3,7 @@ import crud from "../crud"
 import { databaseDefaultOptions } from "../utils/defaultOptions"
 import { RelationParams, useModuleProps } from "../types/modules"
 import {
-  generateDataTypeFromDescribeTableColumnType,
   getCreateSchema,
-  getGraphQLTypeNameFromSqlType,
   getUpdateSchema,
   generateEnumTypeForGraphql,
 } from "./modulesHelpers"
@@ -62,6 +60,13 @@ export const useModule = (moduleProps: useModuleProps) => {
 
     const useDatabase = get(moduleProps, "useDatabase", false)
 
+    const { table, database, name } = moduleProps
+    if (useDatabase && (!table || !database)) {
+      throw new Error(
+        `${name} is using database please pass database and/or table name`
+      )
+    }
+
     const useSchema = (string: string) => {
       store.graphql.typeDefs = store.graphql.typeDefs.concat(`
         ${string}
@@ -103,8 +108,6 @@ export const useModule = (moduleProps: useModuleProps) => {
         moduleProps,
         connection.instance
       )
-      const tableInformation = tableInfo.originalDescribeColumns
-
       // console.log(tableInfo)
 
       let fields: ModelAttributes<Model<any, any>, any> = {}
@@ -156,20 +159,13 @@ export const useModule = (moduleProps: useModuleProps) => {
 
       filterSchema = [`input ${moduleProps.name}FilterInput {`]
 
-      tableInformation.forEach((element) => {
-        if (
-          element.Type.includes("timestamp") ||
-          element.Type.includes("datetime") ||
-          element.Type.includes("varchar") ||
-          element.Type.includes("text")
-        ) {
-          filterSchema.push(`${element.Field}: StringFilterInput`)
-        } else if (
-          element.Type.includes("int") ||
-          element.Type.includes("number")
-        ) {
-          filterSchema.push(`${element.Field}: IntFilterInput`)
-        }
+      tableInfo.columns.forEach((column) => {
+        let filterInput =
+          column.databaseType.toLowerCase() === "enum"
+            ? `${column.columnName}: ${column.graphqlType}`
+            : `${column.columnName}: ${column.graphqlType}FilterInput`
+
+        filterSchema.push(filterInput)
       })
 
       listSchema = `

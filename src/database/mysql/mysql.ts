@@ -34,7 +34,7 @@ export const useMysqlDatabase = function (obj: useMysqlDatabaseProps) {
         instance: sequelize,
       }
     } catch (e) {
-      console.log(`[DB] Connecting failed to datbase ${obj.name}`)
+      console.log(`[DB] Connecting failed to database ${obj.name}`)
       console.log(e.message)
     }
   }
