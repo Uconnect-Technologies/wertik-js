@@ -6,7 +6,10 @@ export function isPackageInstalled(packageName) {
   try {
     const packageJsonPath = path.resolve(process.cwd(), "package.json")
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath))
-    return packageName in packageJson.dependencies
+    return (
+      packageName in packageJson.dependencies ||
+      packageName in packageJson.devDependencies
+    )
   } catch (error) {
     return false
   }
