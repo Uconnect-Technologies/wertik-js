@@ -36,7 +36,12 @@ export interface RelationParams {
   database: string
   options?: {
     [key: string]: string | number | null
-  }
+  };
+  /**
+   * Allow filtering with table as well.
+   * @default false
+   */
+  allowFiltering?: boolean;
 }
 export type useSchemaProps = string
 

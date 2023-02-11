@@ -1,4 +1,4 @@
-import { get } from "lodash"
+import get from "lodash.get"
 import express from "express"
 import store from "./store"
 import {

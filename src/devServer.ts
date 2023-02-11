@@ -4,9 +4,9 @@ wertik({
   port: 1200,
   graphql: useGraphql(),
   database: {
-    wapgee: useMysqlDatabase({
+    wapgee_prod_new: useMysqlDatabase({
       port: 3306,
-      name: "wapgee",
+      name: "wapgee_prod_new",
       host: "localhost",
       password: "pass",
       username: "root",
@@ -24,7 +24,26 @@ wertik({
       name: "User",
       useDatabase: true,
       table: "users",
-      database: "wapgee",
+      database: "wapgee_prod_new",
+      on: function ({hasMany}) {
+        hasMany({
+          database: "wapgee_prod_new",
+          graphqlKey: "posts",
+          module: "Post",
+          allowFiltering: true,
+          options: {
+            as: "posts",
+            foreignKey: "created_by",
+            sourceKey: "id",
+          }
+        })
+      }
+    }),
+    Post: useModule({
+      name: "Post",
+      useDatabase: true,
+      table: "post",
+      database: "wapgee_prod_new",
     }),
     test: useModule({
       name: "Shirts",

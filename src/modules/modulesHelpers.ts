@@ -1,4 +1,4 @@
-import { get } from "lodash"
+import get from "lodash.get"
 import { useModuleProps } from "../types/modules"
 import { TableInfo } from "../types/database"
 import { capitalizeFirstLetter } from "../utils/capitalizeFirstLetter"

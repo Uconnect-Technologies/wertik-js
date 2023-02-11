@@ -1,4 +1,4 @@
-import { get } from "lodash"
+import get from "lodash.get"
 import crud from "../crud"
 import { databaseDefaultOptions } from "../utils/defaultOptions"
 import { RelationParams, useModuleProps } from "../types/modules"
@@ -57,6 +57,8 @@ export const useModule = (moduleProps: useModuleProps) => {
   }) => {
     let tableInstance: ModelCtor<Model<any, any>>
     let graphqlSchema = []
+    let listSchema = ""
+    let filterSchema = [`input ${moduleProps.name}FilterInput {`]
 
     const useDatabase = get(moduleProps, "useDatabase", false)
 
@@ -97,8 +99,6 @@ export const useModule = (moduleProps: useModuleProps) => {
       }, 2500)
     }
 
-    let listSchema = ""
-    let filterSchema = []
     if (useDatabase) {
       var createSchema = []
       var updateSchema = []
@@ -156,8 +156,6 @@ export const useModule = (moduleProps: useModuleProps) => {
       updateSchema = getUpdateSchema(moduleProps, tableInfo)
 
       createSchema = getCreateSchema(moduleProps, tableInfo)
-
-      filterSchema = [`input ${moduleProps.name}FilterInput {`]
 
       tableInfo.columns.forEach((column) => {
         let filterInput =

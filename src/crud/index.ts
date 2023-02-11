@@ -1,4 +1,4 @@
-import { get } from "lodash"
+import get from "lodash.get"
 import convertFiltersIntoSequalizeObject from "../utils/convertFiltersIntoSequalizeObject"
 
 export const paginate = async (arg, tableInstance) => {

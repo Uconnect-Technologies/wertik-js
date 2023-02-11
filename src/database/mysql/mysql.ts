@@ -1,7 +1,7 @@
 import { Sequelize } from "sequelize"
 import { databaseDefaultOptions } from "../../utils/defaultOptions"
 import { useMysqlDatabaseProps } from "../../types/database"
-import { get } from "lodash"
+import get from "lodash.get"
 
 export const getAllRelationships = (dbName: String) => {
   return `

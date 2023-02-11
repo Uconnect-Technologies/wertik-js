@@ -1,4 +1,5 @@
-import { get, omit } from "lodash"
+import get from "lodash.get"
+import omit from "lodash.omit"
 import { defaultApolloGraphqlOptions } from "../utils/defaultOptions"
 import { ApolloServer } from "apollo-server-express"
 import { useGraphqlProps, GraphqlInitializeProps } from "../types/graphql"

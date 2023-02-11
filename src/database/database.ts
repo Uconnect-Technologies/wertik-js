@@ -1,4 +1,4 @@
-import { get } from "lodash"
+import get from "lodash.get"
 import { paginate } from "../crud/index"
 import { Store } from "../types"
 import { WertikApp } from "../types"
