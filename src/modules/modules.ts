@@ -1,45 +1,15 @@
 import get from "lodash.get"
-import crud from "../crud"
 import { databaseDefaultOptions } from "../utils/defaultOptions"
 import { RelationParams, useModuleProps } from "../types/modules"
 import {
   getCreateSchema,
   getUpdateSchema,
   generateEnumTypeForGraphql,
+  generateGenerateGraphQLCrud,
 } from "./modulesHelpers"
 import { getMysqlTableInfo } from "../database/mysql/getTableInfo"
 import { Store, WertikApp, WertikConfiguration } from "./../types/index"
 import { ModelCtor, Model, ModelAttributes } from "sequelize/types"
-
-const generateGenerateGraphQLCrud = (props, schemaInformation, store) => {
-  const { graphql } = crud(props, schemaInformation, store)
-  const resolvers = graphql.generateCrudResolvers()
-
-  store.graphql.typeDefs = store.graphql.typeDefs.concat(
-    `\n ${schemaInformation.schema} 
-    \n ${schemaInformation.inputSchema.filters}
-    \n ${schemaInformation.inputSchema.create}
-    \n ${schemaInformation.inputSchema.update}
-    `
-  )
-
-  store.graphql.typeDefs = store.graphql.typeDefs.concat(
-    `\n ${graphql.generateQueriesCrudSchema()}`
-  )
-  store.graphql.typeDefs = store.graphql.typeDefs.concat(
-    `\n ${graphql.generateMutationsCrudSchema()}`
-  )
-
-  store.graphql.resolvers.Query = {
-    ...store.graphql.resolvers.Query,
-    ...resolvers.Query,
-  }
-
-  store.graphql.resolvers.Mutation = {
-    ...store.graphql.resolvers.Mutation,
-    ...resolvers.Mutation,
-  }
-}
 
 /**
  * Wertik js module

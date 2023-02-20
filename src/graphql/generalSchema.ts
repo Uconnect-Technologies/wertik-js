@@ -71,7 +71,12 @@ export default `
 		value: String!
 	}
 	type Pagination {
+		total: Int
+		pages: Int
 		page: Int
+		nextPage: Int
+		previousPage: Int
+		hasMore: Boolean
 		limit: Int
 	}
 	type Filter {
@@ -88,4 +93,5 @@ export default `
 		hasMore: Boolean
 		limit: Int
 	}
+	
 `

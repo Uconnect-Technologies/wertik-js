@@ -1,10 +1,10 @@
 import get from "lodash.get"
-import convertFiltersIntoSequalizeObject from "../utils/convertFiltersIntoSequalizeObject"
+import convertFiltersIntoSequelizeObject from "../utils/convertFiltersIntoSequelizeObject"
 
 export const paginate = async (arg, tableInstance) => {
   const { page = 1, limit = 100, sorting = [] } = arg.pagination ?? {}
   const offset = limit * (page - 1)
-  const where = await convertFiltersIntoSequalizeObject(arg.where)
+  const where = await convertFiltersIntoSequelizeObject(arg.where)
   const { count, rows } = await tableInstance.findAndCountAll({
     where,
     offset,
@@ -12,17 +12,19 @@ export const paginate = async (arg, tableInstance) => {
     order: sorting.map(({ column, type }) => [column, type]),
   })
   const totalPages = Math.ceil(count / limit)
+  const pagination = {
+    total: count,
+    nextPage: page + 1,
+    page,
+    previousPage: page === 1 ? 1 : page - 1,
+    pages: totalPages,
+    hasMore: page < totalPages,
+    limit,
+  }
   return {
     list: rows,
-    paginationProperties: {
-      total: count,
-      nextPage: page + 1,
-      page,
-      previousPage: page === 1 ? 1 : page - 1,
-      pages: totalPages,
-      hasMore: page < totalPages,
-      limit,
-    },
+    paginationProperties: pagination,
+    pagination
   }
 }
 
@@ -36,7 +38,7 @@ export default function (module, schemaInformation, store) {
             list: [${module.name}]
             pagination: Pagination
             sorting: Sorting
-            paginationProperties: PaginationProperties
+            paginationProperties: PaginationProperties @deprecated(reason: "Use pagination instead")
         }
         type ${module.name}BulkMutationResponse {
             returning: [${module.name}]
@@ -112,7 +114,7 @@ export default function (module, schemaInformation, store) {
                   function () {}
                 )(_, args, context, info)
                 args = argsFromEvent ? argsFromEvent : args
-                const where = await convertFiltersIntoSequalizeObject(
+                const where = await convertFiltersIntoSequelizeObject(
                   args.where
                 )
                 const response = await schemaInformation.tableInstance.update(
@@ -140,7 +142,7 @@ export default function (module, schemaInformation, store) {
                   function () {}
                 )(_, args, context, info)
                 args = argsFromEvent ? argsFromEvent : args
-                const where = await convertFiltersIntoSequalizeObject(
+                const where = await convertFiltersIntoSequelizeObject(
                   args.where
                 )
                 await schemaInformation.tableInstance.destroy({
@@ -183,7 +185,7 @@ export default function (module, schemaInformation, store) {
                   function () {}
                 )(_, args, context, info)
                 args = argsFromEvent ? argsFromEvent : args
-                const where = await convertFiltersIntoSequalizeObject(
+                const where = await convertFiltersIntoSequelizeObject(
                   args.where
                 )
                 const find = await schemaInformation.tableInstance.findOne({
@@ -215,7 +217,7 @@ export default function (module, schemaInformation, store) {
                   function () {}
                 )(_, args, context, info)
                 args = argsFromEvent ? argsFromEvent : args
-                const where = await convertFiltersIntoSequalizeObject(
+                const where = await convertFiltersIntoSequelizeObject(
                   args.where
                 )
                 const count = await schemaInformation.tableInstance.count({

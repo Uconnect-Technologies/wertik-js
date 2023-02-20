@@ -51,7 +51,7 @@ export interface useModuleProps {
    */
   name: string
   /**
-   * Are you using a database connection to this module? If yes, you will need to provide a database and table.
+   * If your module requires a database connection, you will need to provide a database and table using the 'useDatabase' property. This property should be set to the name of the database and table that your module will use to perform its operations.
    */
   useDatabase: boolean
   /**

@@ -162,7 +162,7 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
       expressApp.get("/w/info", function (req, res) {
         res.json({
           message: "You are running wertik-js v3",
-          version: require("./../../package.json").version,
+          version: require(`${process.cwd()}/package.json`).version,
         })
       })
 

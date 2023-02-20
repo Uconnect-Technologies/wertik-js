@@ -2,6 +2,7 @@ import get from "lodash.get"
 import { useModuleProps } from "../types/modules"
 import { TableInfo } from "../types/database"
 import { capitalizeFirstLetter } from "../utils/capitalizeFirstLetter"
+import crud from "../crud"
 
 export const generateDataTypeFromDescribeTableColumnType = (Type: string) => {
   let length = Type.match(/[0-9]/g)?.join("")
@@ -100,4 +101,36 @@ export const generateEnumTypeForGraphql = (column: TableInfo["columns"][0]) => {
   return `enum ${column.graphqlType} {
     ${column.enumValues.join("\n")}
    }`
+}
+
+
+
+export const generateGenerateGraphQLCrud = (props, schemaInformation, store) => {
+  const { graphql } = crud(props, schemaInformation, store)
+  const resolvers = graphql.generateCrudResolvers()
+
+  store.graphql.typeDefs = store.graphql.typeDefs.concat(
+    `\n ${schemaInformation.schema} 
+    \n ${schemaInformation.inputSchema.filters}
+    \n ${schemaInformation.inputSchema.create}
+    \n ${schemaInformation.inputSchema.update}
+    `
+  )
+
+  store.graphql.typeDefs = store.graphql.typeDefs.concat(
+    `\n ${graphql.generateQueriesCrudSchema()}`
+  )
+  store.graphql.typeDefs = store.graphql.typeDefs.concat(
+    `\n ${graphql.generateMutationsCrudSchema()}`
+  )
+
+  store.graphql.resolvers.Query = {
+    ...store.graphql.resolvers.Query,
+    ...resolvers.Query,
+  }
+
+  store.graphql.resolvers.Mutation = {
+    ...store.graphql.resolvers.Mutation,
+    ...resolvers.Mutation,
+  }
 }
