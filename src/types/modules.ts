@@ -37,11 +37,6 @@ export interface RelationParams {
   options?: {
     [key: string]: string | number | null
   };
-  /**
-   * Allow filtering with table as well.
-   * @default false
-   */
-  allowFiltering?: boolean;
 }
 export type useSchemaProps = string
 
@@ -137,7 +132,7 @@ export interface useModuleProps {
      */
     belongsToMany: (props: RelationParams) => {} | void
     /**
-     * This method adds belogs to many relationship to a module.
+     * This method adds belongs to many relationship to a module.
      */
     hasMany: (props: RelationParams) => {} | void
     /**
@@ -146,7 +141,7 @@ export interface useModuleProps {
     useSchema: (props: useSchemaProps) => {} | void
   }) => void
   /**
-   * Graphql events when a CRUD opreation happens.
+   * Graphql events when a CRUD operation happens.
    */
   events?: {
     /**

@@ -1,32 +1,8 @@
 import get from "lodash.get"
+import { getRelationalFieldsRequestedInQuery } from "../modules/modulesHelpers"
 import convertFiltersIntoSequelizeObject from "../utils/convertFiltersIntoSequelizeObject"
-
-export const paginate = async (arg, tableInstance) => {
-  const { page = 1, limit = 100, sorting = [] } = arg.pagination ?? {}
-  const offset = limit * (page - 1)
-  const where = await convertFiltersIntoSequelizeObject(arg.where)
-  const { count, rows } = await tableInstance.findAndCountAll({
-    where,
-    offset,
-    limit,
-    order: sorting.map(({ column, type }) => [column, type]),
-  })
-  const totalPages = Math.ceil(count / limit)
-  const pagination = {
-    total: count,
-    nextPage: page + 1,
-    page,
-    previousPage: page === 1 ? 1 : page - 1,
-    pages: totalPages,
-    hasMore: page < totalPages,
-    limit,
-  }
-  return {
-    list: rows,
-    paginationProperties: pagination,
-    pagination
-  }
-}
+const graphqlFields = require("graphql-fields")
+import { paginate } from "./paginate"
 
 export default function (module, schemaInformation, store) {
   return {
@@ -204,7 +180,14 @@ export default function (module, schemaInformation, store) {
                   function () {}
                 )(_, args, context, info)
                 args = argsFromEvent ? argsFromEvent : args
-                return await paginate(args, schemaInformation.tableInstance)
+                return await paginate(
+                  args,
+                  schemaInformation.tableInstance,
+                  getRelationalFieldsRequestedInQuery(
+                    module,
+                    graphqlFields(info).list
+                  )
+                )
               }
             ),
             [`count${module.name}`]: get(

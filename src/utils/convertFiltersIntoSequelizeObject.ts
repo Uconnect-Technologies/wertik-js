@@ -4,4 +4,4 @@ const convertFiltersIntoSequelizeObject = (filters) => {
   return filters ? replaceFilterOperators(filters) : {}
 }
 
-export default async (filters) => convertFiltersIntoSequelizeObject(filters)
+export default (filters) => convertFiltersIntoSequelizeObject(filters)

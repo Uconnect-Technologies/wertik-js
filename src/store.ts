@@ -1,6 +1,27 @@
 import generalSchema from "./graphql/generalSchema"
 
-const store = {
+const store: {
+  graphql: {
+    typeDefs: string
+    resolvers: {
+      Query: {
+        [key: string]: Function
+      }
+      Mutation: {
+        [key: string]: Function
+      }
+      [key: string]: {
+        [key: string]: Function
+      }
+    }
+  }
+  database: {
+    relationships: any[]
+    models: {
+      [key: string]: any
+    }
+  }
+} = {
   graphql: {
     typeDefs: `
         ${generalSchema}
@@ -30,6 +51,7 @@ const store = {
   },
   database: {
     relationships: [],
+    models: {},
   },
 }
 

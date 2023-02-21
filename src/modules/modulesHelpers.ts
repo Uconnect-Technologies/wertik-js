@@ -3,6 +3,7 @@ import { useModuleProps } from "../types/modules"
 import { TableInfo } from "../types/database"
 import { capitalizeFirstLetter } from "../utils/capitalizeFirstLetter"
 import crud from "../crud"
+import store from "../store"
 
 export const generateDataTypeFromDescribeTableColumnType = (Type: string) => {
   let length = Type.match(/[0-9]/g)?.join("")
@@ -103,9 +104,11 @@ export const generateEnumTypeForGraphql = (column: TableInfo["columns"][0]) => {
    }`
 }
 
-
-
-export const generateGenerateGraphQLCrud = (props, schemaInformation, store) => {
+export const generateGenerateGraphQLCrud = (
+  props,
+  schemaInformation,
+  store
+) => {
   const { graphql } = crud(props, schemaInformation, store)
   const resolvers = graphql.generateCrudResolvers()
 
@@ -133,4 +136,19 @@ export const generateGenerateGraphQLCrud = (props, schemaInformation, store) => 
     ...store.graphql.resolvers.Mutation,
     ...resolvers.Mutation,
   }
+}
+
+/**
+ * Extract relational fields that were requested in a GraphQL query.
+ */
+export const getRelationalFieldsRequestedInQuery = (
+  module,
+  requestedFields
+) => {
+  const fields = Object.keys(requestedFields)
+  // Filter all relationships for provided modules, based on fields provided filter out those relationships.
+  const relationalFields = store.database.relationships
+    .filter((c) => c.currentModule === module.name)
+    .filter((relationship) => fields.includes(relationship.graphqlKey))
+  return relationalFields
 }

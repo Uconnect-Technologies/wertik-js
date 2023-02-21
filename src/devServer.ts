@@ -30,7 +30,6 @@ wertik({
           database: "wapgee_prod_new",
           graphqlKey: "posts",
           module: "Post",
-          allowFiltering: true,
           options: {
             as: "posts",
             foreignKey: "created_by",

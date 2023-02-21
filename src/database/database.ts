@@ -1,5 +1,5 @@
 import get from "lodash.get"
-import { paginate } from "../crud/index"
+import { paginate } from "../crud/paginate"
 import { Store } from "../types"
 import { WertikApp } from "../types"
 
@@ -28,7 +28,7 @@ export const applyRelationshipsFromStoreToGraphql = async (
 
     store.graphql.resolvers[element.currentModule] = {
       ...oldResolvers,
-      [element.graphqlKey]: async (parent, _args, context) => {
+      [element.graphqlKey]: async (parent, _args, context, info) => {
         const tableInstance =
           context.wertik.modules[element.referencedModule].tableInstance
         let referencedModuleKey =
@@ -46,6 +46,9 @@ export const applyRelationshipsFromStoreToGraphql = async (
             },
           })
         } else if (["hasMany", "belongsToMany"]) {
+          if (parent[info.fieldName]) {
+            return { list: parent[info.fieldName] }
+          }
           return await paginate(
             {
               where: {

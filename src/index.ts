@@ -171,6 +171,10 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
         configuration,
       })
 
+      if (wertikApp?.models) {
+        store.database.models = wertikApp.models
+      }
+
       if (configuration.graphql) {
         wertikApp.graphql = configuration.graphql({
           wertikApp: wertikApp,

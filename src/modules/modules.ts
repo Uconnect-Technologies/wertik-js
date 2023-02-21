@@ -25,8 +25,9 @@ export const useModule = (moduleProps: useModuleProps) => {
     configuration: WertikConfiguration
     app: WertikApp
   }) => {
+    const currentModuleRelationships = []
     let tableInstance: ModelCtor<Model<any, any>>
-    let graphqlSchema = []
+    let graphqlSchema = [`type ${moduleProps.name} {`]
     let listSchema = ""
     let filterSchema = [`input ${moduleProps.name}FilterInput {`]
 
@@ -69,6 +70,73 @@ export const useModule = (moduleProps: useModuleProps) => {
       }, 2500)
     }
 
+    const hasOne = (params: RelationParams) => {
+      graphqlSchema.push(`${params.graphqlKey}: ${params.module}`)
+      let relationshipInfo = {
+        currentModule: moduleProps.name,
+        currentModuleDatabase: moduleProps.database,
+        graphqlKey: params.graphqlKey,
+        referencedModule: params.module,
+        referencedModuleDatabase: params.database,
+        options: params.options,
+        type: "hasOne",
+      }
+      store.database.relationships.push(relationshipInfo)
+      currentModuleRelationships.push(relationshipInfo)
+    }
+    const belongsTo = (params: RelationParams) => {
+      graphqlSchema.push(`${params.graphqlKey}: ${params.module}`)
+      let relationshipInfo = {
+        currentModule: moduleProps.name,
+        currentModuleDatabase: moduleProps.database,
+        graphqlKey: params.graphqlKey,
+        referencedModule: params.module,
+        referencedModuleDatabase: params.database,
+        options: params.options,
+        type: "belongsTo",
+      }
+      store.database.relationships.push(relationshipInfo)
+      currentModuleRelationships.push(relationshipInfo)
+    }
+    const belongsToMany = (params: RelationParams) => {
+      graphqlSchema.push(`${params.graphqlKey}: ${params.module}List`)
+      let relationshipInfo = {
+        currentModule: moduleProps.name,
+        currentModuleDatabase: moduleProps.database,
+        graphqlKey: params.graphqlKey,
+        referencedModule: params.module,
+        referencedModuleDatabase: params.database,
+        options: params.options,
+        type: "belongsToMany",
+      }
+      store.database.relationships.push(relationshipInfo)
+      currentModuleRelationships.push(relationshipInfo)
+    }
+    const hasMany = (params: RelationParams) => {
+      graphqlSchema.push(`${params.graphqlKey}: ${params.module}List`)
+      let relationshipInfo = {
+        currentModule: moduleProps.name,
+        currentModuleDatabase: moduleProps.database,
+        graphqlKey: params.graphqlKey,
+        referencedModule: params.module,
+        referencedModuleDatabase: params.database,
+        options: params.options,
+        type: "hasMany",
+      }
+      store.database.relationships.push(relationshipInfo)
+      currentModuleRelationships.push(relationshipInfo)
+    }
+    get(moduleProps, "on", () => {})({
+      useQuery,
+      useMutation,
+      useExpress,
+      hasOne,
+      belongsTo,
+      belongsToMany,
+      hasMany,
+      useSchema,
+    })
+
     if (useDatabase) {
       var createSchema = []
       var updateSchema = []
@@ -78,7 +146,6 @@ export const useModule = (moduleProps: useModuleProps) => {
         moduleProps,
         connection.instance
       )
-      // console.log(tableInfo)
 
       let fields: ModelAttributes<Model<any, any>, any> = {}
 
@@ -108,9 +175,6 @@ export const useModule = (moduleProps: useModuleProps) => {
       if (moduleProps?.graphql?.schema) {
         graphqlSchema = moduleProps.graphql.schema.replace("}", "").split("\n")
       } else {
-        // graphql schema
-        graphqlSchema = [`type ${moduleProps.name} {`]
-
         tableInfo.columns.forEach((columnInfo) => {
           if (columnInfo.isEnum) {
             store.graphql.typeDefs = store.graphql.typeDefs.concat(
@@ -135,6 +199,11 @@ export const useModule = (moduleProps: useModuleProps) => {
 
         filterSchema.push(filterInput)
       })
+      currentModuleRelationships.forEach((relation) => {
+        filterSchema.push(
+          `${relation.referencedModule}: ${relation.referencedModule}FilterInput`
+        )
+      })
 
       listSchema = `
         query List${moduleProps.name} {
@@ -143,69 +212,7 @@ export const useModule = (moduleProps: useModuleProps) => {
           filters: ${moduleProps.name}Filters
         }
       `
-    }
 
-    const hasOne = (params: RelationParams) => {
-      graphqlSchema.push(`${params.graphqlKey}: ${params.module}`)
-      store.database.relationships.push({
-        currentModule: moduleProps.name,
-        currentModuleDatabase: moduleProps.database,
-        graphqlKey: params.graphqlKey,
-        referencedModule: params.module,
-        referencedModuleDatabase: params.database,
-        options: params.options,
-        type: "hasOne",
-      })
-    }
-    const belongsTo = (params: RelationParams) => {
-      graphqlSchema.push(`${params.graphqlKey}: ${params.module}`)
-      store.database.relationships.push({
-        currentModule: moduleProps.name,
-        currentModuleDatabase: moduleProps.database,
-        graphqlKey: params.graphqlKey,
-        referencedModule: params.module,
-        referencedModuleDatabase: params.database,
-        options: params.options,
-        type: "belongsTo",
-      })
-    }
-    const belongsToMany = (params: RelationParams) => {
-      graphqlSchema.push(`${params.graphqlKey}: ${params.module}List`)
-      store.database.relationships.push({
-        currentModule: moduleProps.name,
-        currentModuleDatabase: moduleProps.database,
-        graphqlKey: params.graphqlKey,
-        referencedModule: params.module,
-        referencedModuleDatabase: params.database,
-        options: params.options,
-        type: "belongsToMany",
-      })
-    }
-    const hasMany = (params: RelationParams) => {
-      graphqlSchema.push(`${params.graphqlKey}: ${params.module}List`)
-      store.database.relationships.push({
-        currentModule: moduleProps.name,
-        currentModuleDatabase: moduleProps.database,
-        graphqlKey: params.graphqlKey,
-        referencedModule: params.module,
-        referencedModuleDatabase: params.database,
-        options: params.options,
-        type: "hasMany",
-      })
-    }
-
-    get(moduleProps, "on", () => {})({
-      useQuery,
-      useMutation,
-      useExpress,
-      hasOne,
-      belongsTo,
-      belongsToMany,
-      hasMany,
-      useSchema,
-    })
-
-    if (useDatabase) {
       graphqlSchema.push("}")
       filterSchema.push("}")
     }
