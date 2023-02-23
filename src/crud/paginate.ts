@@ -1,7 +1,6 @@
 import store from "../store"
 import convertFiltersIntoSequelizeObject from "../utils/convertFiltersIntoSequelizeObject"
 import get from "lodash.get"
-
 export const paginate = async (arg, tableInstance, include: any[] = []) => {
   const { page = 1, limit = 100, sorting = [] } = arg.pagination ?? {}
   const offset = limit * (page - 1)

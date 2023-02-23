@@ -4,6 +4,7 @@ import { TableInfo } from "../types/database"
 import { capitalizeFirstLetter } from "../utils/capitalizeFirstLetter"
 import crud from "../crud"
 import store from "../store"
+import convertFiltersIntoSequelizeObject from "../utils/convertFiltersIntoSequelizeObject"
 
 export const generateDataTypeFromDescribeTableColumnType = (Type: string) => {
   let length = Type.match(/[0-9]/g)?.join("")

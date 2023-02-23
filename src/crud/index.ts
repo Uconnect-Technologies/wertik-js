@@ -164,9 +164,26 @@ export default function (module, schemaInformation, store) {
                 const where = await convertFiltersIntoSequelizeObject(
                   args.where
                 )
+
                 const find = await schemaInformation.tableInstance.findOne({
                   where: where,
+                  include: getRelationalFieldsRequestedInQuery(
+                    module,
+                    graphqlFields(info)
+                  ).map((c) => {
+                    const _where = convertFiltersIntoSequelizeObject(
+                      get(args, `where.${c.referencedModule}`, {})
+                    )
+                    delete where[c.referencedModule]
+                    return {
+                      model: store.database.models[c.referencedModule],
+                      as: c.options.as,
+                      where: _where,
+                      required: false
+                    }
+                  })
                 })
+
                 return find
               }
             ),

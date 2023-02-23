@@ -39,6 +39,10 @@ export const applyRelationshipsFromStoreToGraphql = async (
           referencedModuleKey = "id"
         }
 
+        if (parent[info.fieldName]) {
+          return { list: parent[info.fieldName] }
+        }
+
         if (["hasOne", "belongsTo"].includes(element.type)) {
           return await tableInstance.findOne({
             where: {
@@ -46,9 +50,6 @@ export const applyRelationshipsFromStoreToGraphql = async (
             },
           })
         } else if (["hasMany", "belongsToMany"]) {
-          if (parent[info.fieldName]) {
-            return { list: parent[info.fieldName] }
-          }
           return await paginate(
             {
               where: {
