@@ -1,6 +1,6 @@
 import get from "lodash.get"
 import express from "express"
-import store from "./store"
+import store, { wertikApp } from "./store"
 import {
   applyRelationshipsFromStoreToDatabase,
   applyRelationshipsFromStoreToGraphql,
@@ -32,24 +32,6 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
   return new Promise(async (resolve, reject) => {
     try {
       configuration.appEnv = configuration.appEnv ?? "local"
-      const wertikApp: WertikApp = {
-        appEnv: configuration.appEnv,
-        port: 1200,
-        modules: {},
-        models: {},
-        database: {},
-        mailer: {},
-        graphql: {},
-        sockets: {},
-        cronJobs: {},
-        storage: {},
-        queue: {
-          jobs: {},
-          bullBoard: {},
-        },
-        redis: {},
-        logger: null,
-      }
 
       const port = get(configuration, "port", 1200)
       const skip = get(configuration, "skip", false)

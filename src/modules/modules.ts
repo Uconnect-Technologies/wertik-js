@@ -218,6 +218,7 @@ export const useModule = (moduleProps: useModuleProps) => {
     }
 
     const schemaInformation = {
+      moduleName: moduleProps.name,
       tableInstance: tableInstance,
       schema: graphqlSchema.join(`\n`),
       inputSchema: {

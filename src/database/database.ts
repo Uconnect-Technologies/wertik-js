@@ -10,6 +10,12 @@ export const applyRelationshipsFromStoreToDatabase = async (
   store.database.relationships.forEach((element) => {
     const currentTable = app.modules[element.currentModule].tableInstance
     const referencedTable = app.modules[element.referencedModule].tableInstance
+    
+
+    console.log(`
+      ${currentTable.getTableName()}.${element.type}(${referencedTable.getTableName()}, ${JSON.stringify(element.options)})
+    `)
+
     // element.type will be hasOne, hasMany, belongsTo or belongsToMany
     currentTable[element.type](referencedTable, element.options || {})
   })
@@ -39,17 +45,20 @@ export const applyRelationshipsFromStoreToGraphql = async (
           referencedModuleKey = "id"
         }
 
-        if (parent[info.fieldName]) {
-          return { list: parent[info.fieldName] }
-        }
-
         if (["hasOne", "belongsTo"].includes(element.type)) {
+          if (parent[info.fieldName]) {
+            return parent[info.fieldName]
+          }
           return await tableInstance.findOne({
             where: {
               [currentModuleKey]: parent[referencedModuleKey],
             },
           })
         } else if (["hasMany", "belongsToMany"]) {
+          if (parent[info.fieldName]) {
+            return { list: parent[info.fieldName] }
+          }
+
           return await paginate(
             {
               where: {

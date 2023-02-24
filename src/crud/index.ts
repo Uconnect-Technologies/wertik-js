@@ -1,4 +1,5 @@
 import get from "lodash.get"
+import { convertGraphqlRequestedFieldsIntoInclude } from "../database/eagerLoadingGraphqlQuery"
 import { getRelationalFieldsRequestedInQuery } from "../modules/modulesHelpers"
 import convertFiltersIntoSequelizeObject from "../utils/convertFiltersIntoSequelizeObject"
 const graphqlFields = require("graphql-fields")
@@ -160,6 +161,17 @@ export default function (module, schemaInformation, store) {
                   "events.beforeView",
                   function () {}
                 )(_, args, context, info)
+
+                var relationalFieldsWhere = {}
+                getRelationalFieldsRequestedInQuery(
+                  module,
+                  graphqlFields(info)
+                ).forEach((element) => {
+                  relationalFieldsWhere[element.referencedModule] =
+                    args.where[element.referencedModule]
+                  delete args.where[element.referencedModule]
+                })
+
                 args = argsFromEvent ? argsFromEvent : args
                 const where = await convertFiltersIntoSequelizeObject(
                   args.where
@@ -167,21 +179,25 @@ export default function (module, schemaInformation, store) {
 
                 const find = await schemaInformation.tableInstance.findOne({
                   where: where,
-                  include: getRelationalFieldsRequestedInQuery(
-                    module,
-                    graphqlFields(info)
-                  ).map((c) => {
-                    const _where = convertFiltersIntoSequelizeObject(
-                      get(args, `where.${c.referencedModule}`, {})
-                    )
-                    delete where[c.referencedModule]
-                    return {
-                      model: store.database.models[c.referencedModule],
-                      as: c.options.as,
-                      where: _where,
-                      required: false
-                    }
-                  })
+                  include: convertGraphqlRequestedFieldsIntoInclude(
+                    graphqlFields(info),
+                    convertFiltersIntoSequelizeObject(relationalFieldsWhere)
+                  ),
+                  // include: getRelationalFieldsRequestedInQuery(
+                  //   module,
+                  //   graphqlFields(info)
+                  // ).map((c) => {
+                  //   const _where = convertFiltersIntoSequelizeObject(
+                  //     get(args, `where.${c.referencedModule}`, {})
+                  //   )
+                  //   delete where[c.referencedModule]
+                  //   return {
+                  //     model: store.database.models[c.referencedModule],
+                  //     as: c.options.as,
+                  //     where: _where,
+                  //     required: false
+                  //   }
+                  // })
                 })
 
                 return find

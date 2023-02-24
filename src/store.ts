@@ -1,4 +1,24 @@
 import generalSchema from "./graphql/generalSchema"
+import { WertikApp } from "./types"
+
+export const wertikApp: WertikApp = {
+  appEnv: "local",
+  port: 1200,
+  modules: {},
+  models: {},
+  database: {},
+  mailer: {},
+  graphql: {},
+  sockets: {},
+  cronJobs: {},
+  storage: {},
+  queue: {
+    jobs: {},
+    bullBoard: {},
+  },
+  redis: {},
+  logger: null,
+}
 
 const store: {
   graphql: {

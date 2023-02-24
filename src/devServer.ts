@@ -43,6 +43,18 @@ wertik({
       useDatabase: true,
       table: "post",
       database: "wapgee_prod_new",
+      on: function ({belongsTo}) {
+        belongsTo({
+          database: "wapgee_prod_new",
+          graphqlKey: "author",
+          module: "User",
+          options: {
+            as: "author",
+            sourceKey: "created_by",
+            foreignKey: "id",
+          }
+        })
+      }
     }),
     test: useModule({
       name: "Shirts",
