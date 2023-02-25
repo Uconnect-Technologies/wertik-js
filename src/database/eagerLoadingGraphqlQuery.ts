@@ -1,5 +1,8 @@
 import store, { wertikApp } from "../store"
 import isPlainObject from "lodash.isplainobject"
+import get from "lodash.get"
+import has from "lodash.has"
+import convertFiltersIntoSequelizeObject from "../utils/convertFiltersIntoSequelizeObject"
 
 const getModuleNameFromKey = (key: string) => {
   return store.database.relationships.find((c) => c.graphqlKey === key)
@@ -16,7 +19,7 @@ const clean = (cleanObject) => {
     })
 
     Object.keys(_obj).forEach((key) => {
-      if (isPlainObject(_obj[key])) {
+      if (isPlainObject(_obj[key]) && key !== "__arguments") {
         _obj[key] = recursion(_obj[key])
       }
     })
@@ -28,8 +31,7 @@ const clean = (cleanObject) => {
 }
 
 export const convertGraphqlRequestedFieldsIntoInclude = (
-  graphqlFields = {},
-  where: { [key: string]: any } = {}
+  graphqlFields = {}
 ) => {
   graphqlFields = clean(graphqlFields)
   const keys = store.database.relationships.map((c) => c.graphqlKey)
@@ -39,7 +41,7 @@ export const convertGraphqlRequestedFieldsIntoInclude = (
 
     for (const key in _obj) {
       if (keys.includes(key)) {
-        includes.push({
+        const includeParams: { [key: string]: any } = {
           required: false,
           model:
             wertikApp.models[
@@ -49,18 +51,33 @@ export const convertGraphqlRequestedFieldsIntoInclude = (
           as: key,
           include:
             Object.keys(_obj[key]).length > 0 ? recursion(_obj[key]) : [],
-        })
+        }
+
+        let __arguments = get(_obj, `[${key}].__arguments`, [])
+        let __whereInArguments = __arguments.find((c) => has(c, "where"))
+        let __limitInArguments = __arguments.find((c) => has(c, "limit"))
+        let __offsetInArguments = __arguments.find((c) => has(c, "offset"))
+        __limitInArguments = get(__limitInArguments, "limit.value", null)
+        __offsetInArguments = get(__offsetInArguments, "offset.value", null)
+
+        if (__whereInArguments) {
+          __whereInArguments = get(__whereInArguments, "where.value", {})
+          __whereInArguments =
+            convertFiltersIntoSequelizeObject(__whereInArguments)
+
+          includeParams.where = __whereInArguments
+        }
+
+        if (__limitInArguments) includeParams.limit = __limitInArguments
+        if (__offsetInArguments) includeParams.offset = __offsetInArguments
+
+        includes.push(includeParams)
       }
     }
     return includes
   }
 
   let include = recursion(graphqlFields)
-
-  include.forEach((item, index) => {
-    let __where = where[getModuleNameFromKey(item.as)]
-    include[index].where = __where
-  })
 
   return include
 }

@@ -26,7 +26,6 @@ export const useModule = (moduleProps: useModuleProps) => {
     configuration: WertikConfiguration
     app: WertikApp
   }) => {
-    const currentModuleRelationships = []
     let tableInstance: ModelCtor<Model<any, any>>
     let graphqlSchema = [`type ${moduleProps.name} {`]
     let listSchema = ""
@@ -83,7 +82,6 @@ export const useModule = (moduleProps: useModuleProps) => {
         type: "hasOne",
       }
       store.database.relationships.push(relationshipInfo)
-      currentModuleRelationships.push(relationshipInfo)
     }
     const belongsTo = (params: RelationParams) => {
       graphqlSchema.push(`${params.graphqlKey}(where: ${params.module}FilterInput): ${params.module}`)
@@ -97,10 +95,9 @@ export const useModule = (moduleProps: useModuleProps) => {
         type: "belongsTo",
       }
       store.database.relationships.push(relationshipInfo)
-      currentModuleRelationships.push(relationshipInfo)
     }
     const belongsToMany = (params: RelationParams) => {
-      graphqlSchema.push(`${params.graphqlKey}(pagination: PaginationInput, where: ${params.module}FilterInput, sorting: [SortingInput]): ${params.module}List`)
+      graphqlSchema.push(`${params.graphqlKey}(offset: Int, limit: Int, where: ${params.module}FilterInput, sorting: [SortingInput]): ${params.module}List`)
       let relationshipInfo = {
         currentModule: moduleProps.name,
         currentModuleDatabase: moduleProps.database,
@@ -111,10 +108,9 @@ export const useModule = (moduleProps: useModuleProps) => {
         type: "belongsToMany",
       }
       store.database.relationships.push(relationshipInfo)
-      currentModuleRelationships.push(relationshipInfo)
     }
     const hasMany = (params: RelationParams) => {
-      graphqlSchema.push(`${params.graphqlKey}(pagination: PaginationInput, where: ${params.module}FilterInput, sorting: [SortingInput]): ${params.module}List`)
+      graphqlSchema.push(`${params.graphqlKey}(offset: Int, limit: Int, where: ${params.module}FilterInput, sorting: [SortingInput]): ${params.module}List`)
       let relationshipInfo = {
         currentModule: moduleProps.name,
         currentModuleDatabase: moduleProps.database,
@@ -125,7 +121,6 @@ export const useModule = (moduleProps: useModuleProps) => {
         type: "hasMany",
       }
       store.database.relationships.push(relationshipInfo)
-      currentModuleRelationships.push(relationshipInfo)
     }
     get(moduleProps, "on", () => {})({
       useQuery,
@@ -199,11 +194,6 @@ export const useModule = (moduleProps: useModuleProps) => {
             : `${column.columnName}: ${column.graphqlType}FilterInput`
 
         filterSchema.push(filterInput)
-      })
-      currentModuleRelationships.forEach((relation) => {
-        filterSchema.push(
-          `${relation.referencedModule}: ${relation.referencedModule}FilterInput`
-        )
       })
 
       listSchema = `

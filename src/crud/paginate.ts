@@ -1,22 +1,9 @@
 import store from "../store"
 import convertFiltersIntoSequelizeObject from "../utils/convertFiltersIntoSequelizeObject"
-import get from "lodash.get"
-export const paginate = async (arg, tableInstance, include: any[] = []) => {
+export const paginate = async (arg, tableInstance, includes: any[] = []) => {
   const { page = 1, limit = 100, sorting = [] } = arg.pagination ?? {}
   const offset = limit * (page - 1)
   const where = convertFiltersIntoSequelizeObject(arg.where)
-  const includes = include.map((c) => {
-    const _where = convertFiltersIntoSequelizeObject(
-      get(arg, `where.${c.referencedModule}`, {})
-    )
-    delete where[c.referencedModule]
-    return {
-      model: store.database.models[c.referencedModule],
-      as: c.options.as,
-      where: _where,
-      required: false
-    }
-  })
 
   const { count, rows } = await tableInstance.findAndCountAll({
     where,

@@ -4,7 +4,7 @@ import { getRelationalFieldsRequestedInQuery } from "../modules/modulesHelpers"
 import convertFiltersIntoSequelizeObject from "../utils/convertFiltersIntoSequelizeObject"
 const graphqlFields = require("graphql-fields")
 import { paginate } from "./paginate"
-import {Op} from "sequelize"
+import { Op } from "sequelize"
 
 export default function (module, schemaInformation, store) {
   return {
@@ -163,25 +163,15 @@ export default function (module, schemaInformation, store) {
                   function () {}
                 )(_, args, context, info)
 
-                var relationalFieldsWhere = {}
-                getRelationalFieldsRequestedInQuery(
-                  module,
-                  graphqlFields(info)
-                ).forEach((element) => {
-                  relationalFieldsWhere[element.referencedModule] =
-                    args.where[element.referencedModule]
-                  delete args.where[element.referencedModule]
-                })
-
                 args = argsFromEvent ? argsFromEvent : args
                 const where = await convertFiltersIntoSequelizeObject(
                   args.where
                 )
+
                 const find = await schemaInformation.tableInstance.findOne({
                   where: where,
                   include: convertGraphqlRequestedFieldsIntoInclude(
-                    graphqlFields(info),
-                    convertFiltersIntoSequelizeObject(relationalFieldsWhere)
+                    graphqlFields(info, {}, { processArguments: true }),
                   ),
                 })
 
@@ -201,9 +191,8 @@ export default function (module, schemaInformation, store) {
                 return await paginate(
                   args,
                   schemaInformation.tableInstance,
-                  getRelationalFieldsRequestedInQuery(
-                    module,
-                    graphqlFields(info).list
+                  convertGraphqlRequestedFieldsIntoInclude(
+                    graphqlFields(info, {}, { processArguments: true })
                   )
                 )
               }
