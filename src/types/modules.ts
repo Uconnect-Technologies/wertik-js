@@ -36,7 +36,7 @@ export interface RelationParams {
   database: string
   options?: {
     [key: string]: string | number | null
-  };
+  }
 }
 export type useSchemaProps = string
 

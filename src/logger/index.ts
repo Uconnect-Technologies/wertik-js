@@ -1,5 +1,5 @@
 import winston, { LoggerOptions } from "winston"
-import {wLog} from "../utils/log"
+import { wLog } from "../utils/log"
 
 /**
  * Creates a winston instance

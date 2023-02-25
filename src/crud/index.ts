@@ -171,7 +171,7 @@ export default function (module, schemaInformation, store) {
                 const find = await schemaInformation.tableInstance.findOne({
                   where: where,
                   include: convertGraphqlRequestedFieldsIntoInclude(
-                    graphqlFields(info, {}, { processArguments: true }),
+                    graphqlFields(info, {}, { processArguments: true })
                   ),
                 })
 

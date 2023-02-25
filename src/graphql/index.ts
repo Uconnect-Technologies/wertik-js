@@ -3,7 +3,7 @@ import omit from "lodash.omit"
 import { defaultApolloGraphqlOptions } from "../utils/defaultOptions"
 import { ApolloServer } from "apollo-server-express"
 import { useGraphqlProps, GraphqlInitializeProps } from "../types/graphql"
-import {wLog} from "../utils/log"
+import { wLog } from "../utils/log"
 
 export const useGraphql = (props?: useGraphqlProps) => {
   return ({

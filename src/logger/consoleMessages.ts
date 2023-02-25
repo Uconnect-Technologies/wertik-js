@@ -1,6 +1,6 @@
 import logSymbols from "log-symbols"
 import chalk from "chalk"
-import { wLog  } from "../utils/log"
+import { wLog } from "../utils/log"
 
 export const successMessage = function (message, secondMessage?: string) {
   wLog(

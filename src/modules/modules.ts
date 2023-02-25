@@ -71,7 +71,9 @@ export const useModule = (moduleProps: useModuleProps) => {
     }
 
     const hasOne = (params: RelationParams) => {
-      graphqlSchema.push(`${params.graphqlKey}(where: ${params.module}FilterInput): ${params.module}`)
+      graphqlSchema.push(
+        `${params.graphqlKey}(where: ${params.module}FilterInput): ${params.module}`
+      )
       let relationshipInfo = {
         currentModule: moduleProps.name,
         currentModuleDatabase: moduleProps.database,
@@ -84,7 +86,9 @@ export const useModule = (moduleProps: useModuleProps) => {
       store.database.relationships.push(relationshipInfo)
     }
     const belongsTo = (params: RelationParams) => {
-      graphqlSchema.push(`${params.graphqlKey}(where: ${params.module}FilterInput): ${params.module}`)
+      graphqlSchema.push(
+        `${params.graphqlKey}(where: ${params.module}FilterInput): ${params.module}`
+      )
       let relationshipInfo = {
         currentModule: moduleProps.name,
         currentModuleDatabase: moduleProps.database,
@@ -97,7 +101,9 @@ export const useModule = (moduleProps: useModuleProps) => {
       store.database.relationships.push(relationshipInfo)
     }
     const belongsToMany = (params: RelationParams) => {
-      graphqlSchema.push(`${params.graphqlKey}(offset: Int, limit: Int, where: ${params.module}FilterInput, sorting: [SortingInput]): ${params.module}List`)
+      graphqlSchema.push(
+        `${params.graphqlKey}(offset: Int, limit: Int, where: ${params.module}FilterInput, sorting: [SortingInput]): ${params.module}List`
+      )
       let relationshipInfo = {
         currentModule: moduleProps.name,
         currentModuleDatabase: moduleProps.database,
@@ -110,7 +116,9 @@ export const useModule = (moduleProps: useModuleProps) => {
       store.database.relationships.push(relationshipInfo)
     }
     const hasMany = (params: RelationParams) => {
-      graphqlSchema.push(`${params.graphqlKey}(offset: Int, limit: Int, where: ${params.module}FilterInput, sorting: [SortingInput]): ${params.module}List`)
+      graphqlSchema.push(
+        `${params.graphqlKey}(offset: Int, limit: Int, where: ${params.module}FilterInput, sorting: [SortingInput]): ${params.module}List`
+      )
       let relationshipInfo = {
         currentModule: moduleProps.name,
         currentModuleDatabase: moduleProps.database,

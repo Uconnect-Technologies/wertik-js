@@ -2,7 +2,7 @@ import moment from "moment"
 import { useModule } from "../../modules/modules"
 import mysqldump from "mysqldump"
 import fs from "fs"
-import {wLog} from "../../utils/log"
+import { wLog } from "../../utils/log"
 
 const dumpDatabase = async (
   dbName: string,

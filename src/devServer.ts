@@ -53,7 +53,7 @@ wertik({
             sourceKey: "created_by",
             foreignKey: "id",
           },
-        });
+        })
       },
     }),
     test: useModule({

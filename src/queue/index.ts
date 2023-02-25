@@ -2,7 +2,7 @@ import Queue from "bull"
 import { isPackageInstalled } from "../utils/checkInstalledPackages"
 import { WertikApp, WertikConfiguration } from "../types"
 import { useQueueProps } from "./../types/queue"
-import {wLog} from "../utils/log"
+import { wLog } from "../utils/log"
 
 /**
  * @param name
