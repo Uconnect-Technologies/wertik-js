@@ -1,6 +1,11 @@
 import store, { wertikApp } from "../store"
 import isPlainObject from "lodash.isplainobject"
 
+const getModuleNameFromKey = (key: string) => {
+  return store.database.relationships.find((c) => c.graphqlKey === key)
+    .referencedModule
+}
+
 const clean = (cleanObject) => {
   let recursion = (_obj) => {
     Object.keys(_obj).forEach((key) => {
@@ -28,20 +33,6 @@ export const convertGraphqlRequestedFieldsIntoInclude = (
 ) => {
   graphqlFields = clean(graphqlFields)
   const keys = store.database.relationships.map((c) => c.graphqlKey)
-  const keysByModules = keys.reduce(
-    (accumulator, currentValue, currentIndex) => {
-      return {
-        ...accumulator,
-        [currentValue]:
-          wertikApp.modules[
-            store.database.relationships.find(
-              (c) => c.graphqlKey === currentValue
-            ).referencedModule
-          ],
-      }
-    },
-    {}
-  )
 
   let recursion = (_obj) => {
     let includes = []
@@ -49,28 +40,27 @@ export const convertGraphqlRequestedFieldsIntoInclude = (
     for (const key in _obj) {
       if (keys.includes(key)) {
         includes.push({
+          required: false,
           model:
-            wertikApp.modules[
+            wertikApp.models[
               store.database.relationships.find((c) => c.graphqlKey === key)
                 .referencedModule
-            ].tableInstance,
+            ],
           as: key,
           include:
             Object.keys(_obj[key]).length > 0 ? recursion(_obj[key]) : [],
-          where: {}
         })
       }
     }
     return includes
   }
 
-  let include =  recursion(graphqlFields);
+  let include = recursion(graphqlFields)
 
   include.forEach((item, index) => {
-    include[index].where = where[keysByModules[item.as].moduleName] ?? {}
-  });
+    let __where = where[getModuleNameFromKey(item.as)]
+    include[index].where = __where
+  })
 
-  console.log(include[0].include)
-
-  return include;
+  return include
 }

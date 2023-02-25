@@ -2,6 +2,7 @@ import moment from "moment"
 import { useModule } from "../../modules/modules"
 import mysqldump from "mysqldump"
 import fs from "fs"
+import {wLog} from "../../utils/log"
 
 const dumpDatabase = async (
   dbName: string,
@@ -188,7 +189,7 @@ export const WertikBackupModule = (
 
             return push
           } catch (e) {
-            console.log(e)
+            wLog(e)
             throw new Error(e)
           }
         },

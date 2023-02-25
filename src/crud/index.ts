@@ -4,6 +4,7 @@ import { getRelationalFieldsRequestedInQuery } from "../modules/modulesHelpers"
 import convertFiltersIntoSequelizeObject from "../utils/convertFiltersIntoSequelizeObject"
 const graphqlFields = require("graphql-fields")
 import { paginate } from "./paginate"
+import {Op} from "sequelize"
 
 export default function (module, schemaInformation, store) {
   return {
@@ -176,28 +177,12 @@ export default function (module, schemaInformation, store) {
                 const where = await convertFiltersIntoSequelizeObject(
                   args.where
                 )
-
                 const find = await schemaInformation.tableInstance.findOne({
                   where: where,
                   include: convertGraphqlRequestedFieldsIntoInclude(
                     graphqlFields(info),
                     convertFiltersIntoSequelizeObject(relationalFieldsWhere)
                   ),
-                  // include: getRelationalFieldsRequestedInQuery(
-                  //   module,
-                  //   graphqlFields(info)
-                  // ).map((c) => {
-                  //   const _where = convertFiltersIntoSequelizeObject(
-                  //     get(args, `where.${c.referencedModule}`, {})
-                  //   )
-                  //   delete where[c.referencedModule]
-                  //   return {
-                  //     model: store.database.models[c.referencedModule],
-                  //     as: c.options.as,
-                  //     where: _where,
-                  //     required: false
-                  //   }
-                  // })
                 })
 
                 return find

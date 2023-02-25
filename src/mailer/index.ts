@@ -2,7 +2,7 @@ import nodemailer from "nodemailer"
 import handlebars from "handlebars"
 import { useMailerProps, WertikApp, WertikConfiguration } from "../types"
 import { SendEmailProps } from "../types/mailer"
-import get from "lodash.get"
+import { wLog } from "../utils/log"
 
 export const useMailer = (props: useMailerProps) => {
   return async () => {
@@ -22,7 +22,7 @@ export const useMailer = (props: useMailerProps) => {
           },
         }
 
-    console.log(`[Mailer]`, `Initialized mailer "${props.name}"`)
+    wLog(`[Mailer]`, `Initialized mailer "${props.name}"`)
 
     return nodemailer.createTransport(emailConfiguration)
   }
@@ -54,13 +54,10 @@ export const emailSender = ({
         subject: props.options.subject,
       })
       if (emailInstance && emailInstance.messageId) {
-        console.log("Message sent: %s", emailInstance.messageId)
+        wLog("Message sent: %s", emailInstance.messageId)
       }
       if (nodemailer && nodemailer.getTestMessageUrl) {
-        console.log(
-          "Preview URL: %s",
-          nodemailer.getTestMessageUrl(emailInstance)
-        )
+        wLog("Preview URL: %s", nodemailer.getTestMessageUrl(emailInstance))
       }
 
       if (configuration.mailer.events.onEmailSent) {
@@ -79,7 +76,7 @@ export const emailSender = ({
 
       return emailInstance
     } catch (e) {
-      console.log(e)
+      wLog(e)
       if (configuration.mailer.events.onEmailSentFailed) {
         configuration.mailer.events.onEmailSentFailed({
           mailer: props.mailer,

@@ -1,4 +1,5 @@
 import get from "lodash.get"
+import { wLog } from "../utils/log"
 import { paginate } from "../crud/paginate"
 import { Store } from "../types"
 import { WertikApp } from "../types"
@@ -7,18 +8,21 @@ export const applyRelationshipsFromStoreToDatabase = async (
   store: Store,
   app: WertikApp
 ) => {
+  wLog("[Wertik] Registering relationships \n")
   store.database.relationships.forEach((element) => {
     const currentTable = app.modules[element.currentModule].tableInstance
     const referencedTable = app.modules[element.referencedModule].tableInstance
-    
 
-    console.log(`
-      ${currentTable.getTableName()}.${element.type}(${referencedTable.getTableName()}, ${JSON.stringify(element.options)})
-    `)
+    wLog(
+      `${currentTable.getTableName()}.${
+        element.type
+      }(${referencedTable.getTableName()}, ${JSON.stringify(element.options)})`
+    )
 
     // element.type will be hasOne, hasMany, belongsTo or belongsToMany
     currentTable[element.type](referencedTable, element.options || {})
   })
+  wLog("\n")
 }
 
 export const applyRelationshipsFromStoreToGraphql = async (
@@ -58,7 +62,6 @@ export const applyRelationshipsFromStoreToGraphql = async (
           if (parent[info.fieldName]) {
             return { list: parent[info.fieldName] }
           }
-
           return await paginate(
             {
               where: {

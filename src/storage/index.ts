@@ -1,5 +1,6 @@
 import { WertikApp, WertikConfiguration } from "../types"
 import { useStorageProps } from "../types/storage"
+import { wLog } from "../utils/log"
 
 const DIGITAL_OCEAN = "digitalocean"
 const DROPBOX = "dropbox"
@@ -30,9 +31,7 @@ export const useStorage = (storageItem: useStorageProps) => {
         endpoint: spacesEndpoint,
       })
 
-      console.log(
-        `[Storage] Initialized Digital Ocean instance ${storageItem.name}`
-      )
+      wLog(`[Storage] Initialized Digital Ocean instance ${storageItem.name}`)
 
       return {
         spacesEndpoint,
@@ -45,7 +44,7 @@ export const useStorage = (storageItem: useStorageProps) => {
         accessToken: dropboxOptions.accessToken,
       })
 
-      console.log(`[Storage] Initialized Dropbox instance ${storageItem.name}`)
+      wLog(`[Storage] Initialized Dropbox instance ${storageItem.name}`)
 
       return {
         dropbox: dropboxInstance,

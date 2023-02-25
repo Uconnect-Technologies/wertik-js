@@ -10,6 +10,7 @@ import {
 import { getMysqlTableInfo } from "../database/mysql/getTableInfo"
 import { Store, WertikApp, WertikConfiguration } from "./../types/index"
 import { ModelCtor, Model, ModelAttributes } from "sequelize/types"
+import { wLog } from "../utils/log"
 
 /**
  * Wertik js module
@@ -71,7 +72,7 @@ export const useModule = (moduleProps: useModuleProps) => {
     }
 
     const hasOne = (params: RelationParams) => {
-      graphqlSchema.push(`${params.graphqlKey}: ${params.module}`)
+      graphqlSchema.push(`${params.graphqlKey}(where: ${params.module}FilterInput): ${params.module}`)
       let relationshipInfo = {
         currentModule: moduleProps.name,
         currentModuleDatabase: moduleProps.database,
@@ -85,7 +86,7 @@ export const useModule = (moduleProps: useModuleProps) => {
       currentModuleRelationships.push(relationshipInfo)
     }
     const belongsTo = (params: RelationParams) => {
-      graphqlSchema.push(`${params.graphqlKey}: ${params.module}`)
+      graphqlSchema.push(`${params.graphqlKey}(where: ${params.module}FilterInput): ${params.module}`)
       let relationshipInfo = {
         currentModule: moduleProps.name,
         currentModuleDatabase: moduleProps.database,
@@ -99,7 +100,7 @@ export const useModule = (moduleProps: useModuleProps) => {
       currentModuleRelationships.push(relationshipInfo)
     }
     const belongsToMany = (params: RelationParams) => {
-      graphqlSchema.push(`${params.graphqlKey}: ${params.module}List`)
+      graphqlSchema.push(`${params.graphqlKey}(pagination: PaginationInput, where: ${params.module}FilterInput, sorting: [SortingInput]): ${params.module}List`)
       let relationshipInfo = {
         currentModule: moduleProps.name,
         currentModuleDatabase: moduleProps.database,
@@ -113,7 +114,7 @@ export const useModule = (moduleProps: useModuleProps) => {
       currentModuleRelationships.push(relationshipInfo)
     }
     const hasMany = (params: RelationParams) => {
-      graphqlSchema.push(`${params.graphqlKey}: ${params.module}List`)
+      graphqlSchema.push(`${params.graphqlKey}(pagination: PaginationInput, where: ${params.module}FilterInput, sorting: [SortingInput]): ${params.module}List`)
       let relationshipInfo = {
         currentModule: moduleProps.name,
         currentModuleDatabase: moduleProps.database,
@@ -234,7 +235,7 @@ export const useModule = (moduleProps: useModuleProps) => {
       app.models[moduleProps.name] = tableInstance
     }
 
-    console.log(`[Module]`, `Initialized module "${moduleProps.name}"`)
+    wLog(`[Module]`, `Initialized module "${moduleProps.name}"`)
 
     return schemaInformation
   }

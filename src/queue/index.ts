@@ -2,6 +2,7 @@ import Queue from "bull"
 import { isPackageInstalled } from "../utils/checkInstalledPackages"
 import { WertikApp, WertikConfiguration } from "../types"
 import { useQueueProps } from "./../types/queue"
+import {wLog} from "../utils/log"
 
 /**
  * @param name
@@ -51,7 +52,7 @@ export const initializeBullBoard = (props: {
     serverAdapter.setBasePath(queuePath)
     express.use(queuePath, serverAdapter.getRouter())
 
-    console.log(
+    wLog(
       `Queue UI Monitoring Bull Board running at: http://localhost:${props.configuration.port}${queuePath}`
     )
 

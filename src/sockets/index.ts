@@ -2,6 +2,7 @@ import {
   Server as SocketIOServer,
   ServerOptions as SocketIOServerOptions,
 } from "socket.io"
+import { wLog } from "../utils/log"
 import {
   Server as WebSocketServer,
   ServerOptions as WebSocketServerOptions,
@@ -24,7 +25,7 @@ export const useWebSockets = (props: WebSocketServerOptions = {}) => {
     if (!props.path) {
       throw new Error("Path must be passed for useWebSockets")
     }
-    console.log(
+    wLog(
       `Web Sockets server starting at ws://localhost:${configuration.port}${props.path}`
     )
     return new WebSocketServer({
@@ -49,7 +50,7 @@ export const useIndependentWebSocketsServer = (
     configuration: WertikConfiguration
     wertikApp: WertikApp
   }) => {
-    console.log(
+    wLog(
       `Web Sockets server starting at ws://localhost:${props.port}/${
         props.path ?? ""
       }`
@@ -73,7 +74,7 @@ export const useSocketIO = (props: any = {}) => {
     configuration: WertikConfiguration
     wertikApp: WertikApp
   }) => {
-    console.log(
+    wLog(
       `Socket.IO server starting at http://localhost:${configuration.port}${
         props.path ?? "/socket.io"
       }`

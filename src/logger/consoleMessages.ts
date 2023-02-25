@@ -1,9 +1,9 @@
 import logSymbols from "log-symbols"
 import chalk from "chalk"
-const log = console.log
+import { wLog  } from "../utils/log"
 
 export const successMessage = function (message, secondMessage?: string) {
-  log(
+  wLog(
     logSymbols.success,
     ` [Wertik-js]: `,
     chalk.green(message),
@@ -12,7 +12,7 @@ export const successMessage = function (message, secondMessage?: string) {
 }
 
 export const errorMessage = function (message) {
-  log(logSymbols.error, ` [Wertik-js]:`, chalk.red(message))
+  wLog(logSymbols.error, ` [Wertik-js]:`, chalk.red(message))
 }
 
 export const warningMessage = function () {}

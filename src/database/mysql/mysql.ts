@@ -2,6 +2,7 @@ import { Sequelize } from "sequelize"
 import { databaseDefaultOptions } from "../../utils/defaultOptions"
 import { useMysqlDatabaseProps } from "../../types/database"
 import get from "lodash.get"
+import { wLog } from "../../utils/log"
 
 export const getAllRelationships = (dbName: String) => {
   return `
@@ -25,7 +26,7 @@ export const useMysqlDatabase = function (obj: useMysqlDatabaseProps) {
         ...(databaseDefaultOptions as any).sql.dbInitializeOptions,
       })
       await sequelize.authenticate()
-      console.log(`[DB] Succcessfully connected to database ${obj.name}`)
+      wLog(`[DB] Succcessfully connected to database ${obj.name}`)
       ;(sequelize as any).relationships = await sequelize.query(
         getAllRelationships(obj.name)
       )
@@ -34,8 +35,8 @@ export const useMysqlDatabase = function (obj: useMysqlDatabaseProps) {
         instance: sequelize,
       }
     } catch (e) {
-      console.log(`[DB] Connecting failed to database ${obj.name}`)
-      console.log(e.message)
+      wLog(`[DB] Connecting failed to database ${obj.name}`)
+      wLog(e.message)
     }
   }
 }

@@ -25,7 +25,7 @@ wertik({
       useDatabase: true,
       table: "users",
       database: "wapgee_prod_new",
-      on: function ({hasMany}) {
+      on: function ({ hasMany }) {
         hasMany({
           database: "wapgee_prod_new",
           graphqlKey: "posts",
@@ -34,27 +34,27 @@ wertik({
             as: "posts",
             foreignKey: "created_by",
             sourceKey: "id",
-          }
+          },
         })
-      }
+      },
     }),
     Post: useModule({
       name: "Post",
       useDatabase: true,
       table: "post",
       database: "wapgee_prod_new",
-      on: function ({belongsTo}) {
-        belongsTo({
-          database: "wapgee_prod_new",
-          graphqlKey: "author",
+      on: function ({ hasOne }) {
+        hasOne({
           module: "User",
+          graphqlKey: "author",
+          database: "default",
           options: {
             as: "author",
             sourceKey: "created_by",
             foreignKey: "id",
-          }
-        })
-      }
+          },
+        });
+      },
     }),
     test: useModule({
       name: "Shirts",
