@@ -37,8 +37,6 @@ export const convertGraphqlRequestedFieldsIntoInclude = (
   graphqlFields = clean(graphqlFields)
   const keys = store.database.relationships.map((c) => c.graphqlKey)
 
-  
-
   let recursion = (_obj) => {
     let includes = []
 

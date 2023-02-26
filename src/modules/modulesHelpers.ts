@@ -155,6 +155,10 @@ export const getRelationalFieldsRequestedInQuery = (
 }
 
 export const generateRequestedFieldsFromGraphqlInfo = (info) => {
-  const keys = [...store.database.relationships.map((c) => c.graphqlKey), '__typename', '__arguments']
+  const keys = [
+    ...store.database.relationships.map((c) => c.graphqlKey),
+    "__typename",
+    "__arguments",
+  ]
   return Object.keys(info).filter((c) => !keys.includes(c))
 }
