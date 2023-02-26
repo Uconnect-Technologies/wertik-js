@@ -3,6 +3,7 @@ import isPlainObject from "lodash.isplainobject"
 import get from "lodash.get"
 import has from "lodash.has"
 import convertFiltersIntoSequelizeObject from "../utils/convertFiltersIntoSequelizeObject"
+import { generateRequestedFieldsFromGraphqlInfo } from "../modules/modulesHelpers"
 
 const getModuleNameFromKey = (key: string) => {
   return store.database.relationships.find((c) => c.graphqlKey === key)
@@ -36,6 +37,8 @@ export const convertGraphqlRequestedFieldsIntoInclude = (
   graphqlFields = clean(graphqlFields)
   const keys = store.database.relationships.map((c) => c.graphqlKey)
 
+  
+
   let recursion = (_obj) => {
     let includes = []
 
@@ -49,6 +52,7 @@ export const convertGraphqlRequestedFieldsIntoInclude = (
                 .referencedModule
             ],
           as: key,
+          attributes: generateRequestedFieldsFromGraphqlInfo(_obj[key]),
           include:
             Object.keys(_obj[key]).length > 0 ? recursion(_obj[key]) : [],
         }

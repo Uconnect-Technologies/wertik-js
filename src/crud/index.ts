@@ -1,10 +1,10 @@
 import get from "lodash.get"
+import { wLog } from "../utils/log"
 import { convertGraphqlRequestedFieldsIntoInclude } from "../database/eagerLoadingGraphqlQuery"
-import { getRelationalFieldsRequestedInQuery } from "../modules/modulesHelpers"
+import { generateRequestedFieldsFromGraphqlInfo } from "../modules/modulesHelpers"
 import convertFiltersIntoSequelizeObject from "../utils/convertFiltersIntoSequelizeObject"
 const graphqlFields = require("graphql-fields")
 import { paginate } from "./paginate"
-import { Op } from "sequelize"
 
 export default function (module, schemaInformation, store) {
   return {
@@ -157,6 +157,7 @@ export default function (module, schemaInformation, store) {
               module,
               "graphql.queries.view",
               async (_, args, context, info) => {
+                wLog(`[Wertik-GraphQL-query]: view${module.name}`)
                 const argsFromEvent = await get(
                   module,
                   "events.beforeView",
@@ -170,6 +171,9 @@ export default function (module, schemaInformation, store) {
 
                 const find = await schemaInformation.tableInstance.findOne({
                   where: where,
+                  attributes: generateRequestedFieldsFromGraphqlInfo(
+                    graphqlFields(info)
+                  ),
                   include: convertGraphqlRequestedFieldsIntoInclude(
                     graphqlFields(info, {}, { processArguments: true })
                   ),
@@ -182,18 +186,25 @@ export default function (module, schemaInformation, store) {
               module,
               "graphql.queries.list",
               async (_, args, context, info) => {
+                wLog(`[Wertik-GraphQL-query]: list${module.name}`)
                 const argsFromEvent = await get(
                   module,
                   "events.beforeList",
                   function () {}
                 )(_, args, context, info)
                 args = argsFromEvent ? argsFromEvent : args
+
                 return await paginate(
                   args,
                   schemaInformation.tableInstance,
                   convertGraphqlRequestedFieldsIntoInclude(
                     graphqlFields(info, {}, { processArguments: true })
-                  )
+                  ),
+                  {
+                    attributes: generateRequestedFieldsFromGraphqlInfo(
+                      graphqlFields(info).list
+                    ),
+                  }
                 )
               }
             ),
@@ -201,6 +212,7 @@ export default function (module, schemaInformation, store) {
               module,
               "graphql.queries.count",
               async (_, args, context, info) => {
+                wLog(`[Wertik-GraphQL-query]: count${module.name}`)
                 const argsFromEvent = await get(
                   module,
                   "events.beforeCount",
