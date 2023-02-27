@@ -53,9 +53,7 @@ export const useIndependentWebSocketsServer = (
   }) => {
     wLogWithSuccess(
       "[Wertik-WebSocket]",
-      `ws://localhost:${props.port}/${
-        props.path ?? ""
-      }`
+      `ws://localhost:${props.port}/${props.path ?? ""}`
     )
     return new WebSocketServer({
       ...props,
@@ -78,9 +76,7 @@ export const useSocketIO = (props: any = {}) => {
   }) => {
     wLogWithSuccess(
       `[Wertik-Socket.IO]`,
-      `http://localhost:${configuration.port}${
-         props.path ?? "/socket.io"
-      }`
+      `http://localhost:${configuration.port}${props.path ?? "/socket.io"}`
     )
     return new SocketIOServer(wertikApp.httpServer, props ?? {})
   }

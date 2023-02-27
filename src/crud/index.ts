@@ -1,9 +1,9 @@
 import get from "lodash.get"
-import { wLog, wLogWithDateWithInfo } from "../utils/log"
+import { wLogWithDateWithInfo } from "../utils/log"
 import { convertGraphqlRequestedFieldsIntoInclude } from "../database/eagerLoadingGraphqlQuery"
 import { generateRequestedFieldsFromGraphqlInfo } from "../modules/modulesHelpers"
 import convertFiltersIntoSequelizeObject from "../utils/convertFiltersIntoSequelizeObject"
-const graphqlFields = require("graphql-fields")
+import graphqlFields from "graphql-fields"
 import { paginate } from "./paginate"
 
 export default function (module, schemaInformation, store) {

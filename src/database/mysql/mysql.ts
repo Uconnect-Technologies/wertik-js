@@ -26,7 +26,10 @@ export const useMysqlDatabase = function (obj: useMysqlDatabaseProps) {
         ...(databaseDefaultOptions as any).sql.dbInitializeOptions,
       })
       await sequelize.authenticate()
-      wLogWithSuccess(`[Wertik-Mysql-Database]`,` Successfully connected to database ${obj.name}`)
+      wLogWithSuccess(
+        `[Wertik-Mysql-Database]`,
+        ` Successfully connected to database ${obj.name}`
+      )
       ;(sequelize as any).relationships = await sequelize.query(
         getAllRelationships(obj.name)
       )

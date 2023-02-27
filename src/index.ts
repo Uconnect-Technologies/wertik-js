@@ -176,7 +176,7 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
         setTimeout(async () => {
           if (skip === false) {
             httpServer.listen(port, () => {
-              wLogWithSuccess(`[Wertik-App]`,`http://localhost:${port}`)
+              wLogWithSuccess(`[Wertik-App]`, `http://localhost:${port}`)
             })
           }
           resolve(wertikApp)

@@ -54,10 +54,10 @@ export const useGraphql = (props?: useGraphqlProps) => {
     })
 
     wLogWithSuccess(
-      '[Wertik-Graphql]',
-      `http://localhost:${
-        configuration.port ?? 1200
-      }/${props?.applyMiddlewareOptions?.path ?? "graphql"}`
+      "[Wertik-Graphql]",
+      `http://localhost:${configuration.port ?? 1200}/${
+        props?.applyMiddlewareOptions?.path ?? "graphql"
+      }`
     )
 
     return GraphqlApolloServer

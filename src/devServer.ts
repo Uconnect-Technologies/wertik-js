@@ -1,4 +1,14 @@
-import wertik, { useMysqlDatabase, useGraphql, useModule, useWebSockets, useSocketIO, useIndependentWebSocketsServer, useLogger, useWinstonTransport, useMailer } from "./index"
+import wertik, {
+  useMysqlDatabase,
+  useGraphql,
+  useModule,
+  useWebSockets,
+  useSocketIO,
+  useIndependentWebSocketsServer,
+  useLogger,
+  useWinstonTransport,
+  useMailer,
+} from "./index"
 
 wertik({
   port: 1200,
@@ -89,6 +99,6 @@ wertik({
       default: useMailer({
         name: "Default",
       }),
-    }
+    },
   },
 })
