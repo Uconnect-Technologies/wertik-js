@@ -8,6 +8,7 @@ import wertik, {
   useLogger,
   useWinstonTransport,
   useMailer,
+  useRedis,
 } from "./index"
 
 wertik({
@@ -101,4 +102,9 @@ wertik({
       }),
     },
   },
+  redis: {
+    testRedis: useRedis({
+        name: "testRedis"
+    })
+}
 })

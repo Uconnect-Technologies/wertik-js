@@ -1,5 +1,5 @@
 import { createClient } from "redis"
-import { wLog } from "../utils/log"
+import { wLog, wLogWithSuccess } from "../utils/log"
 import { useRedisProps, WertikApp, WertikConfiguration } from "../types"
 
 export const useRedis = (props?: useRedisProps) => {
@@ -13,7 +13,7 @@ export const useRedis = (props?: useRedisProps) => {
     const client = createClient(props)
     await client.connect()
     client.on("error", (err) => wLog(`Redis Client ${props.name} Error `, err))
-    wLog(`[Redis]`, `Initialized redis "${props.name}"`)
+    wLogWithSuccess(`[Wertik-Redis]`, `Initialized redis "${props.name}"`)
     return client
   }
 }
