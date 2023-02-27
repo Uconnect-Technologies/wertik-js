@@ -1,5 +1,5 @@
 import get from "lodash.get"
-import { wLog } from "../utils/log"
+import { wLog, wLogWithInfo } from "../utils/log"
 import { paginate } from "../crud/paginate"
 import { Store } from "../types"
 import { WertikApp } from "../types"
@@ -9,7 +9,7 @@ export const applyRelationshipsFromStoreToDatabase = async (
   app: WertikApp
 ) => {
   if (store.database.relationships.length > 0)
-    wLog("[Wertik] Registering relationships \n")
+    wLogWithInfo("[Wertik-Database]", "Registering relationships \n")
   store.database.relationships.forEach((element) => {
     const currentTable = app.modules[element.currentModule].tableInstance
     const referencedTable = app.modules[element.referencedModule].tableInstance

@@ -10,7 +10,7 @@ import http from "http"
 import { WertikConfiguration } from "./types"
 import { WertikApp } from "./types"
 import { initializeBullBoard } from "./queue/index"
-import { wLog } from "./utils/log"
+import { wLog, wLogWithSuccess } from "./utils/log"
 
 export * from "./database/database"
 export * from "./modules/modules"
@@ -176,7 +176,7 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
         setTimeout(async () => {
           if (skip === false) {
             httpServer.listen(port, () => {
-              wLog(`Wertik JS app listening at http://localhost:${port}`)
+              wLogWithSuccess(`[Wertik-App]`,`http://localhost:${port}`)
             })
           }
           resolve(wertikApp)

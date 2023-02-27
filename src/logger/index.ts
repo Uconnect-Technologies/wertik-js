@@ -1,5 +1,5 @@
 import winston, { LoggerOptions } from "winston"
-import { wLog } from "../utils/log"
+import { wLog, wLogWithSuccess } from "../utils/log"
 
 /**
  * Creates a winston instance
@@ -7,7 +7,7 @@ import { wLog } from "../utils/log"
  * @returns winston instance
  */
 export const useLogger = (options?: LoggerOptions) => {
-  wLog(`[Logger]`, `Initialized winston logger`)
+  wLogWithSuccess(`[Wertik-WinstonLogger]`, `Initialized winston logger`)
   return winston.createLogger(options)
 }
 /**

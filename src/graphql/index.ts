@@ -3,7 +3,7 @@ import omit from "lodash.omit"
 import { defaultApolloGraphqlOptions } from "../utils/defaultOptions"
 import { ApolloServer } from "apollo-server-express"
 import { useGraphqlProps, GraphqlInitializeProps } from "../types/graphql"
-import { wLog } from "../utils/log"
+import { wLog, wLogWithInfo, wLogWithSuccess } from "../utils/log"
 
 export const useGraphql = (props?: useGraphqlProps) => {
   return ({
@@ -53,8 +53,9 @@ export const useGraphql = (props?: useGraphqlProps) => {
       ...(props?.applyMiddlewareOptions ?? {}),
     })
 
-    wLog(
-      `GraphQL server starting at http://localhost:${
+    wLogWithSuccess(
+      '[Wertik-Graphql]',
+      `http://localhost:${
         configuration.port ?? 1200
       }/${props?.applyMiddlewareOptions?.path ?? "graphql"}`
     )

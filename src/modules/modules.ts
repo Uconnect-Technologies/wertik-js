@@ -10,7 +10,7 @@ import {
 import { getMysqlTableInfo } from "../database/mysql/getTableInfo"
 import { Store, WertikApp, WertikConfiguration } from "./../types/index"
 import { ModelCtor, Model, ModelAttributes } from "sequelize/types"
-import { wLog } from "../utils/log"
+import { wLog, wLogWithInfo } from "../utils/log"
 
 /**
  * Wertik js module
@@ -233,7 +233,7 @@ export const useModule = (moduleProps: useModuleProps) => {
       app.models[moduleProps.name] = tableInstance
     }
 
-    wLog(`[Module]`, `Initialized module "${moduleProps.name}"`)
+    wLogWithInfo(`[Wertik-Module]`, `Initialized module "${moduleProps.name}"`)
 
     return schemaInformation
   }

@@ -1,4 +1,4 @@
-import moment from "moment"
+import dayjs from "./../../utils/dayjs"
 import { useModule } from "../../modules/modules"
 import mysqldump from "mysqldump"
 import fs from "fs"
@@ -14,7 +14,7 @@ const dumpDatabase = async (
     name: string
   }
 ) => {
-  const filename = `backups/${moment().format(
+  const filename = `backups/${dayjs().format(
     "MMMM-DD-YYYY-h-mm-ss-a"
   )}-database-${dbName}.sql`.toLowerCase()
 

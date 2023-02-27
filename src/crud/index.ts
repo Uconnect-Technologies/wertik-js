@@ -1,5 +1,5 @@
 import get from "lodash.get"
-import { wLog } from "../utils/log"
+import { wLog, wLogWithDateWithInfo } from "../utils/log"
 import { convertGraphqlRequestedFieldsIntoInclude } from "../database/eagerLoadingGraphqlQuery"
 import { generateRequestedFieldsFromGraphqlInfo } from "../modules/modulesHelpers"
 import convertFiltersIntoSequelizeObject from "../utils/convertFiltersIntoSequelizeObject"
@@ -49,6 +49,10 @@ export default function (module, schemaInformation, store) {
               module,
               "graphql.mutations.createOrUpdate",
               async (_, args, context, info) => {
+                wLogWithDateWithInfo(
+                  "[Wertik-GraphQL-Mutation]",
+                  `${info.fieldName} - ${JSON.stringify(args)}`
+                )
                 const argsFromEvent = await get(
                   module,
                   "events.beforeCreateOrUpdate",
@@ -86,6 +90,10 @@ export default function (module, schemaInformation, store) {
               module,
               "graphql.mutations.update",
               async (_, args, context, info) => {
+                wLogWithDateWithInfo(
+                  "[Wertik-GraphQL-Mutation]",
+                  `${info.fieldName} - ${JSON.stringify(args)}`
+                )
                 const argsFromEvent = await get(
                   module,
                   "events.beforeUpdate",
@@ -114,6 +122,10 @@ export default function (module, schemaInformation, store) {
               module,
               "graphql.mutations.delete",
               async (_, args, context, info) => {
+                wLogWithDateWithInfo(
+                  "[Wertik-GraphQL-Mutation]",
+                  `${info.fieldName} - ${JSON.stringify(args)}`
+                )
                 const argsFromEvent = await get(
                   module,
                   "events.beforeDelete",
@@ -133,6 +145,10 @@ export default function (module, schemaInformation, store) {
               module,
               "graphql.mutations.create",
               async (_, args, context, info) => {
+                wLogWithDateWithInfo(
+                  "[Wertik-GraphQL-Mutation]",
+                  `${info.fieldName} - ${JSON.stringify(args)}`
+                )
                 const argsFromEvent = await get(
                   module,
                   "events.beforeCreate",
@@ -157,7 +173,10 @@ export default function (module, schemaInformation, store) {
               module,
               "graphql.queries.view",
               async (_, args, context, info) => {
-                wLog(`[Wertik-GraphQL-query]: view${module.name}`)
+                wLogWithDateWithInfo(
+                  "[Wertik-GraphQL-Query]",
+                  `${info.fieldName} - ${JSON.stringify(args)}`
+                )
                 const argsFromEvent = await get(
                   module,
                   "events.beforeView",
@@ -186,7 +205,10 @@ export default function (module, schemaInformation, store) {
               module,
               "graphql.queries.list",
               async (_, args, context, info) => {
-                wLog(`[Wertik-GraphQL-query]: list${module.name}`)
+                wLogWithDateWithInfo(
+                  "[Wertik-GraphQL-Query]",
+                  `list${module.name} - args ${JSON.stringify(args)}`
+                )
                 const argsFromEvent = await get(
                   module,
                   "events.beforeList",
@@ -212,7 +234,10 @@ export default function (module, schemaInformation, store) {
               module,
               "graphql.queries.count",
               async (_, args, context, info) => {
-                wLog(`[Wertik-GraphQL-query]: count${module.name}`)
+                wLogWithDateWithInfo(
+                  "[Wertik-GraphQL-Query]",
+                  `${info.fieldName} - ${JSON.stringify(args)}`
+                )
                 const argsFromEvent = await get(
                   module,
                   "events.beforeCount",

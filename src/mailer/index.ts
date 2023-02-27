@@ -2,7 +2,7 @@ import nodemailer from "nodemailer"
 import handlebars from "handlebars"
 import { useMailerProps, WertikApp, WertikConfiguration } from "../types"
 import { SendEmailProps } from "../types/mailer"
-import { wLog } from "../utils/log"
+import { wLog, wLogWithInfo, wLogWithSuccess } from "../utils/log"
 
 export const useMailer = (props: useMailerProps) => {
   return async () => {
@@ -22,7 +22,7 @@ export const useMailer = (props: useMailerProps) => {
           },
         }
 
-    wLog(`[Mailer]`, `Initialized mailer "${props.name}"`)
+    wLogWithSuccess(`[Wertik-NodeMailer]`, `Initialized mailer "${props.name}"`)
 
     return nodemailer.createTransport(emailConfiguration)
   }

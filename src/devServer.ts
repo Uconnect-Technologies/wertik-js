@@ -1,4 +1,4 @@
-import wertik, { useMysqlDatabase, useGraphql, useModule } from "./index"
+import wertik, { useMysqlDatabase, useGraphql, useModule, useWebSockets, useSocketIO, useIndependentWebSocketsServer, useLogger, useWinstonTransport, useMailer } from "./index"
 
 wertik({
   port: 1200,
@@ -62,5 +62,33 @@ wertik({
       database: "test",
       table: "shirts",
     }),
+  },
+  sockets: {
+    mySockets: useWebSockets({
+      path: "/websockets",
+    }),
+    socketio: useSocketIO({
+      path: "/mysocketioserver",
+    }),
+    mySockets2: useIndependentWebSocketsServer({
+      port: 1500,
+    }),
+  },
+  logger: useLogger({
+    transports: useWinstonTransport((winston) => {
+      return [
+        new winston.transports.File({
+          filename: "info.log",
+          level: "info",
+        }),
+      ]
+    }),
+  }),
+  mailer: {
+    instances: {
+      default: useMailer({
+        name: "Default",
+      }),
+    }
   },
 })
