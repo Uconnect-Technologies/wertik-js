@@ -33,34 +33,38 @@ test("Expect null configuration does not causes error", async () => {
   await expect(wertik(null)).resolves.not.toThrowError()
 })
 
-test("Expect test database to connect and does not causes error", async () => {
-  await expect(
-    wertik({
-      database: {
-        default: useMysqlDatabase(database),
-      },
-    })
-  ).resolves.not.toThrowError()
-})
+if (database.name) {
+  test("Expect test database to connect and does not causes error", async () => {
+    await expect(
+      wertik({
+        database: {
+          default: useMysqlDatabase(database),
+        },
+      })
+    ).resolves.not.toThrowError()
+  })
+}
 
-test("Expect useMysqlDatabase, useModule and useGraphql", async () => {
-  await expect(
-    wertik({
-      database: {
-        default: useMysqlDatabase(database),
-      },
-      modules: {
-        test: useModule({
-          name: "Shirts",
-          useDatabase: true,
-          database: "default",
-          table: process.env.TEST_DATABASE_TABLE,
-        }),
-      },
-      graphql: useGraphql(),
-    })
-  ).resolves.not.toThrowError()
-})
+if (database.name) {
+  test("Expect useMysqlDatabase, useModule and useGraphql", async () => {
+    await expect(
+      wertik({
+        database: {
+          default: useMysqlDatabase(database),
+        },
+        modules: {
+          test: useModule({
+            name: "Shirts",
+            useDatabase: true,
+            database: "default",
+            table: process.env.TEST_DATABASE_TABLE,
+          }),
+        },
+        graphql: useGraphql(),
+      })
+    ).resolves.not.toThrowError()
+  })
+}
 
 test("Expect mailer to work without configuration and does not causes error", async () => {
   await expect(
@@ -81,8 +85,6 @@ test("Expect graphql to work with useGraphql and does not causes error", async (
     })
   ).resolves.not.toThrowError()
 })
-
-
 
 test("Expect useWebsockets, useIndependentWebSocketsServer and useSocketIO works and does not throw any error", async () => {
   await expect(
