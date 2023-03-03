@@ -3,6 +3,7 @@ import { wLog, wLogWithInfo } from "../utils/log"
 import { paginate } from "../crud/paginate"
 import { Store } from "../types"
 import { WertikApp } from "../types"
+import logSymbols from "log-symbols"
 
 export const applyRelationshipsFromStoreToDatabase = async (
   store: Store,
@@ -15,6 +16,7 @@ export const applyRelationshipsFromStoreToDatabase = async (
     const referencedTable = app.modules[element.referencedModule].tableInstance
 
     wLog(
+      logSymbols.success,
       `${currentTable.getTableName()}.${
         element.type
       }(${referencedTable.getTableName()}, ${JSON.stringify(element.options)})`

@@ -22,6 +22,7 @@ export const wertikApp: WertikApp = {
 
 const store: {
   graphql: {
+    graphqlKeys: string[],
     typeDefs: string
     resolvers: {
       Query: {
@@ -43,6 +44,7 @@ const store: {
   }
 } = {
   graphql: {
+    graphqlKeys: [],
     typeDefs: `
         ${generalSchema}
         type Response {

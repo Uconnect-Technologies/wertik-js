@@ -5,6 +5,8 @@ import { generateRequestedFieldsFromGraphqlInfo } from "../modules/modulesHelper
 import convertFiltersIntoSequelizeObject from "../utils/convertFiltersIntoSequelizeObject"
 import graphqlFields from "graphql-fields"
 import { paginate } from "./paginate"
+import omit from "lodash.omit"
+import { voidFunction } from "../utils/voidFunction"
 
 export default function (module, schemaInformation, store) {
   return {
@@ -56,7 +58,7 @@ export default function (module, schemaInformation, store) {
                 const argsFromEvent = await get(
                   module,
                   "events.beforeCreateOrUpdate",
-                  function () {}
+                  voidFunction
                 )(_, args, context, info)
                 args = argsFromEvent ? argsFromEvent : args
                 const id = args.id
@@ -97,7 +99,7 @@ export default function (module, schemaInformation, store) {
                 const argsFromEvent = await get(
                   module,
                   "events.beforeUpdate",
-                  function () {}
+                  voidFunction
                 )(_, args, context, info)
                 args = argsFromEvent ? argsFromEvent : args
                 const where = await convertFiltersIntoSequelizeObject(
@@ -129,7 +131,7 @@ export default function (module, schemaInformation, store) {
                 const argsFromEvent = await get(
                   module,
                   "events.beforeDelete",
-                  function () {}
+                  voidFunction
                 )(_, args, context, info)
                 args = argsFromEvent ? argsFromEvent : args
                 const where = await convertFiltersIntoSequelizeObject(
@@ -152,7 +154,7 @@ export default function (module, schemaInformation, store) {
                 const argsFromEvent = await get(
                   module,
                   "events.beforeCreate",
-                  function () {}
+                  voidFunction
                 )(_, args, context, info)
                 args = argsFromEvent ? argsFromEvent : args
                 const response = []
@@ -180,8 +182,12 @@ export default function (module, schemaInformation, store) {
                 const argsFromEvent = await get(
                   module,
                   "events.beforeView",
-                  function () {}
+                  voidFunction
                 )(_, args, context, info)
+                const keys = [
+                  ...store.database.relationships.map((c) => c.graphqlKey),
+                  ...store.graphql.graphqlKeys,
+                ]
 
                 args = argsFromEvent ? argsFromEvent : args
                 const where = await convertFiltersIntoSequelizeObject(
@@ -189,7 +195,7 @@ export default function (module, schemaInformation, store) {
                 )
 
                 const find = await schemaInformation.tableInstance.findOne({
-                  where: where,
+                  where: omit(where, keys),
                   attributes: generateRequestedFieldsFromGraphqlInfo(
                     graphqlFields(info)
                   ),
@@ -212,7 +218,7 @@ export default function (module, schemaInformation, store) {
                 const argsFromEvent = await get(
                   module,
                   "events.beforeList",
-                  function () {}
+                  voidFunction
                 )(_, args, context, info)
                 args = argsFromEvent ? argsFromEvent : args
 
@@ -241,14 +247,21 @@ export default function (module, schemaInformation, store) {
                 const argsFromEvent = await get(
                   module,
                   "events.beforeCount",
-                  function () {}
+                  voidFunction
                 )(_, args, context, info)
                 args = argsFromEvent ? argsFromEvent : args
                 const where = await convertFiltersIntoSequelizeObject(
                   args.where
                 )
+                const keys = [
+                  ...store.database.relationships.map((c) => c.graphqlKey),
+                  ...store.graphql.graphqlKeys,
+                ]
                 const count = await schemaInformation.tableInstance.count({
-                  where: where,
+                  where: omit(where, keys),
+                  include: convertGraphqlRequestedFieldsIntoInclude(
+                    graphqlFields(info, {}, { processArguments: true })
+                  ),
                 })
                 return count
               }

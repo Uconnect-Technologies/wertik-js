@@ -7,7 +7,8 @@ export type iObject = { [key: string]: any }
 
 export interface Store {
   graphql: {
-    typeDefs: String
+    graphqlKeys: string[]
+    typeDefs: string
     resolvers: {
       Query: {
         [key: string]: Function
