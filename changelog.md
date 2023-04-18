@@ -1,5 +1,13 @@
 ## Started changelog after version 3.2.9
 
+### 3.4.0
+
+- Added eager loading for list and view queries.
+- Improved lazy loading behavior in GraphQL to avoid unnecessary queries.
+- Added support for loading only requested fields in Sequelize.
+- Added recursion support for both list and view queries.
+- Added support for filtering associated data in recursive queries.
+
 ### 3.3.0
 
 - When sending emails fails, also throws errors in console
