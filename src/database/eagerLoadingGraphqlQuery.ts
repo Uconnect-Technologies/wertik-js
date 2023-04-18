@@ -32,10 +32,17 @@ const clean = (cleanObject) => {
 }
 
 export const convertGraphqlRequestedFieldsIntoInclude = (
-  graphqlFields = {}
+  graphqlFields = {},
+  args: any = {}
 ) => {
   graphqlFields = clean(graphqlFields)
-  const keys = store.database.relationships.map((c) => c.graphqlKey)
+  const keys = [
+    ...store.database.relationships.map((c) => c.graphqlKey),
+    ...store.graphql.graphqlKeys,
+  ]
+  const requiredFilters = keys.filter((c) =>
+    Object.keys(args.where ?? {}).includes(c)
+  )
 
   let recursion = (_obj) => {
     let includes = []
@@ -80,6 +87,27 @@ export const convertGraphqlRequestedFieldsIntoInclude = (
   }
 
   let include = recursion(graphqlFields)
+
+
+  /**
+    * Make sure the include is required if filters are requested in root level filters. 
+    * If root level filters are not met then the response will be null.
+    * In below graphql query, it will return if user has id 2 and written a post which id is 132, if id is not found then whole response will be null.
+    query viewUser {
+      viewUser(where: { id: { _eq: 2 }, posts: { id: { _eq: 123 } } }) {
+        id
+        name
+      } 
+    }
+  */
+  include = include.map((c) => {
+    if (requiredFilters.includes(c.as)) {
+      c.required = true
+      c.where = convertFiltersIntoSequelizeObject(args.where[c.as])
+    }
+
+    return c;
+  })
 
   return include
 }

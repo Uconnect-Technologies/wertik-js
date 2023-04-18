@@ -88,7 +88,7 @@ export const useModule = (moduleProps: useModuleProps) => {
       store.database.relationships.push(relationshipInfo)
       currentModuleRelationships.push(relationshipInfo);
       store.graphql.graphqlKeys.push(camelize(params.module))
-      filterSchema.push(`${camelize(params.module)}: ${params.module}FilterInput`);
+      filterSchema.push(`${camelize(params.graphqlKey)}: ${params.module}FilterInput`);
     }
     const belongsTo = (params: RelationParams) => {
       graphqlSchema.push(
@@ -106,7 +106,7 @@ export const useModule = (moduleProps: useModuleProps) => {
       store.database.relationships.push(relationshipInfo)
       currentModuleRelationships.push(relationshipInfo);
       store.graphql.graphqlKeys.push(camelize(params.module))
-      filterSchema.push(`${camelize(params.module)}: ${params.module}FilterInput`);
+      filterSchema.push(`${camelize(params.graphqlKey)}: ${params.module}FilterInput`);
     }
     const belongsToMany = (params: RelationParams) => {
       graphqlSchema.push(
@@ -124,7 +124,7 @@ export const useModule = (moduleProps: useModuleProps) => {
       store.database.relationships.push(relationshipInfo)
       currentModuleRelationships.push(relationshipInfo);
       store.graphql.graphqlKeys.push(camelize(params.module))
-      filterSchema.push(`${camelize(params.module)}: ${params.module}FilterInput`);
+      filterSchema.push(`${camelize(params.graphqlKey)}: ${params.module}FilterInput`);
     }
     const hasMany = (params: RelationParams) => {
       graphqlSchema.push(
@@ -142,7 +142,7 @@ export const useModule = (moduleProps: useModuleProps) => {
       currentModuleRelationships.push(relationshipInfo);
       store.database.relationships.push(relationshipInfo)
       store.graphql.graphqlKeys.push(camelize(params.module))
-      filterSchema.push(`${camelize(params.module)}: ${params.module}FilterInput`);
+      filterSchema.push(`${camelize(params.graphqlKey)}: ${params.module}FilterInput`);
     }
     get(moduleProps, "on", () => {})({
       useQuery,

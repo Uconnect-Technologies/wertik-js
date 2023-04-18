@@ -200,7 +200,8 @@ export default function (module, schemaInformation, store) {
                     graphqlFields(info)
                   ),
                   include: convertGraphqlRequestedFieldsIntoInclude(
-                    graphqlFields(info, {}, { processArguments: true })
+                    graphqlFields(info, {}, { processArguments: true }),
+                    args
                   ),
                 })
 
@@ -226,7 +227,8 @@ export default function (module, schemaInformation, store) {
                   args,
                   schemaInformation.tableInstance,
                   convertGraphqlRequestedFieldsIntoInclude(
-                    graphqlFields(info, {}, { processArguments: true })
+                    graphqlFields(info, {}, { processArguments: true }),
+                    args
                   ),
                   {
                     attributes: generateRequestedFieldsFromGraphqlInfo(
@@ -260,7 +262,8 @@ export default function (module, schemaInformation, store) {
                 const count = await schemaInformation.tableInstance.count({
                   where: omit(where, keys),
                   include: convertGraphqlRequestedFieldsIntoInclude(
-                    graphqlFields(info, {}, { processArguments: true })
+                    graphqlFields(info, {}, { processArguments: true }),
+                    args
                   ),
                 })
                 return count

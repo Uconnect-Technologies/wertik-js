@@ -104,7 +104,7 @@ wertik({
   },
   redis: {
     testRedis: useRedis({
-        name: "testRedis"
-    })
-}
+      name: "testRedis",
+    }),
+  },
 })
