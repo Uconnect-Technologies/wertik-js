@@ -8,6 +8,7 @@
 - Added recursion support for both list and view queries.
 - Added support for filtering associated data in recursive queries.
 - Removed moment.js and replaced with dayjs.
+- Removed lodash, installed its child packages to reduce app size.
 
 ### 3.3.0
 
