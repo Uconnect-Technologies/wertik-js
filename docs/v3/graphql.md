@@ -6,18 +6,18 @@ For GraphQL, Wertik JS uses Apollo GraphQL under the hood. We choose Apollo Grap
 import wertik, { useGraphql } from "wertik-js/lib/";
 wertik({
   port: 1200,
-  graphql: useGraphql(useGraphqlProps),
+  graphql: useGraphql(UseGraphqlProps),
 });
 ```
 
 This will initialize GraphQL on URL: http://localhost:1200/graphql. If you visit this link you will Apollo GraphQL playground.
 
-#### useGraphqlProps
+#### UseGraphqlProps
 
-useGraphqlProps is an argument which is optional when using `useGraphql` method.
+UseGraphqlProps is an argument which is optional when using `useGraphql` method.
 
 ```typescript
-export interface useGraphqlProps {
+export interface UseGraphqlProps {
   options?: {
     [key: string]: any;
   };
@@ -32,5 +32,5 @@ export interface useGraphqlProps {
 
 - options includes ApolloServer options.
 - applyMiddlewareOptions includes options while integrating Apollo Server with express server with same port.
-- resolvers for defined schema in useGraphqlProps.typeDefs.
+- resolvers for defined schema in UseGraphqlProps.typeDefs.
 - typeDefs is your graphql schema.

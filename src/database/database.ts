@@ -1,8 +1,7 @@
 import get from "lodash.get"
 import { wLog, wLogWithInfo } from "../utils/log"
 import { paginate } from "../crud/paginate"
-import { Store } from "../types"
-import { WertikApp } from "../types"
+import { Store, WertikApp } from "../types"
 import logSymbols from "log-symbols"
 
 export const applyRelationshipsFromStoreToDatabase = async (
@@ -14,12 +13,14 @@ export const applyRelationshipsFromStoreToDatabase = async (
   store.database.relationships.forEach((element) => {
     const currentTable = app.modules[element.currentModule].tableInstance
     const referencedTable = app.modules[element.referencedModule].tableInstance
+    const currentTableName = currentTable.getTableName() as string
+    const referencedTableName = referencedTable.getTableName() as string
 
     wLog(
       logSymbols.success,
-      `${currentTable.getTableName()}.${
+      `${currentTableName}.${
         element.type
-      }(${referencedTable.getTableName()}, ${JSON.stringify(element.options)})`
+      }(${referencedTableName}, ${JSON.stringify(element.options)})`
     )
 
     // element.type will be hasOne, hasMany, belongsTo or belongsToMany

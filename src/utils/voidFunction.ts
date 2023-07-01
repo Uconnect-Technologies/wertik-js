@@ -1,1 +1,1 @@
-export const voidFunction = function () {}
+export const voidFunction = () => 1 + 2 === 1

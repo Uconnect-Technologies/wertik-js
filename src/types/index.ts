@@ -1,5 +1,5 @@
 import { Sequelize } from "sequelize/types"
-import { useMysqlDatabaseProps } from "./database"
+import { UseMysqlDatabaseProps } from "./database"
 import { SendEmailProps } from "./mailer"
 import { WertikModule } from "./modules"
 
@@ -50,7 +50,7 @@ export interface WertikConfiguration {
    */
   database?: {
     [key: string]: () => Promise<{
-      credentials: useMysqlDatabaseProps
+      credentials: UseMysqlDatabaseProps
       instance: Sequelize
     }>
   }
@@ -86,7 +86,7 @@ export interface WertikConfiguration {
     }
     events?: {
       /**
-       * Runs when email sents successfully.
+       * Runs when email sent successfully.
        */
       onEmailSent?: (options: {
         options: iObject
@@ -94,18 +94,18 @@ export interface WertikConfiguration {
         configuration: WertikConfiguration
         emailInstance: any
         previewURL: string | boolean
-        mailer: String
-      }) => void | any | null | undefined
+        mailer: string
+      }) => void
       /**
        * Runs when email fails to send.
        */
       onEmailSentFailed?: (options: {
-        mailer: String
+        mailer: string
         wertikApp: WertikApp
         configuration: WertikConfiguration
         error: any
         options: iObject
-      }) => void | any | null | undefined
+      }) => void
     }
   }
   /**
@@ -215,7 +215,7 @@ export interface useMailerProps {
    */
   name: string
   /**
-   * Provide options that you provide procide to nodemailer.createTransport function.
+   * Provide options that you provide provide to nodemailer.createTransport function.
    */
   options?: {
     [key: string]: any

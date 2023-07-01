@@ -45,7 +45,7 @@ const uploadDumpToDigitalOceanSpaces = async (
   Bucket,
   ACL
 ) => {
-  const data = await fs.readFileSync(filename)
+  const data = fs.readFileSync(filename)
 
   const params = {
     Bucket: Bucket,
@@ -59,7 +59,7 @@ const uploadDumpToDigitalOceanSpaces = async (
   return response
 }
 const uploadDumpToDropbox = async (filename, dropboxInstance) => {
-  const data: Buffer = await fs.readFileSync(filename)
+  const data: Buffer = fs.readFileSync(filename)
   const response = await dropboxInstance.dropbox.filesUpload({
     strict_conflict: false,
     path: `/${filename}`,

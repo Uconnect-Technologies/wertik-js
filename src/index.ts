@@ -7,10 +7,9 @@ import {
 } from "./database/database"
 import { emailSender } from "./mailer/index"
 import http from "http"
-import { WertikConfiguration } from "./types"
-import { WertikApp } from "./types"
+import { WertikConfiguration, WertikApp } from "./types"
 import { initializeBullBoard } from "./queue/index"
-import { wLog, wLogWithSuccess } from "./utils/log"
+import { wLogWithSuccess } from "./utils/log"
 
 export * from "./database/database"
 export * from "./modules/modules"
@@ -44,7 +43,7 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
       wertikApp.express = expressApp
       wertikApp.port = configuration.port
 
-      if (configuration.mailer && configuration.mailer.instances) {
+      if (configuration?.mailer?.instances) {
         for (const mailName of Object.keys(
           configuration.mailer.instances || {}
         )) {
@@ -54,33 +53,27 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
         }
       }
 
-      if (configuration.storage) {
+      if (configuration?.storage) {
         for (const storageName of Object.keys(configuration.storage || {})) {
-          wertikApp.storage[storageName] = await configuration.storage[
-            storageName
-          ]({
+          wertikApp.storage[storageName] = configuration.storage[storageName]({
             configuration: configuration,
             wertikApp: wertikApp,
           })
         }
       }
 
-      if (configuration.cronJobs) {
+      if (configuration?.cronJobs) {
         for (const cronName of Object.keys(configuration.cronJobs || {})) {
-          wertikApp.cronJobs[cronName] = await configuration.cronJobs[cronName](
-            {
-              configuration: configuration,
-              wertikApp: wertikApp,
-            }
-          )
+          wertikApp.cronJobs[cronName] = configuration.cronJobs[cronName]({
+            configuration: configuration,
+            wertikApp: wertikApp,
+          })
         }
       }
 
       if (configuration.sockets) {
         for (const socketName of Object.keys(configuration.sockets || {})) {
-          wertikApp.sockets[socketName] = await configuration.sockets[
-            socketName
-          ]({
+          wertikApp.sockets[socketName] = configuration.sockets[socketName]({
             configuration: configuration,
             wertikApp: wertikApp,
           })
@@ -113,9 +106,8 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
 
       if (configuration?.queue?.jobs) {
         for (const queueName of Object.keys(configuration?.queue?.jobs || {})) {
-          wertikApp.queue.jobs[queueName] = await configuration.queue.jobs[
-            queueName
-          ]()
+          wertikApp.queue.jobs[queueName] =
+            configuration.queue.jobs[queueName]()
         }
       }
 
@@ -128,7 +120,7 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
 
       if (configuration.redis) {
         for (const redisName of Object.keys(configuration.redis || {})) {
-          wertikApp.redis[redisName] = await configuration.redis[redisName]({
+          wertikApp.redis[redisName] = configuration.redis[redisName]({
             wertikApp,
             configuration,
           })

@@ -2,10 +2,10 @@ import get from "lodash.get"
 import omit from "lodash.omit"
 import { defaultApolloGraphqlOptions } from "../utils/defaultOptions"
 import { ApolloServer } from "apollo-server-express"
-import { useGraphqlProps, GraphqlInitializeProps } from "../types/graphql"
-import { wLog, wLogWithInfo, wLogWithSuccess } from "../utils/log"
+import { UseGraphqlProps, GraphqlInitializeProps } from "../types/graphql"
+import { wLogWithSuccess } from "../utils/log"
 
-export const useGraphql = (props?: useGraphqlProps) => {
+export const useGraphql = (props?: UseGraphqlProps) => {
   return ({
     wertikApp,
     expressApp,

@@ -88,7 +88,6 @@ export const convertGraphqlRequestedFieldsIntoInclude = (
 
   let include = recursion(graphqlFields)
 
-
   /**
     * Make sure the include is required if filters are requested in root level filters. 
     * If root level filters are not met then the response will be null.
@@ -106,7 +105,7 @@ export const convertGraphqlRequestedFieldsIntoInclude = (
       c.where = convertFiltersIntoSequelizeObject(args.where[c.as])
     }
 
-    return c;
+    return c
   })
 
   return include

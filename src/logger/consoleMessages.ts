@@ -15,6 +15,10 @@ export const errorMessage = function (message) {
   wLog(logSymbols.error, ` [Wertik-js]:`, chalk.red(message))
 }
 
-export const warningMessage = function () {}
+export const warningMessage = function (message) {
+  wLog(logSymbols.warning, ` [Wertik-js]:`, chalk.yellow(message))
+}
 
-export const infoMessage = function () {}
+export const infoMessage = function (message) {
+  wLog(logSymbols.info, ` [Wertik-js]:`, chalk.blue(message))
+}

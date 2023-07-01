@@ -2,7 +2,7 @@ import {
   Server as SocketIOServer,
   ServerOptions as SocketIOServerOptions,
 } from "socket.io"
-import { wLog, wLogWithSuccess } from "../utils/log"
+import { wLogWithSuccess } from "../utils/log"
 import {
   Server as WebSocketServer,
   ServerOptions as WebSocketServerOptions,

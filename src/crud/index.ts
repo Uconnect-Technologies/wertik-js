@@ -38,18 +38,18 @@ export default function (module, schemaInformation, store) {
         return `
             extend type Mutation {
               update${module.name}(input: update${module.name}Input,where: ${module.name}FilterInput!): ${module.name}BulkMutationResponse
-              create${module.name}(input: [create${module.name}Input]): ${module.name}BulkMutationResponse
+              insert${module.name}(input: [insert${module.name}Input]): ${module.name}BulkMutationResponse
               delete${module.name}(where: ${module.name}FilterInput!): SuccessResponse
-              createOrUpdate${module.name}(id: Int, input: create${module.name}Input): ${module.name}
+              InsertOrUpdate${module.name}(id: Int, input: insert${module.name}Input): ${module.name}
             }
           `
       },
       generateCrudResolvers() {
         return {
           Mutation: {
-            [`createOrUpdate${module.name}`]: get(
+            [`InsertOrUpdate${module.name}`]: get(
               module,
-              "graphql.mutations.createOrUpdate",
+              "graphql.mutations.InsertOrUpdate",
               async (_, args, context, info) => {
                 wLogWithDateWithInfo(
                   "[Wertik-GraphQL-Mutation]",
@@ -57,7 +57,7 @@ export default function (module, schemaInformation, store) {
                 )
                 const argsFromEvent = await get(
                   module,
-                  "events.beforeCreateOrUpdate",
+                  "events.beforeInsertOrUpdate",
                   voidFunction
                 )(_, args, context, info)
                 args = argsFromEvent ? argsFromEvent : args
@@ -143,7 +143,7 @@ export default function (module, schemaInformation, store) {
                 return { message: `${module.name} Deleted` }
               }
             ),
-            [`create${module.name}`]: get(
+            [`insert${module.name}`]: get(
               module,
               "graphql.mutations.create",
               async (_, args, context, info) => {

@@ -1,23 +1,23 @@
 import get from "lodash.get"
 import { databaseDefaultOptions } from "../utils/defaultOptions"
-import { RelationParams, useModuleProps } from "../types/modules"
+import { RelationParams, UseModuleProps } from "../types/modules"
 import {
-  getCreateSchema,
+  getInsertSchema,
   getUpdateSchema,
   generateEnumTypeForGraphql,
   generateGenerateGraphQLCrud,
 } from "./modulesHelpers"
 import { getMysqlTableInfo } from "../database/mysql/getTableInfo"
 import { Store, WertikApp, WertikConfiguration } from "./../types/index"
-import { ModelCtor, Model, ModelAttributes } from "sequelize/types"
-import {  wLogWithInfo } from "../utils/log"
+import { ModelStatic, Model, ModelAttributes } from "sequelize/types"
+import { wLogWithInfo } from "../utils/log"
 import camelize from "../utils/camelize"
 
 /**
  * Wertik js module
- * @param props see interface useModuleProps
+ * @param props see interface UseModuleProps
  */
-export const useModule = (moduleProps: useModuleProps) => {
+export const useModule = (moduleProps: UseModuleProps) => {
   return async ({
     store,
     configuration,
@@ -27,8 +27,8 @@ export const useModule = (moduleProps: useModuleProps) => {
     configuration: WertikConfiguration
     app: WertikApp
   }) => {
-    let currentModuleRelationships = [];
-    let tableInstance: ModelCtor<Model<any, any>>
+    let currentModuleRelationships = []
+    let tableInstance: ModelStatic<Model<any, any>>
     let graphqlSchema = [`type ${moduleProps.name} {`]
     let listSchema = ""
     let filterSchema = [`input ${moduleProps.name}FilterInput {`]
@@ -86,9 +86,11 @@ export const useModule = (moduleProps: useModuleProps) => {
         type: "hasOne",
       }
       store.database.relationships.push(relationshipInfo)
-      currentModuleRelationships.push(relationshipInfo);
+      currentModuleRelationships.push(relationshipInfo)
       store.graphql.graphqlKeys.push(camelize(params.module))
-      filterSchema.push(`${camelize(params.graphqlKey)}: ${params.module}FilterInput`);
+      filterSchema.push(
+        `${camelize(params.graphqlKey)}: ${params.module}FilterInput`
+      )
     }
     const belongsTo = (params: RelationParams) => {
       graphqlSchema.push(
@@ -104,9 +106,11 @@ export const useModule = (moduleProps: useModuleProps) => {
         type: "belongsTo",
       }
       store.database.relationships.push(relationshipInfo)
-      currentModuleRelationships.push(relationshipInfo);
+      currentModuleRelationships.push(relationshipInfo)
       store.graphql.graphqlKeys.push(camelize(params.module))
-      filterSchema.push(`${camelize(params.graphqlKey)}: ${params.module}FilterInput`);
+      filterSchema.push(
+        `${camelize(params.graphqlKey)}: ${params.module}FilterInput`
+      )
     }
     const belongsToMany = (params: RelationParams) => {
       graphqlSchema.push(
@@ -122,9 +126,11 @@ export const useModule = (moduleProps: useModuleProps) => {
         type: "belongsToMany",
       }
       store.database.relationships.push(relationshipInfo)
-      currentModuleRelationships.push(relationshipInfo);
+      currentModuleRelationships.push(relationshipInfo)
       store.graphql.graphqlKeys.push(camelize(params.module))
-      filterSchema.push(`${camelize(params.graphqlKey)}: ${params.module}FilterInput`);
+      filterSchema.push(
+        `${camelize(params.graphqlKey)}: ${params.module}FilterInput`
+      )
     }
     const hasMany = (params: RelationParams) => {
       graphqlSchema.push(
@@ -139,10 +145,12 @@ export const useModule = (moduleProps: useModuleProps) => {
         options: params.options,
         type: "hasMany",
       }
-      currentModuleRelationships.push(relationshipInfo);
+      currentModuleRelationships.push(relationshipInfo)
       store.database.relationships.push(relationshipInfo)
       store.graphql.graphqlKeys.push(camelize(params.module))
-      filterSchema.push(`${camelize(params.graphqlKey)}: ${params.module}FilterInput`);
+      filterSchema.push(
+        `${camelize(params.graphqlKey)}: ${params.module}FilterInput`
+      )
     }
     get(moduleProps, "on", () => {})({
       useQuery,
@@ -155,9 +163,10 @@ export const useModule = (moduleProps: useModuleProps) => {
       useSchema,
     })
 
+    let insertSchema = []
+    let updateSchema = []
+
     if (useDatabase) {
-      var createSchema = []
-      var updateSchema = []
       const connection = app.database[moduleProps.database]
       // info
       const tableInfo = await getMysqlTableInfo(
@@ -207,7 +216,7 @@ export const useModule = (moduleProps: useModuleProps) => {
 
       updateSchema = getUpdateSchema(moduleProps, tableInfo)
 
-      createSchema = getCreateSchema(moduleProps, tableInfo)
+      insertSchema = getInsertSchema(moduleProps, tableInfo)
 
       tableInfo.columns.forEach((column) => {
         let filterInput =
@@ -235,7 +244,7 @@ export const useModule = (moduleProps: useModuleProps) => {
       tableInstance: tableInstance,
       schema: graphqlSchema.join(`\n`),
       inputSchema: {
-        create: createSchema || "",
+        insert: insertSchema || "",
         update: updateSchema || "",
         list: listSchema,
         filters: filterSchema.join("\n"),

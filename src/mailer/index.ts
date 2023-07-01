@@ -2,7 +2,7 @@ import nodemailer from "nodemailer"
 import handlebars from "handlebars"
 import { useMailerProps, WertikApp, WertikConfiguration } from "../types"
 import { SendEmailProps } from "../types/mailer"
-import { wLog, wLogWithInfo, wLogWithSuccess } from "../utils/log"
+import { wLog, wLogWithSuccess } from "../utils/log"
 
 export const useMailer = (props: useMailerProps) => {
   return async () => {
@@ -53,10 +53,10 @@ export const emailSender = ({
         html: resultTemplate,
         subject: props.options.subject,
       })
-      if (emailInstance && emailInstance.messageId) {
+      if (emailInstance?.messageId) {
         wLog("Message sent: %s", emailInstance.messageId)
       }
-      if (nodemailer && nodemailer.getTestMessageUrl) {
+      if (nodemailer?.getTestMessageUrl) {
         wLog("Preview URL: %s", nodemailer.getTestMessageUrl(emailInstance))
       }
 
@@ -67,10 +67,7 @@ export const emailSender = ({
           wertikApp,
           configuration,
           emailInstance,
-          previewURL:
-            nodemailer && nodemailer.getTestMessageUrl
-              ? nodemailer.getTestMessageUrl(emailInstance)
-              : "",
+          previewURL: nodemailer?.getTestMessageUrl(emailInstance),
         })
       }
 

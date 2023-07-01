@@ -1,10 +1,9 @@
 import get from "lodash.get"
-import { useModuleProps } from "../types/modules"
+import { UseModuleProps } from "../types/modules"
 import { TableInfo } from "../types/database"
 import { capitalizeFirstLetter } from "../utils/capitalizeFirstLetter"
 import crud from "../crud"
 import store from "../store"
-import convertFiltersIntoSequelizeObject from "../utils/convertFiltersIntoSequelizeObject"
 
 export const generateDataTypeFromDescribeTableColumnType = (Type: string) => {
   let length = Type.match(/[0-9]/g)?.join("")
@@ -32,7 +31,7 @@ export const getGraphQLTypeNameFromSqlType = (
   },
   module
 ) => {
-  var type = column.Type
+  let type = column.Type
   if (typeof column.Type === "string") {
     type = type.toLowerCase()
   } else {
@@ -62,7 +61,7 @@ export const getGraphQLTypeNameFromSqlType = (
 }
 
 export const getUpdateSchema = (
-  module: useModuleProps,
+  module: UseModuleProps,
   tableInfo: TableInfo
 ) => {
   const optionsUpdateSchema = get(module, "graphql.updateSchema", "")
@@ -80,23 +79,23 @@ export const getUpdateSchema = (
   return updateSchema.join("\n")
 }
 
-export const getCreateSchema = (
-  module: useModuleProps,
+export const getInsertSchema = (
+  module: UseModuleProps,
   tableInfo: TableInfo
 ) => {
-  const optionsCreateSchema = get(module, "graphql.createSchema", "")
-  if (optionsCreateSchema) return optionsCreateSchema
-  let createSchema = [`input create${module.name}Input {`]
+  const optionsInsertSchema = get(module, "graphql.createSchema", "")
+  if (optionsInsertSchema) return optionsInsertSchema
+  let insertSchema = [`input insert${module.name}Input {`]
   tableInfo.columns.forEach((column) => {
     if (column.columnName !== "id" && !column.isDateColumn) {
-      createSchema.push(
-        `${column.columnName}: ${column.graphqlCreateInputType}`
+      insertSchema.push(
+        `${column.columnName}: ${column.graphqlInsertInputType}`
       )
     }
   })
-  createSchema.push("}")
+  insertSchema.push("}")
 
-  return createSchema.join("\n")
+  return insertSchema.join("\n")
 }
 
 export const generateEnumTypeForGraphql = (column: TableInfo["columns"][0]) => {
@@ -116,7 +115,7 @@ export const generateGenerateGraphQLCrud = (
   store.graphql.typeDefs = store.graphql.typeDefs.concat(
     `\n ${schemaInformation.schema} 
     \n ${schemaInformation.inputSchema.filters}
-    \n ${schemaInformation.inputSchema.create}
+    \n ${schemaInformation.inputSchema.insert}
     \n ${schemaInformation.inputSchema.update}
     `
   )

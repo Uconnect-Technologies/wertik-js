@@ -47,7 +47,7 @@ wertik({
             targetKey: "id",
           },
         })
-      }
+      },
     }),
     EcommerceUsers: useModule({
       name: "EcommerceUsers",
@@ -65,7 +65,7 @@ wertik({
             sourceKey: "id",
           },
         })
-      }
+      },
     }),
     User: useModule({
       name: "User",
