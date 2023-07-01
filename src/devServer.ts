@@ -15,30 +15,66 @@ wertik({
   port: 1200,
   graphql: useGraphql(),
   database: {
-    wapgee_prod_new: useMysqlDatabase({
+    ecommerce: useMysqlDatabase({
       port: 3306,
-      name: "wapgee_prod_new",
+      name: "wertik",
       host: "localhost",
       password: "pass",
       username: "root",
     }),
-    test: useMysqlDatabase({
-      username: "root",
+    wapgee_prod: useMysqlDatabase({
       port: 3306,
-      password: "pass",
+      name: "wapgee_prod",
       host: "localhost",
-      name: "wertik",
+      password: "pass",
+      username: "root",
     }),
   },
   modules: {
+    EcommerceShirts: useModule({
+      name: "EcommerceShirts",
+      useDatabase: true,
+      database: "ecommerce",
+      table: "shirts",
+      on: function ({ belongsTo }) {
+        belongsTo({
+          database: "ecommerce",
+          graphqlKey: "user",
+          module: "EcommerceUsers",
+          options: {
+            as: "user",
+            foreignKey: "user_id",
+            targetKey: "id",
+          },
+        })
+      }
+    }),
+    EcommerceUsers: useModule({
+      name: "EcommerceUsers",
+      useDatabase: true,
+      database: "ecommerce",
+      table: "users",
+      on: function ({ hasMany }) {
+        hasMany({
+          database: "ecommerce",
+          graphqlKey: "shirts",
+          module: "EcommerceShirts",
+          options: {
+            as: "shirts",
+            foreignKey: "user_id",
+            sourceKey: "id",
+          },
+        })
+      }
+    }),
     User: useModule({
       name: "User",
       useDatabase: true,
       table: "users",
-      database: "wapgee_prod_new",
+      database: "wapgee_prod",
       on: function ({ hasMany }) {
         hasMany({
-          database: "wapgee_prod_new",
+          database: "wapgee_prod",
           graphqlKey: "posts",
           module: "Post",
           options: {
@@ -53,7 +89,7 @@ wertik({
       name: "Post",
       useDatabase: true,
       table: "post",
-      database: "wapgee_prod_new",
+      database: "wapgee_prod",
       on: function ({ hasOne }) {
         hasOne({
           module: "User",
@@ -66,12 +102,6 @@ wertik({
           },
         })
       },
-    }),
-    test: useModule({
-      name: "Shirts",
-      useDatabase: true,
-      database: "test",
-      table: "shirts",
     }),
   },
   sockets: {

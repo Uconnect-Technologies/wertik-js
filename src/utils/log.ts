@@ -10,6 +10,10 @@ export const wLogWithInfo = (info, ...params) => {
   console.log(chalk.blueBright(info), ...params)
 }
 
+export const wLogWithError = (info, ...params) => {
+  console.log(chalk.redBright(info), ...params)
+}
+
 export const wLogWithSuccess = (info, ...params) => {
   console.log(chalk.greenBright(info), ...params)
 }

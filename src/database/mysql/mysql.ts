@@ -2,7 +2,7 @@ import { Sequelize } from "sequelize"
 import { databaseDefaultOptions } from "../../utils/defaultOptions"
 import { useMysqlDatabaseProps } from "../../types/database"
 import get from "lodash.get"
-import { wLog, wLogWithSuccess } from "../../utils/log"
+import { wLog, wLogWithError, wLogWithSuccess } from "../../utils/log"
 
 export const getAllRelationships = (dbName: String) => {
   return `
@@ -25,7 +25,10 @@ export const useMysqlDatabase = function (obj: useMysqlDatabaseProps) {
         ...get(obj, "options", {}),
         ...(databaseDefaultOptions as any).sql.dbInitializeOptions,
       })
-      await sequelize.authenticate()
+      await sequelize.authenticate().catch((error) => {
+        wLogWithError("[DB] Connecting failed to database", obj.name)
+        process.exit(1);
+      })
       wLogWithSuccess(
         `[Wertik-Mysql-Database]`,
         `Successfully connected to database ${obj.name}`
