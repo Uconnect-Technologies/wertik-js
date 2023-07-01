@@ -7,6 +7,7 @@
 - Added support for loading only requested fields in Sequelize.
 - Added recursion support for both list and view queries.
 - Added support for filtering associated data in recursive queries.
+- Removed moment.js and replaced with dayjs.
 
 ### 3.3.0
 
