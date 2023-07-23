@@ -137,8 +137,4 @@ wertik({
       name: "testRedis",
     }),
   },
-}).then((app) => {
-  setTimeout(() => {
-    app.stopServer()
-  }, 5000)
 })
