@@ -9,7 +9,7 @@ import { emailSender } from "./mailer/index"
 import http from "http"
 import { WertikConfiguration, WertikApp } from "./types"
 import { initializeBullBoard } from "./queue/index"
-import { wLogWithSuccess } from "./utils/log"
+import { wLogWithInfo, wLogWithSuccess } from "./utils/log"
 
 export * from "./database/database"
 export * from "./modules/modules"
@@ -164,17 +164,48 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
         next()
       })
 
+      let startServer = () => {
+        httpServer.listen(port, () => {
+          wLogWithSuccess(`[Wertik-App]`, `http://localhost:${port}`)
+        })
+      }
+
+      let stopServer = () => {
+        wLogWithInfo(`[Wertik-App]`, `Stopping server`)
+        httpServer.close(() => {
+          wLogWithSuccess(`[Wertik-App]`, `Server stopped`)
+          process.exit()
+        })
+      }
+
+      let restartServer = () => {
+        wLogWithInfo(`[Wertik-App]`, `Restarting server`)
+        httpServer.close(() => {
+          setTimeout(() => {
+            startServer()
+          }, 500)
+        })
+      }
+
       if (!new Object(process.env).hasOwnProperty("TEST_MODE")) {
         setTimeout(async () => {
           if (skip === false) {
-            httpServer.listen(port, () => {
-              wLogWithSuccess(`[Wertik-App]`, `http://localhost:${port}`)
-            })
+            startServer()
           }
-          resolve(wertikApp)
+          resolve({
+            ...wertikApp,
+            restartServer,
+            stopServer,
+            startServer,
+          })
         }, 500)
       } else {
-        resolve(wertikApp)
+        resolve({
+          ...wertikApp,
+          restartServer,
+          stopServer,
+          startServer,
+        })
       }
     } catch (e) {
       console.error(e)

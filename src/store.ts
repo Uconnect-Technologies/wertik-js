@@ -2,6 +2,9 @@ import generalSchema from "./graphql/generalSchema"
 import { WertikApp } from "./types"
 
 export const wertikApp: WertikApp = {
+  restartServer: () => {},
+  stopServer: () => {},
+  startServer: () => {},
   appEnv: "local",
   port: 1200,
   modules: {},

@@ -170,6 +170,9 @@ export interface WertikConfiguration {
 export interface WertikApp {
   appEnv: "production" | "development" | "local"
   sendEmail?: (options: { mailer: string; options: SendEmailProps }) => iObject
+  restartServer: () => void
+  stopServer: () => void
+  startServer: () => void
   port: number
   modules: {
     [key: string]: WertikModule
