@@ -204,12 +204,12 @@ export interface WertikApp {
 /**
  * Provide same options that redis createClient method requires.
  */
-export interface useRedisProps {
+export interface UseRedisProps {
   [key: string]: any
   name: string
 }
 
-export interface useMailerProps {
+export interface UseMailerProps {
   /**
    * Provide name for your mailer.
    */

@@ -38,7 +38,6 @@ export interface RelationParams {
     [key: string]: string | number | null
   }
 }
-export type UseSchemaProps = string
 
 export interface UseModuleProps {
   /**
@@ -138,7 +137,7 @@ export interface UseModuleProps {
     /**
      * This method adds has many relationship to a module.
      */
-    useSchema: (props: UseSchemaProps) => {} | void
+    useSchema: (props: string) => {} | void
   }) => void
   /**
    * Graphql events when a CRUD operation happens.

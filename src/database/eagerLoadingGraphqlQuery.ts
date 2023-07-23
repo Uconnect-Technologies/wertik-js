@@ -5,11 +5,6 @@ import has from "lodash.has"
 import convertFiltersIntoSequelizeObject from "../utils/convertFiltersIntoSequelizeObject"
 import { generateRequestedFieldsFromGraphqlInfo } from "../modules/modulesHelpers"
 
-const getModuleNameFromKey = (key: string) => {
-  return store.database.relationships.find((c) => c.graphqlKey === key)
-    .referencedModule
-}
-
 const clean = (cleanObject) => {
   let recursion = (_obj) => {
     Object.keys(_obj).forEach((key) => {

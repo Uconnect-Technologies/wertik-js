@@ -1,10 +1,10 @@
 import nodemailer from "nodemailer"
 import handlebars from "handlebars"
-import { useMailerProps, WertikApp, WertikConfiguration } from "../types"
+import { UseMailerProps, WertikApp, WertikConfiguration } from "../types"
 import { SendEmailProps } from "../types/mailer"
 import { wLog, wLogWithSuccess } from "../utils/log"
 
-export const useMailer = (props: useMailerProps) => {
+export const useMailer = (props: UseMailerProps) => {
   return async () => {
     let testAccount = props.options
       ? null
