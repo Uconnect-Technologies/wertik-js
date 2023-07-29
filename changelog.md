@@ -8,7 +8,10 @@
 - Added recursion support for both list and view queries.
 - Added support for filtering associated data in recursive queries.
 - Removed moment.js and replaced with dayjs.
+- Scanned  and verified fixes with SonarQube.
 - Removed lodash, installed its child packages to reduce app size.
+- Added `startServer()`, `restartServer()`, `stopServer()` methods
+- Added tests to ensure graphql operations work perfectly.
 
 ### 3.3.0
 
