@@ -11,7 +11,7 @@ export const wertikApp: WertikApp = {
   models: {},
   database: {},
   mailer: {},
-  graphql: {},
+  graphql: null,
   sockets: {},
   cronJobs: {},
   storage: {},

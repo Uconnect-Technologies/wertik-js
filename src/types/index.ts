@@ -2,6 +2,7 @@ import { Sequelize } from "sequelize/types"
 import { UseMysqlDatabaseProps } from "./database"
 import { SendEmailProps } from "./mailer"
 import { WertikModule } from "./modules"
+import { ApolloServer } from "apollo-server-express"
 
 export type iObject = { [key: string]: any }
 
@@ -125,7 +126,7 @@ export interface WertikConfiguration {
     configuration: WertikConfiguration
     wertikApp: WertikApp
     expressApp: any
-  }) => iObject
+  }) => ApolloServer
   /**
    * Cron Jobs
    */
@@ -193,7 +194,7 @@ export interface WertikApp {
     [key: string]: WertikModule["tableInstance"]
   }
   mailer: iObject
-  graphql: iObject
+  graphql: ApolloServer
   sockets: iObject
   cronJobs: iObject
   storage: iObject
