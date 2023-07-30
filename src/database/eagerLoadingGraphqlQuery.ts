@@ -44,7 +44,8 @@ export const convertGraphqlRequestedFieldsIntoInclude = (
 
     /**
      * TODO: Check why setting require false on this query works, but setting true fails.
-     * {
+     * 
+     {
       listEcommerceUsers {
         list {
           id
@@ -66,7 +67,7 @@ export const convertGraphqlRequestedFieldsIntoInclude = (
 
     /**
      * TODO: Check why setting require true on this query works, but setting false fails.
-     * {
+     {
         listEcommerceShirts {
           list {
             id

@@ -8,7 +8,6 @@ export const paginate = async (
   includes: any[] = [],
   queryOptions: { [key: string]: any } = {}
 ) => {
-  console.log(includes)
   const { page = 1, limit = 100, sorting = [] } = arg.pagination ?? {}
   const offset = limit * (page - 1)
   const keys = [
