@@ -74,7 +74,7 @@ export const useModule = (moduleProps: UseModuleProps) => {
 
     const hasOne = (params: RelationParams) => {
       graphqlSchema.push(
-        `${params.graphqlKey}(where: ${params.module}FilterInput): ${params.module}`
+        `${params.graphqlKey}: ${params.module}`
       )
       let relationshipInfo = {
         currentModule: moduleProps.name,
@@ -94,7 +94,7 @@ export const useModule = (moduleProps: UseModuleProps) => {
     }
     const belongsTo = (params: RelationParams) => {
       graphqlSchema.push(
-        `${params.graphqlKey}(where: ${params.module}FilterInput): ${params.module}`
+        `${params.graphqlKey}: ${params.module}`
       )
       let relationshipInfo = {
         currentModule: moduleProps.name,

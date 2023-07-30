@@ -42,6 +42,42 @@ export const convertGraphqlRequestedFieldsIntoInclude = (
   let recursion = (_obj) => {
     let includes = []
 
+    /**
+     * TODO: Check why setting require false on this query works, but setting true fails.
+     * {
+      listEcommerceUsers {
+        list {
+          id
+          name
+          shirts {
+            list {
+              id
+              sizes
+              user {
+                id
+                name
+              }
+            }
+          }
+        }
+      }
+    }
+     */
+
+    /**
+     * TODO: Check why setting require true on this query works, but setting false fails.
+     * {
+        listEcommerceShirts {
+          list {
+            id
+            user {
+              id
+            }
+          }
+        }
+      }
+     */
+
     for (const key in _obj) {
       if (keys.includes(key)) {
         const includeParams: { [key: string]: any } = {
