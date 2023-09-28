@@ -11,9 +11,6 @@
 - Scanned and verified fixes with SonarQube.
 - Removed lodash, installed its child packages to reduce app size.
 - Added `startServer()`, `restartServer()`, `stopServer()` methods
-
-#### Graphql
-
 - Changed list query to  `users` instead of `listUsers`, `EcommerceUsers` becomes `ecommerce_users`.
 - Changed view query to singular `user` instead of `viewUser`, `EcommerceUser` becomes `ecommerce_user`.
 - Changed graphql list field `list` to `rows`.
