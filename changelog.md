@@ -8,15 +8,18 @@
 - Added recursion support for both list and view queries.
 - Added support for filtering associated data in recursive queries.
 - Removed moment.js and replaced with dayjs.
-- Scanned  and verified fixes with SonarQube.
+- Scanned and verified fixes with SonarQube.
 - Removed lodash, installed its child packages to reduce app size.
 - Added `startServer()`, `restartServer()`, `stopServer()` methods
-- Added tests to ensure graphql operations work perfectly.
-- Changed graphql list field `list` to `rows`.
-- Added `Module` after module name in graphql types. For example, `User` is now `UserModule`.
+
+#### Graphql
+
 - Changed list query to  `users` instead of `listUsers`, `EcommerceUsers` becomes `ecommerce_users`.
 - Changed view query to singular `user` instead of `viewUser`, `EcommerceUser` becomes `ecommerce_user`.
+- Changed graphql list field `list` to `rows`.
 - Removed method `applyRelationshipsFromStoreToGraphql`, since we are moving to eager loading.
+- Added `Module` after module name in graphql types. For example, `User` is now `UserModule`.
+- Added tests to ensure graphql operations work perfectly.
 - Added option to output graphql type definitions in a file.
 
 ### 3.3.0

@@ -86,8 +86,9 @@ export const getInsertSchema = (
   tableInfo: TableInfo
 ) => {
   const optionsInsertSchema = get(module, "graphql.createSchema", "")
+  const rowsFieldName = generateRowsFieldNameForModuleName(module.name)
   if (optionsInsertSchema) return optionsInsertSchema
-  let insertSchema = [`input insert${module.name}Input {`]
+  let insertSchema = [`input insert_${rowsFieldName}_input {`]
   tableInfo.columns.forEach((column) => {
     if (column.columnName !== "id" && !column.isDateColumn) {
       insertSchema.push(
@@ -165,7 +166,6 @@ export const generateRequestedFieldsFromGraphqlInfo = (info) => {
 
   return Object.keys(info).filter((c) => !keys.includes(c))
 }
-
 
 export const generateRowFieldNameForModuleName = (moduleName) => {
   return snackCase(pluralize.singular(moduleName)).toLowerCase()

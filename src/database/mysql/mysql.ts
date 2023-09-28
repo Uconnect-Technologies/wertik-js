@@ -2,7 +2,12 @@ import { Sequelize } from "sequelize"
 import { databaseDefaultOptions } from "../../utils/defaultOptions"
 import { UseMysqlDatabaseProps } from "../../types/database"
 import get from "lodash.get"
-import { wLog, wLogWithError, wLogWithInfo, wLogWithSuccess } from "../../utils/log"
+import {
+  wLog,
+  wLogWithError,
+  wLogWithInfo,
+  wLogWithSuccess,
+} from "../../utils/log"
 
 export const getAllRelationships = (dbName: string) => {
   return `

@@ -15,7 +15,7 @@ export interface UseGraphqlProps {
     Query: {}
   }
   typeDefs?: string
-  storeTypeDefFilePath?: string;
+  storeTypeDefFilePath?: string
 }
 
 export interface GraphqlInitializeProps {

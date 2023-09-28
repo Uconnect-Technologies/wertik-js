@@ -98,7 +98,7 @@ if (database.name) {
       let viewItem = await app.graphql.executeOperation({
         query: `
           query {
-            viewShirts(where: { sizes: xxxl }) {
+            shirt(where: { sizes: xxxl }) {
               id
               sizes
             }
@@ -106,7 +106,8 @@ if (database.name) {
           
       `,
       })
-      expect(viewItem.data.viewShirts.sizes).toBe("xxxl")
+      console.log(viewItem)
+      expect(viewItem.data.shirt.sizes).toBe("xxxl")
     })
     // deleted
     test("Expect graphql to delete data", async () => {

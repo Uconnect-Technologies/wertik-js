@@ -1,9 +1,7 @@
 import get from "lodash.get"
 import express from "express"
 import store, { wertikApp } from "./store"
-import {
-  applyRelationshipsFromStoreToDatabase,
-} from "./database/database"
+import { applyRelationshipsFromStoreToDatabase } from "./database/database"
 import { emailSender } from "./mailer/index"
 import http from "http"
 import { WertikConfiguration, WertikApp } from "./types"

@@ -33,7 +33,7 @@ export const useModule = (moduleProps: UseModuleProps) => {
     let tableInstance: ModelStatic<Model<any, any>>
     let graphqlSchema = [`type ${moduleProps.name}Module {`]
     let listSchema = ""
-    let filterSchema = [`input ${moduleProps.name}FilterInput {`]
+    let filterSchema = [`input ${generateRowFieldNameForModuleName(moduleProps.name)}_filter_input {`]
 
     const useDatabase = get(moduleProps, "useDatabase", false)
 
@@ -75,9 +75,7 @@ export const useModule = (moduleProps: UseModuleProps) => {
     }
 
     const hasOne = (params: RelationParams) => {
-      graphqlSchema.push(
-        `${params.graphqlKey}: ${params.module}Module`
-      )
+      graphqlSchema.push(`${params.graphqlKey}: ${params.module}Module`)
       let relationshipInfo = {
         currentModule: moduleProps.name,
         currentModuleDatabase: moduleProps.database,
@@ -91,13 +89,11 @@ export const useModule = (moduleProps: UseModuleProps) => {
       currentModuleRelationships.push(relationshipInfo)
       store.graphql.graphqlKeys.push(camelize(params.module))
       filterSchema.push(
-        `${camelize(params.graphqlKey)}: ${params.module}FilterInput`
+        `${camelize(params.graphqlKey)}: ${generateRowFieldNameForModuleName(params.module)}_filter_input`
       )
     }
     const belongsTo = (params: RelationParams) => {
-      graphqlSchema.push(
-        `${params.graphqlKey}: ${params.module}Module`
-      )
+      graphqlSchema.push(`${params.graphqlKey}: ${params.module}Module`)
       let relationshipInfo = {
         currentModule: moduleProps.name,
         currentModuleDatabase: moduleProps.database,
@@ -111,12 +107,12 @@ export const useModule = (moduleProps: UseModuleProps) => {
       currentModuleRelationships.push(relationshipInfo)
       store.graphql.graphqlKeys.push(camelize(params.module))
       filterSchema.push(
-        `${camelize(params.graphqlKey)}: ${params.module}FilterInput`
+        `${camelize(params.graphqlKey)}: ${generateRowFieldNameForModuleName(params.module)}_filter_input`
       )
     }
     const belongsToMany = (params: RelationParams) => {
       graphqlSchema.push(
-        `${params.graphqlKey}(offset: Int, limit: Int, where: ${params.module}FilterInput, sorting: [SortingInput]): ${params.module}List`
+        `${params.graphqlKey}(offset: Int, limit: Int, where: ${generateRowFieldNameForModuleName(params.module)}_filter_input, sorting: [SortingInput]): ${params.module}List`
       )
       let relationshipInfo = {
         currentModule: moduleProps.name,
@@ -131,12 +127,12 @@ export const useModule = (moduleProps: UseModuleProps) => {
       currentModuleRelationships.push(relationshipInfo)
       store.graphql.graphqlKeys.push(camelize(params.module))
       filterSchema.push(
-        `${camelize(params.graphqlKey)}: ${params.module}FilterInput`
+        `${camelize(params.graphqlKey)}: ${generateRowFieldNameForModuleName(params.module)}_filter_input`
       )
     }
     const hasMany = (params: RelationParams) => {
       graphqlSchema.push(
-        `${params.graphqlKey}(offset: Int, limit: Int, where: ${params.module}FilterInput, sorting: [SortingInput]): ${params.module}List`
+        `${params.graphqlKey}(offset: Int, limit: Int, where: ${generateRowFieldNameForModuleName(params.module)}_filter_input, sorting: [SortingInput]): ${params.module}List`
       )
       let relationshipInfo = {
         currentModule: moduleProps.name,
@@ -151,7 +147,7 @@ export const useModule = (moduleProps: UseModuleProps) => {
       store.database.relationships.push(relationshipInfo)
       store.graphql.graphqlKeys.push(camelize(params.module))
       filterSchema.push(
-        `${camelize(params.graphqlKey)}: ${params.module}FilterInput`
+        `${camelize(params.graphqlKey)}: ${generateRowFieldNameForModuleName(params.module)}_filter_input`
       )
     }
     get(moduleProps, "on", () => {})({
@@ -221,12 +217,12 @@ export const useModule = (moduleProps: UseModuleProps) => {
       insertSchema = getInsertSchema(moduleProps, tableInfo)
 
       tableInfo.columns.forEach((column) => {
-        let filterInput =
+        let filter_input =
           column.databaseType.toLowerCase() === "enum"
             ? `${column.columnName}: ${column.graphqlType}`
-            : `${column.columnName}: ${column.graphqlType}FilterInput`
+            : `${column.columnName}: ${column.graphqlType.toLowerCase()}_filter_input`
 
-        filterSchema.push(filterInput)
+        filterSchema.push(filter_input)
       })
 
       listSchema = `

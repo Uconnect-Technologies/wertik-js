@@ -1,7 +1,11 @@
 import get from "lodash.get"
 import { wLogWithDateWithInfo } from "../utils/log"
 import { convertGraphqlRequestedFieldsIntoInclude } from "../database/eagerLoadingGraphqlQuery"
-import { generateRequestedFieldsFromGraphqlInfo, generateRowFieldNameForModuleName, generateRowsFieldNameForModuleName } from "../modules/modulesHelpers"
+import {
+  generateRequestedFieldsFromGraphqlInfo,
+  generateRowFieldNameForModuleName,
+  generateRowsFieldNameForModuleName,
+} from "../modules/modulesHelpers"
 import convertFiltersIntoSequelizeObject from "../utils/convertFiltersIntoSequelizeObject"
 import graphqlFields from "graphql-fields"
 import { paginate } from "./paginate"
@@ -9,7 +13,6 @@ import omit from "lodash.omit"
 import { voidFunction } from "../utils/voidFunction"
 
 export default function (module, schemaInformation, store) {
-  
   let rowsFieldName = generateRowsFieldNameForModuleName(module.name)
   let singleRowFieldName = generateRowFieldNameForModuleName(module.name)
 
@@ -32,25 +35,25 @@ export default function (module, schemaInformation, store) {
         }
 
         extend type Query {
-            ${singleRowFieldName}(where: ${module.name}FilterInput): ${module.name}Module
-            ${rowsFieldName}(pagination: PaginationInput, where: ${module.name}FilterInput, sorting: [SortingInput]): ${module.name}List
-            count${module.name}(where: ${module.name}FilterInput):  Int
+            ${singleRowFieldName}(where: ${singleRowFieldName}_filter_input): ${module.name}Module
+            ${rowsFieldName}(pagination: PaginationInput, where: ${singleRowFieldName}_filter_input, sorting: [SortingInput]): ${module.name}List
+            count${module.name}(where: ${singleRowFieldName}_filter_input):  Int
         }`
       },
       generateMutationsCrudSchema() {
         return `
             extend type Mutation {
-              update${module.name}(input: update${module.name}Input,where: ${module.name}FilterInput!): ${module.name}BulkMutationResponse
-              insert${module.name}(input: [insert${module.name}Input]): ${module.name}BulkMutationResponse
-              delete${module.name}(where: ${module.name}FilterInput!): SuccessResponse
-              InsertOrUpdate${module.name}(id: Int, input: insert${module.name}Input): ${module.name}List
+              update_${rowsFieldName}(input: update${module.name}Input,where: ${singleRowFieldName}_filter_input!): ${module.name}BulkMutationResponse
+              insert_${rowsFieldName}(input: [insert_${rowsFieldName}_input]): ${module.name}BulkMutationResponse
+              delete_${rowsFieldName}(where: ${singleRowFieldName}_filter_input!): SuccessResponse
+              insert_or_update_${rowsFieldName}(id: Int, input: insert_${rowsFieldName}_input): ${module.name}List
             }
           `
       },
       generateCrudResolvers() {
         return {
           Mutation: {
-            [`InsertOrUpdate${module.name}`]: get(
+            [`insert_or_update_${rowsFieldName}`]: get(
               module,
               "graphql.mutations.InsertOrUpdate",
               async (_, args, context, info) => {
@@ -91,7 +94,7 @@ export default function (module, schemaInformation, store) {
                 }
               }
             ),
-            [`update${module.name}`]: get(
+            [`update_${rowsFieldName}`]: get(
               module,
               "graphql.mutations.update",
               async (_, args, context, info) => {
@@ -123,7 +126,7 @@ export default function (module, schemaInformation, store) {
                 }
               }
             ),
-            [`delete${module.name}`]: get(
+            [`delete_${rowsFieldName}`]: get(
               module,
               "graphql.mutations.delete",
               async (_, args, context, info) => {
@@ -146,7 +149,7 @@ export default function (module, schemaInformation, store) {
                 return { message: `${module.name} Deleted` }
               }
             ),
-            [`insert${module.name}`]: get(
+            [`insert_${rowsFieldName}`]: get(
               module,
               "graphql.mutations.create",
               async (_, args, context, info) => {
