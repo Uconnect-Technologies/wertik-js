@@ -1,7 +1,7 @@
 import get from "lodash.get"
 import { wLogWithDateWithInfo } from "../utils/log"
 import { convertGraphqlRequestedFieldsIntoInclude } from "../database/eagerLoadingGraphqlQuery"
-import { generateRequestedFieldsFromGraphqlInfo } from "../modules/modulesHelpers"
+import { generateRequestedFieldsFromGraphqlInfo, generateRowFieldNameForModuleName, generateRowsFieldNameForModuleName } from "../modules/modulesHelpers"
 import convertFiltersIntoSequelizeObject from "../utils/convertFiltersIntoSequelizeObject"
 import graphqlFields from "graphql-fields"
 import { paginate } from "./paginate"
@@ -9,19 +9,22 @@ import omit from "lodash.omit"
 import { voidFunction } from "../utils/voidFunction"
 
 export default function (module, schemaInformation, store) {
+  
+  let rowsFieldName = generateRowsFieldNameForModuleName(module.name)
+  let singleRowFieldName = generateRowFieldNameForModuleName(module.name)
+
   return {
     graphql: {
       generateQueriesCrudSchema() {
         return `
-
         type ${module.name}List {
-            list: [${module.name}]
+            rows: [${module.name}Module]
             pagination: Pagination
             sorting: Sorting
             paginationProperties: PaginationProperties @deprecated(reason: "Use pagination instead")
         }
         type ${module.name}BulkMutationResponse {
-            returning: [${module.name}]
+            returning: [${module.name}Module]
             affectedRows: Int
         }
         type Count${module.name} {
@@ -29,8 +32,8 @@ export default function (module, schemaInformation, store) {
         }
 
         extend type Query {
-            view${module.name}(where: ${module.name}FilterInput): ${module.name}
-            list${module.name}(pagination: PaginationInput, where: ${module.name}FilterInput, sorting: [SortingInput]): ${module.name}List
+            ${singleRowFieldName}(where: ${module.name}FilterInput): ${module.name}Module
+            ${rowsFieldName}(pagination: PaginationInput, where: ${module.name}FilterInput, sorting: [SortingInput]): ${module.name}List
             count${module.name}(where: ${module.name}FilterInput):  Int
         }`
       },
@@ -40,7 +43,7 @@ export default function (module, schemaInformation, store) {
               update${module.name}(input: update${module.name}Input,where: ${module.name}FilterInput!): ${module.name}BulkMutationResponse
               insert${module.name}(input: [insert${module.name}Input]): ${module.name}BulkMutationResponse
               delete${module.name}(where: ${module.name}FilterInput!): SuccessResponse
-              InsertOrUpdate${module.name}(id: Int, input: insert${module.name}Input): ${module.name}
+              InsertOrUpdate${module.name}(id: Int, input: insert${module.name}Input): ${module.name}List
             }
           `
       },
@@ -171,7 +174,7 @@ export default function (module, schemaInformation, store) {
             ),
           },
           Query: {
-            [`view${module.name}`]: get(
+            [singleRowFieldName]: get(
               module,
               "graphql.queries.view",
               async (_, args, context, info) => {
@@ -208,13 +211,13 @@ export default function (module, schemaInformation, store) {
                 return find
               }
             ),
-            [`list${module.name}`]: get(
+            [rowsFieldName]: get(
               module,
               "graphql.queries.list",
               async (_, args, context, info) => {
                 wLogWithDateWithInfo(
                   "[Wertik-GraphQL-Query]",
-                  `list${module.name} - args ${JSON.stringify(args)}`
+                  `${rowsFieldName} - args ${JSON.stringify(args)}`
                 )
                 const argsFromEvent = await get(
                   module,
@@ -232,7 +235,7 @@ export default function (module, schemaInformation, store) {
                   ),
                   {
                     attributes: generateRequestedFieldsFromGraphqlInfo(
-                      graphqlFields(info).list
+                      graphqlFields(info).rows
                     ),
                   }
                 )

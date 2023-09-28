@@ -2,7 +2,7 @@ import { Sequelize } from "sequelize"
 import { databaseDefaultOptions } from "../../utils/defaultOptions"
 import { UseMysqlDatabaseProps } from "../../types/database"
 import get from "lodash.get"
-import { wLog, wLogWithError, wLogWithSuccess } from "../../utils/log"
+import { wLog, wLogWithError, wLogWithInfo, wLogWithSuccess } from "../../utils/log"
 
 export const getAllRelationships = (dbName: string) => {
   return `
@@ -27,6 +27,9 @@ export const useMysqlDatabase = function (obj: UseMysqlDatabaseProps) {
       })
       await sequelize.authenticate().catch((error) => {
         wLogWithError("[DB] Connecting failed to database", obj.name)
+        wLogWithError("[DB] Error", error.message)
+        wLogWithInfo("[DB] Error Info")
+        wLog(error)
         process.exit(1)
       })
       wLogWithSuccess(

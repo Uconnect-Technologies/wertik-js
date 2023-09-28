@@ -4,6 +4,8 @@ import { TableInfo } from "../types/database"
 import { capitalizeFirstLetter } from "../utils/capitalizeFirstLetter"
 import crud from "../crud"
 import store from "../store"
+import pluralize from "pluralize"
+import snackCase from "lodash.snakecase"
 
 export const generateDataTypeFromDescribeTableColumnType = (Type: string) => {
   let length = Type.match(/[0-9]/g)?.join("")
@@ -160,5 +162,14 @@ export const generateRequestedFieldsFromGraphqlInfo = (info) => {
     "__typename",
     "__arguments",
   ]
+
   return Object.keys(info).filter((c) => !keys.includes(c))
+}
+
+
+export const generateRowFieldNameForModuleName = (moduleName) => {
+  return snackCase(pluralize.singular(moduleName)).toLowerCase()
+}
+export const generateRowsFieldNameForModuleName = (moduleName) => {
+  return snackCase(pluralize.plural(moduleName)).toLowerCase()
 }

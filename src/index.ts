@@ -3,7 +3,6 @@ import express from "express"
 import store, { wertikApp } from "./store"
 import {
   applyRelationshipsFromStoreToDatabase,
-  applyRelationshipsFromStoreToGraphql,
 } from "./database/database"
 import { emailSender } from "./mailer/index"
 import http from "http"
@@ -132,7 +131,6 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
       }
 
       applyRelationshipsFromStoreToDatabase(store, wertikApp)
-      applyRelationshipsFromStoreToGraphql(store, wertikApp)
 
       expressApp.get("/w/info", function (req, res) {
         res.json({

@@ -13,19 +13,21 @@ import wertik, {
 
 wertik({
   port: 1200,
-  graphql: useGraphql(),
+  graphql: useGraphql({
+    storeTypeDefFilePath: process.cwd() + "/graphqlSchema.graphql",
+  }),
   database: {
     ecommerce: useMysqlDatabase({
       port: 3306,
       name: "wertik",
-      host: "localhost",
+      host: "127.0.0.1",
       password: "pass",
       username: "root",
     }),
     wapgee_prod: useMysqlDatabase({
       port: 3306,
       name: "wapgee_prod",
-      host: "localhost",
+      host: "127.0.0.1",
       password: "pass",
       username: "root",
     }),

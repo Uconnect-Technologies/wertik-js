@@ -8,7 +8,8 @@ export const paginate = async (
   includes: any[] = [],
   queryOptions: { [key: string]: any } = {}
 ) => {
-  const { page = 1, limit = 100, sorting = [] } = arg.pagination ?? {}
+  const { page = 1, limit = 100 } = arg.pagination ?? {}
+  const sorting = arg.sorting ?? []
   const offset = limit * (page - 1)
   const keys = [
     ...store.database.relationships.map((c) => c.graphqlKey),
@@ -36,7 +37,7 @@ export const paginate = async (
     limit,
   }
   return {
-    list: rows,
+    rows: rows,
     paginationProperties: pagination,
     pagination,
   }

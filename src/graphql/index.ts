@@ -4,6 +4,8 @@ import { defaultApolloGraphqlOptions } from "../utils/defaultOptions"
 import { ApolloServer } from "apollo-server-express"
 import { UseGraphqlProps, GraphqlInitializeProps } from "../types/graphql"
 import { wLogWithSuccess } from "../utils/log"
+import fs from "fs"
+import path from "path"
 
 export const useGraphql = (props?: UseGraphqlProps) => {
   return ({
@@ -28,6 +30,12 @@ export const useGraphql = (props?: UseGraphqlProps) => {
     }
 
     const options = { ...get(configuration, "graphql.options", {}) }
+
+    if (props && props.storeTypeDefFilePath) {
+      if (fs.existsSync(props.storeTypeDefFilePath))
+        fs.unlinkSync(props.storeTypeDefFilePath)
+      fs.writeFileSync(props.storeTypeDefFilePath, store.graphql.typeDefs)
+    }
 
     const GraphqlApolloServer = new ApolloServer({
       typeDefs: store.graphql.typeDefs,

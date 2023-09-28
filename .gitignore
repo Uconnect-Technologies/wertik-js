@@ -19,3 +19,4 @@ warning.log
 lib
 
 .scannerwork
+graphqlSchema.graphql

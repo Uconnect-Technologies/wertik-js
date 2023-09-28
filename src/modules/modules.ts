@@ -6,6 +6,8 @@ import {
   getUpdateSchema,
   generateEnumTypeForGraphql,
   generateGenerateGraphQLCrud,
+  generateRowsFieldNameForModuleName,
+  generateRowFieldNameForModuleName,
 } from "./modulesHelpers"
 import { getMysqlTableInfo } from "../database/mysql/getTableInfo"
 import { Store, WertikApp, WertikConfiguration } from "./../types/index"
@@ -29,7 +31,7 @@ export const useModule = (moduleProps: UseModuleProps) => {
   }) => {
     let currentModuleRelationships = []
     let tableInstance: ModelStatic<Model<any, any>>
-    let graphqlSchema = [`type ${moduleProps.name} {`]
+    let graphqlSchema = [`type ${moduleProps.name}Module {`]
     let listSchema = ""
     let filterSchema = [`input ${moduleProps.name}FilterInput {`]
 
@@ -74,7 +76,7 @@ export const useModule = (moduleProps: UseModuleProps) => {
 
     const hasOne = (params: RelationParams) => {
       graphqlSchema.push(
-        `${params.graphqlKey}: ${params.module}`
+        `${params.graphqlKey}: ${params.module}Module`
       )
       let relationshipInfo = {
         currentModule: moduleProps.name,
@@ -94,7 +96,7 @@ export const useModule = (moduleProps: UseModuleProps) => {
     }
     const belongsTo = (params: RelationParams) => {
       graphqlSchema.push(
-        `${params.graphqlKey}: ${params.module}`
+        `${params.graphqlKey}: ${params.module}Module`
       )
       let relationshipInfo = {
         currentModule: moduleProps.name,
@@ -229,7 +231,7 @@ export const useModule = (moduleProps: UseModuleProps) => {
 
       listSchema = `
         query List${moduleProps.name} {
-          list: [${moduleProps.name}]
+          rows: [${moduleProps.name}]
           paginationProperties: PaginationProperties
           filters: ${moduleProps.name}Filters
         }
