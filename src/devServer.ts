@@ -33,16 +33,16 @@ wertik({
     }),
   },
   modules: {
-    EcommerceShirts: useModule({
-      name: "EcommerceShirts",
+    Product: useModule({
+      name: "Product",
       useDatabase: true,
       database: "ecommerce",
-      table: "shirts",
+      table: "product",
       on: function ({ belongsTo }) {
         belongsTo({
           database: "ecommerce",
           graphqlKey: "user",
-          module: "EcommerceUsers",
+          module: "User",
           options: {
             as: "user",
             foreignKey: "user_id",
@@ -51,60 +51,96 @@ wertik({
         })
       },
     }),
-    EcommerceUsers: useModule({
-      name: "EcommerceUsers",
+    User: useModule({
+      name: "User",
       useDatabase: true,
       database: "ecommerce",
-      table: "users",
+      table: "user",
       on: function ({ hasMany }) {
         hasMany({
           database: "ecommerce",
-          graphqlKey: "shirts",
-          module: "EcommerceShirts",
+          graphqlKey: "products",
+          module: "Product",
           options: {
-            as: "shirts",
+            as: "products",
             foreignKey: "user_id",
             sourceKey: "id",
           },
         })
       },
     }),
-    User: useModule({
-      name: "User",
-      useDatabase: true,
-      table: "users",
-      database: "wapgee_prod",
-      on: function ({ hasMany }) {
-        hasMany({
-          database: "wapgee_prod",
-          graphqlKey: "posts",
-          module: "Post",
-          options: {
-            as: "posts",
-            foreignKey: "created_by",
-            sourceKey: "id",
-          },
-        })
-      },
-    }),
-    Post: useModule({
-      name: "Post",
-      useDatabase: true,
-      table: "post",
-      database: "wapgee_prod",
-      on: function ({ hasOne }) {
-        hasOne({
-          module: "User",
-          graphqlKey: "author",
-          database: "default",
-          options: {
-            as: "author",
-            sourceKey: "created_by",
-            foreignKey: "id",
-          },
-        })
-      },
-    }),
+    // EcommerceShirts: useModule({
+    //   name: "EcommerceShirts",
+    //   useDatabase: true,
+    //   database: "ecommerce",
+    //   table: "shirts",
+    //   on: function ({ belongsTo }) {
+    //     belongsTo({
+    //       database: "ecommerce",
+    //       graphqlKey: "user",
+    //       module: "EcommerceUsers",
+    //       options: {
+    //         as: "user",
+    //         foreignKey: "user_id",
+    //         targetKey: "id",
+    //       },
+    //     })
+    //   },
+    // }),
+    // EcommerceUsers: useModule({
+    //   name: "EcommerceUsers",
+    //   useDatabase: true,
+    //   database: "ecommerce",
+    //   table: "users",
+    //   on: function ({ hasMany }) {
+    //     hasMany({
+    //       database: "ecommerce",
+    //       graphqlKey: "shirts",
+    //       module: "EcommerceShirts",
+    //       options: {
+    //         as: "shirts",
+    //         foreignKey: "user_id",
+    //         sourceKey: "id",
+    //       },
+    //     })
+    //   },
+    // }),
+    // User: useModule({
+    //   name: "User",
+    //   useDatabase: true,
+    //   table: "users",
+    //   database: "wapgee_prod",
+    //   on: function ({ hasMany }) {
+    //     hasMany({
+    //       database: "wapgee_prod",
+    //       graphqlKey: "posts",
+    //       module: "Post",
+    //       options: {
+    //         as: "posts",
+    //         foreignKey: "created_by",
+    //         sourceKey: "id",
+    //       },
+    //     })
+    //   },
+    // }),
+    // Post: useModule({
+    //   name: "Post",
+    //   useDatabase: true,
+    //   table: "post",
+    //   database: "wapgee_prod",
+    //   on: function ({ hasOne }) {
+    //     hasOne({
+    //       module: "User",
+    //       graphqlKey: "author",
+    //       database: "default",
+    //       options: {
+    //         as: "author",
+    //         sourceKey: "created_by",
+    //         foreignKey: "id",
+    //       },
+    //     })
+    //   },
+    // }),
   },
   sockets: {
     mySockets: useWebSockets({

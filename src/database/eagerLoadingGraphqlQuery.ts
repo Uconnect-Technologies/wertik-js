@@ -8,9 +8,9 @@ import { generateRequestedFieldsFromGraphqlInfo } from "../modules/modulesHelper
 const clean = (cleanObject) => {
   let recursion = (_obj) => {
     Object.keys(_obj).forEach((key) => {
-      if (key === "list") {
-        _obj = { ..._obj, ..._obj["list"] }
-        delete _obj["list"]
+      if (key === "rows") {
+        _obj = { ..._obj, ..._obj["rows"] }
+        delete _obj["rows"]
       }
     })
 

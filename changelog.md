@@ -13,7 +13,7 @@
 - Added `startServer()`, `restartServer()`, `stopServer()` methods
 - Changed list query to  `users` instead of `listUsers`, `EcommerceUsers` becomes `ecommerce_users`.
 - Changed view query to singular `user` instead of `viewUser`, `EcommerceUser` becomes `ecommerce_user`.
-- Changed graphql list field `list` to `rows`.
+- Changed graphql list field `list` to `rows`.  
 - Removed method `applyRelationshipsFromStoreToGraphql`, since we are moving to eager loading.
 - Added `Module` after module name in graphql types. For example, `User` is now `UserModule`.
 - Added tests to ensure graphql operations work perfectly.
