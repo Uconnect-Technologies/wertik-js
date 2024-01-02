@@ -7,17 +7,18 @@
 - Added support for loading only requested fields in Sequelize.
 - Added recursion support for both list and view queries.
 - Added support for filtering associated data in recursive queries.
-- Removed moment.js and replaced with dayjs.
+- Replaced moment.js with dayjs.
 - Scanned and verified fixes with SonarQube.
-- Removed lodash, installed its child packages to reduce app size.
-- Added `startServer()`, `restartServer()`, `stopServer()` methods
-- Changed list query to  `users` instead of `listUsers`, `EcommerceUsers` becomes `ecommerce_users`.
-- Changed view query to singular `user` instead of `viewUser`, `EcommerceUser` becomes `ecommerce_user`.
-- Changed graphql list field `list` to `rows`.  
-- Removed method `applyRelationshipsFromStoreToGraphql`, since we are moving to eager loading.
-- Added `Module` after module name in graphql types. For example, `User` is now `UserModule`.
-- Added tests to ensure graphql operations work perfectly.
-- Added option to output graphql type definitions in a file.
+- Removed lodash and installed its child packages to reduce app size.
+- Added methods: `startServer()`, `restartServer()`, `stopServer()`.
+- Removed query `list`. For example for Module `Users`, `listUsers` will become `users`, `EcommerceUsers` will become `ecommerce_users`.
+- From single query item `view` is removed, For example `viewUser` will become `user` and `EcommerceUser` will become `ecommerce_user`
+- Changed GraphQL list field from `list` to `rows`.
+- Removed `applyRelationshipsFromStoreToGraphql` method due to the shift towards eager loading.
+- Appended `Module` after module names in GraphQL types, e.g., `User` is now `UserModule`.
+- Added tests to ensure GraphQL operations function correctly.
+- Introduced an option to output GraphQL type definitions in a file.
+
 
 ### 3.3.0
 
