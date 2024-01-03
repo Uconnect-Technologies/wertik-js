@@ -1,45 +1,33 @@
-import { get } from "lodash"
-import convertFiltersIntoSequalizeObject from "../utils/convertFiltersIntoSequalizeObject"
-
-export const paginate = async (arg, tableInstance) => {
-  const { page = 1, limit = 100, sorting = [] } = arg.pagination ?? {}
-  const offset = limit * (page - 1)
-  const where = await convertFiltersIntoSequalizeObject(arg.where)
-  const { count, rows } = await tableInstance.findAndCountAll({
-    where,
-    offset,
-    limit,
-    order: sorting.map(({ column, type }) => [column, type]),
-  })
-  const totalPages = Math.ceil(count / limit)
-  return {
-    list: rows,
-    paginationProperties: {
-      total: count,
-      nextPage: page + 1,
-      page,
-      previousPage: page === 1 ? 1 : page - 1,
-      pages: totalPages,
-      hasMore: page < totalPages,
-      limit,
-    },
-  }
-}
+import get from "lodash.get"
+import { wLogWithDateWithInfo } from "../utils/log"
+import { convertGraphqlRequestedFieldsIntoInclude } from "../database/eagerLoadingGraphqlQuery"
+import {
+  generateRequestedFieldsFromGraphqlInfo,
+  generateRowFieldNameForModuleName,
+  generateRowsFieldNameForModuleName,
+} from "../modules/modulesHelpers"
+import convertFiltersIntoSequelizeObject from "../utils/convertFiltersIntoSequelizeObject"
+import graphqlFields from "graphql-fields"
+import { paginate } from "./paginate"
+import omit from "lodash.omit"
+import { voidFunction } from "../utils/voidFunction"
 
 export default function (module, schemaInformation, store) {
+  let rowsFieldName = generateRowsFieldNameForModuleName(module.name)
+  let singleRowFieldName = generateRowFieldNameForModuleName(module.name)
+
   return {
     graphql: {
       generateQueriesCrudSchema() {
         return `
-
         type ${module.name}List {
-            list: [${module.name}]
+            rows: [${module.name}Module]
             pagination: Pagination
             sorting: Sorting
-            paginationProperties: PaginationProperties
+            paginationProperties: PaginationProperties @deprecated(reason: "Use pagination instead")
         }
         type ${module.name}BulkMutationResponse {
-            returning: [${module.name}]
+            returning: [${module.name}Module]
             affectedRows: Int
         }
         type Count${module.name} {
@@ -47,32 +35,36 @@ export default function (module, schemaInformation, store) {
         }
 
         extend type Query {
-            view${module.name}(where: ${module.name}FilterInput): ${module.name}
-            list${module.name}(pagination: PaginationInput, where: ${module.name}FilterInput, sorting: [SortingInput]): ${module.name}List
-            count${module.name}(where: ${module.name}FilterInput):  Int
+            ${singleRowFieldName}(where: ${singleRowFieldName}_filter_input): ${module.name}Module
+            ${rowsFieldName}(pagination: PaginationInput, where: ${singleRowFieldName}_filter_input, sorting: [SortingInput]): ${module.name}List
+            count${module.name}(where: ${singleRowFieldName}_filter_input):  Int
         }`
       },
       generateMutationsCrudSchema() {
         return `
             extend type Mutation {
-              update${module.name}(input: update${module.name}Input,where: ${module.name}FilterInput!): ${module.name}BulkMutationResponse
-              create${module.name}(input: [create${module.name}Input]): ${module.name}BulkMutationResponse
-              delete${module.name}(where: ${module.name}FilterInput!): SuccessResponse
-              createOrUpdate${module.name}(id: Int, input: create${module.name}Input): ${module.name}
+              update_${rowsFieldName}(input: update${module.name}Input,where: ${singleRowFieldName}_filter_input!): ${module.name}BulkMutationResponse
+              insert_${rowsFieldName}(input: [insert_${rowsFieldName}_input]): ${module.name}BulkMutationResponse
+              delete_${rowsFieldName}(where: ${singleRowFieldName}_filter_input!): SuccessResponse
+              insert_or_update_${rowsFieldName}(id: Int, input: insert_${rowsFieldName}_input): ${module.name}List
             }
           `
       },
       generateCrudResolvers() {
         return {
           Mutation: {
-            [`createOrUpdate${module.name}`]: get(
+            [`insert_or_update_${rowsFieldName}`]: get(
               module,
-              "graphql.mutations.createOrUpdate",
+              "graphql.mutations.InsertOrUpdate",
               async (_, args, context, info) => {
+                wLogWithDateWithInfo(
+                  "[Wertik-GraphQL-Mutation]",
+                  `${info.fieldName} - ${JSON.stringify(args)}`
+                )
                 const argsFromEvent = await get(
                   module,
-                  "events.beforeCreateOrUpdate",
-                  function () {}
+                  "events.beforeInsertOrUpdate",
+                  voidFunction
                 )(_, args, context, info)
                 args = argsFromEvent ? argsFromEvent : args
                 const id = args.id
@@ -102,17 +94,21 @@ export default function (module, schemaInformation, store) {
                 }
               }
             ),
-            [`update${module.name}`]: get(
+            [`update_${rowsFieldName}`]: get(
               module,
               "graphql.mutations.update",
               async (_, args, context, info) => {
+                wLogWithDateWithInfo(
+                  "[Wertik-GraphQL-Mutation]",
+                  `${info.fieldName} - ${JSON.stringify(args)}`
+                )
                 const argsFromEvent = await get(
                   module,
                   "events.beforeUpdate",
-                  function () {}
+                  voidFunction
                 )(_, args, context, info)
                 args = argsFromEvent ? argsFromEvent : args
-                const where = await convertFiltersIntoSequalizeObject(
+                const where = await convertFiltersIntoSequelizeObject(
                   args.where
                 )
                 const response = await schemaInformation.tableInstance.update(
@@ -130,17 +126,21 @@ export default function (module, schemaInformation, store) {
                 }
               }
             ),
-            [`delete${module.name}`]: get(
+            [`delete_${rowsFieldName}`]: get(
               module,
               "graphql.mutations.delete",
               async (_, args, context, info) => {
+                wLogWithDateWithInfo(
+                  "[Wertik-GraphQL-Mutation]",
+                  `${info.fieldName} - ${JSON.stringify(args)}`
+                )
                 const argsFromEvent = await get(
                   module,
                   "events.beforeDelete",
-                  function () {}
+                  voidFunction
                 )(_, args, context, info)
                 args = argsFromEvent ? argsFromEvent : args
-                const where = await convertFiltersIntoSequalizeObject(
+                const where = await convertFiltersIntoSequelizeObject(
                   args.where
                 )
                 await schemaInformation.tableInstance.destroy({
@@ -149,14 +149,18 @@ export default function (module, schemaInformation, store) {
                 return { message: `${module.name} Deleted` }
               }
             ),
-            [`create${module.name}`]: get(
+            [`insert_${rowsFieldName}`]: get(
               module,
               "graphql.mutations.create",
               async (_, args, context, info) => {
+                wLogWithDateWithInfo(
+                  "[Wertik-GraphQL-Mutation]",
+                  `${info.fieldName} - ${JSON.stringify(args)}`
+                )
                 const argsFromEvent = await get(
                   module,
                   "events.beforeCreate",
-                  function () {}
+                  voidFunction
                 )(_, args, context, info)
                 args = argsFromEvent ? argsFromEvent : args
                 const response = []
@@ -173,53 +177,100 @@ export default function (module, schemaInformation, store) {
             ),
           },
           Query: {
-            [`view${module.name}`]: get(
+            [singleRowFieldName]: get(
               module,
               "graphql.queries.view",
               async (_, args, context, info) => {
+                wLogWithDateWithInfo(
+                  "[Wertik-GraphQL-Query]",
+                  `${info.fieldName} - ${JSON.stringify(args)}`
+                )
                 const argsFromEvent = await get(
                   module,
                   "events.beforeView",
-                  function () {}
+                  voidFunction
                 )(_, args, context, info)
+                const keys = [
+                  ...store.database.relationships.map((c) => c.graphqlKey),
+                  ...store.graphql.graphqlKeys,
+                ]
+
                 args = argsFromEvent ? argsFromEvent : args
-                const where = await convertFiltersIntoSequalizeObject(
+                const where = await convertFiltersIntoSequelizeObject(
                   args.where
                 )
+
                 const find = await schemaInformation.tableInstance.findOne({
-                  where: where,
+                  where: omit(where, keys),
+                  attributes: generateRequestedFieldsFromGraphqlInfo(
+                    graphqlFields(info)
+                  ),
+                  include: convertGraphqlRequestedFieldsIntoInclude(
+                    graphqlFields(info, {}, { processArguments: true }),
+                    args
+                  ),
                 })
+
                 return find
               }
             ),
-            [`list${module.name}`]: get(
+            [rowsFieldName]: get(
               module,
               "graphql.queries.list",
               async (_, args, context, info) => {
+                wLogWithDateWithInfo(
+                  "[Wertik-GraphQL-Query]",
+                  `${rowsFieldName} - args ${JSON.stringify(args)}`
+                )
                 const argsFromEvent = await get(
                   module,
                   "events.beforeList",
-                  function () {}
+                  voidFunction
                 )(_, args, context, info)
                 args = argsFromEvent ? argsFromEvent : args
-                return await paginate(args, schemaInformation.tableInstance)
+
+                return await paginate(
+                  args,
+                  schemaInformation.tableInstance,
+                  convertGraphqlRequestedFieldsIntoInclude(
+                    graphqlFields(info, {}, { processArguments: true }),
+                    args
+                  ),
+                  {
+                    attributes: generateRequestedFieldsFromGraphqlInfo(
+                      graphqlFields(info).rows
+                    ),
+                  }
+                )
               }
             ),
             [`count${module.name}`]: get(
               module,
               "graphql.queries.count",
               async (_, args, context, info) => {
+                wLogWithDateWithInfo(
+                  "[Wertik-GraphQL-Query]",
+                  `${info.fieldName} - ${JSON.stringify(args)}`
+                )
                 const argsFromEvent = await get(
                   module,
                   "events.beforeCount",
-                  function () {}
+                  voidFunction
                 )(_, args, context, info)
                 args = argsFromEvent ? argsFromEvent : args
-                const where = await convertFiltersIntoSequalizeObject(
+                const where = await convertFiltersIntoSequelizeObject(
                   args.where
                 )
+                const keys = [
+                  ...store.database.relationships.map((c) => c.graphqlKey),
+                  ...store.graphql.graphqlKeys,
+                ]
                 const count = await schemaInformation.tableInstance.count({
-                  where: where,
+                  where: omit(where, keys),
+                  include: convertGraphqlRequestedFieldsIntoInclude(
+                    graphqlFields(info, {}, { processArguments: true }),
+                    args
+                  ),
                 })
                 return count
               }

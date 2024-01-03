@@ -1,9 +1,13 @@
-import { get, omit } from "lodash"
+import get from "lodash.get"
+import omit from "lodash.omit"
 import { defaultApolloGraphqlOptions } from "../utils/defaultOptions"
 import { ApolloServer } from "apollo-server-express"
-import { useGraphqlProps, GraphqlInitializeProps } from "../types/graphql"
+import { UseGraphqlProps, GraphqlInitializeProps } from "../types/graphql"
+import { wLogWithSuccess } from "../utils/log"
+import fs from "fs"
+import path from "path"
 
-export const useGraphql = (props?: useGraphqlProps) => {
+export const useGraphql = (props?: UseGraphqlProps) => {
   return ({
     wertikApp,
     expressApp,
@@ -26,6 +30,12 @@ export const useGraphql = (props?: useGraphqlProps) => {
     }
 
     const options = { ...get(configuration, "graphql.options", {}) }
+
+    if (props && props.storeTypeDefFilePath) {
+      if (fs.existsSync(props.storeTypeDefFilePath))
+        fs.unlinkSync(props.storeTypeDefFilePath)
+      fs.writeFileSync(props.storeTypeDefFilePath, store.graphql.typeDefs)
+    }
 
     const GraphqlApolloServer = new ApolloServer({
       typeDefs: store.graphql.typeDefs,
@@ -51,10 +61,11 @@ export const useGraphql = (props?: useGraphqlProps) => {
       ...(props?.applyMiddlewareOptions ?? {}),
     })
 
-    console.log(
-      `GraphQL server starting at http://localhost:${
-        configuration.port ?? 1200
-      }/${props?.applyMiddlewareOptions?.path ?? "graphql"}`
+    wLogWithSuccess(
+      "[Wertik-Graphql]",
+      `http://localhost:${configuration.port ?? 1200}/${
+        props?.applyMiddlewareOptions?.path ?? "graphql"
+      }`
     )
 
     return GraphqlApolloServer

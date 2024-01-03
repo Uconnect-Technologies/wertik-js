@@ -1,9 +1,15 @@
 import { Sequelize } from "sequelize"
 import { databaseDefaultOptions } from "../../utils/defaultOptions"
-import { useMysqlDatabaseProps } from "../../types/database"
-import { get } from "lodash"
+import { UseMysqlDatabaseProps } from "../../types/database"
+import get from "lodash.get"
+import {
+  wLog,
+  wLogWithError,
+  wLogWithInfo,
+  wLogWithSuccess,
+} from "../../utils/log"
 
-export const getAllRelationships = (dbName: String) => {
+export const getAllRelationships = (dbName: string) => {
   return `
     SELECT *
     FROM information_schema.KEY_COLUMN_USAGE
@@ -14,7 +20,7 @@ export const getAllRelationships = (dbName: String) => {
   `
 }
 
-export const useMysqlDatabase = function (obj: useMysqlDatabaseProps) {
+export const useMysqlDatabase = function (obj: UseMysqlDatabaseProps) {
   return async () => {
     try {
       let sequelize = new Sequelize(obj.name, obj.username, obj.password, {
@@ -24,8 +30,17 @@ export const useMysqlDatabase = function (obj: useMysqlDatabaseProps) {
         ...get(obj, "options", {}),
         ...(databaseDefaultOptions as any).sql.dbInitializeOptions,
       })
-      await sequelize.authenticate()
-      console.log(`[DB] Succcessfully connected to database ${obj.name}`)
+      await sequelize.authenticate().catch((error) => {
+        wLogWithError("[DB] Connecting failed to database", obj.name)
+        wLogWithError("[DB] Error", error.message)
+        wLogWithInfo("[DB] Error Info")
+        wLog(error)
+        process.exit(1)
+      })
+      wLogWithSuccess(
+        `[Wertik-Mysql-Database]`,
+        `Successfully connected to database ${obj.name}`
+      )
       ;(sequelize as any).relationships = await sequelize.query(
         getAllRelationships(obj.name)
       )
@@ -34,8 +49,8 @@ export const useMysqlDatabase = function (obj: useMysqlDatabaseProps) {
         instance: sequelize,
       }
     } catch (e) {
-      console.log(`[DB] Connecting failed to database ${obj.name}`)
-      console.log(e.message)
+      wLog(`[DB] Connecting failed to database ${obj.name}`)
+      wLog(e.message)
     }
   }
 }

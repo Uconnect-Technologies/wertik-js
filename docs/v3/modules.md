@@ -98,13 +98,13 @@ input updateGamesInput {
 For filtering data from `games` table, Wertik JS will also create an input for filtering:
 
 ```graphql
-input GamesFilterInput {
-  name: StringFilterInput
-  publisher: StringFilterInput
+input Gamesfilter_input {
+  name: Stringfilter_input
+  publisher: Stringfilter_input
 }
 ```
 
-To explore more about `StringFilterInput` and other filter input please visit GraphQL Playground to get more familiar with it.
+To explore more about `Stringfilter_input` and other filter input please visit GraphQL Playground to get more familiar with it.
 
 ## This will generate
 
@@ -117,13 +117,13 @@ To explore more about `StringFilterInput` and other filter input please visit Gr
 ```graphql
 type Query {
   version: String
-  viewGames(where: GamesFilterInput): Games
+  viewGames(where: Gamesfilter_input): Games
   listGames(
     pagination: PaginationInput
-    where: GamesFilterInput
+    where: Gamesfilter_input
     sorting: [SortingInput]
   ): GamesList
-  countGames(where: GamesFilterInput): Int
+  countGames(where: Gamesfilter_input): Int
 }
 ```
 
@@ -140,10 +140,10 @@ type Mutation {
   version: String
   updateGames(
     input: updateGamesInput
-    where: GamesFilterInput!
+    where: Gamesfilter_input!
   ): GamesBulkMutationResponse
   createGames(input: [createGamesInput]): GamesBulkMutationResponse
-  deleteGames(where: GamesFilterInput!): SuccessResponse
+  deleteGames(where: Gamesfilter_input!): SuccessResponse
   createOrUpdateGames(id: Int, input: createGamesInput): Games
 }
 ```
@@ -157,7 +157,7 @@ When you provide `useMysqlDatabase: true` for a module called Games. Wertik JS w
 ```graphql
 listGames(
   pagination: PaginationInput
-  where: GamesFilterInput
+  where: Gamesfilter_input
   sorting: [SortingInput]
 ): GamesList
 ```
@@ -171,7 +171,7 @@ input PaginationInput {
 }
 ```
 
-And `GamesFilterInput` is same as Sequelize search object but main keywords such as like, `eq` or `like` starts with `_`, For example:
+And `Gamesfilter_input` is same as Sequelize search object but main keywords such as like, `eq` or `like` starts with `_`, For example:
 
 ```graphql
 query GamesList {

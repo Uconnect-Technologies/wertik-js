@@ -1,13 +1,15 @@
 import { Sequelize } from "sequelize/types"
-import { useMysqlDatabaseProps } from "./database"
+import { UseMysqlDatabaseProps } from "./database"
 import { SendEmailProps } from "./mailer"
 import { WertikModule } from "./modules"
+import { ApolloServer } from "apollo-server-express"
 
 export type iObject = { [key: string]: any }
 
 export interface Store {
   graphql: {
-    typeDefs: String
+    graphqlKeys: string[]
+    typeDefs: string
     resolvers: {
       Query: {
         [key: string]: Function
@@ -49,7 +51,7 @@ export interface WertikConfiguration {
    */
   database?: {
     [key: string]: () => Promise<{
-      credentials: useMysqlDatabaseProps
+      credentials: UseMysqlDatabaseProps
       instance: Sequelize
     }>
   }
@@ -85,7 +87,7 @@ export interface WertikConfiguration {
     }
     events?: {
       /**
-       * Runs when email sents successfully.
+       * Runs when email sent successfully.
        */
       onEmailSent?: (options: {
         options: iObject
@@ -93,18 +95,18 @@ export interface WertikConfiguration {
         configuration: WertikConfiguration
         emailInstance: any
         previewURL: string | boolean
-        mailer: String
-      }) => void | any | null | undefined
+        mailer: string
+      }) => void
       /**
        * Runs when email fails to send.
        */
       onEmailSentFailed?: (options: {
-        mailer: String
+        mailer: string
         wertikApp: WertikApp
         configuration: WertikConfiguration
         error: any
         options: iObject
-      }) => void | any | null | undefined
+      }) => void
     }
   }
   /**
@@ -124,7 +126,7 @@ export interface WertikConfiguration {
     configuration: WertikConfiguration
     wertikApp: WertikApp
     expressApp: any
-  }) => iObject
+  }) => ApolloServer
   /**
    * Cron Jobs
    */
@@ -169,6 +171,9 @@ export interface WertikConfiguration {
 export interface WertikApp {
   appEnv: "production" | "development" | "local"
   sendEmail?: (options: { mailer: string; options: SendEmailProps }) => iObject
+  restartServer: () => void
+  stopServer: () => void
+  startServer: () => void
   port: number
   modules: {
     [key: string]: WertikModule
@@ -189,7 +194,7 @@ export interface WertikApp {
     [key: string]: WertikModule["tableInstance"]
   }
   mailer: iObject
-  graphql: iObject
+  graphql: ApolloServer
   sockets: iObject
   cronJobs: iObject
   storage: iObject
@@ -203,18 +208,18 @@ export interface WertikApp {
 /**
  * Provide same options that redis createClient method requires.
  */
-export interface useRedisProps {
+export interface UseRedisProps {
   [key: string]: any
   name: string
 }
 
-export interface useMailerProps {
+export interface UseMailerProps {
   /**
    * Provide name for your mailer.
    */
   name: string
   /**
-   * Provide options that you provide procide to nodemailer.createTransport function.
+   * Provide options that you provide provide to nodemailer.createTransport function.
    */
   options?: {
     [key: string]: any

@@ -1,7 +1,56 @@
 import generalSchema from "./graphql/generalSchema"
+import { WertikApp } from "./types"
 
-const store = {
+/**
+ * @description This is the store of the app. It contains all the data that is required by the app to run.
+ */
+export const wertikApp: WertikApp = {
+  restartServer: () => {},
+  stopServer: () => {},
+  startServer: () => {},
+  appEnv: "local",
+  port: 1200,
+  modules: {},
+  models: {},
+  database: {},
+  mailer: {},
+  graphql: null,
+  sockets: {},
+  cronJobs: {},
+  storage: {},
+  queue: {
+    jobs: {},
+    bullBoard: {},
+  },
+  redis: {},
+  logger: null,
+}
+
+const store: {
   graphql: {
+    graphqlKeys: string[]
+    typeDefs: string
+    resolvers: {
+      Query: {
+        [key: string]: Function
+      }
+      Mutation: {
+        [key: string]: Function
+      }
+      [key: string]: {
+        [key: string]: Function
+      }
+    }
+  }
+  database: {
+    relationships: any[]
+    models: {
+      [key: string]: any
+    }
+  }
+} = {
+  graphql: {
+    graphqlKeys: [],
     typeDefs: `
         ${generalSchema}
         type Response {
@@ -30,6 +79,7 @@ const store = {
   },
   database: {
     relationships: [],
+    models: {},
   },
 }
 

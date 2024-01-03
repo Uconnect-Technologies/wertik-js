@@ -1,7 +1,8 @@
-import moment from "moment"
+import dayjs from "./../../utils/dayjs"
 import { useModule } from "../../modules/modules"
 import mysqldump from "mysqldump"
 import fs from "fs"
+import { wLog } from "../../utils/log"
 
 const dumpDatabase = async (
   dbName: string,
@@ -13,7 +14,7 @@ const dumpDatabase = async (
     name: string
   }
 ) => {
-  const filename = `backups/${moment().format(
+  const filename = `backups/${dayjs().format(
     "MMMM-DD-YYYY-h-mm-ss-a"
   )}-database-${dbName}.sql`.toLowerCase()
 
@@ -44,7 +45,7 @@ const uploadDumpToDigitalOceanSpaces = async (
   Bucket,
   ACL
 ) => {
-  const data = await fs.readFileSync(filename)
+  const data = fs.readFileSync(filename)
 
   const params = {
     Bucket: Bucket,
@@ -58,7 +59,7 @@ const uploadDumpToDigitalOceanSpaces = async (
   return response
 }
 const uploadDumpToDropbox = async (filename, dropboxInstance) => {
-  const data: Buffer = await fs.readFileSync(filename)
+  const data: Buffer = fs.readFileSync(filename)
   const response = await dropboxInstance.dropbox.filesUpload({
     strict_conflict: false,
     path: `/${filename}`,
@@ -188,7 +189,7 @@ export const WertikBackupModule = (
 
             return push
           } catch (e) {
-            console.log(e)
+            wLog(e)
             throw new Error(e)
           }
         },

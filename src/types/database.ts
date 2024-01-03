@@ -1,6 +1,6 @@
 import { iObject } from "."
 
-export interface useMysqlDatabaseProps {
+export interface UseMysqlDatabaseProps {
   /**
    * Database name
    */
@@ -37,7 +37,7 @@ export interface TableInfo {
     default: string | number
     extra: any
     graphqlType: string
-    graphqlCreateInputType: string
+    graphqlInsertInputType: string
     graphqlUpdateInputType: string
     enumValues: string[] | null
     isEnum: boolean

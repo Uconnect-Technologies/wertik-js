@@ -12,43 +12,42 @@ export const convertDatabaseTypeIntoGraphqlType = (
   columnInfo: MysqlColumnInfoDescribeTable,
   tableName: string
 ) => {
-  var isPrimary = columnInfo.Key === "PRI"
-  var limit = columnInfo.Type.match(/\d+/g)
-  var isRequiredIndicator = columnInfo.Null === "NO" ? "!" : ""
-  if (limit) limit[0]
+  let isPrimary = columnInfo.Key === "PRI"
+  // let limit = columnInfo.Type.match(/\d+/g)
+  let isRequiredIndicator = columnInfo.Null === "NO" ? "!" : ""
 
   if (columnInfo.Type.toLowerCase() === "tinyint(1)") {
     return {
       graphqlType: `Boolean`,
-      graphqlCreateInputType: `Boolean${isRequiredIndicator}`,
+      graphqlInsertInputType: `Boolean${isRequiredIndicator}`,
       graphqlUpdateInputType: `Boolean${isRequiredIndicator}`,
       databaseType: "INTEGER",
     }
   } else if (numberTypes.find((c) => columnInfo.Type.includes(c))) {
     return {
       graphqlType: `Int`,
-      graphqlCreateInputType: `Int`,
+      graphqlInsertInputType: `Int`,
       graphqlUpdateInputType: `Int${isPrimary ? "!" : ""}`,
       databaseType: "INTEGER",
     }
   } else if (jsonTypes.find((c) => columnInfo.Type.includes(c))) {
     return {
       graphqlType: `JSON`,
-      graphqlCreateInputType: `String${isRequiredIndicator}`,
+      graphqlInsertInputType: `String${isRequiredIndicator}`,
       graphqlUpdateInputType: `String${isRequiredIndicator}`,
       databaseType: "STRING",
     }
   } else if (stringTypes.find((c) => columnInfo.Type.includes(c))) {
     return {
       graphqlType: `String`,
-      graphqlCreateInputType: `String${isRequiredIndicator}`,
+      graphqlInsertInputType: `String${isRequiredIndicator}`,
       graphqlUpdateInputType: `String${isRequiredIndicator}`,
       databaseType: "STRING",
     }
   } else if (dateTypes.find((c) => columnInfo.Type.includes(c))) {
     return {
       graphqlType: `String`,
-      graphqlCreateInputType: `String${isRequiredIndicator}`,
+      graphqlInsertInputType: `String${isRequiredIndicator}`,
       graphqlUpdateInputType: `String${isRequiredIndicator}`,
       databaseType: "STRING",
       isDateColumn: true,
@@ -58,7 +57,7 @@ export const convertDatabaseTypeIntoGraphqlType = (
       graphqlType: `${capitalizeFirstLetter(tableName)}${capitalizeFirstLetter(
         columnInfo.Field
       )}Enum`,
-      graphqlCreateInputType: `${capitalizeFirstLetter(
+      graphqlInsertInputType: `${capitalizeFirstLetter(
         tableName
       )}${capitalizeFirstLetter(columnInfo.Field)}Enum${isRequiredIndicator}`,
       graphqlUpdateInputType: `${capitalizeFirstLetter(

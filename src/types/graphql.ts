@@ -5,7 +5,7 @@ export interface GetMiddlewareOptionsGraphql extends GetMiddlewareOptions {
   path: string
 }
 
-export interface useGraphqlProps {
+export interface UseGraphqlProps {
   options?: {
     [key: string]: any
   }
@@ -15,6 +15,7 @@ export interface useGraphqlProps {
     Query: {}
   }
   typeDefs?: string
+  storeTypeDefFilePath?: string
 }
 
 export interface GraphqlInitializeProps {

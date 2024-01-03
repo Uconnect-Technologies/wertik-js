@@ -1,15 +1,12 @@
-import { get } from "lodash"
+import get from "lodash.get"
 import express from "express"
-import store from "./store"
-import {
-  applyRelationshipsFromStoreToDatabase,
-  applyRelationshipsFromStoreToGraphql,
-} from "./database/database"
+import store, { wertikApp } from "./store"
+import { applyRelationshipsFromStoreToDatabase } from "./database/database"
 import { emailSender } from "./mailer/index"
 import http from "http"
-import { WertikConfiguration } from "./types"
-import { WertikApp } from "./types"
+import { WertikConfiguration, WertikApp } from "./types"
 import { initializeBullBoard } from "./queue/index"
+import { wLogWithInfo, wLogWithSuccess } from "./utils/log"
 
 export * from "./database/database"
 export * from "./modules/modules"
@@ -32,24 +29,6 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
   return new Promise(async (resolve, reject) => {
     try {
       configuration.appEnv = configuration.appEnv ?? "local"
-      const wertikApp: WertikApp = {
-        appEnv: configuration.appEnv,
-        port: 1200,
-        modules: {},
-        models: {},
-        database: {},
-        mailer: {},
-        graphql: {},
-        sockets: {},
-        cronJobs: {},
-        storage: {},
-        queue: {
-          jobs: {},
-          bullBoard: {},
-        },
-        redis: {},
-        logger: null,
-      }
 
       const port = get(configuration, "port", 1200)
       const skip = get(configuration, "skip", false)
@@ -61,7 +40,7 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
       wertikApp.express = expressApp
       wertikApp.port = configuration.port
 
-      if (configuration.mailer && configuration.mailer.instances) {
+      if (configuration?.mailer?.instances) {
         for (const mailName of Object.keys(
           configuration.mailer.instances || {}
         )) {
@@ -71,33 +50,27 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
         }
       }
 
-      if (configuration.storage) {
+      if (configuration?.storage) {
         for (const storageName of Object.keys(configuration.storage || {})) {
-          wertikApp.storage[storageName] = await configuration.storage[
-            storageName
-          ]({
+          wertikApp.storage[storageName] = configuration.storage[storageName]({
             configuration: configuration,
             wertikApp: wertikApp,
           })
         }
       }
 
-      if (configuration.cronJobs) {
+      if (configuration?.cronJobs) {
         for (const cronName of Object.keys(configuration.cronJobs || {})) {
-          wertikApp.cronJobs[cronName] = await configuration.cronJobs[cronName](
-            {
-              configuration: configuration,
-              wertikApp: wertikApp,
-            }
-          )
+          wertikApp.cronJobs[cronName] = configuration.cronJobs[cronName]({
+            configuration: configuration,
+            wertikApp: wertikApp,
+          })
         }
       }
 
       if (configuration.sockets) {
         for (const socketName of Object.keys(configuration.sockets || {})) {
-          wertikApp.sockets[socketName] = await configuration.sockets[
-            socketName
-          ]({
+          wertikApp.sockets[socketName] = configuration.sockets[socketName]({
             configuration: configuration,
             wertikApp: wertikApp,
           })
@@ -130,9 +103,8 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
 
       if (configuration?.queue?.jobs) {
         for (const queueName of Object.keys(configuration?.queue?.jobs || {})) {
-          wertikApp.queue.jobs[queueName] = await configuration.queue.jobs[
-            queueName
-          ]()
+          wertikApp.queue.jobs[queueName] =
+            configuration.queue.jobs[queueName]()
         }
       }
 
@@ -145,7 +117,7 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
 
       if (configuration.redis) {
         for (const redisName of Object.keys(configuration.redis || {})) {
-          wertikApp.redis[redisName] = await configuration.redis[redisName]({
+          wertikApp.redis[redisName] = configuration.redis[redisName]({
             wertikApp,
             configuration,
           })
@@ -157,12 +129,11 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
       }
 
       applyRelationshipsFromStoreToDatabase(store, wertikApp)
-      applyRelationshipsFromStoreToGraphql(store, wertikApp)
 
       expressApp.get("/w/info", function (req, res) {
         res.json({
           message: "You are running wertik-js v3",
-          version: require("./../../package.json").version,
+          version: require(`${process.cwd()}/package.json`).version,
         })
       })
 
@@ -170,6 +141,10 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
         wertikApp,
         configuration,
       })
+
+      if (wertikApp?.models) {
+        store.database.models = wertikApp.models
+      }
 
       if (configuration.graphql) {
         wertikApp.graphql = configuration.graphql({
@@ -185,17 +160,48 @@ const Wertik: (configuration?: WertikConfiguration) => Promise<WertikApp> = (
         next()
       })
 
+      let startServer = () => {
+        httpServer.listen(port, () => {
+          wLogWithSuccess(`[Wertik-App]`, `http://localhost:${port}`)
+        })
+      }
+
+      let stopServer = () => {
+        wLogWithInfo(`[Wertik-App]`, `Stopping server`)
+        httpServer.close(() => {
+          wLogWithSuccess(`[Wertik-App]`, `Server stopped`)
+          process.exit()
+        })
+      }
+
+      let restartServer = () => {
+        wLogWithInfo(`[Wertik-App]`, `Restarting server`)
+        httpServer.close(() => {
+          setTimeout(() => {
+            startServer()
+          }, 500)
+        })
+      }
+
       if (!new Object(process.env).hasOwnProperty("TEST_MODE")) {
         setTimeout(async () => {
           if (skip === false) {
-            httpServer.listen(port, () => {
-              console.log(`Wertik JS app listening at http://localhost:${port}`)
-            })
+            startServer()
           }
-          resolve(wertikApp)
+          resolve({
+            ...wertikApp,
+            restartServer,
+            stopServer,
+            startServer,
+          })
         }, 500)
       } else {
-        resolve(wertikApp)
+        resolve({
+          ...wertikApp,
+          restartServer,
+          stopServer,
+          startServer,
+        })
       }
     } catch (e) {
       console.error(e)
