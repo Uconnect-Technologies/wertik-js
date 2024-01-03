@@ -45,6 +45,7 @@ export const getMysqlTableInfo = async (
         module.name
       )
       let isPrimary = element.Key === "PRI"
+      const isNull = element.Null === "YES";
 
       return {
         columnName: element.Field,
@@ -53,7 +54,7 @@ export const getMysqlTableInfo = async (
         graphqlInsertInputType: graphqlType.graphqlInsertInputType,
         graphqlUpdateInputType: graphqlType.graphqlUpdateInputType,
         enumValues: graphqlType.enumValues,
-        isNull: element.Null === "no" ? false : true,
+        isNull: isNull,
         isEnum: graphqlType.isEnum,
         databaseType: graphqlType.databaseType,
         isPrimary: isPrimary,
