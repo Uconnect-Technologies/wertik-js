@@ -45,7 +45,7 @@ export const getMysqlTableInfo = async (
         module.name
       )
       let isPrimary = element.Key === "PRI"
-      const isNull = element.Null === "YES";
+      const isNull = element.Null === "YES"
 
       return {
         columnName: element.Field,

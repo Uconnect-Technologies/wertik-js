@@ -3,8 +3,13 @@ import chalk from "chalk"
 
 export const wLog = console.log
 export const wLogWithDateWithInfo = (info, ...params) => {
-  let day = dayjs();
-  console.log(day.format("L-LT"), day.format("Z"), chalk.blueBright(info), ...params)
+  let day = dayjs()
+  console.log(
+    day.format("L-LT"),
+    day.format("Z"),
+    chalk.blueBright(info),
+    ...params
+  )
 }
 
 export const wLogWithInfo = (info, ...params) => {
